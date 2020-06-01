@@ -16,7 +16,6 @@ import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 
 //Firebase Imports 
-import firebase from "firebase/app";
 import firebaseApp from "../firebaseConfig";
 
 
@@ -25,7 +24,6 @@ const ForgotPassword = ({ history }) => {
   const classes = useStyles();
   async function handleSignUp(event) {
     event.preventDefault();
-    const db = firebase.firestore();
     const { email} = event.target.elements;
     try {
       

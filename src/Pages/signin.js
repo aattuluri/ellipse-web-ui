@@ -59,14 +59,14 @@ const Signin = ({ history }) => {
           <Typography component="h1" variant="h6">
             Kill time for what matters
           </Typography><br></br>
-          <img src={iPhone} height="500px" width="300px" align="center"></img><br></br>
+          <img src={iPhone} alt="iphone" height="500px" width="300px" align="center"></img><br></br>
           <div className={classes.paperimage}>
             <Grid item xs={12} sm={12} md={12} elevation={6} square>
 
-              <img src={GoogleBadge} height="100px" width="250px"></img><br></br>
+              <img src={GoogleBadge} alt="playstore" height="100px" width="250px"></img><br></br>
             </Grid>
             <Grid item xs={12} sm={12} md={12} elevation={6} square >
-              <img src={AppleBadge} height="70px" width="220px"></img>
+              <img src={AppleBadge} alt="appstore" height="70px" width="220px"></img>
             </Grid>
           </div>
         </div>
