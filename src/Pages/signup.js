@@ -19,20 +19,46 @@ import Container from '@material-ui/core/Container';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 
 //Firebase Imports 
 import firebase from "firebase/app";
 import firebaseApp from "../firebaseConfig";
 
-
+//function for alert
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 const Signup = ({ history }) => {
   const classes = useStyles();
+  const [state, setState] = React.useState({
+    open: false,
+    vertical: 'top',
+    horizontal: 'center',
+    message: 'success',
+    type: 'error'
+  });
+  const { vertical, horizontal, open, message, type } = state;
+  const handleClose = async (event, reason) => {
+    await firebaseApp.auth().signOut()
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    if (message === "Signedup successfully.Verify your email and login") {
+      history.replace("/")
+    }
+
+    setState({ ...state, open: false });
+  };
   async function handleSignUp(event) {
     event.preventDefault();
     const db = firebase.firestore();
     const { fullName, email, gender, college, designation, password, terms } = event.target.elements;
     try {
+      console.log(terms.checked);
       if (terms.checked) {
         await firebaseApp
           .auth()
@@ -46,26 +72,49 @@ const Signup = ({ history }) => {
               Uid: user.user.uid,
               Designation: designation.value
             }).then(function () {
-              console.log("Document successfully written!");
-              history.replace("/")
+              setState({
+                open: true,
+                vertical: 'top',
+                horizontal: 'center',
+                message: 'Signedup successfully.Verify your email and login',
+                type: "success"
+              });
             })
-
           })
-        console.log("success")
       }
       else {
-        console.log("Terms and condition is not clicked")
+        setState({
+          open: true,
+          vertical: 'top',
+          horizontal: 'center',
+          message: 'Please agress the terms and condiitons',
+          type: "error"
+        });
       }
 
     } catch (error) {
-      alert(error);
+      setState({
+        open: true,
+        vertical: 'top',
+        horizontal: 'center',
+        message: error.message,
+        type: "error"
+      })
     }
   }
 
   return (
     <Container component="main" maxWidth="sm">
       <CssBaseline />
-
+      <Snackbar
+        anchorOrigin={{ vertical, horizontal }}
+        open={open}
+        autoHideDuration={6000}
+        onClose={handleClose}
+        key={vertical + horizontal}
+      >
+        <Alert onClose={handleClose} severity={type}>{message}</Alert>
+      </Snackbar>
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />

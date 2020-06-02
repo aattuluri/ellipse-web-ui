@@ -11,7 +11,8 @@ const useStyles = makeStyles((theme) => ({
         flexDirection: 'column',
         alignItems: 'center',
         backgroundColor: theme.palette.secondary.main,
-        padding: theme.spacing(5),
+        padding: theme.spacing(0),
+        paddingBottom: theme.spacing(4),
         borderRadius: 30,
     },
     paperLeft: {
@@ -32,9 +33,8 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: theme.palette.primary.main,
     },
     form: {
-        width: '80%', // Fix IE 11 issue.
-        marginTop: theme.spacing(10),
-        // backgroundColor: theme.palette.secondary,
+        width: '90%', 
+        margin: theme.spacing(5),
     },
     submit: {
         margin: theme.spacing(3, 0, 2),

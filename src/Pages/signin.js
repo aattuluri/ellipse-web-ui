@@ -18,11 +18,36 @@ import firebaseApp from "../firebaseConfig";
 import Copyright from "../Components/copyright";
 import { AuthContext } from "../Auth";
 import { withRouter, Redirect } from "react-router";
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 
+
+//function for alert
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 
 const Signin = ({ history }) => {
   const classes = useStyles();
+  const [state, setState] = React.useState({
+    open: false,
+    vertical: 'top',
+    horizontal: 'center',
+    message: 'success',
+    type: 'error'
+  });
+  const { vertical, horizontal, open,message,type} = state;
+  const handleClose = async (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    if(message === "Signedin successfully.Verify your email and login"){
+      history.push('/home')
+    }
+    
+    setState({ ...state, open: false });
+  };
   async function handleSignin(event) {
     event.preventDefault();
     const { email, password } = event.target.elements;
@@ -31,12 +56,17 @@ const Signin = ({ history }) => {
       await firebaseApp
         .auth()
         .signInWithEmailAndPassword(email.value, password.value).then((user) => {
-          console.log(user);
-          history.push('/home')
+          setState({ 
+            open: true, 
+            vertical: 'top', 
+            horizontal: 'center',
+            message: 'Signedup successfully.Verify your email and login',
+            type: "success"});
+          
         })
       console.log("success")
     } catch (error) {
-      alert(error);
+      setState({ open: true, vertical: 'top', horizontal: 'center',message: error.message,type: "error"})
     }
   }
   const { currentUser } = useContext(AuthContext);
@@ -51,6 +81,15 @@ const Signin = ({ history }) => {
   return (
     <Grid container component="main" className={classes.root}>
       <CssBaseline />
+      <Snackbar
+        anchorOrigin={{ vertical, horizontal }}
+        open={open}
+        autoHideDuration={6000}
+        onClose={handleClose}
+        key={vertical + horizontal}
+      >
+        <Alert onClose={handleClose} severity={type}>{message}</Alert>
+      </Snackbar>
       <Grid item xs={12} sm={12} md={7} elevation={6} square>
         <div className={classes.paperLeft}>
           <Typography component="h1" variant="h3">
@@ -61,11 +100,11 @@ const Signin = ({ history }) => {
           </Typography><br></br>
           <img src={iPhone} alt="iphone" height="500px" width="300px" align="center"></img><br></br>
           <div className={classes.paperimage}>
-            <Grid item xs={12} sm={12} md={12} elevation={6} square>
+            <Grid item xs={12} sm={12} md={12} elevation={12} square>
 
               <img src={GoogleBadge} alt="playstore" height="100px" width="250px"></img><br></br>
             </Grid>
-            <Grid item xs={12} sm={12} md={12} elevation={6} square >
+            <Grid item xs={12} sm={12} md={12} elevation={12} square >
               <img src={AppleBadge} alt="appstore" height="70px" width="220px"></img>
             </Grid>
           </div>
