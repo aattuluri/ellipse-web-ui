@@ -20,6 +20,7 @@ import { AuthContext } from "../Auth";
 import { withRouter, Redirect } from "react-router";
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 
 //function for alert
@@ -37,6 +38,7 @@ const Signin = ({ history }) => {
     message: 'success',
     type: 'error'
   });
+  const [loading, setLoading] = React.useState(false);
   const { vertical, horizontal, open,message,type} = state;
   const handleClose = async (event, reason) => {
     if (reason === 'clickaway') {
@@ -50,12 +52,14 @@ const Signin = ({ history }) => {
   };
   async function handleSignin(event) {
     event.preventDefault();
+    setLoading(true);
     const { email, password } = event.target.elements;
     try {
       console.log("started")
       await firebaseApp
         .auth()
         .signInWithEmailAndPassword(email.value, password.value).then((user) => {
+          setLoading(false);
           setState({ 
             open: true, 
             vertical: 'top', 
@@ -64,8 +68,8 @@ const Signin = ({ history }) => {
             type: "success"});
           
         })
-      console.log("success")
     } catch (error) {
+      setLoading(false);
       setState({ open: true, vertical: 'top', horizontal: 'center',message: error.message,type: "error"})
     }
   }
@@ -81,6 +85,7 @@ const Signin = ({ history }) => {
   return (
     <Grid container component="main" className={classes.root}>
       <CssBaseline />
+      
       <Snackbar
         anchorOrigin={{ vertical, horizontal }}
         open={open}
@@ -110,8 +115,10 @@ const Signin = ({ history }) => {
           </div>
         </div>
       </Grid>
+ 
       <Grid item xs={12} sm={12} md={5} elevation={6} square>
         <div className={classes.paperRight} >
+
           <Avatar className={classes.avatar}>
             <LockOutlinedIcon />
           </Avatar>
@@ -146,15 +153,21 @@ const Signin = ({ history }) => {
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             />
+            <div className={classes.wrapper}>
             <Button
               type="submit"
               fullWidth
               variant="contained"
               color="primary"
+              disabled={loading}
               className={classes.submit}
             >
-              Sign In
+              {loading ? <CircularProgress color="primary" size={24} />: "Sign In" }
+              
             </Button>
+            
+            </div>
+            
             <Grid container>
               <Grid item xs>
                 <Link href="/forgotpassword" variant="body2">
@@ -167,10 +180,12 @@ const Signin = ({ history }) => {
                 </Link>
               </Grid>
             </Grid>
+            
             <Box mt={5}>
               <Copyright />
             </Box>
           </form>
+          
         </div>
       </Grid>
     </Grid>

@@ -21,7 +21,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
-
+import CircularProgress from '@material-ui/core/CircularProgress';
 //Firebase Imports 
 import firebase from "firebase/app";
 import firebaseApp from "../firebaseConfig";
@@ -40,6 +40,7 @@ const Signup = ({ history }) => {
     message: 'success',
     type: 'error'
   });
+  const [loading, setLoading] = React.useState(false);
   const { vertical, horizontal, open, message, type } = state;
   const handleClose = async (event, reason) => {
     await firebaseApp.auth().signOut()
@@ -55,6 +56,7 @@ const Signup = ({ history }) => {
   };
   async function handleSignUp(event) {
     event.preventDefault();
+    setLoading(true);
     const db = firebase.firestore();
     const { fullName, email, gender, college, designation, password, terms } = event.target.elements;
     try {
@@ -83,6 +85,7 @@ const Signup = ({ history }) => {
           })
       }
       else {
+        setLoading(false);
         setState({
           open: true,
           vertical: 'top',
@@ -93,6 +96,7 @@ const Signup = ({ history }) => {
       }
 
     } catch (error) {
+      setLoading(false);
       setState({
         open: true,
         vertical: 'top',
@@ -229,9 +233,10 @@ const Signup = ({ history }) => {
             fullWidth
             variant="contained"
             color="primary"
+            disabled={loading}
             className={classes.submit}
           >
-            Sign Up
+           {loading ? <CircularProgress color="primary" size={24}/>: "Sign Up" }
           </Button>
           <Grid container justify="center">
             <Grid item>
