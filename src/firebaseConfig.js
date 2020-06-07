@@ -1,6 +1,7 @@
 import * as firebase from 'firebase';
 import "firebase/auth";
 import 'firebase/firestore';
+import 'firebase/storage';
 
 var firebaseApp = firebase.initializeApp({
   apiKey: "AIzaSyAGY_fm6kPdpgxrG7vz4epTtFgTaYvORg4",
@@ -12,4 +13,5 @@ var firebaseApp = firebase.initializeApp({
   appId: "1:546695835211:web:8f76783205af6c5389e7ce",
   measurementId: "G-0RZP5M1CH5"
 });
+firebase.analytics();
 export default firebaseApp;

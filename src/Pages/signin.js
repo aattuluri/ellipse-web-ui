@@ -39,15 +39,15 @@ const Signin = ({ history }) => {
     type: 'error'
   });
   const [loading, setLoading] = React.useState(false);
-  const { vertical, horizontal, open,message,type} = state;
+  const { vertical, horizontal, open, message, type } = state;
   const handleClose = async (event, reason) => {
     if (reason === 'clickaway') {
       return;
     }
-    if(message === "Signedin successfully.Verify your email and login"){
+    if (message === "Signedin successfully.Verify your email and login") {
       history.push('/home')
     }
-    
+
     setState({ ...state, open: false });
   };
   async function handleSignin(event) {
@@ -60,32 +60,30 @@ const Signin = ({ history }) => {
         .auth()
         .signInWithEmailAndPassword(email.value, password.value).then((user) => {
           setLoading(false);
-          setState({ 
-            open: true, 
-            vertical: 'top', 
+          setState({
+            open: true,
+            vertical: 'top',
             horizontal: 'center',
             message: 'Signedup successfully.Verify your email and login',
-            type: "success"});
-          
+            type: "success"
+          });
+
         })
     } catch (error) {
       setLoading(false);
-      setState({ open: true, vertical: 'top', horizontal: 'center',message: error.message,type: "error"})
+      setState({ open: true, vertical: 'top', horizontal: 'center', message: error.message, type: "error" })
     }
   }
   const { currentUser } = useContext(AuthContext);
-  console.log("b")
-  console.log(currentUser);
   if (currentUser) {
     console.log(currentUser);
-
-    return <Redirect to="/UserDetails" />;
+    return <Redirect to="/userdetails" />;
   }
 
   return (
     <Grid container component="main" className={classes.root}>
       <CssBaseline />
-      
+
       <Snackbar
         anchorOrigin={{ vertical, horizontal }}
         open={open}
@@ -95,7 +93,7 @@ const Signin = ({ history }) => {
       >
         <Alert onClose={handleClose} severity={type}>{message}</Alert>
       </Snackbar>
-      <Grid item xs={12} sm={12} md={7} elevation={6} square>
+      <Grid item xs={12} sm={12} md={7} elevation={6} >
         <div className={classes.paperLeft}>
           <Typography component="h1" variant="h3">
             Ellipse
@@ -115,7 +113,7 @@ const Signin = ({ history }) => {
           </div>
         </div>
       </Grid>
- 
+
       <Grid item xs={12} sm={12} md={5} elevation={6} square>
         <div className={classes.paperRight} >
 
@@ -154,20 +152,20 @@ const Signin = ({ history }) => {
               label="Remember me"
             />
             <div className={classes.wrapper}>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              disabled={loading}
-              className={classes.submit}
-            >
-              {loading ? <CircularProgress color="primary" size={24} />: "Sign In" }
-              
-            </Button>
-            
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                disabled={loading}
+                className={classes.submit}
+              >
+                {loading ? <CircularProgress color="primary" size={24} /> : "Sign In"}
+
+              </Button>
+
             </div>
-            
+
             <Grid container>
               <Grid item xs>
                 <Link href="/forgotpassword" variant="body2">
@@ -180,12 +178,12 @@ const Signin = ({ history }) => {
                 </Link>
               </Grid>
             </Grid>
-            
+
             <Box mt={5}>
               <Copyright />
             </Box>
           </form>
-          
+
         </div>
       </Grid>
     </Grid>
