@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Copyright from '../Components/copyright';
 import useStyles from '../Themes/SignupPageStyles';
 import { withRouter } from 'react-router';
+import axios from 'axios';
 
 //MaterialUI imports
 import Avatar from '@material-ui/core/Avatar';
@@ -33,6 +34,7 @@ function Alert(props) {
 
 const Signup = ({ history }) => {
   const classes = useStyles();
+  const [token,setToken] = React.useState("");
   const [state, setState] = React.useState({
     open: false,
     vertical: 'top',
@@ -43,47 +45,91 @@ const Signup = ({ history }) => {
   const [loading, setLoading] = React.useState(false);
   const { vertical, horizontal, open, message, type } = state;
   const handleClose = async (event, reason) => {
-    await firebaseApp.auth().signOut()
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    if (message === "Signedup successfully.Verify your email and login") {
-      history.replace("/")
-    }
-
+    fetch('https://ellipseserver1.herokuapp.com/api/users/​logout', {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        },
+          method: 'POST',
+        }).then((result)=>{
+          // console.log(result.json())
+          result.json().then((data)=>{
+            if(data.message === "success"){
+              if (reason === 'clickaway') {
+                return;
+              }
+          
+              if (message === "Signedup successfully.Verify your email and login") {
+                history.replace("/")
+              }
+            }
+          })
+        })
     setState({ ...state, open: false });
   };
   async function handleSignUp(event) {
     event.preventDefault();
     setLoading(true);
     const db = firebase.firestore();
+    // const token = "";
+    event.preventDefault();
     const { fullName, email, gender, college, designation, password, terms } = event.target.elements;
     try {
-      console.log(terms.checked);
       if (terms.checked) {
-        await firebaseApp
-          .auth()
-          .createUserWithEmailAndPassword(email.value, password.value).then(function (user) {
-            console.log(user.user.uid);
-            db.collection("UserDetails").doc(user.user.uid).set({
-              FullName: fullName.value,
-              Email: email.value,
-              College: college.value,
-              Gender: gender.value,
-              Uid: user.user.uid,
-              Designation: designation.value
-            }).then(function () {
-              setState({
-                open: true,
-                vertical: 'top',
-                horizontal: 'center',
-                message: 'Signedup successfully.Verify your email and login',
-                type: "success"
-              });
-            })
+        var data = new FormData
+        const payload = {
+          name: fullName.value,
+          email: email.value,
+          password: password.value
+        };
+        // data.append(JSON.stringify(payload));
+        data = JSON.stringify(payload);
+        console.log(data);
+        fetch("​https://ellipseserver1.herokuapp.com/api/users/signup", {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          method: 'POST',
+          body: data
+        }).then((result)=>{
+          console.log(result);
+          result.json().then((val)=>{
+            console.log(val);
+            setToken(val.token);
+            setState({
+                      open: true,
+                      vertical: 'top',
+                      horizontal: 'center',
+                      message: 'Signedup successfully.Verify your email and login',
+                      type: "success"
+                    });
           })
+          // setToken(result.json().token);
+        })
+        // AP0033036342020LL
+        // await firebaseApp
+        //   .auth()
+        //   .createUserWithEmailAndPassword(email.value, password.value).then(function (user) {
+        //     console.log(user.user.uid);
+        //     db.collection("UserDetails").doc(user.user.uid).set({
+        //       FullName: fullName.value,
+        //       Email: email.value,
+        //       College: college.value,
+        //       Gender: gender.value,
+        //       Uid: user.user.uid,
+        //       Designation: designation.value
+        //     }).then(function () {
+        //       setState({
+        //         open: true,
+        //         vertical: 'top',
+        //         horizontal: 'center',
+        //         message: 'Signedup successfully.Verify your email and login',
+        //         type: "success"
+        //       });
+        //     })
+        //   })
       }
+    
       else {
         setLoading(false);
         setState({

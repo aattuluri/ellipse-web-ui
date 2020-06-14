@@ -5,15 +5,13 @@ import firebaseApp from "../firebaseConfig";
 import firebase from "firebase/app";
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import PhoneIcon from '@material-ui/icons/Phone';
-import FavoriteIcon from '@material-ui/icons/Favorite';
 import PersonPinIcon from '@material-ui/icons/PersonPin';
 import Paper from '@material-ui/core/Paper';
-import { fade, makeStyles } from '@material-ui/core/styles';
+// import { fade, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
+// import MenuIcon from '@material-ui/icons/Menu';
 import Typography from '@material-ui/core/Typography';
 // import Button from '@material-ui/core/Button';
 import InputBase from '@material-ui/core/InputBase';
@@ -22,89 +20,44 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 // import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import MailIcon from '@material-ui/icons/Mail';
+// import AccountCircle from '@material-ui/icons/AccountCircle';
+// import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
-import MoreIcon from '@material-ui/icons/MoreVert';
+// import MoreIcon from '@material-ui/icons/MoreVert';
+// import HomeIcon from '@material-ui/icons/Home';
+import TelegramIcon from '@material-ui/icons/Telegram';
+import EventIcon from '@material-ui/icons/Event';
+// import Box from '@material-ui/core/Box';
+import TabPanel from './EventsTabpanel';
+import useStyles from '../Themes/MainHomeStyles';
+import { Grid, Button } from '@material-ui/core';
+import ProfilePanel from './ProfileTabpanel';
+import ExploreIcon from '@material-ui/icons/Explore';
+import SettingsIcon from '@material-ui/icons/Settings';
 
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-    //   maxWidth: 500,
-  },
-  grow: {
-    flexGrow: 1,
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
-  title: {
-    display: 'none',
-    [theme.breakpoints.up('sm')]: {
-      display: 'block',
-    },
-  },
-  search: {
-    position: 'relative',
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.white, 0.15),
-    '&:hover': {
-      backgroundColor: fade(theme.palette.common.white, 0.25),
-    },
-    marginRight: theme.spacing(2),
-    marginLeft: 0,
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      marginLeft: theme.spacing(3),
-      width: 'auto',
-    },
-  },
-  searchIcon: {
-    padding: theme.spacing(0, 2),
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  inputRoot: {
-    color: 'inherit',
-  },
-  inputInput: {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('md')]: {
-      width: '20ch',
-    },
-  },
-  sectionDesktop: {
-    display: 'none',
-    [theme.breakpoints.up('md')]: {
-      display: 'flex',
-    },
-  },
-  sectionMobile: {
-    display: 'flex',
-    [theme.breakpoints.up('md')]: {
-      display: 'none',
-    },
-  },
-}));
 
-const MainHome = function () {
+
+const MainHome = function ({ history }) {
   const classes = useStyles();
   const { currentUser } = useContext(AuthContext);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
-
+  const [value, setValue] = React.useState(0);
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+  const [imageUrl, setImageurl] = useState("");
+  // const [loading, setLoading] = React.useState(false);
 
+
+  function handleMorebuttonClick(event) {
+    event.preventDefault();
+    // history.push("/event/1")
+  }
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -121,8 +74,7 @@ const MainHome = function () {
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
-  // const [loading, setLoading] = React.useState(false);
-  const [imageUrl, setImageurl] = useState("");
+
   if (!currentUser) {
     console.log(currentUser);
     return <Redirect to="/" />;
@@ -131,56 +83,14 @@ const MainHome = function () {
 
   try {
     const db = firebase.firestore();
-    db.collection("UserDetails").doc(currentUserUid).get().then(doc => {
-      setImageurl(doc.data()["ProfilrPicUrl"])
+    db.collection("UserDetails").doc(currentUserUid).get().then(function (doc) {
+      console.log(doc.data()["ProfilrPicUrl"])
+      setImageurl(doc.data()["ProfilrPicUrl"]);
     });
   }
   catch (error) {
     console.log(error);
-
   }
-
-
-  const mobileMenuId = 'primary-search-account-menu-mobile';
-  const renderMobileMenu = (
-    <Menu
-      anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      id={mobileMenuId}
-      keepMounted
-      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-      open={isMobileMenuOpen}
-      onClose={handleMobileMenuClose}
-    >
-      <MenuItem>
-        <IconButton aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="secondary">
-            <MailIcon />
-          </Badge>
-        </IconButton>
-        <p>Messages</p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton aria-label="show 11 new notifications" color="inherit">
-          <Badge badgeContent={11} color="secondary">
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
-        <p>Notifications</p>
-      </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <AccountCircle />
-        </IconButton>
-        <p>Profile</p>
-      </MenuItem>
-    </Menu>
-  );
 
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
@@ -195,22 +105,24 @@ const MainHome = function () {
     >
       <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={() => firebase.auth().signOut()}>Log Out</MenuItem>
     </Menu>
   );
 
+  // function a11yProps(index) {
+  //   return {
+  //     id: `scrollable-prevent-tab-${index}`,
+  //     'aria-controls': `scrollable-prevent-tabpanel-${index}`,
+  //   };
+  // }
+
+
   return (
-    <div>
-      <AppBar position="static">
+    <div className={classes.grow}>
+    <React.Fragment>
+      <AppBar position="sticky" color="secondary">
         <Toolbar>
-          <IconButton
-            edge="start"
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="open drawer"
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography className={classes.title} variant="h6" noWrap>
+          <Typography className={classes.title} variant="h5" noWrap>
             Ellipse
           </Typography>
           <div className={classes.search}>
@@ -226,13 +138,28 @@ const MainHome = function () {
               inputProps={{ 'aria-label': 'search' }}
             />
           </div>
+          <div className={classes.tabs}>
+            <Paper square className={classes.root}>
+              <Tabs
+                value={value}
+                onChange={handleChange}
+                variant="fullWidth"
+                indicatorColor="primary"
+                textColor="primary"
+                aria-label="icon tabs example"
+              >
+                <Tab icon={<EventIcon />} aria-label="phone" />
+                <Tab icon={<TelegramIcon />} aria-label="favorite" />
+                <Tab icon={<ExploreIcon />} aria-label="person" />
+                {/* <Tab icon={<FavoriteIcon />} aria-label="favorite" /> */}
+                <Tab icon={<PersonPinIcon />} aria-label="person" />
+              </Tabs>
+            </Paper>
+          </div>
+
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
-            <IconButton aria-label="show 4 new mails" color="inherit">
-              <Badge badgeContent={4} color="secondary">
-                <MailIcon />
-              </Badge>
-            </IconButton>
+
             <IconButton aria-label="show 17 new notifications" color="inherit">
               <Badge badgeContent={17} color="secondary">
                 <NotificationsIcon />
@@ -246,50 +173,64 @@ const MainHome = function () {
               onClick={handleProfileMenuOpen}
               color="inherit"
             >
-              <AccountCircle />
-            </IconButton>
-          </div>
-          <div className={classes.sectionMobile}>
-            <IconButton
-              aria-label="show more"
-              aria-controls={mobileMenuId}
-              aria-haspopup="true"
-              onClick={handleMobileMenuOpen}
-              color="inherit"
-            >
-              <MoreIcon />
+              <SettingsIcon></SettingsIcon>
             </IconButton>
           </div>
         </Toolbar>
       </AppBar>
-      {renderMobileMenu}
       {renderMenu}
-      <Paper square className={classes.root}>
-        <Tabs
-          // value={value}
-          // onChange={handleChange}
-          variant="fullWidth"
-          indicatorColor="secondary"
-          textColor="secondary"
-          aria-label="icon label tabs example"
-        >
-          <Tab icon={<PhoneIcon />} label="RECENTS" />
-          <Tab icon={<FavoriteIcon />} label="FAVORITES" />
-          <Tab icon={<PersonPinIcon />} label="NEARBY" />
-          <Tab icon={<FavoriteIcon />} label="FAVORITES" />
-          <Tab icon={<PersonPinIcon />} label="NEARBY" />
-        </Tabs>
-      </Paper>
-      <h1>Welcome</h1>
-      <img className=" circle-img"
-        height="300px"
-        width="300px"
-        src={imageUrl}
-        alt="avatar_img" /><br></br>
-      <button>Edit</button><br></br>
-      <textarea></textarea><br></br>
-      <button>Skip</button>
-      <button>Save and Continue</button>
+      <AppBar position="sticky" color="secondary">
+        <div className={classes.mobiletab}>
+
+          <Paper square className={classes.root} position="sticky">
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              variant="fullWidth"
+              indicatorColor="primary"
+              textColor="primary"
+              aria-label="icon tabs example"
+            >
+              <Tab icon={<EventIcon />} aria-label="phone" />
+              <Tab icon={<TelegramIcon />} aria-label="favorite" />
+              <Tab icon={<ExploreIcon />} aria-label="person" />
+              <Tab icon={<PersonPinIcon />} aria-label="person" />
+            </Tabs>
+          </Paper>
+
+
+        </div>
+      </AppBar>
+      <div className={classes.paper}>
+        <Grid container component="main" className={classes.flex_section}>
+        
+          <Grid item xs={12} sm={12} md={4} lg={2} spacing={2} className={classes.flex_col_scroll}>
+            <Typography value={value} index={0}>Filters</Typography>
+
+          </Grid>
+          <Grid item xs={12} sm={12} md={8} lg={8} spacing={2} className={classes.flex_col_scroll}>
+            <TabPanel value={value} url={imageUrl} index={0}>
+              Item One
+            </TabPanel>
+            <TabPanel value={value} index={1}>
+              Item One
+            </TabPanel>
+            <TabPanel value={value} index={2}>
+              Item One
+          </TabPanel>
+            <ProfilePanel value={value} index={3}></ProfilePanel>
+          </Grid>
+          <Grid item xs={12} sm={12} md={4} lg={2} spacing={5} className={classes.flex_col_scroll}>
+          <Paper className={classes.rpaper}>
+            <Button variant="contained" size="large" className={classes.postButton} >Post Event</Button>
+            </Paper>
+
+          </Grid>
+        </Grid>
+
+
+      </div>
+      </React.Fragment>
     </div>
   )
 }

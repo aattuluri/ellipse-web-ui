@@ -77,7 +77,7 @@ const Signin = ({ history }) => {
   const { currentUser } = useContext(AuthContext);
   if (currentUser) {
     console.log(currentUser);
-    return <Redirect to="/userdetails" />;
+    return <Redirect to="/home" />;
   }
 
   return (
