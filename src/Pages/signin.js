@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -40,14 +40,24 @@ const Signin = ({ history }) => {
   });
   const [loading, setLoading] = React.useState(false);
   const { vertical, horizontal, open, message, type } = state;
+  const [user,setUser] = React.useState(null);
+  const [token,setToken] = React.useState(null);
   const handleClose = async (event, reason) => {
     if (reason === 'clickaway') {
       return;
     }
-    if (message === "Signedin successfully.Verify your email and login") {
-      history.push('/home')
-    }
+    if (message === "Signedin successfully") {
+      localStorage.setItem('token', token);
+      localStorage.setItem('user', user);
 
+      console.log(JSON.parse(user).collegeName);
+      if(JSON.parse(user).collegeName == null){
+        history.push('/userinfo');
+      }
+      else{
+        history.push('/home');
+      }
+    }
     setState({ ...state, open: false });
   };
   async function handleSignin(event) {
@@ -56,29 +66,53 @@ const Signin = ({ history }) => {
     const { email, password } = event.target.elements;
     try {
       console.log("started")
-      await firebaseApp
-        .auth()
-        .signInWithEmailAndPassword(email.value, password.value).then((user) => {
+      var data = new FormData
+      const payload = {
+        email: email.value,
+        password: password.value
+      };
+      data = JSON.stringify(payload);
+      fetch('http://localhost:4000/api/users/login', {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        method: 'POST',
+        body: data
+      }).then((response) => {
+        if(response.status == 200){
+          response.json().then((value) => {
+            console.log(value);
+            setToken(value.token);
+            setUser(JSON.stringify(value.user));
+  
+            setLoading(false);
+            setState({
+              open: true,
+              vertical: 'top',
+              horizontal: 'center',
+              message: 'Signedin successfully',
+              type: "success"
+            });
+          })
+        }
+        else{
           setLoading(false);
-          setState({
-            open: true,
-            vertical: 'top',
-            horizontal: 'center',
-            message: 'Signedup successfully.Verify your email and login',
-            type: "success"
-          });
-
-        })
+          setState({ open: true, vertical: 'top', horizontal: 'center', message: "invalid credentials", type: "error" })
+        }
+        
+      })
     } catch (error) {
+
       setLoading(false);
       setState({ open: true, vertical: 'top', horizontal: 'center', message: error.message, type: "error" })
     }
   }
-  const { currentUser } = useContext(AuthContext);
-  if (currentUser) {
-    console.log(currentUser);
+  const currentUser = localStorage.getItem('user');
+  if(currentUser){
     return <Redirect to="/home" />;
   }
+ 
+
 
   return (
     <Grid container component="main" className={classes.root}>
@@ -87,7 +121,7 @@ const Signin = ({ history }) => {
       <Snackbar
         anchorOrigin={{ vertical, horizontal }}
         open={open}
-        autoHideDuration={6000}
+        autoHideDuration={2000}
         onClose={handleClose}
         key={vertical + horizontal}
       >
@@ -190,3 +224,28 @@ const Signin = ({ history }) => {
   );
 }
 export default withRouter(Signin);
+
+
+ // const { currentUser } = useContext(AuthContext);
+  // console.log(currentUser);
+  // if (currentUser) {
+  //   console.log(currentUser);
+  //   return <Redirect to="/home" />;
+  // }
+  // useEffect(() => {
+  // localStorage.removeItem('user');
+  // const token = localStorage.getItem('token');
+  // const currentUser = localStorage.getItem('user');
+
+  //   if(currentUser){
+  //     console.log(JSON.parse(currentUser));
+  //   }
+  //   // 
+  //   // console.log(currentUser.email)
+  // console.log(token);
+  // console.log(localStorage.getItem('user'))
+  // if(token){
+  //   console.log(token);
+  //   return <Redirect to="/home" />;
+  // }
+  // }, []);

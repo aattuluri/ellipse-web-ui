@@ -8,9 +8,9 @@ function EventsTabPanel(props) {
     const { children, value, url, index, ...other } = props;
     const [expanded, setExpanded] = React.useState(false);
 
-    const handleExpandClick = () => {
-        setExpanded(!expanded);
-    };
+    // const handleExpandClick = () => {
+    //     setExpanded(!expanded);
+    // };
     return (
         <div
             role="tabpanel"

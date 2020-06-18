@@ -9,6 +9,10 @@ import firebaseApp from "../firebaseConfig";
 import firebase from "firebase/app";
 import { AuthContext } from "../Auth";
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Select from '@material-ui/core/Select';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormControl from '@material-ui/core/FormControl';
+import Grid from '@material-ui/core/Grid';
 
 const useStyles = makeStyles((theme) => ({
   paperRight: {
@@ -52,12 +56,12 @@ const UserDetails = ({ history }) => {
   const [imageType, setImageType] = useState("");
   const [imageAsFile, setImageAsFile] = useState('');
   const [loading, setLoading] = React.useState(false);
-  const { currentUser } = useContext(AuthContext);
-  if (!currentUser) {
-    console.log(currentUser);
-    return <Redirect to="/"/>;
-  }
-  const currentUserUid = firebaseApp.auth().currentUser.uid;
+  // const { currentUser } = useContext(AuthContext);
+  // if (!currentUser) {
+  //   console.log(currentUser);
+  //   return <Redirect to="/"/>;
+  // }
+  // const currentUserUid = firebaseApp.auth().currentUser.uid;
   function handleChange(event) {
     if (event.target.files[0]) {
       const image = event.target.files[0]
@@ -68,29 +72,32 @@ const UserDetails = ({ history }) => {
       setImageType(fileType.substr(fileType.indexOf('/') + 1));
     }
   }
+  // function sk
+
   function uploadData(event) {
     event.preventDefault();
-    setLoading(true);
-    const {bio} = event.target.elements;
-    try {
-      const db = firebase.firestore();
-      const storageRef = firebase.storage().ref();
-      const imageRef = storageRef.child(`ProfilePics/${currentUserUid}.${imageType}`);
-      imageRef.put(imageAsFile).then(snapShot => {
-        snapShot.ref.getDownloadURL().then(downloadURL => {
-          db.collection("UserDetails").doc(currentUserUid).update({
-            'ProfilrPicUrl': downloadURL,
-            'Bio': bio.value,
-          }).then(function(){
-            setLoading(false);
-            history.replace("/home");
-          })
-        });
-      })
-    }
-    catch (error) {
-      console.log(error);
-    }
+    history.replace("/home");
+    // setLoading(true);
+    // const {bio} = event.target.elements;
+    // try {
+    //   const db = firebase.firestore();
+    //   const storageRef = firebase.storage().ref();
+    //   const imageRef = storageRef.child(`ProfilePics/${currentUserUid}.${imageType}`);
+    //   imageRef.put(imageAsFile).then(snapShot => {
+    //     snapShot.ref.getDownloadURL().then(downloadURL => {
+    //       db.collection("UserDetails").doc(currentUserUid).update({
+    //         'ProfilrPicUrl': downloadURL,
+    //         'Bio': bio.value,
+    //       }).then(function(){
+    //         setLoading(false);
+    //         history.replace("/home");
+    //       })
+    //     });
+    //   })
+    // }
+    // catch (error) {
+    //   console.log(error);
+    // }
 
   }
 

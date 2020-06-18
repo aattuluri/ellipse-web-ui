@@ -34,19 +34,20 @@ import { Grid, Button } from '@material-ui/core';
 import ProfilePanel from './ProfileTabpanel';
 import ExploreIcon from '@material-ui/icons/Explore';
 import SettingsIcon from '@material-ui/icons/Settings';
-
+import CalenderPanel from './CalenderPanel';
+import HomeIcon from '@material-ui/icons/Home';
 
 
 
 const MainHome = function ({ history }) {
   const classes = useStyles();
-  const { currentUser } = useContext(AuthContext);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const [value, setValue] = React.useState(0);
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const [imageUrl, setImageurl] = useState("");
+  const [calenderValue, setCalenderValue] = useState(new Date());
   // const [loading, setLoading] = React.useState(false);
 
 
@@ -74,22 +75,35 @@ const MainHome = function ({ history }) {
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
-
-  if (!currentUser) {
-    console.log(currentUser);
+  // localStorage.removeItem('user');
+  // localStorage.removeItem('token');
+  console.log(localStorage.getItem('user'));
+  const currentUser = localStorage.getItem('user');
+  const token = localStorage.getItem('token');
+  if(!currentUser){
     return <Redirect to="/" />;
   }
-  const currentUserUid = firebaseApp.auth().currentUser.uid;
 
-  try {
-    const db = firebase.firestore();
-    db.collection("UserDetails").doc(currentUserUid).get().then(function (doc) {
-      console.log(doc.data()["ProfilrPicUrl"])
-      setImageurl(doc.data()["ProfilrPicUrl"]);
-    });
-  }
-  catch (error) {
-    console.log(error);
+
+  function handleSignout(event){
+    console.log(token);
+    fetch('http://localhost:4000/api/users/logout',{
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      method: 'POST'
+    }).then((result) => {
+      result.json().then((data) => {
+        if (data.message === "success") {
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          history.replace("/")
+        }
+      })
+    })
+    
+    
   }
 
   const menuId = 'primary-search-account-menu';
@@ -105,16 +119,11 @@ const MainHome = function ({ history }) {
     >
       <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-      <MenuItem onClick={() => firebase.auth().signOut()}>Log Out</MenuItem>
+      <MenuItem onClick={handleSignout}>Log Out</MenuItem>
     </Menu>
   );
 
-  // function a11yProps(index) {
-  //   return {
-  //     id: `scrollable-prevent-tab-${index}`,
-  //     'aria-controls': `scrollable-prevent-tabpanel-${index}`,
-  //   };
-  // }
+ 
 
 
   return (
@@ -148,10 +157,10 @@ const MainHome = function ({ history }) {
                 textColor="primary"
                 aria-label="icon tabs example"
               >
+              <Tab icon={<HomeIcon />} aria-label="phone" />
                 <Tab icon={<EventIcon />} aria-label="phone" />
                 <Tab icon={<TelegramIcon />} aria-label="favorite" />
                 <Tab icon={<ExploreIcon />} aria-label="person" />
-                {/* <Tab icon={<FavoriteIcon />} aria-label="favorite" /> */}
                 <Tab icon={<PersonPinIcon />} aria-label="person" />
               </Tabs>
             </Paper>
@@ -191,9 +200,10 @@ const MainHome = function ({ history }) {
               textColor="primary"
               aria-label="icon tabs example"
             >
-              <Tab icon={<EventIcon />} aria-label="phone" />
-              <Tab icon={<TelegramIcon />} aria-label="favorite" />
-              <Tab icon={<ExploreIcon />} aria-label="person" />
+            <Tab icon={<HomeIcon />} aria-label="home" />
+              <Tab icon={<EventIcon />} aria-label="event" />
+              <Tab icon={<TelegramIcon />} aria-label="messages" />
+              <Tab icon={<ExploreIcon />} aria-label="explore" />
               <Tab icon={<PersonPinIcon />} aria-label="person" />
             </Tabs>
           </Paper>
@@ -206,19 +216,16 @@ const MainHome = function ({ history }) {
         
           <Grid item xs={12} sm={12} md={4} lg={2} spacing={2} className={classes.flex_col_scroll}>
             <Typography value={value} index={0}>Filters</Typography>
+            {/* <Calendar onChange={setCalenderValue} value={calenderValue} ></Calendar> */}
 
           </Grid>
           <Grid item xs={12} sm={12} md={8} lg={8} spacing={2} className={classes.flex_col_scroll}>
             <TabPanel value={value} url={imageUrl} index={0}>
-              Item One
             </TabPanel>
-            <TabPanel value={value} index={1}>
-              Item One
-            </TabPanel>
+            <CalenderPanel value={value} index={1}>Item One</CalenderPanel>
             <TabPanel value={value} index={2}>
-              Item One
           </TabPanel>
-            <ProfilePanel value={value} index={3}></ProfilePanel>
+            <ProfilePanel value={value} index={4}></ProfilePanel>
           </Grid>
           <Grid item xs={12} sm={12} md={4} lg={2} spacing={5} className={classes.flex_col_scroll}>
           <Paper className={classes.rpaper}>
@@ -236,3 +243,26 @@ const MainHome = function ({ history }) {
 }
 
 export default withRouter(MainHome);
+
+
+
+  // const currentUserUid = firebaseApp.auth().currentUser.uid;
+
+  // try {
+  //   const db = firebase.firestore();
+  //   db.collection("UserDetails").doc(currentUserUid).get().then(function (doc) {
+  //     console.log(doc.data()["ProfilrPicUrl"])
+  //     setImageurl(doc.data()["ProfilrPicUrl"]);
+  //   });
+  // }
+  // catch (error) {
+    // console.log(error);
+  // }
+
+
+   // function a11yProps(index) {
+  //   return {
+  //     id: `scrollable-prevent-tab-${index}`,
+  //     'aria-controls': `scrollable-prevent-tabpanel-${index}`,
+  //   };
+  // }

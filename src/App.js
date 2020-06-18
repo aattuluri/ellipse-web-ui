@@ -7,6 +7,8 @@ import UserDetails from './Pages/UserDetails';
 import MainHome from './Pages/MainHome';
 import { AuthProvider } from "./Auth";
 import EventDetails from './Pages/EventDetails';
+import OTPVer from './Pages/otpverification';
+import UserInfo from './Pages/UserInfo';
 function App() {
   return (
     <AuthProvider>
@@ -16,9 +18,11 @@ function App() {
           <Route exact path="/signin" component={Login} />
           <Route exact path="/signup" component={SignUp} />
           <Route exact path="/forgotpassword" component={ForgotPassword} />
+          <Route exact path="/userinfo" component={UserInfo}></Route>
           <Route exact path="/userdetails" component={UserDetails}></Route>
           <Route exact path="/home" component={MainHome}></Route>
           <Route exact path="/event/:eventId" component={EventDetails} />
+          <Route exact path="/otpverification" component={OTPVer}></Route> 
         </div>
       </Router>
     </AuthProvider>

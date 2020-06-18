@@ -26,6 +26,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 //Firebase Imports 
 import firebase from "firebase/app";
 import firebaseApp from "../firebaseConfig";
+// import
 
 //function for alert
 function Alert(props) {
@@ -34,7 +35,9 @@ function Alert(props) {
 
 const Signup = ({ history }) => {
   const classes = useStyles();
-  const [token,setToken] = React.useState("");
+  const [token, setToken] = React.useState("");
+  const [sEmail, setSemail] = React.useState("");
+  const [currentUser, setCurrentUser] = React.useState(null);
   const [state, setState] = React.useState({
     open: false,
     vertical: 'top',
@@ -45,66 +48,96 @@ const Signup = ({ history }) => {
   const [loading, setLoading] = React.useState(false);
   const { vertical, horizontal, open, message, type } = state;
   const handleClose = async (event, reason) => {
-    fetch('https://ellipseserver1.herokuapp.com/api/users/​logout', {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-        },
-          method: 'POST',
-        }).then((result)=>{
-          // console.log(result.json())
-          result.json().then((data)=>{
-            if(data.message === "success"){
-              if (reason === 'clickaway') {
-                return;
-              }
-          
-              if (message === "Signedup successfully.Verify your email and login") {
-                history.replace("/")
-              }
-            }
-          })
-        })
+    console.log(token);
+
+    if (message === "Signedup successfully") {
+      localStorage.setItem('token', token);
+      localStorage.setItem('user', currentUser);
+      history.replace("/otpverification")
+    }
+
     setState({ ...state, open: false });
   };
   async function handleSignUp(event) {
     event.preventDefault();
     setLoading(true);
     const db = firebase.firestore();
-    // const token = "";
-    event.preventDefault();
-    const { fullName, email, gender, college, designation, password, terms } = event.target.elements;
+    // gender, college, designation, 
+    const { fullName, email, password, username, terms } = event.target.elements;
     try {
+      setSemail(email.value);
       if (terms.checked) {
         var data = new FormData
         const payload = {
           name: fullName.value,
           email: email.value,
-          password: password.value
+          password: password.value,
+          username: username.value
         };
-        // data.append(JSON.stringify(payload));
         data = JSON.stringify(payload);
         console.log(data);
-        fetch("​https://ellipseserver1.herokuapp.com/api/users/signup", {
+        fetch('http://localhost:4000/api/users/signup', {
           headers: {
             'Content-Type': 'application/json',
+            'Accept': 'application/json'
           },
           method: 'POST',
           body: data
-        }).then((result)=>{
-          console.log(result);
-          result.json().then((val)=>{
-            console.log(val);
-            setToken(val.token);
-            setState({
+        }).then((result) => {
+          if (result.status == 200) {
+            console.log(result);
+            result.json().then((val) => {
+              console.log(val);
+              console.log(val.token);
+              setToken(val.token);
+              console.log(val.user.name);
+              setCurrentUser(JSON.stringify(val.user));
+              var data2 = new FormData
+              const payload2 = {
+                email: email.value
+              };
+              data2 = JSON.stringify(payload2)
+              console.log(token);
+              const tok = val.token;
+              console.log(tok);
+              fetch('http://localhost:4000/api/users/sendverificationemail', {
+                headers: {
+                  'Authorization': `Bearer ${tok}`,
+                  'Content-Type': 'application/json'
+                },
+                method: 'POST',
+                body: data2
+              }).then((result) => {
+                // console.log(result.json());
+
+                result.json().then((res) => {
+                  console.log(res.message);
+                  if (res.message == "success") {
+                    console.log(res.message);
+                    setState({
                       open: true,
                       vertical: 'top',
                       horizontal: 'center',
-                      message: 'Signedup successfully.Verify your email and login',
+                      message: 'Signedup successfully',
                       type: "success"
                     });
-          })
-          // setToken(result.json().token);
+                  }
+                })
+
+              })
+
+            })
+          }
+          else if (result.status == 401) {
+            setLoading(false);
+            setState({
+              open: true,
+              vertical: 'top',
+              horizontal: 'center',
+              message: 'Email already registered',
+              type: "error"
+            });
+          }
         })
         // AP0033036342020LL
         // await firebaseApp
@@ -129,7 +162,7 @@ const Signup = ({ history }) => {
         //     })
         //   })
       }
-    
+
       else {
         setLoading(false);
         setState({
@@ -198,6 +231,16 @@ const Signup = ({ history }) => {
               />
             </Grid>
             <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                id="username"
+                label="User Name"
+                name="username"
+              />
+            </Grid>
+            {/* <Grid item xs={12}>
               <FormControl variant="outlined" fullWidth required>
                 <InputLabel htmlFor="outlined-age-native-simple">Gender</InputLabel>
                 <Select
@@ -215,8 +258,8 @@ const Signup = ({ history }) => {
                   <option value="Others">Others</option>
                 </Select>
               </FormControl>
-            </Grid>
-            <Grid item xs={12}>
+            </Grid> */}
+            {/* <Grid item xs={12}>
               <FormControl variant="outlined" fullWidth required>
                 <InputLabel htmlFor="outlined-age-native-simple">You are</InputLabel>
                 <Select
@@ -234,8 +277,8 @@ const Signup = ({ history }) => {
                   <option value="Club/Organisation">Club/Organisation</option>
                 </Select>
               </FormControl>
-            </Grid>
-            <Grid item xs={12}>
+            </Grid> */}
+            {/* <Grid item xs={12}>
               <FormControl variant="outlined" fullWidth required>
                 <InputLabel htmlFor="outlined-age-native-simple">Your College</InputLabel>
                 <Select
@@ -253,7 +296,7 @@ const Signup = ({ history }) => {
                   <option value="SRM University">SRM University</option>
                 </Select>
               </FormControl>
-            </Grid>
+            </Grid> */}
 
             <Grid item xs={12}>
               <TextField
@@ -267,6 +310,7 @@ const Signup = ({ history }) => {
                 autoComplete="current-password"
               />
             </Grid>
+
             <Grid item xs={12}>
               <FormControlLabel
                 control={<Checkbox color="primary" name="terms" />}
@@ -282,7 +326,7 @@ const Signup = ({ history }) => {
             disabled={loading}
             className={classes.submit}
           >
-           {loading ? <CircularProgress color="primary" size={24}/>: "Sign Up" }
+            {loading ? <CircularProgress color="primary" size={24} /> : "Sign Up"}
           </Button>
           <Grid container justify="center">
             <Grid item>
