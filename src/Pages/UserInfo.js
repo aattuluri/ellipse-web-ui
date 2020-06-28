@@ -7,10 +7,6 @@ import { withRouter } from 'react-router';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
@@ -22,10 +18,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import CircularProgress from '@material-ui/core/CircularProgress';
-//Firebase Imports 
-import firebase from "firebase/app";
-import firebaseApp from "../firebaseConfig";
-// import
+
 
 //function for alert
 function Alert(props) {
@@ -47,7 +40,7 @@ const UserInfo = ({ history }) => {
     const handleClose = async (event, reason) => {
 
         if (message === "successful") {
-            history.replace("/home")
+            history.replace("/userdetails")
         }
 
         setState({ ...state, open: false });
@@ -57,7 +50,7 @@ const UserInfo = ({ history }) => {
         setLoading(true);
         const token = localStorage.getItem('token');
         const { gender, designation, college } = event.target.elements; 
-        var data = new FormData
+        var data = new FormData()
         const payload = {
             gender: gender.value,
             designation: designation.value,
@@ -66,7 +59,7 @@ const UserInfo = ({ history }) => {
         data = JSON.stringify(payload);
 
         try {
-            fetch('http://localhost:4000/api/users/userdetails', {
+            fetch('https://ellipseserver1.herokuapp.com/api/users/userdetails', {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
@@ -75,9 +68,9 @@ const UserInfo = ({ history }) => {
                   method: 'POST',
                   body: data
             }).then(response =>{
-                if(response.status == 200){
+                if(response.status === 200){
                     response.json().then(val =>{
-                        fetch('http://localhost:4000/api/users/me', {
+                        fetch('https://ellipseserver1.herokuapp.com/api/users/me', {
                             headers: {
                                 'Authorization': `Bearer ${token}`,
                                 'Content-Type': 'application/json',

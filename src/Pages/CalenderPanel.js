@@ -1,49 +1,32 @@
-import React from 'react';
-import Button from '@material-ui/core/Button';
-import EventCard from '../Components/EventCard';
-import Backdrop from '@material-ui/core/Backdrop';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import Grid from '@material-ui/core/Grid';
 import { Typography } from '@material-ui/core';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-// import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import IconButton from '@material-ui/core/IconButton';
-import MailIcon from '@material-ui/icons/Mail';
-import ShareIcon from '@material-ui/icons/Share';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import { Calendar, momentLocalizer } from 'react-big-calendar'
+// import { Calendar, momentLocalizer } from 'react-big-calendar'
 import FullCalendar from '@fullcalendar/react';
-import dayGridPlugin from '@fullcalendar/daygrid';
+// import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
+import dayGridPlugin from '@fullcalendar/daygrid'
 import '../main.scss'
+import EventsDialog from '../Components/EventsDialog'
+// import moment from 'moment'
 
-import moment from 'moment'
-
-const localizer = momentLocalizer(moment)
+// const localizer = momentLocalizer(moment)
 
 
 
-function a11yProps(index) {
-    return {
-        id: `vertical-tab-${index}`,
-        'aria-controls': `vertical-tabpanel-${index}`,
-    };
-}
+// function a11yProps(index) {
+//     return {
+//         id: `vertical-tab-${index}`,
+//         'aria-controls': `vertical-tabpanel-${index}`,
+//     };
+// }
 
 const useStyles = makeStyles((theme) => ({
-    backdrop: {
-        zIndex: theme.zIndex.drawer + 1,
-        color: '#fff',
-    },
+    // backdrop: {
+    //     // zIndex: theme.zIndex.drawer + 1,
+    //     color: '#fff',
+    // },
     icons: {
         position: 'absolute',
         right: theme.spacing(1),
@@ -55,55 +38,87 @@ const useStyles = makeStyles((theme) => ({
 
 function CalenderPanel(props) {
     const { children, value, url, index, ...other } = props;
-    const [expanded, setExpanded] = React.useState(false);
-
+    const user = JSON.parse(localStorage.getItem('user'));
+    // const url = user.imageUrl;
+    const token = localStorage.getItem('token');
     const classes = useStyles();
+    const [allEvents, setAllEvents] = React.useState([]);
+    const [events,setEvents] = React.useState([]);
     const [open, setOpen] = React.useState(false);
+    const [selectedEvent,setSelectedEvent]= React.useState([]);
+    // var events
+    useEffect(() => {
+        fetch(' https://ellipseserver1.herokuapp.com/api/events', {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            method: 'GET'
+        }).then(response => {
+            response.json().then(value => {
+                value.forEach(y =>{
+                    console.log(y.start_time);
+                    setEvents(events =>
+                        [...events,{id:JSON.stringify(y), title: y.name, start: y.start_time,end: y.finish_time }]
+                    )
+                })
+                setAllEvents(value);
+            })
+        })
+        
+    }, [])
+
     const handleClose = () => {
         setOpen(false);
     };
-    const handleClick = function () {
+   
+
+    function handleEventClick(info){
+        console.log(JSON.parse(info.event.id).name);
+        setSelectedEvent(JSON.parse(info.event.id))
         setOpen(true);
     }
-
-    const events = [
-        {
-            id: 0,
-            title: 'All Day Event very long title',
-            allDay: true,
-            start: new Date(2015, 3, 0),
-            end: new Date(2015, 3, 1),
-        },
-        {
-            id: 1,
-            title: 'Long Event',
-            start: new Date(2015, 3, 7),
-            end: new Date(2015, 3, 10),
-        },
-
-        {
-            id: 2,
-            title: 'DTS STARTS',
-            start: new Date(2016, 2, 13, 0, 0, 0),
-            end: new Date(2016, 2, 20, 0, 0, 0),
-        },
-    ]
-
     return (
         <div
             role="tabpanel"
             // hidden={value !== index}
             {...other}>
             {value === index && (
-                <div style={{backgroundColor:"#1C1C1E"}}>
-                    <Typography>Calender View</Typography>
-                    
-                    <FullCalendar eventBackgroundColor="#e7305b" events={[
-                        { title: 'Dev Hack', date: '2020-06-17' },
-                        { title: 'event 2', date: '2020-06-18T16:00:00' }
-                    ]} defaultView='timeGridWeek' plugins={[timeGridPlugin]}  backgroundColor="black" ></FullCalendar>
+                <div>
+                <Grid container component="main">
 
+                    <Grid item xs={12} sm={12} md={4} lg={2} spacing={2}>
+                        <Typography index={0}>Filters</Typography>
+                        {/* <Calendar onChange={setCalenderValue} value={calenderValue} ></Calendar> */}
+
+                    </Grid>
+                    <Grid item xs={12} sm={12} md={8} lg={8} spacing={2} className={classes.flex_col_scroll}>
+                        <FullCalendar 
+                        eventBackgroundColor="#e7305b" 
+                        events={events} 
+                        eventClick={handleEventClick}
+                        defaultView='dayGridMonth' plugins={[dayGridPlugin]} backgroundColor="black" ></FullCalendar>
+
+                    </Grid>
+                    <Grid item xs={12} sm={12} md={4} lg={2} spacing={5}>
+                        {/* <Paper className={classes.rpaper}>
+                                <Button onClick={handlePostButtonClick} variant="contained" size="large" className={classes.postButton} >Post Event</Button>
+                            </Paper> */}
+
+                    </Grid>
+                </Grid>
+                <div>
+                <EventsDialog 
+                open={open} 
+                event={selectedEvent} 
+                handleClose={handleClose}
+                name={selectedEvent.name}></EventsDialog>
                 </div>
+                </div>
+                
+                
+
 
             )}
         </div>
@@ -111,3 +126,15 @@ function CalenderPanel(props) {
 }
 
 export default CalenderPanel;
+
+
+{/* <div style={{backgroundColor:"#1C1C1E"}}> 
+            
+            <Typography>Calender View</Typography>
+           
+           <FullCalendar eventBackgroundColor="#e7305b" events={[
+               { title: 'Dev Hack', date: '2020-06-17' },
+               { title: 'event 2', date: '2020-06-18T16:00:00' }
+           ]} defaultView='timeGridWeek' plugins={[timeGridPlugin]}  backgroundColor="black" ></FullCalendar>
+
+       </div> */}

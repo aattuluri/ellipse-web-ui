@@ -88,3 +88,32 @@ textarea{
   font-size: larger;
 } */ 
 
+html,
+body {
+  margin: 0;
+  height: 100%;
+}
+
+.root {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+}
+
+.flex-section {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.flex-col-scroll {
+  flex-grow: 1;
+  overflow: auto;
+  min-height: 100%;
+}
+
+.flex-no-shrink {
+  flex-shrink: 0;
+}

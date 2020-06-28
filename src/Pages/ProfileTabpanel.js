@@ -1,28 +1,30 @@
 import React from 'react';
-// import EventCard from '../Components/EventCard';
-// import { Typography } from '@material-ui/core';
 import ProfileCard from '../Components/MainProfileCard';
+import { Grid } from '@material-ui/core';
 
 
 function EventsTabPanel(props) {
     const { children, value, url, index, ...other } = props;
-    const [expanded, setExpanded] = React.useState(false);
-
-    // const handleExpandClick = () => {
-    //     setExpanded(!expanded);
-    // };
     return (
         <div
             role="tabpanel"
             // hidden={value !== index}
             {...other}>
-            {value === index && (
+            {/* {value === index && ( */}
                 <div>
-                {/* <Typography>Profile Page</Typography> */}
+                <Grid container component="main">
+                <Grid item xs={12} sm={12} md={3} lg={2} spacing={2}>
+
+                </Grid>
+                <Grid item xs={12} sm={12} md={3} lg={8} spacing={2}>
                 <ProfileCard></ProfileCard>
+                </Grid>
+                </Grid>
+                
+                
                 </div>
                 
-            )}
+            {/* )} */}
         </div>
     );
 }

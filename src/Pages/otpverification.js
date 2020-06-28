@@ -2,24 +2,17 @@ import React, { useEffect } from 'react';
 import Copyright from '../Components/copyright';
 import useStyles from '../Themes/SignupPageStyles';
 import { withRouter } from 'react-router';
-import axios from 'axios';
 
 //MaterialUI imports
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
-import Select from '@material-ui/core/Select';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormControl from '@material-ui/core/FormControl';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -32,7 +25,7 @@ function Alert(props) {
 
 const OTPver = ({ history }) => {
     const classes = useStyles();
-    const [token, setToken] = React.useState("");
+    // const [token, setToken] = React.useState("");
     const [state, setState] = React.useState({
         open: false,
         vertical: 'top',
@@ -43,53 +36,73 @@ const OTPver = ({ history }) => {
     const [loading, setLoading] = React.useState(false);
     const { vertical, horizontal, open, message, type } = state;
 
-    function handleClose(){
+    function handleClose() {
         console.log("message")
-        if(message == "verified"){
-            history.replace("/home")
+        if (message === "verified") {
+            history.replace("/userinfo")
         }
     }
 
-    function handleVerification(event){
+    function handleVerification(event) {
         event.preventDefault();
         setLoading(true);
-        const {otp} = event.target.elements;
-        try{
-            var data = new FormData
-        const payload = {
-          otp: otp.value
-        };
-        // data.append(JSON.stringify(payload));
-        data = JSON.stringify(payload);
-        const token = localStorage.getItem("token");
-        fetch('http://localhost:4000/api/users/verifyotp',{
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-              },
-              method: 'POST',
-              body: data
+        const { otp } = event.target.elements;
+        try {
+            var data = new FormData();
+            const payload = {
+                otp: otp.value
+            };
+            // data.append(JSON.stringify(payload));
+            data = JSON.stringify(payload);
+            const token = localStorage.getItem("token");
+            fetch('https://ellipseserver1.herokuapp.com/api/users/verifyotp', {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                method: 'POST',
+                body: data
 
-        }
-        ).then((result)=>{
-            result.json().then(val =>{
-                console.log(val.message);
-                if(val.message == "verified"){
-                    setLoading(false);
-                    setState({
-                        open: true,
-                        vertical: 'top',
-                        horizontal: 'center',
-                        message: "verified",
-                        type: 'success'
-                    })
-                    
-                }
+            }
+            ).then((result) => {
+                result.json().then(val => {
+                    console.log(val.message);
+                    if (val.message === "verified") {
+                        setLoading(false);
+                        setState({
+                            open: true,
+                            vertical: 'top',
+                            horizontal: 'center',
+                            message: "verified",
+                            type: 'success'
+                        })
+
+                    }
+                    else if (val.message === "Not verified") {
+                        setLoading(false);
+                        setState({
+                            open: true,
+                            vertical: 'top',
+                            horizontal: 'center',
+                            message: "incorrect otp",
+                            type: 'error'
+                        })
+                    }
+                    else {
+                        setLoading(false);
+                        setState({
+                            open: true,
+                            vertical: 'top',
+                            horizontal: 'center',
+                            message: "Something went wrong try again",
+                            type: 'error'
+                        })
+                    }
+                })
             })
-        })
         }
-        catch(error){
+        catch (error) {
             setLoading(false);
             setState({
                 open: true,
@@ -99,8 +112,8 @@ const OTPver = ({ history }) => {
                 type: 'error'
             })
         }
-        
-        
+
+
 
     }
 

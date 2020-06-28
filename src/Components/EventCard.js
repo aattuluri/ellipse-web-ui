@@ -1,20 +1,20 @@
 import React from 'react';
-import Box from '@material-ui/core/Box';
+// import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
-import clsx from 'clsx';
+// import clsx from 'clsx';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
-import CardMedia from '@material-ui/core/CardMedia';
+// import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
-import Avatar from '@material-ui/core/Avatar';
+// import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
-import { red } from '@material-ui/core/colors';
+// import { red } from '@material-ui/core/colors';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShareIcon from '@material-ui/icons/Share';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { makeStyles } from '@material-ui/core/styles';
-import PlayCircleFilledWhiteIcon from '@material-ui/icons/PlayCircleFilledWhite';
+// import PlayCircleFilledWhiteIcon from '@material-ui/icons/PlayCircleFilledWhite';
 import Button from '@material-ui/core/Button';
 import MailIcon from '@material-ui/icons/Mail';
 
@@ -48,14 +48,14 @@ function Eventcard(props) {
   const classes = useStyles();
   function handleMoreButtonClick(){
     console.log("button clicked");
-    props.click();
+    props.click(props.eventId);
   }
 
   return (
     <Card className={classes.root}>
       <CardHeader
         avatar={
-          <img height="160" width="150" src={props.url}></img>
+          <img alt="profile" height="160" width="150" src={props.url}></img>
         }
         action={
           <IconButton aria-label="settings">
@@ -64,7 +64,7 @@ function Eventcard(props) {
         }
         title={
           <Typography variant="h5" color="textPrimary" component="p">
-            DevHack
+            {props.name}
         </Typography>
         }
         subheader={
@@ -79,16 +79,16 @@ function Eventcard(props) {
           Details
         </Typography>
         <Typography variant="body2" color="textSecondary" component="p">
-          Online Hackathon
+          {props.eventMode} {props.eventType}
         </Typography>
         <Typography variant="body2" color="textSecondary" component="p">
-          Last Date for Registration: 22/09/2020 10:00 AM IST
+          Last Date for Registration: {props.regEndTime}
         </Typography>
         <Typography variant="body2" color="textSecondary" component="p">
-          Start Time: 22/09/2020 10:00 AM IST
+          Start Time: {props.startTime}
         </Typography>
         <Typography variant="body2" color="textSecondary" component="p">
-          End Time: 22/09/2020 10:00 AM IST
+          End Time: {props.endTime}
         </Typography>
       </CardContent>
       <CardActions disableSpacing>

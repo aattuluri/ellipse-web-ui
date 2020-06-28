@@ -212,6 +212,12 @@ const MainHome = function ({ history }) {
         </div>
       </AppBar>
       <div className={classes.paper}>
+      {/* <TabPanel value={value} url={imageUrl} index={0}>
+            </TabPanel>
+            <CalenderPanel value={value} index={1}>Item One</CalenderPanel>
+            <TabPanel value={value} index={2}>
+          </TabPanel>
+            <ProfilePanel value={value} index={3}></ProfilePanel> */}
         <Grid container component="main" className={classes.flex_section}>
         
           <Grid item xs={12} sm={12} md={4} lg={2} spacing={2} className={classes.flex_col_scroll}>
@@ -220,12 +226,13 @@ const MainHome = function ({ history }) {
 
           </Grid>
           <Grid item xs={12} sm={12} md={8} lg={8} spacing={2} className={classes.flex_col_scroll}>
-            <TabPanel value={value} url={imageUrl} index={0}>
+          <TabPanel value={value} url={imageUrl} index={0}>
             </TabPanel>
             <CalenderPanel value={value} index={1}>Item One</CalenderPanel>
             <TabPanel value={value} index={2}>
           </TabPanel>
             <ProfilePanel value={value} index={4}></ProfilePanel>
+            
           </Grid>
           <Grid item xs={12} sm={12} md={4} lg={2} spacing={5} className={classes.flex_col_scroll}>
           <Paper className={classes.rpaper}>

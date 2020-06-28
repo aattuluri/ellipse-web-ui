@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -14,9 +14,8 @@ import useStyles from '../Themes/SigninPageStyles'
 import AppleBadge from '../Components/Images/AppleBadge.png';
 import GoogleBadge from '../Components/Images/google-play-badge.png';
 import iPhone from '../Components/Images/iPhone 11 Pro Max@2x.png';
-import firebaseApp from "../firebaseConfig";
 import Copyright from "../Components/copyright";
-import { AuthContext } from "../Auth";
+// import { AuthContext } from "../Auth";
 import { withRouter, Redirect } from "react-router";
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
@@ -51,12 +50,18 @@ const Signin = ({ history }) => {
       localStorage.setItem('user', user);
 
       console.log(JSON.parse(user).collegeName);
-      if(JSON.parse(user).collegeName == null){
-        history.push('/userinfo');
+      if(JSON.parse(user).isVerified){
+        if(JSON.parse(user).collegeName == null){
+          history.push('/userinfo');
+        }
+        else{
+          history.push('/home');
+        }
       }
       else{
-        history.push('/home');
+        history.push('/otpverification')
       }
+      
     }
     setState({ ...state, open: false });
   };
@@ -66,20 +71,20 @@ const Signin = ({ history }) => {
     const { email, password } = event.target.elements;
     try {
       console.log("started")
-      var data = new FormData
+      var data = new FormData()
       const payload = {
         email: email.value,
         password: password.value
       };
       data = JSON.stringify(payload);
-      fetch('http://localhost:4000/api/users/login', {
+      fetch('https://ellipseserver1.herokuapp.com/api/users/login', {
         headers: {
           'Content-Type': 'application/json'
         },
         method: 'POST',
         body: data
       }).then((response) => {
-        if(response.status == 200){
+        if(response.status === 200){
           response.json().then((value) => {
             console.log(value);
             setToken(value.token);
@@ -121,7 +126,7 @@ const Signin = ({ history }) => {
       <Snackbar
         anchorOrigin={{ vertical, horizontal }}
         open={open}
-        autoHideDuration={2000}
+        autoHideDuration={200}
         onClose={handleClose}
         key={vertical + horizontal}
       >
@@ -137,7 +142,7 @@ const Signin = ({ history }) => {
           </Typography><br></br>
           <img src={iPhone} alt="iphone" height="500px" width="300px" align="center"></img><br></br>
           <div className={classes.paperimage}>
-            <Grid item xs={12} sm={12} md={12} elevation={12} square>
+            <Grid item xs={12} sm={12} md={12} elevation={12}>
 
               <img src={GoogleBadge} alt="playstore" height="100px" width="250px"></img><br></br>
             </Grid>

@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import Copyright from '../Components/copyright';
 import useStyles from '../Themes/SignupPageStyles';
 import { withRouter } from 'react-router';
-import axios from 'axios';
+// import axios from 'axios';
 
 //MaterialUI imports
 import Avatar from '@material-ui/core/Avatar';
@@ -17,16 +17,9 @@ import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
-import Select from '@material-ui/core/Select';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormControl from '@material-ui/core/FormControl';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import CircularProgress from '@material-ui/core/CircularProgress';
-//Firebase Imports 
-import firebase from "firebase/app";
-import firebaseApp from "../firebaseConfig";
-// import
 
 //function for alert
 function Alert(props) {
@@ -36,7 +29,6 @@ function Alert(props) {
 const Signup = ({ history }) => {
   const classes = useStyles();
   const [token, setToken] = React.useState("");
-  const [sEmail, setSemail] = React.useState("");
   const [currentUser, setCurrentUser] = React.useState(null);
   const [state, setState] = React.useState({
     open: false,
@@ -61,13 +53,10 @@ const Signup = ({ history }) => {
   async function handleSignUp(event) {
     event.preventDefault();
     setLoading(true);
-    const db = firebase.firestore();
-    // gender, college, designation, 
     const { fullName, email, password, username, terms } = event.target.elements;
     try {
-      setSemail(email.value);
       if (terms.checked) {
-        var data = new FormData
+        var data = new FormData()
         const payload = {
           name: fullName.value,
           email: email.value,
@@ -76,7 +65,7 @@ const Signup = ({ history }) => {
         };
         data = JSON.stringify(payload);
         console.log(data);
-        fetch('http://localhost:4000/api/users/signup', {
+        fetch('https://ellipseserver1.herokuapp.com/api/users/signup', {
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
@@ -84,7 +73,7 @@ const Signup = ({ history }) => {
           method: 'POST',
           body: data
         }).then((result) => {
-          if (result.status == 200) {
+          if (result.status === 200) {
             console.log(result);
             result.json().then((val) => {
               console.log(val);
@@ -92,7 +81,7 @@ const Signup = ({ history }) => {
               setToken(val.token);
               console.log(val.user.name);
               setCurrentUser(JSON.stringify(val.user));
-              var data2 = new FormData
+              var data2 = new FormData();
               const payload2 = {
                 email: email.value
               };
@@ -100,7 +89,7 @@ const Signup = ({ history }) => {
               console.log(token);
               const tok = val.token;
               console.log(tok);
-              fetch('http://localhost:4000/api/users/sendverificationemail', {
+              fetch('https://ellipseserver1.herokuapp.com/api/users/sendverificationemail', {
                 headers: {
                   'Authorization': `Bearer ${tok}`,
                   'Content-Type': 'application/json'
@@ -112,7 +101,7 @@ const Signup = ({ history }) => {
 
                 result.json().then((res) => {
                   console.log(res.message);
-                  if (res.message == "success") {
+                  if (res.message === "success") {
                     console.log(res.message);
                     setState({
                       open: true,
@@ -128,7 +117,7 @@ const Signup = ({ history }) => {
 
             })
           }
-          else if (result.status == 401) {
+          else if (result.status === 401) {
             setLoading(false);
             setState({
               open: true,
