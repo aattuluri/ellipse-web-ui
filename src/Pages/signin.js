@@ -35,28 +35,27 @@ const Signin = ({ history }) => {
     vertical: 'top',
     horizontal: 'center',
     message: 'success',
-    type: 'error'
+    type: 'error',
+    autoHide: 300
   });
   const [loading, setLoading] = React.useState(false);
-  const { vertical, horizontal, open, message, type } = state;
+  const { vertical, horizontal, open, message, type,autoHide } = state;
   const [user,setUser] = React.useState(null);
   const [token,setToken] = React.useState(null);
+  const [isUserVerified,setIsUserVerified] = React.useState(null);
   const handleClose = async (event, reason) => {
     if (reason === 'clickaway') {
       return;
     }
     if (message === "Signedin successfully") {
       localStorage.setItem('token', token);
-      localStorage.setItem('user', user);
+      // localStorage.setItem('user', user);
 
-      console.log(JSON.parse(user).collegeName);
-      if(JSON.parse(user).isVerified){
-        if(JSON.parse(user).collegeName == null){
-          history.push('/userinfo');
-        }
-        else{
+      // console.log(JSON.parse(user).collegeName);
+      if(isUserVerified){
+        
           history.push('/home');
-        }
+        
       }
       else{
         history.push('/otpverification')
@@ -70,14 +69,14 @@ const Signin = ({ history }) => {
     setLoading(true);
     const { email, password } = event.target.elements;
     try {
-      console.log("started")
       var data = new FormData()
       const payload = {
         email: email.value,
         password: password.value
       };
       data = JSON.stringify(payload);
-      fetch('https://ellipseserver1.herokuapp.com/api/users/login', {
+      console.log(data);
+      fetch('http://139.59.16.53:4000/api/users/login', {
         headers: {
           'Content-Type': 'application/json'
         },
@@ -86,9 +85,9 @@ const Signin = ({ history }) => {
       }).then((response) => {
         if(response.status === 200){
           response.json().then((value) => {
-            console.log(value);
             setToken(value.token);
-            setUser(JSON.stringify(value.user));
+            setIsUserVerified(value.isVerified);
+            // setUser(JSON.stringify(value.userDetails));
   
             setLoading(false);
             setState({
@@ -96,20 +95,32 @@ const Signin = ({ history }) => {
               vertical: 'top',
               horizontal: 'center',
               message: 'Signedin successfully',
-              type: "success"
+              type: "success",
+              autoHide: 200
             });
           })
         }
         else{
           setLoading(false);
-          setState({ open: true, vertical: 'top', horizontal: 'center', message: "invalid credentials", type: "error" })
+          setState({ 
+            open: true,
+            vertical: 'top', 
+            horizontal: 'center', 
+            message: "invalid credentials", 
+            type: "error",autoHide:6000 })
         }
         
       })
     } catch (error) {
 
       setLoading(false);
-      setState({ open: true, vertical: 'top', horizontal: 'center', message: error.message, type: "error" })
+      setState({ 
+        open: true, 
+        vertical: 'top', 
+        horizontal: 'center', 
+        message: error.message, 
+        type: "error",
+        autoHide:6000 })
     }
   }
   const currentUser = localStorage.getItem('user');
@@ -126,7 +137,7 @@ const Signin = ({ history }) => {
       <Snackbar
         anchorOrigin={{ vertical, horizontal }}
         open={open}
-        autoHideDuration={200}
+        autoHideDuration={autoHide}
         onClose={handleClose}
         key={vertical + horizontal}
       >

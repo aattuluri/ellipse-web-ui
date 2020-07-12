@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState} from "react";
 import { withRouter, Redirect } from "react-router";
 import Avatar from '@material-ui/core/Avatar';
 import { makeStyles } from '@material-ui/core/styles';
@@ -54,8 +54,8 @@ const useStyles = makeStyles((theme) => ({
 const UserDetails = ({ history }) => {
   const classes = useStyles();
   const [imageUrl, setImageurl] = useState("");
-  const [imageType, setImageType] = useState("");
-  const [imageAsFile, setImageAsFile] = useState('');
+  // const [imageType, setImageType] = useState("");
+  // const [imageAsFile, setImageAsFile] = useState('');
   const [loading, setLoading] = React.useState(false);
   const [image, setImage] = React.useState(null);
   // const { currentUser } = useContext(AuthContext);
@@ -88,11 +88,11 @@ const UserDetails = ({ history }) => {
   function handleChange(event) {
     if (event.target.files[0]) {
       setImage(event.target.files[0]);
-      setImageAsFile(imageFile => (image))
+      // setImageAsFile(imageFile => (image))
       const url = URL.createObjectURL(event.target.files[0]);
-      const fileType = event.target.files[0].type;
+      // const fileType = event.target.files[0].type;
       setImageurl(url)
-      setImageType(fileType.substr(fileType.indexOf('/') + 1));
+      // setImageType(fileType.substr(fileType.indexOf('/') + 1));
     }
 
   }

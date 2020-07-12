@@ -24,10 +24,10 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
   },
   title: {
-    display: 'none',
-    [theme.breakpoints.up('sm')]: {
-      display: 'block',
-    },
+    display: 'block',
+    // [theme.breakpoints.up('sm')]: {
+    //   display: 'block',
+    // },
   },
   search: {
     position: 'relative',
@@ -37,9 +37,9 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: fade(theme.palette.common.white, 0.25),
     },
     marginRight: theme.spacing(2),
-    marginLeft: 0,
-    width: 'auto',
-    [theme.breakpoints.up('sm')]: {
+    marginLeft: theme.spacing(3),
+    width: '230px',
+    [theme.breakpoints.up('md')]: {
       marginLeft: theme.spacing(3),
       width: 'auto',
     },

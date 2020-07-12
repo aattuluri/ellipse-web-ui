@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { withRouter, Redirect } from "react-router";
-import { Link } from 'react-router-dom';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import PersonPinIcon from '@material-ui/icons/PersonPin';
@@ -12,7 +11,7 @@ import IconButton from '@material-ui/core/IconButton';
 // import MenuIcon from '@material-ui/icons/Menu';
 import Typography from '@material-ui/core/Typography';
 // import Button from '@material-ui/core/Button';
-import InputBase from '@material-ui/core/InputBase';
+// import InputBase from '@material-ui/core/InputBase';
 import Badge from '@material-ui/core/Badge';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
@@ -35,6 +34,8 @@ import HomeIcon from '@material-ui/icons/Home';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
 import EventsDialog from '../Components/EventsDialog';
+import EventsContext from '../EventsContext';
+import AuthContext from '../AuthContext';
 
 
 
@@ -42,61 +43,61 @@ import EventsDialog from '../Components/EventsDialog';
 const NavigationBar = function ({ history }) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  // const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const [value, setValue] = React.useState(0);
-  const [allEvents, setAllEvents] = React.useState([]);
-  const [searchedEvent,setSearchedEvent]= React.useState([]);
-  
+  // const [allEvents, setAllEvents] = React.useState([]);
+  const [searchedEvent, setSearchedEvent] = React.useState([]);
+
   const isMenuOpen = Boolean(anchorEl);
   // const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-  const [calenderValue, setCalenderValue] = useState(new Date());
+  // const [calenderValue, setCalenderValue] = useState(new Date());
   // const [loading, setLoading] = React.useState(false);
-  const eventypes = ["Hackathon", "Coding Contest", "Webinar"];
+  // const eventypes = ["Hackathon", "Coding Contest", "Webinar"];
   const [open, setOpen] = React.useState(false);
-
-  useEffect(()=>{
+  const allEvents = React.useContext(EventsContext);
+  useEffect(() => {
     setValue(parseInt(localStorage.getItem('tabIndex')));
-    fetch('https://ellipseserver1.herokuapp.com/api/events', {
-        headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        },
-        method: 'GET'
-    }).then(response => {
-        response.json().then(value => {
-            console.log(value);
-            setAllEvents(value);
-            // setFinalEvents(value);
-        })
-    })
-  },[])
+    // fetch('https://ellipseserver1.herokuapp.com/api/events', {
+    //   headers: {
+    //     'Authorization': `Bearer ${token}`,
+    //     'Content-Type': 'application/json',
+    //     'Accept': 'application/json'
+    //   },
+    //   method: 'GET'
+    // }).then(response => {
+    //   response.json().then(value => {
+    //     console.log(value);
+    //     setAllEvents(value);
+    //     // setFinalEvents(value);
+    //   })
+    // })
+  }, [])
 
 
-  function handleMorebuttonClick(event) {
-    event.preventDefault();
-    // history.push("/event/1")
-  }
-  function handleSearchChange(event,value){
+  // function handleMorebuttonClick(event) {
+  //   event.preventDefault();
+  //   // history.push("/event/1")
+  // }
+  function handleSearchChange(event, value) {
     console.log(value);
-    if(value != null){
+    if (value != null) {
       setSearchedEvent(value);
-    setOpen(true);
+      setOpen(true);
     }
   }
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
-    console.log(typeof(newValue));
-    localStorage.setItem('tabIndex',newValue);
-    console.log(localStorage.getItem('tabIndex'));
+    // console.log(typeof (newValue));
+    localStorage.setItem('tabIndex', newValue);
+    // console.log(localStorage.getItem('tabIndex'));
   };
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
   const handleMobileMenuClose = () => {
-    setMobileMoreAnchorEl(null);
+    // setMobileMoreAnchorEl(null);
   };
 
   const handleMenuClose = () => {
@@ -109,19 +110,21 @@ const NavigationBar = function ({ history }) {
   // };
   // localStorage.removeItem('user');
   // localStorage.removeItem('token');
-  console.log(localStorage.getItem('user'));
-  const currentUser = localStorage.getItem('user');
+  // console.log(localStorage.getItem('user'));
+  // const currentUser = localStorage.getItem('user');
+  const currentUser = React.useContext(AuthContext);
   const token = localStorage.getItem('token');
-  if(!currentUser){
+  console.log(currentUser);
+  if (!currentUser) {
     return <Redirect to="/" />;
   }
 
 
 
-  function handleSignout(event){
+  function handleSignout(event) {
     console.log(token);
-    
-    fetch('https://ellipseserver1.herokuapp.com/api/users/logout',{
+
+    fetch('http://139.59.16.53:4000/api/users/logout', {
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
@@ -137,8 +140,8 @@ const NavigationBar = function ({ history }) {
         }
       })
     })
-    
-    
+
+
   }
 
   const menuId = 'primary-search-account-menu';
@@ -158,35 +161,38 @@ const NavigationBar = function ({ history }) {
     </Menu>
   );
 
-  function handleeventClick(){
-      history.push("/events")
-      // localStorage.setItem('tabIndex',1);
+  function handleeventClick(event) {
+    event.preventDefault();
+    history.push("/events")
+    // localStorage.setItem('tabIndex',1);
   }
-  function handleHomeClick(){
-      history.push("/home")
-      // localStorage.setItem('tabIndex',2);
+  function handleHomeClick() {
+    history.push("/home")
+    // localStorage.setItem('tabIndex',2);
   }
-  function handleProfileClick(){
+  function handleProfileClick() {
     history.push("/profile")
   }
-
+  function handleChatClick(){
+    history.push('/chat')
+  }
   const handleClose = () => {
     setOpen(false);
-};
+  };
 
   return (
     <div className={classes.grow}>
-    <React.Fragment>
-      <AppBar position="sticky" color="secondary">
-        <Toolbar>
-          <Typography className={classes.title} variant="h5" noWrap>
-            Ellipse
+      <React.Fragment>
+        <AppBar position="sticky" color="secondary">
+          <Toolbar>
+            <Typography className={classes.title} variant="h5" noWrap>
+              Ellipse
           </Typography>
-          <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <SearchIcon />
-            </div>
-            <Autocomplete
+            <div className={classes.search}>
+              <div className={classes.searchIcon}>
+                <SearchIcon />
+              </div>
+              <Autocomplete
                 freeSolo
                 id="combo-box-demo"
                 placeholder="search.."
@@ -194,11 +200,53 @@ const NavigationBar = function ({ history }) {
                 getOptionLabel={(option) => option.name}
                 onChange={handleSearchChange}
                 renderInput={(params) => <TextField {...params} placeholder="search.."
-                 className={classes.inputInput}  /> }
+                  className={classes.inputInput} />}
               />
-          </div>
-          <div className={classes.tabs}>
-            <Paper square className={classes.root}>
+            </div>
+            <div className={classes.tabs}>
+              <Paper square className={classes.root}>
+                <Tabs
+                  value={value}
+                  onChange={handleChange}
+                  variant="fullWidth"
+                  indicatorColor="primary"
+                  textColor="primary"
+                  aria-label="icon tabs example"
+                >
+                  <Tab onClick={handleHomeClick} icon={<HomeIcon />} aria-label="phone" />
+                  <Tab onClick={handleeventClick} icon={<EventIcon />} aria-label="phone" />
+                  <Tab onClick={handleChatClick} icon={<TelegramIcon />} aria-label="favorite" />
+                  <Tab icon={<ExploreIcon />} aria-label="person" />
+                  <Tab onClick={handleProfileClick} icon={<PersonPinIcon />} aria-label="person" />
+                </Tabs>
+              </Paper>
+            </div>
+
+            <div className={classes.grow} />
+            <div className={classes.sectionDesktop}>
+              <IconButton aria-label="show 17 new notifications" color="inherit">
+                <Badge badgeContent={17} color="secondary">
+                  <NotificationsIcon />
+                </Badge>
+              </IconButton>
+              <IconButton
+                edge="end"
+                aria-label="account of current user"
+                aria-controls={menuId}
+                aria-haspopup="true"
+                onClick={handleProfileMenuOpen}
+                color="inherit"
+              >
+                <SettingsIcon></SettingsIcon>
+              </IconButton>
+            </div>
+          </Toolbar>
+        </AppBar>
+        {renderMenu}
+        <AppBar position="sticky" color="secondary">
+          <div className={classes.mobiletab}>
+
+            <Paper square className={classes.root} position="sticky">
               <Tabs
                 value={value}
                 onChange={handleChange}
@@ -207,61 +255,30 @@ const NavigationBar = function ({ history }) {
                 textColor="primary"
                 aria-label="icon tabs example"
               >
-              <Tab onClick={handleHomeClick} icon={<HomeIcon />} aria-label="phone" />
-                <Tab onClick={handleeventClick} icon={<EventIcon />} aria-label="phone" />
-                <Tab icon={<TelegramIcon />}  aria-label="favorite" />
-                <Tab icon={<ExploreIcon />} aria-label="person" />
-                <Tab onClick={handleProfileClick}  icon={<PersonPinIcon />} aria-label="person" />
+                <Tab onClick={handleHomeClick} icon={<HomeIcon />} aria-label="home" />
+                <Tab onClick={handleeventClick} icon={<EventIcon />} aria-label="event" />
+                <Tab onClick={handleChatClick} icon={<TelegramIcon />} aria-label="messages" />
+                <Tab icon={<ExploreIcon />} aria-label="explore" />
+                <Tab onClick={handleProfileClick} icon={<PersonPinIcon />} aria-label="person" />
               </Tabs>
             </Paper>
           </div>
-
-          <div className={classes.grow} />
-          <div className={classes.sectionDesktop}>
-            <IconButton aria-label="show 17 new notifications" color="inherit">
-              <Badge badgeContent={17} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
-            <IconButton
-              edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
-              color="inherit"
-            >
-              <SettingsIcon></SettingsIcon>
-            </IconButton>
-          </div>
-        </Toolbar>
-      </AppBar>
-      {renderMenu}
-      <AppBar position="sticky" color="secondary">
-        <div className={classes.mobiletab}>
-
-          <Paper square className={classes.root} position="sticky">
-            <Tabs
-              value={value}
-              onChange={handleChange}
-              variant="fullWidth"
-              indicatorColor="primary"
-              textColor="primary"
-              aria-label="icon tabs example"
-            >
-            <Tab onClick={handleHomeClick}  icon={<HomeIcon />} aria-label="home" />
-              <Tab onClick={handleeventClick} icon={<EventIcon />} aria-label="event" />
-              <Tab icon={<TelegramIcon />} aria-label="messages" />
-              <Tab icon={<ExploreIcon />} aria-label="explore" />
-              <Tab icon={<PersonPinIcon />} aria-label="person" />
-            </Tabs>
-          </Paper>
+        </AppBar>
+        <div>
+          <EventsDialog
+            open={open}
+            event={searchedEvent}
+            name={searchedEvent.name}
+            startTime={searchedEvent.start_time}
+            endTime={searchedEvent.finish_time}
+            regEndTime={searchedEvent.registrationEndTime}
+            type={searchedEvent.eventType}
+            tags={searchedEvent.tags}
+            mode={searchedEvent.eventMode}
+            feeType={searchedEvent.feesType}
+            // url={user.imageUrl}
+            handleClose={handleClose}></EventsDialog>
         </div>
-      </AppBar>
-     
-      <div>
-        <EventsDialog open={open} event={searchedEvent} handleClose={handleClose}></EventsDialog>
-      </div>
       </React.Fragment>
     </div>
   )
@@ -269,50 +286,3 @@ const NavigationBar = function ({ history }) {
 
 export default withRouter(NavigationBar);
 
- {/* <div className={classes.paper}>
-        <Grid container component="main" className={classes.flex_section}>
-        
-          <Grid item xs={12} sm={12} md={4} lg={2} spacing={2} className={classes.flex_col_scroll}>
-            <Typography value={value} index={0}>Filters</Typography> */}
-            {/* <Calendar onChange={setCalenderValue} value={calenderValue} ></Calendar> */}
-
-          {/* </Grid>
-          <Grid item xs={12} sm={12} md={8} lg={8} spacing={2} className={classes.flex_col_scroll}>
-            <TabPanel value={value} url={imageUrl} index={0}>
-            </TabPanel>
-            <CalenderPanel value={value} index={1}>Item One</CalenderPanel>
-            <TabPanel value={value} index={2}>
-          </TabPanel>
-            <ProfilePanel value={value} index={4}></ProfilePanel>
-          </Grid>
-          <Grid item xs={12} sm={12} md={4} lg={2} spacing={5} className={classes.flex_col_scroll}>
-          <Paper className={classes.rpaper}>
-            <Button variant="contained" size="large" className={classes.postButton} >Post Event</Button>
-            </Paper>
-
-          </Grid>
-        </Grid> */}
-
-
-      {/* </div> */}
-
-  // const currentUserUid = firebaseApp.auth().currentUser.uid;
-
-  // try {
-  //   const db = firebase.firestore();
-  //   db.collection("UserDetails").doc(currentUserUid).get().then(function (doc) {
-  //     console.log(doc.data()["ProfilrPicUrl"])
-  //     setImageurl(doc.data()["ProfilrPicUrl"]);
-  //   });
-  // }
-  // catch (error) {
-    // console.log(error);
-  // }
-
-
-   // function a11yProps(index) {
-  //   return {
-  //     id: `scrollable-prevent-tab-${index}`,
-  //     'aria-controls': `scrollable-prevent-tabpanel-${index}`,
-  //   };
-  // }

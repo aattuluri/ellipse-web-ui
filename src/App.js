@@ -4,20 +4,23 @@ import Login from './Pages/signin';
 import SignUp from './Pages/signup';
 import ForgotPassword from './Pages/ForgotPassword';
 import UserDetails from './Pages/UserDetails';
-import MainHome from './Pages/MainHome';
 import { AuthProvider } from "./Auth";
-import EventDetails from './Pages/EventDetails';
 import OTPVer from './Pages/otpverification';
 import UserInfo from './Pages/UserInfo';
 import Layout from './Pages/Layout';
 import CalenderPanel from './Pages/CalenderPanel';
 import EventsTabPanel from './Pages/EventsTabpanel';
-import EventPost from './Pages/EventPost';
 import ProfileTabPanel from './Pages/ProfileTabpanel';
-import EventPanel from './Pages/EventsPanel';
-// import './'
-// import { Switch } from '@material-ui/core';
+import EventPostForm from './Pages/EventPostForm';
+import ChatPanel from './Pages/ChatPanel';
+import EventDetails from './Pages/EventDetails';
+
 function App() {
+
+  
+
+
+
   return (
     <AuthProvider>
       <Router>
@@ -34,10 +37,12 @@ function App() {
             <Layout>
             <Route path="/home" component={EventsTabPanel}></Route>
               <Route exact path="/events" component={CalenderPanel}></Route>
-              <Route exact path="/post" component={EventPost}></Route>
+              <Route exact path="/post" component={EventPostForm}></Route>
               <Route exact path="/profile" component={ProfileTabPanel}></Route>
+              <Route exact path="/chat" component={ChatPanel}></Route>
+              <Route exact path="/event/:eventId" component={EventDetails} />
               {/* <Route exact path="/eventdetails" component={EventDetails} /> */}
-              {/* <Route exact path="/event/:eventId" component={EventDetails} /> */}
+              
             </Layout>
           </Switch>
           

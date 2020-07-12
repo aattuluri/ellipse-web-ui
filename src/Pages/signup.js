@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import Copyright from '../Components/copyright';
 import useStyles from '../Themes/SignupPageStyles';
 import { withRouter } from 'react-router';
@@ -65,7 +65,7 @@ const Signup = ({ history }) => {
         };
         data = JSON.stringify(payload);
         console.log(data);
-        fetch('https://ellipseserver1.herokuapp.com/api/users/signup', {
+        fetch('http://139.59.16.53:4000/api/users/signup', {
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
@@ -79,17 +79,17 @@ const Signup = ({ history }) => {
               console.log(val);
               console.log(val.token);
               setToken(val.token);
-              console.log(val.user.name);
-              setCurrentUser(JSON.stringify(val.user));
+              // console.log(val.user.name);
+              // setCurrentUser(JSON.stringify(val.user));
               var data2 = new FormData();
               const payload2 = {
-                email: email.value
+                email: val.useremail
               };
               data2 = JSON.stringify(payload2)
               console.log(token);
               const tok = val.token;
               console.log(tok);
-              fetch('https://ellipseserver1.herokuapp.com/api/users/sendverificationemail', {
+              fetch('http://139.59.16.53:4000/api/users/sendverificationemail', {
                 headers: {
                   'Authorization': `Bearer ${tok}`,
                   'Content-Type': 'application/json'

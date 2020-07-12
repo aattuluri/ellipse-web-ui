@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import Copyright from '../Components/copyright';
 import useStyles from '../Themes/SignupPageStyles';
 import { withRouter } from 'react-router';
@@ -55,7 +55,7 @@ const OTPver = ({ history }) => {
             // data.append(JSON.stringify(payload));
             data = JSON.stringify(payload);
             const token = localStorage.getItem("token");
-            fetch('https://ellipseserver1.herokuapp.com/api/users/verifyotp', {
+            fetch('http://139.59.16.53:4000/api/users/verifyotp', {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',

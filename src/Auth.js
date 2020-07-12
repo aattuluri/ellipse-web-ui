@@ -11,7 +11,7 @@ export const AuthProvider = ({ children }) => {
     //   setCurrentUser(user);
     //   setPending(false)
     // }
-    console.log(localStorage.getItem('user'))
+    // console.log(localStorage.getItem('user'))
     setCurrentUser(localStorage.getItem('user'));
     setPending(false);
 

@@ -17,6 +17,17 @@ import { makeStyles } from '@material-ui/core/styles';
 // import PlayCircleFilledWhiteIcon from '@material-ui/icons/PlayCircleFilledWhite';
 import Button from '@material-ui/core/Button';
 import MailIcon from '@material-ui/icons/Mail';
+// import Timeline from '@material-ui/lab/Timeline';
+// import TimelineItem from '@material-ui/lab/TimelineItem';
+// import TimelineSeparator from '@material-ui/lab/TimelineSeparator';
+// import TimelineConnector from '@material-ui/lab/TimelineConnector';
+// import TimelineContent from '@material-ui/lab/TimelineContent';
+// import TimelineDot from '@material-ui/lab/TimelineDot';
+import Chip from '@material-ui/core/Chip';
+// import PublicIcon from '@material-ui/icons/Public';
+// import TimelineOppositeContent from '@material-ui/lab/TimelineOppositeContent';
+import { Link } from 'react-router-dom';
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
   avatar: {
     backgroundColor: theme.palette.primary.main,
   },
-  buttonDiv:{
+  buttonDiv: {
     marginLeft: 'auto',
   },
   button: {
@@ -46,16 +57,28 @@ const useStyles = makeStyles((theme) => ({
 
 function Eventcard(props) {
   const classes = useStyles();
-  function handleMoreButtonClick(){
+  function handleMoreButtonClick() {
     console.log("button clicked");
     props.click(props.eventId);
+  }
+  const startDate = new Date(props.startTime);
+  const endDate = new Date(props.endTime);
+  const regEndDate = new Date(props.regEndTime);
+  const event = props.event;
+  // console.log(typeof (props.startTime));
+  function handleImageClick(){
+    console.log("hello")
+    props.imageDialog();
+  }
+  function handleRegClick(){
+    props.handleReg(props.eventId);
   }
 
   return (
     <Card className={classes.root}>
       <CardHeader
         avatar={
-          <img alt="profile" height="160" width="150" src={props.url}></img>
+          <img onClick={handleImageClick} alt="profile" height="160" width="150" src={props.url}></img>
         }
         action={
           <IconButton aria-label="settings">
@@ -65,7 +88,7 @@ function Eventcard(props) {
         title={
           <Typography variant="h5" color="textPrimary" component="p">
             {props.name}
-        </Typography>
+          </Typography>
         }
         subheader={
           <Typography variant="body1" color="textSecondary" component="p">
@@ -75,21 +98,61 @@ function Eventcard(props) {
         }
       />
       <CardContent>
-        <Typography variant="body2" color="textPrimary" component="p">
+        {/* <Typography variant="body2" color="textPrimary" component="p">
           Details
-        </Typography>
-        <Typography variant="body2" color="textSecondary" component="p">
-          {props.eventMode} {props.eventType}
-        </Typography>
-        <Typography variant="body2" color="textSecondary" component="p">
-          Last Date for Registration: {props.regEndTime}
-        </Typography>
-        <Typography variant="body2" color="textSecondary" component="p">
-          Start Time: {props.startTime}
-        </Typography>
-        <Typography variant="body2" color="textSecondary" component="p">
-          End Time: {props.endTime}
-        </Typography>
+        </Typography> */}
+        <Chip variant="outlined" color="textSecondary" size="small" label={props.eventMode}></Chip>
+        <Chip style={{marginLeft:"4px"}} variant="outlined" color="textSecondary" size="small" label={props.feeType}></Chip>
+        <Chip style={{marginLeft:"4px"}} variant="outlined" color="textSecondary" size="small" label={props.eventType}></Chip>
+        <Chip style={{marginLeft:"4px"}} variant="outlined" color="textSecondary" size="small" label={"Reg ends at "+regEndDate.toDateString()}></Chip>
+        <Chip style={{marginLeft:"4px"}} variant="outlined" color="textSecondary" size="small" label={"Starts at "+startDate.toDateString()}></Chip>
+        <Chip style={{marginLeft:"4px"}} variant="outlined" color="textSecondary" size="small" label={"Ends at  "+endDate.toDateString()}></Chip>
+        {/* <Grid container component="main">
+          <Grid item xs={6} sm={6} md={6}>
+            <Typography variant="h6" component="p">
+            <PublicIcon></PublicIcon> {props.eventMode} 
+            </Typography>
+            <Typography variant="h6" component="p">
+            <PublicIcon></PublicIcon> {props.eventType} 
+            </Typography>
+            <Typography variant="body2" color="textSecondary" component="p">
+              Last Date for Registration:
+            </Typography>
+            <Typography variant="h5" color="textPrimary" component="p">
+              {startDate.toDateString()}
+            </Typography>
+
+          </Grid>
+          <Grid item xs={6} sm={6} md={6}>
+            <Timeline align='alternate'>
+            <TimelineItem>
+          <TimelineOppositeContent>
+            <Typography color="textSecondary">{startDate.toDateString()}</Typography>
+          </TimelineOppositeContent>
+          <TimelineSeparator>
+            <TimelineDot />
+            <TimelineConnector />
+          </TimelineSeparator>
+          <TimelineContent>
+            <Typography>Starts</Typography>
+          </TimelineContent>
+        </TimelineItem>
+        <TimelineItem>
+          <TimelineOppositeContent>
+            <Typography color="textSecondary">{startDate.toDateString()}</Typography>
+          </TimelineOppositeContent>
+          <TimelineSeparator>
+            <TimelineDot />
+            <TimelineConnector />
+          </TimelineSeparator>
+          <TimelineContent>
+            <Typography>Ends</Typography>
+          </TimelineContent>
+        </TimelineItem>
+            </Timeline>
+          </Grid>
+        </Grid> */}
+
       </CardContent>
       <CardActions disableSpacing>
         <IconButton aria-label="add to favorites">
@@ -102,14 +165,15 @@ function Eventcard(props) {
           <ShareIcon />
         </IconButton>
         <div className={classes.buttonDiv}>
-        <Button size="small" color="primary" variant="outlined" className={classes.button} onClick={handleMoreButtonClick}>
-          Learn More
+          <Button size="small" color="primary" variant="outlined" className={classes.button} onClick={handleMoreButtonClick}>
+            Learn More
         </Button>
-        <Button size="small" color="primary" variant="contained" className={classes.button}>
+          <Button size="small" color="primary" variant="contained" className={classes.button} onClick={handleRegClick}>
+          {/* <Link to={"/event/"+event._id} target="blank">Register</Link> */}
           Register
         </Button>
         </div>
-        
+
       </CardActions>
     </Card>);
 }

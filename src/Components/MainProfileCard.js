@@ -19,9 +19,14 @@ import { makeStyles } from '@material-ui/core/styles';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Paper from '@material-ui/core/Paper';
-import TabPanel from '../Pages/EventsTabpanel';
+// import TabPanel from '../Pages/EventsTabpanel';
 import Grid from '@material-ui/core/Grid';
 import CssBaseline from '@material-ui/core/CssBaseline';
+// import ProfileEventCard from '../Components/ProfileEventCard';
+import ProfileEventsTabPanel from './ProfileRegEventsTabPanel';
+import ProfilePostedEventsTabPanel from './ProfilePostedEventsTabPanel';
+import AuthContext from '../AuthContext';
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -63,15 +68,18 @@ const useStyles = makeStyles((theme) => ({
 function Eventcard(props) {
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
-    const user = JSON.parse(localStorage.getItem('user'));
+    // const user = JSON.parse(localStorage.getItem('user'));
+    const user = React.useContext(AuthContext);
     // const url = user.imageUrl;
-    const token = localStorage.getItem('token');
+    // const token = localStorage.getItem('token');
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
 
+    // function handleEditButton(){
 
+    // }
 
 
 
@@ -80,7 +88,7 @@ function Eventcard(props) {
         <Grid container component="main">
         <CssBaseline />
         <Grid item xs={false} sm={false} md={2}>
-        <Typography>Hello</Typography>
+        {/* <Typography>Hello</Typography> */}
         </Grid>
             <Grid item xs={12} sm={12} md={8}>
             <CardHeader
@@ -88,7 +96,7 @@ function Eventcard(props) {
                     <Avatar className={classes.large} sizes="100" alt="" src={user.imageUrl}></Avatar>
                 }
                 action={
-                    <IconButton aria-label="settings">
+                    <IconButton onClick={props.handleEditButton} aria-label="settings">
                         {/* <MoreVertIcon /> */}
                         <Typography>Edit Profile</Typography>
                     </IconButton>
@@ -100,7 +108,7 @@ function Eventcard(props) {
             ></CardHeader>
             </Grid>
             <Grid item xs = {false} sm={false} md={2}>
-            <Typography>Hello</Typography>
+            {/* <Typography>Hello</Typography> */}
             </Grid>
         </Grid>
             
@@ -113,13 +121,19 @@ function Eventcard(props) {
                         textColor="primary"
                         centered
                     >
+                        
                         <Tab label="About" />
-                        <Tab label="Your Events" />
-                        <Tab label="Your Posts" />
-                        <Tab label="Your Projects" />
+                        <Tab label="Registered Events" />
+                        <Tab label="Posted Events" />
+                        
                     </Tabs>
                 </Paper>
                 <div>
+                <ProfileEventsTabPanel url={user.imageUrl} value={value} index={1}></ProfileEventsTabPanel>
+                <ProfilePostedEventsTabPanel url={user.imageUrl} value={value} index={2}></ProfilePostedEventsTabPanel>
+                {/* <ProfileEventsTabPanel url={user.imageUrl} value={value} index={2}></ProfileEventsTabPanel> */}
+                {/* <ProfileEventCard></ProfileEventCard> */}
+                {/* <ProfileEventCard></ProfileEventCard> */}
                     {/* <TabPanel value={value} index={0}>
                         Item One
                     </TabPanel>

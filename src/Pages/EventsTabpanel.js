@@ -1,95 +1,34 @@
 import React, { useEffect } from 'react';
 import Button from '@material-ui/core/Button';
 import EventCard from '../Components/EventCard';
-// import Backdrop from '@material-ui/core/Backdrop';
-// import CircularProgress from '@material-ui/core/CircularProgress';
 import { makeStyles } from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';
-// import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Grid from '@material-ui/core/Grid';
-import { Typography, TextField } from '@material-ui/core';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-// import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import IconButton from '@material-ui/core/IconButton';
-import MailIcon from '@material-ui/icons/Mail';
-import ShareIcon from '@material-ui/icons/Share';
+import { Typography } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
-import EventPost from './EventPost';
 import { withRouter } from 'react-router';
 import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import Divider from '@material-ui/core/Divider';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import Avatar from '@material-ui/core/Avatar';
-import GridList from '@material-ui/core/GridList';
-import GridListTile from '@material-ui/core/GridListTile';
-import DialogActions from '@material-ui/core/DialogActions';
-// import EventDetailsTab from './EventDetails';
-import AppBar from '@material-ui/core/AppBar';
-import Checkbox from '@material-ui/core/Checkbox';
-// import IconButton from '@material-ui/core/IconButton';
-import CommentIcon from '@material-ui/icons/Comment';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import DateFnsUtils from '@date-io/date-fns';
-import { MuiPickersUtilsProvider, DatePicker, } from '@material-ui/pickers';
-import Select from '@material-ui/core/Select';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormControl from '@material-ui/core/FormControl';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-// import FormControl from '@material-ui/core/FormControl';
-import FormLabel from '@material-ui/core/FormLabel';
+import EventsDialog from '../Components/EventsDialog';
+import Fab from '@material-ui/core/Fab';
+import AddIcon from '@material-ui/icons/Add';
+import SortLeftPanel from '../Components/SortLeftPanel';
+import MobileSortPanel from '../Components/MobileSortPanel';
+import ImageDialog from '../Components/ImageDialog';
+import EventsContext from '../EventsContext';
+import Skeleton from '@material-ui/lab/Skeleton';
+import { Link } from 'react-router-dom';
+import AuthContext from '../AuthContext';
 
-
-
-function TabPanel(props) {
-    const { children, value, index, ...other } = props;
-
-    return (
-        <div
-            role="tabpanel"
-            hidden={value !== index}
-            id={`scrollable-auto-tabpanel-${index}`}
-            aria-labelledby={`scrollable-auto-tab-${index}`}
-            {...other}
-        >
-            {value === index && (
-                <Box p={3}>
-                    <Typography>{children}</Typography>
-                </Box>
-            )}
-        </div>
-    );
-}
-
-//   TabPanel.propTypes = {
-//     children: PropTypes.node,
-//     index: PropTypes.any.isRequired,
-//     value: PropTypes.any.isRequired,
-//   };
-
-function a11yProps(index) {
-    return {
-        id: `scrollable-auto-tab-${index}`,
-        'aria-controls': `scrollable-auto-tabpanel-${index}`,
-    };
-}
 
 // function a11yProps(index) {
 //     return {
-//         id: `vertical-tab-${index}`,
-//         'aria-controls': `vertical-tabpanel-${index}`,
+//         id: `scrollable-auto-tab-${index}`,
+//         'aria-controls': `scrollable-auto-tabpanel-${index}`,
 //     };
 // }
+
 
 const useStyles = makeStyles((theme) => ({
     backdrop: {
@@ -115,25 +54,36 @@ const useStyles = makeStyles((theme) => ({
         // borderRadius: theme.spacing(50)
     },
     postButton: {
-        borderRadius: theme.spacing(50)
+        borderRadius: theme.spacing(50),
+        [theme.breakpoints.down('md')]: {
+            display: 'none',
+        },
     },
     root: {
         background: theme.palette.primary.light,
         position: 'sticky',
         top: theme.spacing(10),
         marginLeft: theme.spacing(1),
-        bottom: 0,
-        zIndex: 3,
+
+        [theme.breakpoints.down('sm')]: {
+            display: 'none',
+        },
+        // bottom: 0,
+        // zIndex: 3,
     },
     root2: {
-        marginTop: theme.spacing(5),
+        marginTop: theme.spacing(3),
         width: '100%',
         maxWidth: 360,
         backgroundColor: theme.palette.secondary.main,
         position: 'relative',
         overflow: 'auto',
         maxHeight: 300,
-        borderRadius: theme.spacing(2)
+        minHeight: 300,
+        borderRadius: theme.spacing(2),
+        [theme.breakpoints.down('md')]: {
+            display: 'none',
+        },
     },
     filterTextField: {
         padding: theme.spacing(1),
@@ -143,26 +93,49 @@ const useStyles = makeStyles((theme) => ({
         margin: theme.spacing(1),
         width: theme.spacing(10),
         borderRadius: theme.spacing(50)
+    },
+    fab: {
+        position: 'fixed',
+        bottom: theme.spacing(2),
+        right: theme.spacing(2),
+        [theme.breakpoints.up('lg')]: {
+            display: 'none',
+        },
+    },
+    mobileFilterButton: {
+        [theme.breakpoints.up('md')]: {
+            display: 'none',
+        },
+    },
+    skeleton: {
+        textDecorationColor: theme.palette.primary.dark,
     }
 
 }));
 
 function EventsTabPanel({ history }) {
     // const { children, value, url, index, ...other } = props;
-    const user = JSON.parse(localStorage.getItem('user'));
+    // const user = JSON.parse(localStorage.getItem('user'));
     // const url = user.imageUrl;
-    const token = localStorage.getItem('token');
+    // const token = localStorage.getItem('token');
+    const user = React.useContext(AuthContext);
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
-    const [allEvents, setAllEvents] = React.useState([]);
+    const [imageDialogOpen, setImageDialogOpen] = React.useState(false);
+    // const [allEvents, setAllEvents] = React.useState([]);
     const [selectedEvent, setSelectedEvent] = React.useState("");
-    const [sortDate, setSortDate] = React.useState(null);
-    const [sortType, setSortType] = React.useState(null);
-    const [sortEventMode, setSortEventMode] = React.useState(null);
+    const [sortStartDate, setSortStartDate] = React.useState(null);
+    const [sortEndDate, setSortEndDate] = React.useState(null);
+    // const [sortType, setSortType] = React.useState(null);
+    // const [sortEventMode, setSortEventMode] = React.useState(null);
     const [sortCollegeType, setSortCollegeType] = React.useState("");
     const [sortedEventsArray, setSortedEventsArray] = React.useState([]);
     const [isFiltered, setIsFiltered] = React.useState(false);
-    const [finalEvents, setFinalEvents] = React.useState([]);
+    const [feeSortChecked, setFeeSortChecked] = React.useState([0]);
+    const [modeSortChecked, setModeSortChecked] = React.useState([0]);
+    const [filterDialogOpen, setFilterDialogOpen] = React.useState(false);
+    const allEvents = React.useContext(EventsContext);
+    // setAllEvents(fEvents);
     const handleClose = () => {
         setOpen(false);
     };
@@ -176,95 +149,156 @@ function EventsTabPanel({ history }) {
         history.push('/post')
     }
     useEffect(() => {
-        fetch('https://ellipseserver1.herokuapp.com/api/events', {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            method: 'GET'
-        }).then(response => {
-            response.json().then(value => {
-                console.log(value);
-                setAllEvents(value);
-                setFinalEvents(value);
-            })
-        })
+        // setAllEvents(fEvents);
+        //     fetch('https://ellipseserver1.herokuapp.com/api/events', {
+        //         headers: {
+        //             'Authorization': `Bearer ${token}`,
+        //             'Content-Type': 'application/json',
+        //             'Accept': 'application/json'
+        //         },
+        //         method: 'GET'
+        //     }).then(response => {
+        //         response.json().then(value => {
+        //             console.log(value);
+        //             setAllEvents(value);
+        //             setFinalEvents(value);
+        //         })
+        //     })
     }, [])
 
-    const [value, setValue] = React.useState(0);
+    // const [value, setValue] = React.useState(0);
 
-    const handleChange = (event, newValue) => {
-        setValue(newValue);
-    };
-
-    console.log(allEvents);
-
-    const [checked, setChecked] = React.useState([0]);
-
-    const handleToggle = (value) => () => {
-        const currentIndex = checked.indexOf(value);
-        const newChecked = [...checked];
-
-        if (currentIndex === -1) {
-            newChecked.push(value);
-        } else {
-            newChecked.splice(currentIndex, 1);
-        }
-        console.log(checked);
-        setChecked(newChecked);
-    };
-
-
-    console.log(checked);
+    // const handleChange = (event, newValue) => {
+    //     setValue(newValue);
+    // };
     const handleSortDateChange = (date) => {
         console.log(date);
-        setSortDate(date);
+        setSortStartDate(date);
     };
-
-    function handleSortEventModeChamge(event, value) {
-        console.log(event);
-        console.log(value);
+    const handleEndSortDateChange = (date) => {
+        setSortEndDate(date);
     }
 
+    // function handleSortEventModeChamge(event, value) {
+    //     console.log(event);
+    //     console.log(value);
+    // }
+    // console.log(allEvents);
     function handleSortCollegeChange(event, value) {
         console.log(value)
         setSortCollegeType(value);
     }
-
-    function handleSortApplyButton() {
-        console.log(sortDate);
-        console.log(checked);
+    async function handleSortApplyButton() {
+        console.log(sortStartDate);
+        console.log(modeSortChecked);
         console.log(sortCollegeType);
-        if (sortDate != null) {
-            console.log(sortByDate(sortDate, allEvents));
-            const dateSortedEvents = sortByDate(sortDate, allEvents)
-            console.log(dateSortedEvents);
+        if (sortStartDate != null && sortEndDate != null) {
+            const dateRangeSortedEvents = sortByDateRange(sortStartDate, sortEndDate, allEvents);
+            setSortedEventsArray(dateRangeSortedEvents);
             setIsFiltered(true);
-                setSortedEventsArray(dateSortedEvents);
-            if(checked.length > 0){
+            if (modeSortChecked.length > 1) {
+                console.log(sortByMode(dateRangeSortedEvents));
+                const typeSortedEvents = sortByMode(dateRangeSortedEvents);
+                setSortedEventsArray(typeSortedEvents);
+                setIsFiltered(true);
+                if (feeSortChecked.length > 1) {
+                    const feeSortedEvents = sortByCost(typeSortedEvents);
+                    setSortedEventsArray(feeSortedEvents);
+                    setIsFiltered(true);
+                    if (sortCollegeType === user.collegeName) {
+                        const collegeSortedEvents = sortByCollege(feeSortedEvents);
+                        setSortedEventsArray(collegeSortedEvents);
+                        setIsFiltered(true);
+                    }
+                }
+            }
+            else if (feeSortChecked.length > 1) {
+                const feeSortedEvents = sortByCost(dateRangeSortedEvents);
+                setSortedEventsArray(feeSortedEvents);
+                setIsFiltered(true);
+                if (sortCollegeType === user.collegeName) {
+                    const collegeSortedEvents = sortByCollege(feeSortedEvents);
+                    setSortedEventsArray(collegeSortedEvents);
+                    setIsFiltered(true);
+                }
+            }
+            else if (sortCollegeType === user.collegeName) {
+                const collegeSortedEvents = sortByCollege(dateRangeSortedEvents);
+                setSortedEventsArray(collegeSortedEvents);
+                setIsFiltered(true);
+            }
+        }
+        else if (sortStartDate != null) {
+            const dateSortedEvents = await sortByDate(sortStartDate, allEvents)
+            setSortedEventsArray(dateSortedEvents);
+            setIsFiltered(true);
+            if (modeSortChecked.length > 1) {
                 console.log(sortByMode(dateSortedEvents));
                 const typeSortedEvents = sortByMode(dateSortedEvents);
-                // isFiltered(true);
-                setIsFiltered(true);
                 setSortedEventsArray(typeSortedEvents);
+                setIsFiltered(true);
+                if (feeSortChecked.length > 1) {
+                    const feeSortedEvents = sortByCost(dateSortedEvents);
+                    setSortedEventsArray(feeSortedEvents);
+                    setIsFiltered(true);
+                    if (sortCollegeType === user.collegeName) {
+                        const collegeSortedEvents = sortByCollege(feeSortedEvents);
+                        setSortedEventsArray(collegeSortedEvents);
+                        setIsFiltered(true);
+                    }
+                }
             }
-            // else{
-            //     setIsFiltered(true);
-            //     console.log(sortedEventsArray);
-            //     setSortedEventsArray(dateSortedEvents);
-            // }
+            else if (feeSortChecked.length > 1) {
+                const feeSortedEvents = sortByCost(dateSortedEvents);
+                setSortedEventsArray(feeSortedEvents);
+                setIsFiltered(true);
+                if (sortCollegeType === user.collegeName) {
+                    const collegeSortedEvents = sortByCollege(feeSortedEvents);
+                    setSortedEventsArray(collegeSortedEvents);
+                    setIsFiltered(true);
+                }
+            }
+            else if (sortCollegeType === user.collegeName) {
+                const collegeSortedEvents = sortByCollege(dateSortedEvents);
+                setSortedEventsArray(collegeSortedEvents);
+                setIsFiltered(true);
+            }
         }
-        else if(checked.length > 0){
+        else if (modeSortChecked.length > 1) {
             const typeSortedEvents = sortByMode(allEvents);
-            // console.log(sortByMode(allEvents));
-            setIsFiltered(true);
-            setSortedEventsArray(typeSortedEvents);
-        }
+            console.log(sortByMode(allEvents));
 
-        setFinalEvents(sortedEventsArray);
-        console.log(sortedEventsArray);
-        console.log(finalEvents);
+            setSortedEventsArray(typeSortedEvents);
+            setIsFiltered(true);
+            if (feeSortChecked.length > 1) {
+                const feeSortedEvents = sortByCost(typeSortedEvents);
+                setSortedEventsArray(feeSortedEvents);
+                setIsFiltered(true);
+            }
+        }
+        else if (feeSortChecked.length > 1) {
+            const feeSortedEvents = sortByCost(allEvents);
+            setSortedEventsArray(feeSortedEvents);
+            setIsFiltered(true);
+        }
+        else if (sortCollegeType === user.collegeName) {
+            const collegeSortedEvents = sortByCollege(allEvents);
+            setSortedEventsArray(collegeSortedEvents);
+            setIsFiltered(true);
+        }
+    }
+
+    function sortByDateRange(date1, date2, sEvents) {
+        var sortedEvents = [];
+        console.log(typeof (date1));
+        console.log(typeof (date1));
+        sEvents.forEach(sEvent => {
+            const d = new Date(sEvent.start_time);
+            if (date1.getTime() <= d.getTime() && d.getTime() <= date2.getTime()) {
+                sortedEvents.push(sEvent);
+            }
+        })
+        return sortedEvents;
     }
 
     function sortByDate(date, tEvents) {
@@ -274,26 +308,23 @@ function EventsTabPanel({ history }) {
             const d = new Date(sevent.start_time);
             const y = `${d.getDate()}` + d.getMonth() + d.getFullYear();
             console.log(y);
-            if (x == y) {
+            if (x === y) {
                 console.log(sevent);
                 sDEvents.push(sevent);
-                // setSDEvents(sDEvents =>[
-                //     ...sDEvents,sevent
-                // ])
-                // setIsFiltered(true);
             }
             console.log(sortedEventsArray);
         })
         console.log(sDEvents);
         return sDEvents;
     }
-    function sortByMode(sEvents){
+    function sortByMode(sEvents) {
         var sortedEvents = [];
         console.log(sEvents);
-        sEvents.forEach(sevent =>{
-            console.log(checked);
+        console.log(modeSortChecked);
+        sEvents.forEach(sevent => {
+            // console.log(checked);
             console.log(sevent.eventMode);
-            if(checked.includes(sevent.eventMode)){
+            if (modeSortChecked.includes(sevent.eventMode)) {
                 console.log("ddd");
                 sortedEvents.push(sevent);
             }
@@ -302,117 +333,131 @@ function EventsTabPanel({ history }) {
         return sortedEvents;
     }
 
+    function sortByCost(sEvents) {
+        var sortedEvents = [];
+        console.log(sEvents);
+        sEvents.forEach(sevent => {
+            // console.log(checked);
+            console.log(sevent.eventMode);
+            if (feeSortChecked.includes(sevent.feesType)) {
+                console.log("ddd");
+                sortedEvents.push(sevent);
+            }
+        })
+        console.log(sortedEvents);
+        return sortedEvents;
+    }
+
+    function sortByCollege(sEvents) {
+        var sortedEvents = [];
+        sEvents.forEach(sevent => {
+            // console.log(checked);
+            console.log(sevent.eventMode);
+            if (user.collegeName === sevent.college) {
+                console.log("ddd");
+                sortedEvents.push(sevent);
+            }
+        })
+        return sortedEvents;
+    }
+
     function handlesortDiscardButton() {
         setSortedEventsArray([]);
-        setSortEventMode(null);
+        // setSortEventMode(null);
         setIsFiltered(false);
         // setChecked(null);
     }
-    console.log(sortedEventsArray);
-    console.log(allEvents);
-    console.log(finalEvents);
+    function handlefilterButtonClicked() {
+        setFilterDialogOpen(true);
+    }
+    function handleFilterClose() {
+        setFilterDialogOpen(false);
+    }
+    function handleImageDialogClose() {
+        setImageDialogOpen(false);
+    }
+    function handleImageDialogOpen() {
+        console.log("ndjc")
+        setImageDialogOpen(true);
+    }
+
+    function handleRegistrationButton(event){
+        setSelectedEvent(event);
+        // history.push('/events')
+        // return <Link to="/events"></Link>
+    }
+
     return (
         <div>
-            <Grid container component="main">
-                <Grid item xs={12} sm={12} md={3} lg={2} spacing={2} style={{ padding: "10px" }}>
+            <Grid container component="main" >
+                <Grid item xs={false} md={3} lg={2} style={{ padding: "10px" }} >
                     <Paper className={classes.root}>
-                        <Typography index={0}>Filters</Typography>
-                        {/* <TextField className={classes.filterTextField} variant='standard' label="By Date" fullWidth></TextField> */}
-                        {/* <form>
-
-                        </form> */}
-                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                            <DatePicker
-                                //   minDate={Date.now()}
-                                fullWidth
-                                required
-                                variant="inline"
-                                format="dd MMM yyyy"
-                                margin="normal"
-                                id="startDate"
-                                label="Event Start Date"
-                                name="startDate"
-                                defaultValue=''
-                                value={sortDate}
-                                onChange={handleSortDateChange}
-                                KeyboardButtonProps={{
-                                    'aria-label': 'change date',
-                                }}
-                            />
-                        </MuiPickersUtilsProvider>
-
-
-                        <FormControl fullWidth >
-                            <InputLabel htmlFor="outlined-age-native-simple">Sort By</InputLabel>
-                            <Select
-                                fullWidth
-                                native
-                                label="Event Mode"
-                                onChange={handleSortEventModeChamge}
-                                inputProps={{
-                                    name: 'sortBy',
-                                    id: 'outlined-age-native-simple',
-                                }}
-                            >
-                                <option aria-label="None" value="" />
-                                <option value="eventSortDate">Event Start Date</option>
-                                <option value="recentlyAdded">Recently added</option>
-                            </Select>
-                        </FormControl>
-                        <Typography style={{ paddingTop: "10px" }}>Event Mode</Typography>
-                        <List className={classes.root}>
-                            {["online", "offline"].map((value) => {
-                                const labelId = `checkbox-list-label-${value}`;
-
-                                return (
-                                    <ListItem key={value} role={undefined} dense button onClick={handleToggle(value)}>
-                                        <ListItemIcon>
-                                            <Checkbox
-                                                edge="start"
-                                                color="default"
-                                                checked={checked.indexOf(value) !== -1}
-                                                tabIndex={-1}
-                                                disableRipple
-                                                inputProps={{ 'aria-labelledby': labelId }}
-                                            />
-                                        </ListItemIcon>
-                                        <ListItemText id={labelId} primary={value} />
-
-                                    </ListItem>
-                                );
-                            })}
-                        </List>
-
-                        <Typography>College</Typography>
-                        <RadioGroup aria-label="address" name="address" defaultValue="All" onChange={handleSortCollegeChange} style={{ display: "inline" }}>
-                            <List className={classes.root}>
-                                {["All", `${user.collegeName}`].map((value) => {
-                                    const labelId = `checkbox-list-label-${value}`;
-
-                                    return (
-                                        <ListItem key={value} role={undefined} dense button onClick={handleToggle(value)}>
-                                            <ListItemIcon>
-                                                <FormControlLabel value={value} control={<Radio color="default" />} label={value} />
-                                            </ListItemIcon>
-                                            {/* <ListItemText id={labelId} primary={value} /> */}
-
-                                        </ListItem>
-                                    );
-                                })}
-                            </List>
-
-                        </RadioGroup>
-
-                        <Button className={classes.filterButton} onClick={handleSortApplyButton} variant="contained" > Apply </Button>
-                        <Button className={classes.filterButton} onClick={handlesortDiscardButton} variant="contained">Discard</Button>
+                        <SortLeftPanel
+                            handleSortDateChange={handleSortDateChange}
+                            sortStartDate={sortStartDate}
+                            handleEndSortDateChange={handleEndSortDateChange}
+                            sortEndDate={sortEndDate}
+                            handleSortCollegeChange={handleSortCollegeChange}
+                            feeChecked={feeSortChecked}
+                            modeChecked={modeSortChecked}
+                            setFeeChecked={setFeeSortChecked}
+                            setModeChecked={setModeSortChecked}
+                            handleSortApplyButton={handleSortApplyButton}
+                            handlesortDiscardButton={handlesortDiscardButton}>
+                        </SortLeftPanel>
                     </Paper>
+                    <Button className={classes.mobileFilterButton} variant="outlined" onClick={handlefilterButtonClicked} >Filters</Button>
 
                 </Grid>
-                <Grid item xs={12} sm={12} md={9} lg={8} spacing={2}>
+                <Grid item xs={12} sm={12} md={9} lg={8}>
+                    <Dialog
+                        open={filterDialogOpen}
+                        onClose={handleFilterClose}
+                        fullWidth={true}
+                        scroll="paper"
+                        aria-labelledby="scroll-dialog-title"
+                        aria-describedby="scroll-dialog-description"
+                        maxWidth="sm" PaperProps={{
+                            style: {
+                                backgroundColor: "#1C1C1E",
+                                boxShadow: 'none',
+                            },
+                        }}>
+                        <DialogTitle>Filters</DialogTitle>
+                        <DialogContent>
+                            <MobileSortPanel
+                                handleSortDateChange={handleSortDateChange}
+                                sortStartDate={sortStartDate}
+                                handleEndSortDateChange={handleEndSortDateChange}
+                                sortEndDate={sortEndDate}
+                                handleSortCollegeChange={handleSortCollegeChange}
+                                feeChecked={feeSortChecked}
+                                modeChecked={modeSortChecked}
+                                setFeeChecked={setFeeSortChecked}
+                                setModeChecked={setModeSortChecked}
+                                handleSortApplyButton={handleSortApplyButton}
+                                handlesortDiscardButton={handlesortDiscardButton}>
+                            </MobileSortPanel>
+                        </DialogContent>
+
+                    </Dialog>
+                    {allEvents.length === 0 && <div>
+                        <Skeleton variant="rect" animation="wave" height={118} />
+                        <Skeleton animation="wave" />
+                        <Skeleton animation="wave" />
+                        <Skeleton animation="wave" />
+                        <br></br><br></br>
+                        <Skeleton variant="rect" animation="wave" height={118} />
+                        <Skeleton animation="wave" />
+                        <Skeleton animation="wave" />
+                        <Skeleton animation="wave" />
+                    </div>}
+
                     {
                         isFiltered ? sortedEventsArray.map((event, index) => {
                             return (
                                 <EventCard
+                                    key={index}
                                     click={handleClick}
                                     url={user.imageUrl}
                                     name={event.name}
@@ -421,6 +466,10 @@ function EventsTabPanel({ history }) {
                                     eventMode={event.eventMode}
                                     eventType={event.eventType}
                                     regEndTime={event.registrationEndTime}
+                                    event={event}
+                                    feeType={event.feesType}
+                                    imageDialog={handleImageDialogOpen}
+                                    handleReg={handleRegistrationButton}
                                     eventId={event}
                                 >
 
@@ -428,6 +477,7 @@ function EventsTabPanel({ history }) {
                         }) : allEvents.map((event, index) => {
                             return (
                                 <EventCard
+                                    key={index}
                                     click={handleClick}
                                     url={user.imageUrl}
                                     name={event.name}
@@ -437,6 +487,10 @@ function EventsTabPanel({ history }) {
                                     eventType={event.eventType}
                                     regEndTime={event.registrationEndTime}
                                     eventId={event}
+                                    feeType={event.feesType}
+                                    imageDialog={handleImageDialogOpen}
+                                    handleReg={handleRegistrationButton}
+                                    event={event}
                                 >
 
                                 </EventCard>)
@@ -448,7 +502,10 @@ function EventsTabPanel({ history }) {
                     <EventCard click={handleClick} url ={user.imageUrl}></EventCard>
                     <EventCard click={handleClick} url ={user.imageUrl}></EventCard> */}
                 </Grid>
-                <Grid item xs={12} sm={12} md={4} lg={2} spacing={5}>
+                <Grid item xs={12} sm={12} md={4} lg={2} >
+                    <Fab color="primary" aria-label="add" className={classes.fab} onClick={handlePostButtonClick}>
+                        <AddIcon />
+                    </Fab>
                     <Paper className={classes.rpaper}>
                         <Button
                             onClick={handlePostButtonClick}
@@ -459,117 +516,11 @@ function EventsTabPanel({ history }) {
                             Post Event
                         </Button>
                         <List className={classes.root2}>
-                            <ListItem alignItems="flex-start">
-                                <ListItemAvatar>
-                                    <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
-                                </ListItemAvatar>
-                                <ListItemText
-                                    primary="Brunch this weekend?"
-                                    secondary={
-                                        <React.Fragment>
-                                            <Typography
-                                                component="span"
-                                                variant="body2"
-                                                className={classes.inline}
-                                                color="textPrimary">
-                                                Ali Connors
-                                            </Typography>
-                                            {" — I'll be in your neighborhood doing errands this…"}
-                                        </React.Fragment>
-                                    }
-                                />
-                            </ListItem>
-                            <Divider variant="inset" component="li" />
-                            <ListItem alignItems="flex-start">
-                                <ListItemAvatar>
-                                    <Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" />
-                                </ListItemAvatar>
-                                <ListItemText
-                                    primary="Summer BBQ"
-                                    secondary={
-                                        <React.Fragment>
-                                            <Typography
-                                                component="span"
-                                                variant="body2"
-                                                className={classes.inline}
-                                                color="textPrimary"
-                                            >
-                                                to Scott, Alex, Jennifer
-                                            </Typography>
-                                            {" — Wish I could come, but I'm out of town this…"}
-                                        </React.Fragment>
-                                    }
-                                />
-                            </ListItem>
+                            {/* <Divider variant="inset" component="li" /> */}
+                            <Typography>No Registered Events</Typography>
 
 
-                            <Divider variant="inset" component="li" />
-                            <ListItem alignItems="flex-start">
-                                <ListItemAvatar>
-                                    <Avatar alt="Cindy Baker" src="/static/images/avatar/3.jpg" />
-                                </ListItemAvatar>
-                                <ListItemText
-                                    primary="Oui Oui"
-                                    secondary={
-                                        <React.Fragment>
-                                            <Typography
-                                                component="span"
-                                                variant="body2"
-                                                className={classes.inline}
-                                                color="textPrimary"
-                                            >
-                                                Sandra Adams
-                                            </Typography>
-                                            {' — Do you have Paris recommendations? Have you ever…'}
-                                        </React.Fragment>
-                                    }
-                                />
-                            </ListItem>
-                            <Divider variant="inset" component="li" />
-                            <ListItem alignItems="flex-start">
-                                <ListItemAvatar>
-                                    <Avatar alt="Cindy Baker" src="/static/images/avatar/3.jpg" />
-                                </ListItemAvatar>
-                                <ListItemText
-                                    primary="Oui Oui"
-                                    secondary={
-                                        <React.Fragment>
-                                            <Typography
-                                                component="span"
-                                                variant="body2"
-                                                className={classes.inline}
-                                                color="textPrimary"
-                                            >
-                                                Sandra Adams
-                                            </Typography>
-                                            {' — Do you have Paris recommendations? Have you ever…'}
-                                        </React.Fragment>
-                                    }
-                                />
-                            </ListItem>
 
-                            <Divider variant="inset" component="li" />
-                            <ListItem alignItems="flex-start">
-                                <ListItemAvatar>
-                                    <Avatar alt="Cindy Baker" src="/static/images/avatar/3.jpg" />
-                                </ListItemAvatar>
-                                <ListItemText
-                                    primary="Oui Oui"
-                                    secondary={
-                                        <React.Fragment>
-                                            <Typography
-                                                component="span"
-                                                variant="body2"
-                                                className={classes.inline}
-                                                color="textPrimary"
-                                            >
-                                                Sandra Adams
-                                            </Typography>
-                                            {' — Do you have Paris recommendations? Have you ever…'}
-                                        </React.Fragment>
-                                    }
-                                />
-                            </ListItem>
                         </List>
 
                     </Paper>
@@ -578,101 +529,18 @@ function EventsTabPanel({ history }) {
                 </Grid>
             </Grid>
             <div>
-                {/* <EventDetailsTab a = {true}></EventDetailsTab> */}
-                <Dialog
+                <EventsDialog
                     open={open}
-                    onClose={handleClose}
-                    scroll="paper"
-                    aria-labelledby="scroll-dialog-title"
-                    aria-describedby="scroll-dialog-description"
-                    fullWidth={true}
-                    maxWidth="md"
-                    PaperProps={{
-                        style: {
-                            backgroundColor: "#1C1C1E",
-                            boxShadow: 'none',
-                        },
-                    }}
-
+                    event={selectedEvent}
+                    handleClose={handleClose}
                 >
-                    <DialogTitle id="scroll-dialog-title">
-                        DevHack
-                                <div className={classes.icons}>
-                            <IconButton aria-label="add to favorites">
-                                <FavoriteIcon />
-                            </IconButton>
-                            <IconButton aria-label="share">
-                                <MailIcon></MailIcon>
-                            </IconButton>
-                            <IconButton aria-label="share">
-                                <ShareIcon />
-                            </IconButton>
-                        </div>
+                    imageDialog={handleImageDialogOpen}
+                </EventsDialog>
+                <ImageDialog
+                    open={imageDialogOpen}
+                    handleClose={handleImageDialogClose} url={user.imageUrl}>
+                </ImageDialog>
 
-                    </DialogTitle>
-                    <DialogContent dividers={true}>
-                        <img height="160" width="150" src={selectedEvent.poster}></img>
-                        <DialogContentText
-                            id="scroll-dialog-description"
-                            // ref={descriptionElementRef}
-                            tabIndex={-1}>
-                            <AppBar position="static" color="default">
-                                <Tabs
-                                    value={value}
-                                    onChange={handleChange}
-                                    indicatorColor="primary"
-                                    textColor="primary"
-                                    variant="scrollable"
-                                    scrollButtons="auto"
-                                    aria-label="scrollable auto tabs example"
-                                >
-                                    <Tab label="Item One" {...a11yProps(0)} />
-                                    <Tab label="Item Two" {...a11yProps(1)} />
-                                    <Tab label="Item Three" {...a11yProps(2)} />
-                                    <Tab label="Item Four" {...a11yProps(3)} />
-                                    <Tab label="Item Five" {...a11yProps(4)} />
-                                    <Tab label="Item Six" {...a11yProps(5)} />
-                                    <Tab label="Item Seven" {...a11yProps(6)} />
-                                </Tabs>
-                            </AppBar>
-                            <TabPanel value={value} index={0}>
-                                Item One
-                            </TabPanel>
-                            <TabPanel value={value} index={1}>
-                                Item Two
-                            </TabPanel>
-                            <TabPanel value={value} index={2}>
-                                Item Three
-                            </TabPanel>
-                            <TabPanel value={value} index={3}>
-                                Item Four
-                            </TabPanel>
-                            <TabPanel value={value} index={4}>
-                                Item Five
-                            </TabPanel>
-                            <TabPanel value={value} index={5}>
-                                Item Six
-                            </TabPanel>
-                            <TabPanel value={value} index={6}>
-                                Item Seven
-                            </TabPanel>
-
-                            {[...new Array(50)]
-                                .map(
-                                    () => `Cras mattis consectetur purus sit amet fermentum.
-Cras justo odio, dapibus ac facilisis in, egestas eget quam.
-Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
-Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`,
-                                )
-                                .join('\n')}
-                        </DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button variant="contained" onClick={handleClose} color="primary">
-                            Register
-                        </Button>
-                    </DialogActions>
-                </Dialog>
             </div>
         </div>
 
@@ -683,125 +551,4 @@ Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`,
 
 export default withRouter(EventsTabPanel);
 
-
-
- //             <Grid item xs={12} sm={12} md={9} lg={6} spacing={2} className={classes.flex_col_scroll}>
-            //             <GridList cellHeight={160} className={classes.gridList} cols={3}>
-
-            //   <GridListTile  cols={3}>
-            //   <EventCard></EventCard>
-            //   </GridListTile>
-            //   <GridListTile  cols={3}>
-        //       <EventCard></EventCard>
-        //       </GridListTile>
-        //       <GridListTile  cols={3}>
-        //       <EventCard></EventCard>
-        //       </GridListTile>
-        //       <GridListTile  cols={3}>
-        //       <EventCard></EventCard>
-        //       </GridListTile>
-        //       <GridListTile  cols={3}>
-        //       <EventCard></EventCard>
-        //       </GridListTile>
-
-        //   </GridList>
-
-        //                     {/* <EventCard click={handleClick}></EventCard>
-        //                     <EventCard></EventCard>
-        //                     <EventCard></EventCard>
-        //                     <EventCard></EventCard>
-        //                     <EventCard></EventCard>
-        //                     <EventCard></EventCard> */}
-
-        //                 </Grid>
-        //                 <Grid item xs={12} sm={12} md={4} lg={3} spacing={5}>
-        //                     <Paper className={classes.rpaper}>
-        //                         <Button onClick={handlePostButtonClick} variant="contained" size="large" className={classes.postButton} >Post Event</Button>
-        //                     </Paper>
-        //                     <List className={classes.root}>
-        //                         <ListItem alignItems="flex-start">
-        //                             <ListItemAvatar>
-        //                                 <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
-        //                             </ListItemAvatar>
-        //                             <ListItemText
-        //                                 primary="Brunch this weekend?"
-        //                                 secondary={
-        //                                     <React.Fragment>
-        //                                         <Typography
-        //                                             component="span"
-        //                                             variant="body2"
-        //                                             className={classes.inline}
-        //                                             color="textPrimary"
-        //                                         >
-        //                                             Ali Connors
-        //                                         </Typography>
-        //                                         {" — I'll be in your neighborhood doing errands this…"}
-        //                                     </React.Fragment>
-        //                                 }
-        //                             />
-        //                         </ListItem>
-        //                         <Divider variant="inset" component="li" />
-        //                         <ListItem alignItems="flex-start">
-        //                             <ListItemAvatar>
-        //                                 <Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" />
-        //                             </ListItemAvatar>
-        //                             <ListItemText
-        //                                 primary="Summer BBQ"
-        //                                 secondary={
-        //                                     <React.Fragment>
-        //                                         <Typography
-        //                                             component="span"
-        //                                             variant="body2"
-        //                                             className={classes.inline}
-        //                                             color="textPrimary"
-        //                                         >
-        //                                             to Scott, Alex, Jennifer
-        //                                         </Typography>
-        //                                         {" — Wish I could come, but I'm out of town this…"}
-        //                                     </React.Fragment>
-        //                                 }
-        //                             />
-        //                         </ListItem>
-        //                         <Divider variant="inset" component="li" />
-        //                         <ListItem alignItems="flex-start">
-        //                             <ListItemAvatar>
-        //                                 <Avatar alt="Cindy Baker" src="/static/images/avatar/3.jpg" />
-        //                             </ListItemAvatar>
-        //                             <ListItemText
-        //                                 primary="Oui Oui"
-        //                                 secondary={
-        //                                     <React.Fragment>
-        //                                         <Typography
-        //                                             component="span"
-        //                                             variant="body2"
-        //                                             className={classes.inline}
-        //                                             color="textPrimary"
-        //                                         >
-        //                                             Sandra Adams
-        //                                         </Typography>
-        //                                         {' — Do you have Paris recommendations? Have you ever…'}
-        //                                     </React.Fragment>
-        //                                 }
-        //                             />
-        //                         </ListItem>
-        //                     </List>
-
-        //                 </Grid>
-        //             </Grid>
-
-
-        //                     {/* <DialogActions>
-        //                         <Button onClick={handleClose} color="primary">
-        //                             Cancel
-        //                         </Button>
-        //                         <Button onClick={handleClose} color="primary">
-        //                             Subscribe
-        //                         </Button>
-        //                     </DialogActions> */}
-        //                 </Dialog>
-        //             </div>
-
-        //         </div>
-
-        //         {/* )} */}
-        //     </div>
+ 
