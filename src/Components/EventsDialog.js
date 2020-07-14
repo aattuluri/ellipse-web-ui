@@ -58,6 +58,35 @@ function EventsDialog(props) {
     const event = props.event;
     const [value, setValue] = React.useState(0);
     const classes = useStyles();
+    const token = localStorage.getItem('token');
+    // const [image, setImage] = React.useState(null);
+    // console.log(props.imageUrl);
+    // React.useEffect(() => {
+    //     setImage(props.imageUrl);
+    //     if(props.imageUrl === "undefined"){
+    //         fetch(`http://localhost:4000/api/event/image?id=${event.posterUrl}`, {
+    //       headers: {
+    //         'Authorization': `Bearer ${token}`,
+    //         'Content-Type': 'application/json',
+    //         'Accept': 'application/json'
+    //       },
+    //       method: 'GET'
+    //     }).then(response => {
+    //       if (response.status === 200) {
+    //         response.json().then(value => {
+    //           const img = value.image;
+    //           console.log(value.image);
+    //           setImage(img.type + "," + img.image_data)
+    //         })
+    //       }
+    
+    //     })
+    //     }
+        
+        
+    //   }, [])
+
+
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
@@ -119,7 +148,11 @@ function EventsDialog(props) {
                 </div>
             </DialogTitle>
             <DialogContent  dividers={true} >
-            <AboutEventPanel value={value} index={0} event={props.event}></AboutEventPanel>
+            <AboutEventPanel 
+            value={value} 
+            index={0} 
+            imageUrl={props.imageUrl} 
+            event={props.event}></AboutEventPanel>
             <EventsTimeLinePanel value={value} index={1} event={props.event}></EventsTimeLinePanel>
             </DialogContent>
             <DialogActions>

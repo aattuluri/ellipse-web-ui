@@ -26,12 +26,13 @@ function CalenderPanel(props) {
     // const { children, value, url, index, ...other } = props;
     // const user = JSON.parse(localStorage.getItem('user'));
     const user = React.useContext(AuthContext);
-    // const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token');
     const classes = useStyles();
     // const [allEvents, setAllEvents] = React.useState([]);
     const [events, setEvents] = React.useState([]);
     const [open, setOpen] = React.useState(false);
     const [selectedEvent, setSelectedEvent] = React.useState([]);
+    const [image, setImage] = React.useState(null);
     const allEvents = React.useContext(EventsContext);
     
     useEffect(() => {
@@ -68,9 +69,26 @@ function CalenderPanel(props) {
 
 
     function handleEventClick(info) {
-        console.log(JSON.parse(info.event.id).name);
-        setSelectedEvent(JSON.parse(info.event.id))
-        setOpen(true);
+        // console.log(JSON.parse(info.event.id).name);
+        const e = JSON.parse(info.event.id);
+        fetch(`http://localhost:4000/api/event/image?id=${e.posterUrl}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      method: 'GET'
+    }).then(response => {
+      if (response.status === 200) {
+        response.json().then(value => {
+          const img = value.image;
+          setImage(img.type + "," + img.image_data)
+        })
+      }
+
+    })
+    setSelectedEvent(JSON.parse(info.event.id))
+    setOpen(true);
     }
     return (
         <div
@@ -115,7 +133,7 @@ function CalenderPanel(props) {
                             tags={selectedEvent.tags}
                             mode={selectedEvent.eventMode}
                             feeType={selectedEvent.feesType}
-                            url={user.imageUrl}></EventsDialog>
+                            imageUrl={image}></EventsDialog>
                     </div>
                 </div>
 

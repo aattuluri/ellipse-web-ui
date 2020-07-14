@@ -25,7 +25,7 @@ function ProfileEventsTabPanel(props) {
     const user = React.useContext(AuthContext);
     const token = localStorage.getItem('token');
     useEffect(() => {
-        fetch('https://ellipseserver1.herokuapp.com/api/events', {
+        fetch('http://139.59.16.53:4000/api/events', {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',

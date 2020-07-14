@@ -52,7 +52,7 @@ function AboutEventPanel(props) {
         
         var difference = +new Date(event.registrationEndTime) - +new Date();
         let timeLeft = {};
-        console.log(difference);
+        // console.log(difference);
         if(difference < 0){
             difference = +new Date(event.start_time) - +new Date();
         }
@@ -74,7 +74,7 @@ function AboutEventPanel(props) {
     const getTimeLabel = () =>{
         var difference = +new Date(event.registrationEndTime) - +new Date();
         let label = "Registration ends in"
-        console.log(difference);
+        // console.log(difference);
         if(difference < 0){
             label = "Starts in"
             difference = +new Date(event.start_time) - +new Date();
@@ -117,7 +117,7 @@ function AboutEventPanel(props) {
                 <div className={classes.root}>
                 <Grid container component="main">
                     <Grid item xs={12} sm={12} md={4} lg={4} >
-                        <img style={{ maxWidth: '250px' }} alt="event poster" src={user.imageUrl}  ></img>
+                        <img style={{ maxWidth: '250px' }} alt="event poster" src={props.imageUrl}  ></img>
                     </Grid>
                     <Grid item xs={12} sm={12} md={8} lg={8}>
                         <Typography>{event.description} This impressive paella is a perfect party dish and a fun meal to cook together with your guests. Add 1 cup of frozen peas along with the mussels, if you like.</Typography>

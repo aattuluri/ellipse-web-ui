@@ -69,10 +69,14 @@ function Layout(props) {
             },
             method: 'GET'
         }).then(response => {
-            response.json().then(value => {
-                // console.log(value);
-                setAllEvents(value);
-            })
+            if(response.status == 200){
+                response.json().then(value => {
+                    console.log(value);
+                    
+                    setAllEvents(value);
+                })   
+            }
+            
         })
     }, [token])
 
@@ -81,7 +85,7 @@ function Layout(props) {
         <AuthContext.Provider value={currentUser}>
             <EventsContext.Provider value={allEvents}>
                 {
-                    currentUser != null && <div>
+                    currentUser != null && allEvents != null && <div>
                         <Paper className={classes.root}>
                             <NavigationBar></NavigationBar>
                         </Paper>

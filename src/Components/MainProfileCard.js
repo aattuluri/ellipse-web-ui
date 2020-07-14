@@ -76,12 +76,12 @@ function Eventcard(props) {
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
-
+    const url = `data:image/jpeg;base64,${user.imageUrl}`
     // function handleEditButton(){
 
     // }
 
-
+    console.log(url);
 
     return (
         <Card className={classes.root}>

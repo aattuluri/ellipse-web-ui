@@ -89,6 +89,11 @@ const UserInfo = ({ history }) => {
         let reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = function () {
+            console.log(reader.type);
+            console.log(reader.result.split(',')[1])
+            console.log(reader.result.split(',')[0])
+            console.log(reader.result)
+            
           cb(reader.result)
         };
         reader.onerror = function (error) {
@@ -126,7 +131,7 @@ const UserInfo = ({ history }) => {
         data = JSON.stringify(payload);
         console.log(data);
         // http://139.59.16.53:4000/api
-        fetch('http://139.59.16.53:4000/api/users/userdetails', {
+        fetch('http://localhost:4000/api/users/userdetails', {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',

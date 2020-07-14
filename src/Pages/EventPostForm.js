@@ -171,8 +171,12 @@ function getStepContent(step) {
     let reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = function () {
-      cb(reader.result)
+      cb(reader.result.split(',')[0],reader.result.split(',')[1])
     };
+    // console.log(reader.type);
+    // console.log(reader.result.split(',')[1])
+    //         console.log(reader.result.split(',')[0])
+    //         console.log(reader.result)
     reader.onerror = function (error) {
       console.log('Error: ', error);
     };
@@ -194,7 +198,7 @@ function getStepContent(step) {
     // setLoading(true);
     // const { eventName, shortdesc, eventMode,regLink,regFees,organizer,about } = event.target.elements;
     try {
-      getBase64(image, (result) => {
+      getBase64(image, (type,image_data) => {
         var data = new FormData();
         const payload = {
           user_id: user._id,
@@ -207,6 +211,8 @@ function getStepContent(step) {
           eventType: eventType,
           tags: eventThemes,
           // poster: result,
+          image_data: image_data,
+          type: type,
           regLink: regLink,
           fees: fees,
           about: about,
@@ -217,7 +223,7 @@ function getStepContent(step) {
         };
         data = JSON.stringify(payload);
         console.log(data);
-        fetch('http://139.59.16.53:4000/api/events', {
+        fetch('http://localhost:4000/api/events', {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',

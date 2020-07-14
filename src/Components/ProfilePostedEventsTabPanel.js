@@ -4,6 +4,7 @@ import Grid from '@material-ui/core/Grid';
 import ProfileEventCard from '../Components/ProfileEventCard';
 import EventsDialog from '../Components/EventsDialog';
 import AuthContext from '../AuthContext';
+import EventsContext from '../EventsContext';
 
 // const useStyles = makeStyles((theme) => ({
 //     // backdrop: {
@@ -20,32 +21,33 @@ import AuthContext from '../AuthContext';
 function ProfilePostsTabPanel(props) {
     const { children, value, url, index, ...other } = props;
     const [open, setOpen] = React.useState(false);
-    const [allEvents, setAllEvents] = React.useState([]);
+    // const [allEvents, setAllEvents] = React.useState([]);
     const user = React.useContext(AuthContext);
     const token = localStorage.getItem('token');
-    useEffect(() => {
-        fetch('https://ellipseserver1.herokuapp.com/api/events', {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            method: 'GET'
-        }).then(response => {
-            response.json().then(value => {
+    const allEvents = React.useContext(EventsContext);
+    // useEffect(() => {
+    //     fetch('http://139.59.16.53:4000/api/events', {
+    //         headers: {
+    //             'Authorization': `Bearer ${token}`,
+    //             'Content-Type': 'application/json',
+    //             'Accept': 'application/json'
+    //         },
+    //         method: 'GET'
+    //     }).then(response => {
+    //         response.json().then(value => {
             
                 
-                value.filter((val)=>{
-                    return val.user_id === user._id;
-                })
-                // console.log( value.filter((val)=>{
-                //     return val.user_id === user._id;
-                // }));
-                setAllEvents(value);
+    //             value.filter((val)=>{
+    //                 return val.user_id === user._id;
+    //             })
+    //             // console.log( value.filter((val)=>{
+    //             //     return val.user_id === user._id;
+    //             // }));
+    //             setAllEvents(value);
                 
-            })
-        })
-    }, [token,user._id])
+    //         })
+    //     })
+    // }, [token,user._id])
     const postedEvents = allEvents.filter((val)=>{
         return val.user_id === user._id;
     });

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 // import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 // import clsx from 'clsx';
@@ -27,6 +27,7 @@ import Chip from '@material-ui/core/Chip';
 // import PublicIcon from '@material-ui/icons/Public';
 // import TimelineOppositeContent from '@material-ui/lab/TimelineOppositeContent';
 import { Link } from 'react-router-dom';
+import CameraAltOutlinedIcon from '@material-ui/icons/CameraAltOutlined';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -57,28 +58,59 @@ const useStyles = makeStyles((theme) => ({
 
 function Eventcard(props) {
   const classes = useStyles();
-  function handleMoreButtonClick() {
-    console.log("button clicked");
-    props.click(props.eventId);
-  }
+
   const startDate = new Date(props.startTime);
   const endDate = new Date(props.endTime);
   const regEndDate = new Date(props.regEndTime);
+  const [image, setImage] = React.useState(null);
   const event = props.event;
   // console.log(typeof (props.startTime));
-  function handleImageClick(){
+  const token = localStorage.getItem('token');
+  function handleImageClick() {
     console.log("hello")
-    props.imageDialog();
+    props.imageDialog(image);
   }
-  function handleRegClick(){
+  function handleRegClick() {
     props.handleReg(props.eventId);
   }
+  function handleMoreButtonClick() {
+    console.log("button clicked");
+    props.click(props.eventId, image);
+  }
+  useEffect(() => {
+    fetch(`http://localhost:4000/api/event/image?id=${event.posterUrl}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      method: 'GET'
+    }).then(response => {
+      if (response.status === 200) {
+        response.json().then(value => {
+          const img = value.image;
+          setImage(img.type + "," + img.image_data)
+        })
+      }
+
+    })
+  }, [])
 
   return (
     <Card className={classes.root}>
       <CardHeader
         avatar={
-          <img onClick={handleImageClick} alt="profile" height="160" width="150" src={props.url}></img>
+          image != null ?
+            <img onClick={handleImageClick} alt="profile" height="160" width="150" src={image}></img>
+            :
+            <div
+              style={{
+                height: "160px",
+                width: "150px"
+              }}>
+              <CameraAltOutlinedIcon color="disabled" style={{ height: "160px", width: "150px" }} />
+            </div>
+
         }
         action={
           <IconButton aria-label="settings">
@@ -102,11 +134,11 @@ function Eventcard(props) {
           Details
         </Typography> */}
         <Chip variant="outlined" color="textSecondary" size="small" label={props.eventMode}></Chip>
-        <Chip style={{marginLeft:"4px"}} variant="outlined" color="textSecondary" size="small" label={props.feeType}></Chip>
-        <Chip style={{marginLeft:"4px"}} variant="outlined" color="textSecondary" size="small" label={props.eventType}></Chip>
-        <Chip style={{marginLeft:"4px"}} variant="outlined" color="textSecondary" size="small" label={"Reg ends at "+regEndDate.toDateString()}></Chip>
-        <Chip style={{marginLeft:"4px"}} variant="outlined" color="textSecondary" size="small" label={"Starts at "+startDate.toDateString()}></Chip>
-        <Chip style={{marginLeft:"4px"}} variant="outlined" color="textSecondary" size="small" label={"Ends at  "+endDate.toDateString()}></Chip>
+        <Chip style={{ marginLeft: "4px" }} variant="outlined" color="textSecondary" size="small" label={props.feeType}></Chip>
+        <Chip style={{ marginLeft: "4px" }} variant="outlined" color="textSecondary" size="small" label={props.eventType}></Chip>
+        <Chip style={{ marginLeft: "4px" }} variant="outlined" color="textSecondary" size="small" label={"Reg ends at " + regEndDate.toDateString()}></Chip>
+        <Chip style={{ marginLeft: "4px" }} variant="outlined" color="textSecondary" size="small" label={"Starts at " + startDate.toDateString()}></Chip>
+        <Chip style={{ marginLeft: "4px" }} variant="outlined" color="textSecondary" size="small" label={"Ends at  " + endDate.toDateString()}></Chip>
         {/* <Grid container component="main">
           <Grid item xs={6} sm={6} md={6}>
             <Typography variant="h6" component="p">
@@ -169,7 +201,7 @@ function Eventcard(props) {
             Learn More
         </Button>
           <Button size="small" color="primary" variant="contained" className={classes.button} onClick={handleRegClick}>
-          {/* <Link to={"/event/"+event._id} target="blank">Register</Link> */}
+            {/* <Link to={"/event/"+event._id} target="blank">Register</Link> */}
           Register
         </Button>
         </div>

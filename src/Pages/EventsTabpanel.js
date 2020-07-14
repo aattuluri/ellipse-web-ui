@@ -134,14 +134,17 @@ function EventsTabPanel({ history }) {
     const [feeSortChecked, setFeeSortChecked] = React.useState([0]);
     const [modeSortChecked, setModeSortChecked] = React.useState([0]);
     const [filterDialogOpen, setFilterDialogOpen] = React.useState(false);
+    const [selectedImage,setSelectedImage] = React.useState(null);
     const allEvents = React.useContext(EventsContext);
+    console.log(allEvents);
     // setAllEvents(fEvents);
     const handleClose = () => {
         setOpen(false);
     };
-    const handleClick = function (id) {
+    const handleClick = function (id,image) {
         console.log(id);
         setSelectedEvent(id);
+        setSelectedImage(image);
         setOpen(true);
         // history.push('eventdetails')
     }
@@ -376,8 +379,9 @@ function EventsTabPanel({ history }) {
     function handleImageDialogClose() {
         setImageDialogOpen(false);
     }
-    function handleImageDialogOpen() {
-        console.log("ndjc")
+    function handleImageDialogOpen(image) {
+        // console.log(image);
+        setSelectedImage(image);
         setImageDialogOpen(true);
     }
 
@@ -532,11 +536,13 @@ function EventsTabPanel({ history }) {
                 <EventsDialog
                     open={open}
                     event={selectedEvent}
+                    imageUrl={selectedImage}
                     handleClose={handleClose}
                 >
                     imageDialog={handleImageDialogOpen}
                 </EventsDialog>
                 <ImageDialog
+                    image={selectedImage}
                     open={imageDialogOpen}
                     handleClose={handleImageDialogClose} url={user.imageUrl}>
                 </ImageDialog>

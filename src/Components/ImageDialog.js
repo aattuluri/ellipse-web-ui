@@ -37,7 +37,7 @@ function ImageDialog(props) {
             }}>
             <DialogTitle>Hello</DialogTitle>
               <DialogContent>
-                <img src={props.url} alt="profile pic"></img>
+                <img src={props.image} alt="profile pic"></img>
               </DialogContent>
             </Dialog>
       </div>
