@@ -8,6 +8,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import AuthContext from '../AuthContext';
 //function for alert
 function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -50,7 +51,7 @@ function UpdatePasswordTabPanel(props) {
     const classes = useStyles();
     const { children, value, url, index, ...other } = props;
     // const [open, setOpen] = React.useState(false);
-    const user = JSON.parse(localStorage.getItem('user'));
+    const user = React.useContext(AuthContext);
     const token = localStorage.getItem('token');
     const [state, setState] = React.useState({
         open: false,

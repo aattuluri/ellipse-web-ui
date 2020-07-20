@@ -12,7 +12,7 @@ import CalenderPanel from './Pages/CalenderPanel';
 import EventsTabPanel from './Pages/EventsTabpanel';
 import ProfileTabPanel from './Pages/ProfileTabpanel';
 import EventPostForm from './Pages/EventPostForm';
-import ChatPanel from './Pages/ChatPanel';
+import ChatPage from './Pages/ChatPage';
 import EventDetails from './Pages/EventDetails';
 
 function App() {
@@ -39,7 +39,7 @@ function App() {
               <Route exact path="/events" component={CalenderPanel}></Route>
               <Route exact path="/post" component={EventPostForm}></Route>
               <Route exact path="/profile" component={ProfileTabPanel}></Route>
-              <Route exact path="/chat" component={ChatPanel}></Route>
+              <Route exact path="/chat" component={ChatPage}></Route>
               <Route exact path="/event/:eventId" component={EventDetails} />
               {/* <Route exact path="/eventdetails" component={EventDetails} /> */}
               

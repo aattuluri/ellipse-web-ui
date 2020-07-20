@@ -89,6 +89,9 @@ export default function AddressForm(props) {
     if (event.target.files[0]) {
       // setImage(event.target.files[0]);
       props.setPoster(event.target.files[0]);
+      const filePath = event.target.files[0].type;
+      props.setPosterType(event.target.files[0].type);
+      // console.log(event.target.files[0].name);
       const fileName = event.target.files[0].name;
       setImageName(fileName);
     }
@@ -118,7 +121,7 @@ export default function AddressForm(props) {
   return (
     <React.Fragment>
 
-      <form className={classes.form} onSubmit={props.handleEventPost}>
+      <form className={classes.form} onSubmit={props.handleEventPost} encType="multipart/form-data">
         <Grid container spacing={3}>
           <Grid item xs={12} lg={6}>
             <Autocomplete

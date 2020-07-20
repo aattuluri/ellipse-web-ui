@@ -78,38 +78,38 @@ function Eventcard(props) {
     props.click(props.eventId, image);
   }
   useEffect(() => {
-    fetch(`http://localhost:4000/api/event/image?id=${event.posterUrl}`, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      method: 'GET'
-    }).then(response => {
-      if (response.status === 200) {
-        response.json().then(value => {
-          const img = value.image;
-          setImage(img.type + "," + img.image_data)
-        })
-      }
+    // fetch(`http://139.59.16.53:4000/api/event/image?id=${event.posterUrl}`, {
+    //   headers: {
+    //     'Authorization': `Bearer ${token}`,
+    //     'Content-Type': 'application/json',
+    //     'Accept': 'application/json'
+    //   },
+    //   method: 'GET'
+    // }).then(response => {
+    //   if (response.status === 200) {
+    //     response.json().then(value => {
+    //       const img = value.image;
+    //       setImage(img.type + "," + img.image_data)
+    //     })
+    //   }
 
-    })
+    // })
   }, [])
 
   return (
     <Card className={classes.root}>
       <CardHeader
         avatar={
-          image != null ?
-            <img onClick={handleImageClick} alt="profile" height="160" width="150" src={image}></img>
-            :
-            <div
-              style={{
-                height: "160px",
-                width: "150px"
-              }}>
-              <CameraAltOutlinedIcon color="disabled" style={{ height: "160px", width: "150px" }} />
-            </div>
+          // image != null ?
+            <img onClick={handleImageClick} alt="profile" height="160" width="150" src={`http://139.59.16.53:4000/api/image?id=${event.posterUrl}`}></img>
+            // :
+            // <div
+            //   style={{
+            //     height: "160px",
+            //     width: "150px"
+            //   }}>
+            //   <CameraAltOutlinedIcon color="disabled" style={{ height: "160px", width: "150px" }} />
+            // </div>
 
         }
         action={

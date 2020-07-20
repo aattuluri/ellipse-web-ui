@@ -13,7 +13,7 @@ import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-
+import AuthContext from '../AuthContext';
 
 
 
@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
 
 function MobileSortPanel(props) {
     const classes = useStyles();
-    const user = JSON.parse(localStorage.getItem('user'));
+    const user = React.useContext(AuthContext);
     // const token = localStorage.getItem('token');
     // const [feeChecked, setFeeChecked] = React.useState([0]);
     // const [modeChecked, setFeeChecked] = React.useState([0]);
@@ -133,7 +133,7 @@ function MobileSortPanel(props) {
                             </Select>
                         </FormControl> */}
                 <Typography style={{ paddingTop: "10px" }}>Event Mode</Typography>
-                <List className={classes.root}>
+                <List >
                     {["online", "offline"].map((value) => {
                         const labelId = `checkbox-list-label-${value}`;
                         return (

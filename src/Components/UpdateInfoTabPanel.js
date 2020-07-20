@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Badge from '@material-ui/core/Badge';
 import EditIcon from '@material-ui/icons/Edit';
 import TextField from '@material-ui/core/TextField';
+import AuthContext from '../AuthContext';
 const useStyles = makeStyles((theme) => ({
     root: {
         alignItems: "center",
@@ -44,7 +45,7 @@ function UpdateInfoTabPanel(props) {
     const classes = useStyles();
     const { children, value, url, index, ...other } = props;
     // const [open, setOpen] = React.useState(false);
-    const user = JSON.parse(localStorage.getItem('user'));
+    const user = React.useContext(AuthContext);
     // const url = user.imageUrl;
     // const token = localStorage.getItem('token');
     // function handleEditButton() {

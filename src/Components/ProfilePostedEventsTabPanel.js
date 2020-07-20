@@ -49,8 +49,9 @@ function ProfilePostsTabPanel(props) {
     //     })
     // }, [token,user._id])
     const postedEvents = allEvents.filter((val)=>{
-        return val.user_id === user._id;
+        return val.user_id === user.userid;
     });
+
     const [selectedEvent,setSellectedEvent] = React.useState("");
     function handleViewClick(event){
         setSellectedEvent(event);

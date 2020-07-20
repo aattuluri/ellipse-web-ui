@@ -80,7 +80,7 @@ function Layout(props) {
         })
     }, [token])
 
-    console.log(currentUser);
+    // console.log(currentUser);
     return (
         <AuthContext.Provider value={currentUser}>
             <EventsContext.Provider value={allEvents}>

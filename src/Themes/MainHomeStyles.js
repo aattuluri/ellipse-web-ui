@@ -24,10 +24,10 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
   },
   title: {
-    display: 'block',
-    // [theme.breakpoints.up('sm')]: {
-    //   display: 'block',
-    // },
+    display: 'none',
+    [theme.breakpoints.up('sm')]: {
+      display: 'block',
+    },
   },
   search: {
     position: 'relative',

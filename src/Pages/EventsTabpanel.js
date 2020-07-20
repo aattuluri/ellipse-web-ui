@@ -20,6 +20,7 @@ import EventsContext from '../EventsContext';
 import Skeleton from '@material-ui/lab/Skeleton';
 import { Link } from 'react-router-dom';
 import AuthContext from '../AuthContext';
+import GridListEvents from '../Components/GridListEvents';
 
 
 // function a11yProps(index) {
@@ -98,6 +99,7 @@ const useStyles = makeStyles((theme) => ({
         position: 'fixed',
         bottom: theme.spacing(2),
         right: theme.spacing(2),
+        zIndex: 10,
         [theme.breakpoints.up('lg')]: {
             display: 'none',
         },
@@ -414,37 +416,10 @@ function EventsTabPanel({ history }) {
 
                 </Grid>
                 <Grid item xs={12} sm={12} md={9} lg={8}>
-                    <Dialog
-                        open={filterDialogOpen}
-                        onClose={handleFilterClose}
-                        fullWidth={true}
-                        scroll="paper"
-                        aria-labelledby="scroll-dialog-title"
-                        aria-describedby="scroll-dialog-description"
-                        maxWidth="sm" PaperProps={{
-                            style: {
-                                backgroundColor: "#1C1C1E",
-                                boxShadow: 'none',
-                            },
-                        }}>
-                        <DialogTitle>Filters</DialogTitle>
-                        <DialogContent>
-                            <MobileSortPanel
-                                handleSortDateChange={handleSortDateChange}
-                                sortStartDate={sortStartDate}
-                                handleEndSortDateChange={handleEndSortDateChange}
-                                sortEndDate={sortEndDate}
-                                handleSortCollegeChange={handleSortCollegeChange}
-                                feeChecked={feeSortChecked}
-                                modeChecked={modeSortChecked}
-                                setFeeChecked={setFeeSortChecked}
-                                setModeChecked={setModeSortChecked}
-                                handleSortApplyButton={handleSortApplyButton}
-                                handlesortDiscardButton={handlesortDiscardButton}>
-                            </MobileSortPanel>
-                        </DialogContent>
-
-                    </Dialog>
+                <Typography variant="h5" style={{paddingTop:'5px'}}>
+                    Your College Events
+                </Typography>
+                    <GridListEvents></GridListEvents>
                     {allEvents.length === 0 && <div>
                         <Skeleton variant="rect" animation="wave" height={118} />
                         <Skeleton animation="wave" />
@@ -499,12 +474,6 @@ function EventsTabPanel({ history }) {
 
                                 </EventCard>)
                         })}
-                    {/* <EventCard click={handleClick} url ={user.imageUrl}></EventCard>
-                    <EventCard click={handleClick} url ={user.imageUrl}></EventCard>
-                    <EventCard click={handleClick} url ={user.imageUrl}></EventCard>
-                    <EventCard click={handleClick} url ={user.imageUrl}></EventCard>
-                    <EventCard click={handleClick} url ={user.imageUrl}></EventCard>
-                    <EventCard click={handleClick} url ={user.imageUrl}></EventCard> */}
                 </Grid>
                 <Grid item xs={12} sm={12} md={4} lg={2} >
                     <Fab color="primary" aria-label="add" className={classes.fab} onClick={handlePostButtonClick}>
@@ -522,14 +491,8 @@ function EventsTabPanel({ history }) {
                         <List className={classes.root2}>
                             {/* <Divider variant="inset" component="li" /> */}
                             <Typography>No Registered Events</Typography>
-
-
-
                         </List>
-
                     </Paper>
-
-
                 </Grid>
             </Grid>
             <div>
@@ -546,6 +509,37 @@ function EventsTabPanel({ history }) {
                     open={imageDialogOpen}
                     handleClose={handleImageDialogClose} url={user.imageUrl}>
                 </ImageDialog>
+                <Dialog
+                        open={filterDialogOpen}
+                        onClose={handleFilterClose}
+                        fullWidth={true}
+                        scroll="paper"
+                        aria-labelledby="scroll-dialog-title"
+                        aria-describedby="scroll-dialog-description"
+                        maxWidth="sm" PaperProps={{
+                            style: {
+                                backgroundColor: "#1C1C1E",
+                                boxShadow: 'none',
+                            },
+                        }}>
+                        <DialogTitle>Filters</DialogTitle>
+                        <DialogContent>
+                            <MobileSortPanel
+                                handleSortDateChange={handleSortDateChange}
+                                sortStartDate={sortStartDate}
+                                handleEndSortDateChange={handleEndSortDateChange}
+                                sortEndDate={sortEndDate}
+                                handleSortCollegeChange={handleSortCollegeChange}
+                                feeChecked={feeSortChecked}
+                                modeChecked={modeSortChecked}
+                                setFeeChecked={setFeeSortChecked}
+                                setModeChecked={setModeSortChecked}
+                                handleSortApplyButton={handleSortApplyButton}
+                                handlesortDiscardButton={handlesortDiscardButton}>
+                            </MobileSortPanel>
+                        </DialogContent>
+
+                    </Dialog>
 
             </div>
         </div>

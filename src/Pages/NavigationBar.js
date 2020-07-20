@@ -81,7 +81,24 @@ const NavigationBar = function ({ history }) {
   function handleSearchChange(event, value) {
     console.log(value);
     if (value != null) {
+      fetch(`http://139.59.16.53:4000/api/event/image?id=${value.posterUrl}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            method: 'GET'
+        }).then(response => {
+            if (response.status === 200) {
+                response.json().then(value => {
+                    const img = value.image;
+                    setImage(img.type + "," + img.image_data)
+                })
+            }
+
+        })
       setSearchedEvent(value);
+      // setImage(value.posterUrl)
       setOpen(true);
     }
   }
@@ -114,7 +131,8 @@ const NavigationBar = function ({ history }) {
   // const currentUser = localStorage.getItem('user');
   const currentUser = React.useContext(AuthContext);
   const token = localStorage.getItem('token');
-  console.log(currentUser);
+  const [image, setImage] = React.useState(null);
+  // console.log(currentUser);
   if (!currentUser) {
     return <Redirect to="/" />;
   }
@@ -276,7 +294,7 @@ const NavigationBar = function ({ history }) {
             tags={searchedEvent.tags}
             mode={searchedEvent.eventMode}
             feeType={searchedEvent.feesType}
-            // url={user.imageUrl}
+            imageUrl={image}
             handleClose={handleClose}></EventsDialog>
         </div>
       </React.Fragment>

@@ -94,6 +94,7 @@ export default function Checkout({history}) {
   const [eventThemes, setEventThemes] = React.useState(null);
   const [selectedrequirements, setSelectedRequirements] = React.useState(null);
   const [image, setImage] = React.useState(null);
+  const [imageType,setImageType] = React.useState(null);
   // const [imageName, setImageName] = React.useState("");
   // const [addressType,setAddressType] = React.useState("");
   const [collegeName,setCollegeName] = React.useState(null);
@@ -157,6 +158,7 @@ function getStepContent(step) {
         setRegLink={setRegLink} 
         setFees={setFees}
         setRequirements={setSelectedRequirements}
+        setPosterType={setImageType}
         // setOrganizer={setOrganizer}
         // setAddressType={setAddressType}
         setCollegeName={setCollegeName} 
@@ -198,10 +200,9 @@ function getStepContent(step) {
     // setLoading(true);
     // const { eventName, shortdesc, eventMode,regLink,regFees,organizer,about } = event.target.elements;
     try {
-      getBase64(image, (type,image_data) => {
         var data = new FormData();
         const payload = {
-          user_id: user._id,
+          user_id: user.userid,
           name: eventName,
           description: shortDesc,
           start_time: startDate,
@@ -210,9 +211,10 @@ function getStepContent(step) {
           eventMode: eventMode,
           eventType: eventType,
           tags: eventThemes,
+          image: image,
           // poster: result,
-          image_data: image_data,
-          type: type,
+          // image_data: image_data,
+          // type: type,
           regLink: regLink,
           fees: fees,
           about: about,
@@ -222,20 +224,39 @@ function getStepContent(step) {
           college: collegeName
         };
         data = JSON.stringify(payload);
-        console.log(data);
-        fetch('http://localhost:4000/api/events', {
+        // data.append("image",image);
+        // console.log(data);
+        fetch('http://139.59.16.53:4000/api/events', {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
             'Accept': 'application/json'
           },
           method: 'POST',
-          body: data
+          body: data,
         }).then(result => {
+          console.log(result);
           if (result.status === 200) {
             result.json().then(value => {
               console.log(value);
+              var data2 = new FormData();
+              console.log(value);
+              data2.append("image",image);
+              data2.append('eventId',value.eventId);
+              fetch('http://139.59.16.53:4000/api/event/uploadimage', {
+                headers: {
+                  'Authorization': `Bearer ${token}`,
+          },
+          method: 'POST',
+          body: data2,
+        }).then(response=>{
+          if (response.status === 200) {
+            response.json().then(val => {
               history.replace("/home")
+            })
+          }
+        })
+              
             })
           }
           else {
@@ -245,7 +266,7 @@ function getStepContent(step) {
           }
         })
 
-      })
+      
     }
     catch (error) {
       // setLoading(false);

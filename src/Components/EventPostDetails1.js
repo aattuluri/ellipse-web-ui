@@ -134,7 +134,7 @@ export default function AddressForm(props) {
             onChange={handleDescChange}
           />
         </Grid>
-        <Grid item xs={12} sm={6} lg={4}>
+        <Grid item xs={12} sm={6} lg={6}>
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <DateTimePicker
               minDate={Date.now()}
@@ -155,7 +155,7 @@ export default function AddressForm(props) {
           </MuiPickersUtilsProvider>
 
         </Grid>
-        <Grid item xs={12} sm={6} lg={4}>
+        <Grid item xs={12} sm={6} lg={6}>
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <DateTimePicker
               minDate={Date.now()}
@@ -175,7 +175,7 @@ export default function AddressForm(props) {
             />
           </MuiPickersUtilsProvider>
         </Grid>
-        <Grid item xs={12} sm={12} lg={4}>
+        <Grid item xs={12} sm={12} lg={12}>
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <DateTimePicker
               minDate={Date.now()}
@@ -227,7 +227,7 @@ export default function AddressForm(props) {
           />
         </Grid>
 
-        <Grid item xs={12}>
+        {/* <Grid item xs={12}>
           <TextField
             multiline={true}
             rows="5"
@@ -242,6 +242,26 @@ export default function AddressForm(props) {
             onChange={handleAboutChange}
             value={props.about}
           />
+        </Grid> */}
+        <Grid item xs={12}>
+          <FormControl fullWidth required>
+            <InputLabel htmlFor="outlined-age-native-simple">Mode</InputLabel>
+            <Select
+              fullWidth
+              native
+              label="Registration"
+              inputProps={{
+                name: 'registrationMode',
+                id: 'outlined-age-native-simple',
+              }}
+              value={props.eventMode}
+              onChange={handleEventModeChange}
+            >
+              <option aria-label="None" value="" />
+              <option value="online">Online</option>
+              <option value="offline">Offline</option>
+            </Select>
+          </FormControl>
         </Grid>
         <Grid item xs={12}>
               <FormLabel component="legend">Entry Fee</FormLabel>
@@ -251,6 +271,7 @@ export default function AddressForm(props) {
               </RadioGroup>
             </Grid>
       </Grid>
+      
       <div className={classes.buttons}>
         <Button
           type="submit"

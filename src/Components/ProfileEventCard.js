@@ -18,17 +18,37 @@ const useStyles = makeStyles((theme) => ({
 export default function ImgMediaCard(props) {
   const classes = useStyles();
   const event = props.event;
+  const [image, setImage] = React.useState(null);
+  const token = localStorage.getItem('token');
   function handleViewButtonClick(){
     props.handleViewClick(props.event);
   }
 
+  React.useEffect(() => {
+    fetch(`http://139.59.16.53:4000/api/event/image?id=${event.posterUrl}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      method: 'GET'
+    }).then(response => {
+      if (response.status === 200) {
+        response.json().then(value => {
+          const img = value.image;
+          setImage(img.type + "," + img.image_data)
+        })
+      }
+
+    })
+  }, [])
   return (
     <Card className={classes.root}>
       {/* <CardActionArea> */}
         <CardMedia
           component="img"
           height="180"
-          image={props.image}
+          image={`http://139.59.16.53:4000/api/image?id=${event.posterUrl}`}
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="h2">

@@ -93,20 +93,20 @@ const UserInfo = ({ history }) => {
             console.log(reader.result.split(',')[1])
             console.log(reader.result.split(',')[0])
             console.log(reader.result)
-            
-          cb(reader.result)
+
+            cb(reader.result)
         };
         reader.onerror = function (error) {
-          console.log('Error: ', error);
+            console.log('Error: ', error);
         };
-      }
+    }
     function handleChange(event) {
         if (event.target.files[0]) {
-              setImage(event.target.files[0]);
+            setImage(event.target.files[0]);
             // setImageAsFile(imageFile => (image))
-              const url = URL.createObjectURL(event.target.files[0]);
+            const url = URL.createObjectURL(event.target.files[0]);
             // const fileType = event.target.files[0].type;
-              setImageurl(url);
+            setImageurl(url);
             // setImageType(fileType.substr(fileType.indexOf('/') + 1));
         }
 
@@ -115,70 +115,47 @@ const UserInfo = ({ history }) => {
         event.preventDefault();
         setLoading(true);
         const token = localStorage.getItem('token');
-        const { gender, designation, college,bio } = event.target.elements;
+        const { gender, designation, college, bio } = event.target.elements;
         console.log(token);
 
         try {
             getBase64(image, (result) => {
                 var data = new FormData()
-        const payload = {
-            gender: gender.value,
-            designation: designation.value,
-            collegeName: college.value,
-            bio: bio.value,
-            imageUrl: result
-        };
-        data = JSON.stringify(payload);
-        console.log(data);
-        // http://139.59.16.53:4000/api
-        fetch('http://localhost:4000/api/users/userdetails', {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                method: 'POST',
-                body: data
-            }).then(response => {
-                if (response.status === 200) {
-                    response.json().then(val => {
-                        console.log(val.userDetails);
-                        localStorage.setItem('user', JSON.stringify(val.userDetails))
-                                setLoading(false);
-                                setState({
-                                    open: true,
-                                    vertical: 'top',
-                                    horizontal: 'center',
-                                    message: "successful",
-                                    type: "success"
-                                })
-                        // fetch('https://ellipseserver1.herokuapp.com/api/users/me', {
-                        //     headers: {
-                        //         'Authorization': `Bearer ${token}`,
-                        //         'Content-Type': 'application/json',
-                        //         'Accept': 'application/json'
-                        //     },
-                        //     method: 'GET'
-                        // }).then(result => {
-                        //     console.log(result);
-                        //     result.json().then(value => {
-                        //         localStorage.setItem('user', JSON.stringify(value))
-                        //         setLoading(false);
-                        //         setState({
-                        //             open: true,
-                        //             vertical: 'top',
-                        //             horizontal: 'center',
-                        //             message: "successful",
-                        //             type: "success"
-                        //         })
-                        //     })
-                        // })
+                const payload = {
+                    gender: gender.value,
+                    designation: designation.value,
+                    collegeName: college.value,
+                    bio: bio.value,
+                    imageUrl: result
+                };
+                data = JSON.stringify(payload);
+                console.log(data);
+                // http://139.59.16.53:4000/api
+                fetch('http://139.59.16.53:4000/api/users/userdetails', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    method: 'POST',
+                    body: data
+                }).then(response => {
+                    if (response.status === 200) {
+                        response.json().then(val => {
+                            setLoading(false);
+                            setState({
+                                open: true,
+                                vertical: 'top',
+                                horizontal: 'center',
+                                message: "successful",
+                                type: "success"
+                            })
 
-                    })
-                }
+                        })
+                    }
+                })
             })
-            })
-            
+
 
         } catch (error) {
             setLoading(false);
@@ -220,7 +197,7 @@ const UserInfo = ({ history }) => {
                             <EditIcon></EditIcon>
                         </IconButton>
                     </label>}>
-                    <Avatar className={classes.avatar} sizes="100" alt=""  src={imageUrl}></Avatar>
+                    <Avatar className={classes.avatar} sizes="100" alt="" src={imageUrl}></Avatar>
                 </Badge>
 
                 <form className={classes.form} onSubmit={handleSignUp}>
