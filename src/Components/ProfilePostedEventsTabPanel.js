@@ -55,7 +55,7 @@ function ProfilePostsTabPanel(props) {
     const [selectedEvent,setSellectedEvent] = React.useState("");
     function handleViewClick(event){
         setSellectedEvent(event);
-        setOpen(true);
+        // setOpen(true);
     } 
 
     function handleClose(){

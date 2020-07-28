@@ -35,10 +35,11 @@ const Signup = ({ history }) => {
     vertical: 'top',
     horizontal: 'center',
     message: 'success',
-    type: 'error'
+    type: 'error',
+    autoHide: 300
   });
   const [loading, setLoading] = React.useState(false);
-  const { vertical, horizontal, open, message, type } = state;
+  const { vertical, horizontal, open, message, type,autoHide } = state;
   const handleClose = async (event, reason) => {
     console.log(token);
 
@@ -74,13 +75,8 @@ const Signup = ({ history }) => {
           body: data
         }).then((result) => {
           if (result.status === 200) {
-            console.log(result);
             result.json().then((val) => {
-              console.log(val);
-              console.log(val.token);
               setToken(val.token);
-              // console.log(val.user.name);
-              // setCurrentUser(JSON.stringify(val.user));
               var data2 = new FormData();
               const payload2 = {
                 email: val.useremail
@@ -88,7 +84,6 @@ const Signup = ({ history }) => {
               data2 = JSON.stringify(payload2)
               console.log(token);
               const tok = val.token;
-              console.log(tok);
               fetch('http://139.59.16.53:4000/api/users/sendverificationemail', {
                 headers: {
                   'Authorization': `Bearer ${tok}`,
@@ -97,18 +92,15 @@ const Signup = ({ history }) => {
                 method: 'POST',
                 body: data2
               }).then((result) => {
-                // console.log(result.json());
-
                 result.json().then((res) => {
-                  console.log(res.message);
                   if (res.message === "success") {
-                    console.log(res.message);
                     setState({
                       open: true,
                       vertical: 'top',
                       horizontal: 'center',
                       message: 'Signedup successfully',
-                      type: "success"
+                      type: "success",
+                      autoHide: 300
                     });
                   }
                 })
@@ -124,32 +116,11 @@ const Signup = ({ history }) => {
               vertical: 'top',
               horizontal: 'center',
               message: 'Email already registered',
-              type: "error"
+              type: "error",
+              autoHide: 3000
             });
           }
         })
-        // AP0033036342020LL
-        // await firebaseApp
-        //   .auth()
-        //   .createUserWithEmailAndPassword(email.value, password.value).then(function (user) {
-        //     console.log(user.user.uid);
-        //     db.collection("UserDetails").doc(user.user.uid).set({
-        //       FullName: fullName.value,
-        //       Email: email.value,
-        //       College: college.value,
-        //       Gender: gender.value,
-        //       Uid: user.user.uid,
-        //       Designation: designation.value
-        //     }).then(function () {
-        //       setState({
-        //         open: true,
-        //         vertical: 'top',
-        //         horizontal: 'center',
-        //         message: 'Signedup successfully.Verify your email and login',
-        //         type: "success"
-        //       });
-        //     })
-        //   })
       }
 
       else {

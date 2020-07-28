@@ -8,7 +8,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Grid from '@material-ui/core/Grid';
 import { Typography } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
-import { withRouter } from 'react-router';
+import { withRouter, Redirect } from "react-router";
 import List from '@material-ui/core/List';
 import EventsDialog from '../Components/EventsDialog';
 import Fab from '@material-ui/core/Fab';
@@ -119,7 +119,7 @@ function EventsTabPanel({ history }) {
     // const { children, value, url, index, ...other } = props;
     // const user = JSON.parse(localStorage.getItem('user'));
     // const url = user.imageUrl;
-    // const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token');
     const user = React.useContext(AuthContext);
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
@@ -136,16 +136,18 @@ function EventsTabPanel({ history }) {
     const [feeSortChecked, setFeeSortChecked] = React.useState([0]);
     const [modeSortChecked, setModeSortChecked] = React.useState([0]);
     const [filterDialogOpen, setFilterDialogOpen] = React.useState(false);
-    const [selectedImage,setSelectedImage] = React.useState(null);
+    const [selectedImage, setSelectedImage] = React.useState(null);
     const allEvents = React.useContext(EventsContext);
-    console.log(allEvents);
-    // setAllEvents(fEvents);
+    
+    if (!token) {
+        return <Redirect to="/" />;
+    }
     const handleClose = () => {
         setOpen(false);
     };
-    const handleClick = function (id,image) {
-        console.log(id);
-        setSelectedEvent(id);
+    const handleClick = function (event, image) {
+        // console.log(id);
+        setSelectedEvent(event);
         setSelectedImage(image);
         setOpen(true);
         // history.push('eventdetails')
@@ -153,29 +155,7 @@ function EventsTabPanel({ history }) {
     const handlePostButtonClick = () => {
         history.push('/post')
     }
-    useEffect(() => {
-        // setAllEvents(fEvents);
-        //     fetch('https://ellipseserver1.herokuapp.com/api/events', {
-        //         headers: {
-        //             'Authorization': `Bearer ${token}`,
-        //             'Content-Type': 'application/json',
-        //             'Accept': 'application/json'
-        //         },
-        //         method: 'GET'
-        //     }).then(response => {
-        //         response.json().then(value => {
-        //             console.log(value);
-        //             setAllEvents(value);
-        //             setFinalEvents(value);
-        //         })
-        //     })
-    }, [])
 
-    // const [value, setValue] = React.useState(0);
-
-    // const handleChange = (event, newValue) => {
-    //     setValue(newValue);
-    // };
     const handleSortDateChange = (date) => {
         console.log(date);
         setSortStartDate(date);
@@ -387,8 +367,10 @@ function EventsTabPanel({ history }) {
         setImageDialogOpen(true);
     }
 
-    function handleRegistrationButton(event){
+    function handleRegistrationButton(event) {
         setSelectedEvent(event);
+        // history.push({pathName: `/event/register/${event._id}`,events:event})
+        history.push('/event/register/' + event._id);
         // history.push('/events')
         // return <Link to="/events"></Link>
     }
@@ -416,10 +398,13 @@ function EventsTabPanel({ history }) {
 
                 </Grid>
                 <Grid item xs={12} sm={12} md={9} lg={8}>
-                <Typography variant="h5" style={{paddingTop:'5px'}}>
-                    Your College Events
+                    <Typography variant="h5" style={{ paddingTop: '5px' }}>
+                        Your College Events
                 </Typography>
-                    <GridListEvents></GridListEvents>
+                    <GridListEvents click={handleClick} events={allEvents.filter((event) => event.college === user.collegeName)} ></GridListEvents>
+
+
+
                     {allEvents.length === 0 && <div>
                         <Skeleton variant="rect" animation="wave" height={118} />
                         <Skeleton animation="wave" />
@@ -510,36 +495,36 @@ function EventsTabPanel({ history }) {
                     handleClose={handleImageDialogClose} url={user.imageUrl}>
                 </ImageDialog>
                 <Dialog
-                        open={filterDialogOpen}
-                        onClose={handleFilterClose}
-                        fullWidth={true}
-                        scroll="paper"
-                        aria-labelledby="scroll-dialog-title"
-                        aria-describedby="scroll-dialog-description"
-                        maxWidth="sm" PaperProps={{
-                            style: {
-                                backgroundColor: "#1C1C1E",
-                                boxShadow: 'none',
-                            },
-                        }}>
-                        <DialogTitle>Filters</DialogTitle>
-                        <DialogContent>
-                            <MobileSortPanel
-                                handleSortDateChange={handleSortDateChange}
-                                sortStartDate={sortStartDate}
-                                handleEndSortDateChange={handleEndSortDateChange}
-                                sortEndDate={sortEndDate}
-                                handleSortCollegeChange={handleSortCollegeChange}
-                                feeChecked={feeSortChecked}
-                                modeChecked={modeSortChecked}
-                                setFeeChecked={setFeeSortChecked}
-                                setModeChecked={setModeSortChecked}
-                                handleSortApplyButton={handleSortApplyButton}
-                                handlesortDiscardButton={handlesortDiscardButton}>
-                            </MobileSortPanel>
-                        </DialogContent>
+                    open={filterDialogOpen}
+                    onClose={handleFilterClose}
+                    fullWidth={true}
+                    scroll="paper"
+                    aria-labelledby="scroll-dialog-title"
+                    aria-describedby="scroll-dialog-description"
+                    maxWidth="sm" PaperProps={{
+                        style: {
+                            backgroundColor: "#1C1C1E",
+                            boxShadow: 'none',
+                        },
+                    }}>
+                    <DialogTitle>Filters</DialogTitle>
+                    <DialogContent>
+                        <MobileSortPanel
+                            handleSortDateChange={handleSortDateChange}
+                            sortStartDate={sortStartDate}
+                            handleEndSortDateChange={handleEndSortDateChange}
+                            sortEndDate={sortEndDate}
+                            handleSortCollegeChange={handleSortCollegeChange}
+                            feeChecked={feeSortChecked}
+                            modeChecked={modeSortChecked}
+                            setFeeChecked={setFeeSortChecked}
+                            setModeChecked={setModeSortChecked}
+                            handleSortApplyButton={handleSortApplyButton}
+                            handlesortDiscardButton={handlesortDiscardButton}>
+                        </MobileSortPanel>
+                    </DialogContent>
 
-                    </Dialog>
+                </Dialog>
 
             </div>
         </div>
@@ -551,4 +536,3 @@ function EventsTabPanel({ history }) {
 
 export default withRouter(EventsTabPanel);
 
- 

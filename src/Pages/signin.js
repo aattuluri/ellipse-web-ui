@@ -78,12 +78,15 @@ const Signin = ({ history }) => {
       console.log(data);
       fetch('http://139.59.16.53:4000/api/users/login', {
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
         },
         method: 'POST',
         body: data
       }).then((response) => {
+        console.log(response);
         if(response.status === 200){
+          // console.log
           response.json().then((value) => {
             setToken(value.token);
             setIsUserVerified(value.isVerified);
@@ -123,8 +126,8 @@ const Signin = ({ history }) => {
         autoHide:6000 })
     }
   }
-  const currentUser = localStorage.getItem('user');
-  if(currentUser){
+  const lToken = localStorage.getItem('token');
+  if(lToken){
     return <Redirect to="/home" />;
   }
  
@@ -151,16 +154,19 @@ const Signin = ({ history }) => {
           <Typography component="h1" variant="h6">
             Kill time for what matters
           </Typography><br></br>
-          <img src={iPhone} alt="iphone" height="500px" width="300px" align="center"></img><br></br>
+          {/* <div className={classes.iphoneImage}> */}
+          <img src={iPhone} className={classes.iPhoneImage} alt="iphone" height="500px" width="300px" align="center"></img><br></br>
           <div className={classes.paperimage}>
-            <Grid item xs={12} sm={12} md={12} elevation={12}>
+            <Grid item xs={12} sm={12} md={12} className={classes.iPhoneImage} elevation={12}>
 
               <img src={GoogleBadge} alt="playstore" height="100px" width="250px"></img><br></br>
             </Grid>
-            <Grid item xs={12} sm={12} md={12} elevation={12} square >
+            <Grid item xs={12} sm={12} className={classes.iPhoneImage} md={12} elevation={12} square >
               <img src={AppleBadge} alt="appstore" height="70px" width="220px"></img>
             </Grid>
           </div>
+          {/* </div> */}
+          
         </div>
       </Grid>
 

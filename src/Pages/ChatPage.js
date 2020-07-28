@@ -22,7 +22,7 @@ import { Route } from 'react-router';
 import ChatPanel from '../Components/ChatPanel';
 import ChatContactsPanel from '../Pages/ChatContactsPanel';
 import { Typography, Paper } from '@material-ui/core';
-import socket from '../SocketClient';
+// import socket from '../SocketClient';
 
 const useStyles = makeStyles((theme) => ({
     root: {

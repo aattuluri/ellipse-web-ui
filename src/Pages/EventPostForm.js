@@ -10,6 +10,7 @@ import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
 import EventPostDetails1 from '../Components/EventPostDetails1';
 import EventPostDetails2 from '../Components/EventPostDetails2';
+import EventPostDetails3 from '../Components/EventPostDetails3';
 import AuthContext from '../AuthContext';
 
 function Copyright() {
@@ -48,11 +49,11 @@ const useStyles = makeStyles((theme) => ({
       marginBottom: theme.spacing(1),
       padding: theme.spacing(3),
     },
-    backgroundColor:theme.palette.secondary.main,
+    backgroundColor: theme.palette.secondary.main,
   },
   stepper: {
     padding: theme.spacing(3, 8, 2),
-    backgroundColor:theme.palette.secondary.main,
+    backgroundColor: theme.palette.secondary.main,
   },
   buttons: {
     display: 'flex',
@@ -66,9 +67,12 @@ const useStyles = makeStyles((theme) => ({
 
 
 
-export default function Checkout({history}) {
+export default function Checkout({ history }) {
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
+  const token = localStorage.getItem('token');
+  // const user = JSON.parse(u);
+  const user = React.useContext(AuthContext);
   // const [loading, setLoading] = React.useState(false);
   // const [state, setState] = React.useState({
   //   open: false,
@@ -77,113 +81,137 @@ export default function Checkout({history}) {
   //   message: 'success',
   //   type: 'error'
   // });
-  const [eventName,setEventName] = React.useState(null);
-  const [shortDesc,setShortDesc] = React.useState(null);
-  const [eventMode,setEventMode] = React.useState(null);
-  const [about,setAbout] = React.useState(null);
+  const [eventName, setEventName] = React.useState(null);
+  const [shortDesc, setShortDesc] = React.useState(null);
+  const [eventMode, setEventMode] = React.useState(null);
+  const [about, setAbout] = React.useState(null);
   const [startDate, setStartDate] = React.useState(null);
   const [endDate, setendDate] = React.useState(null);
   const [regEndDate, setRegEndDate] = React.useState(null);
   const [eventType, setEventType] = React.useState(null);
-  const [feeType,setFeeType] = React.useState("Free");
+  const [feeType, setFeeType] = React.useState("Free");
+  const [registrationMode, setRegistrationMode] = React.useState(null);
 
 
 
-  const [regLink,setRegLink] = React.useState(null);
-  const [fees,setFees] = React.useState(null);
+  const [regLink, setRegLink] = React.useState(null);
+  const [fees, setFees] = React.useState(null);
   const [eventThemes, setEventThemes] = React.useState(null);
   const [selectedrequirements, setSelectedRequirements] = React.useState(null);
   const [image, setImage] = React.useState(null);
-  const [imageType,setImageType] = React.useState(null);
+  const [imageType, setImageType] = React.useState(null);
   // const [imageName, setImageName] = React.useState("");
-  // const [addressType,setAddressType] = React.useState("");
-  const [collegeName,setCollegeName] = React.useState(null);
-  const [building,setBuildingAdress] = React.useState(null);
+  const [addressType, setAddressType] = React.useState("college");
+  const [collegeName, setCollegeName] = React.useState(user.collegeName);
+  const [building, setBuildingAdress] = React.useState(null);
+  const [organizer, setOrganizer] = React.useState(user.name + "," + user.collegeName);
+  const [venueCollege,setVenueCollege] = React.useState(null);
+  const [participantsType,setParticipantsType] = React.useState("open");
   // const { vertical, horizontal, open, message, type } = state;
 
-  // const u = localStorage.getItem('user');
-  const token = localStorage.getItem('token');
-  // const user = JSON.parse(u);
-  const user = React.useContext(AuthContext);
-  // const handleStartDateChange = (date) => {
-  //   setStartDate(date);
-  // };
-  // const handleendDateChange = (date) => {
-  //   setendDate(date);
-  // };
-  // const handleRegEndDateChange = (date) => {
-  //   setRegEndDate(date)
-  // };
+  const [fields,setFields] = React.useState([]);
 
-  const steps = ['About', 'More Details'];
-console.log(feeType);
-function getStepContent(step) {
-  switch (step) {
-    case 0:
-      return (
-      <EventPostDetails1
-      name={eventName}
-      desc={shortDesc}
-      startDate={startDate}
-      endDate={endDate}
-      regEndDate={regEndDate}
-      eventMode={eventMode}
-      eventType={eventType}
-      about={about}
-      feeType={feeType}
-      setName={setEventName} 
-      setDesc={setShortDesc} 
-      setStartDate={setStartDate} 
-      setEndDate={setendDate} 
-      setRegEndDate={setRegEndDate} 
-      setEventMode={setEventMode} 
-      setEventType={setEventType} 
-      setAbout={setAbout} handleNext={handleNext} setFeeType={setFeeType} />);
-    case 1:
-      return (
-        <EventPostDetails2 
-        handleBack={handleBack}
-        handleEventPost={handleEventPost}
-        eventMode={eventMode}
-        feeType={feeType}
-        eventThemes={eventThemes}
-        eventPoster={image}
-        regLink={regLink}
-        regFees={fees}
-        requirements={selectedrequirements}
-        college={collegeName}
-        building={building}
-        setThemes={setEventThemes} 
-        setPoster={setImage} 
-        setRegLink={setRegLink} 
-        setFees={setFees}
-        setRequirements={setSelectedRequirements}
-        setPosterType={setImageType}
-        // setOrganizer={setOrganizer}
-        // setAddressType={setAddressType}
-        setCollegeName={setCollegeName} 
-        setBuilding={setBuildingAdress}/>
-      ) ;
-    default:
-      throw new Error('Unknown step');
+  function setRegFields(f){
+    console.log(f);
+    setFields(f);
   }
-}
 
+  function handlePostwithoutregFileds(e){
+    e.preventDefault();
+    handleEventPost(null);
+  }
+
+  const [steps, setSteps] = React.useState(['About', 'More Details'])
+  console.log(feeType);
+  function getStepContent(step) {
+    switch (step) {
+      case 0:
+        return (
+          <EventPostDetails1
+            name={eventName}
+            desc={shortDesc}
+            startDate={startDate}
+            endDate={endDate}
+            regEndDate={regEndDate}
+            eventMode={eventMode}
+            eventType={eventType}
+            about={about}
+            feeType={feeType}
+            registrationMode={registrationMode}
+            setName={setEventName}
+            setDesc={setShortDesc}
+            setStartDate={setStartDate}
+            setEndDate={setendDate}
+            setRegEndDate={setRegEndDate}
+            setEventMode={setEventMode}
+            setEventType={setEventType}
+            setRegistrationMode={setRegistrationMode}
+            setAbout={setAbout}
+            handleNext={handleNext}
+            setFeeType={setFeeType}
+            steps={steps}
+            setSteps={setSteps} />);
+      case 1:
+        return (
+          <EventPostDetails2
+            handleBack={handleBack}
+            handleEventPost={handleEventPost}
+            eventMode={eventMode}
+            feeType={feeType}
+            eventThemes={eventThemes}
+            eventPoster={image}
+            regLink={regLink}
+            regFees={fees}
+            about={about}
+            requirements={selectedrequirements}
+            college={collegeName}
+            building={building}
+            organizer={organizer}
+            registrationMode={registrationMode}
+            venueCollege ={venueCollege}
+            participantsType={participantsType}
+            setThemes={setEventThemes}
+            setPoster={setImage}
+            setRegLink={setRegLink}
+            setFees={setFees}
+            setRequirements={setSelectedRequirements}
+            setPosterType={setImageType}
+            setOrganizer={setOrganizer}
+            setAddressType={setAddressType}
+            setCollegeName={setCollegeName}
+            setBuilding={setBuildingAdress}
+            setVenueCollege={setVenueCollege}
+            setAbout={setAbout}
+            setParticipantsType={setParticipantsType}
+            registrationMode={registrationMode}
+            handleNext={registrationMode == "ellipse" ? handleNext : handlePostwithoutregFileds} />
+        );
+      case 2:
+        return (
+          <EventPostDetails3
+            handleBack={handleBack} 
+            fields={fields} 
+            setFields={setRegFields} handlePost={handleEventPost}>
+
+          </EventPostDetails3>);
+      default:
+        throw new Error('Unknown step');
+    }
+  }
+
+
+  console.log(fields);
   function getBase64(file, cb) {
     let reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = function () {
-      cb(reader.result.split(',')[0],reader.result.split(',')[1])
+      cb(reader.result.split(',')[0], reader.result.split(',')[1])
     };
-    // console.log(reader.type);
-    // console.log(reader.result.split(',')[1])
-    //         console.log(reader.result.split(',')[0])
-    //         console.log(reader.result)
     reader.onerror = function (error) {
       console.log('Error: ', error);
     };
   }
-
+  console.log(steps);
   // const handleClose = async (event, reason) => {
   //   if (message === "Signedup successfully") {
   //     // history.replace("/otpverification")
@@ -191,82 +219,85 @@ function getStepContent(step) {
   //   // setState({ ...state, open: false });
   // };
 
- 
 
-  
 
-  async function handleEventPost(event) {
-    event.preventDefault();
+console.log(fields);
+
+  const handleEventPost =  (allFields)=> {
+    console.log(allFields);
+    // event.preventDefault();
     // setLoading(true);
     // const { eventName, shortdesc, eventMode,regLink,regFees,organizer,about } = event.target.elements;
     try {
-        var data = new FormData();
-        const payload = {
-          user_id: user.userid,
-          name: eventName,
-          description: shortDesc,
-          start_time: startDate,
-          finish_time: endDate,
-          registrationEndTime: regEndDate,
-          eventMode: eventMode,
-          eventType: eventType,
-          tags: eventThemes,
-          image: image,
-          // poster: result,
-          // image_data: image_data,
-          // type: type,
-          regLink: regLink,
-          fees: fees,
-          about: about,
-          // organizer: or,
-          feesType:feeType,
-          requirements: selectedrequirements,
-          college: collegeName
-        };
-        data = JSON.stringify(payload);
-        // data.append("image",image);
-        // console.log(data);
-        fetch('http://139.59.16.53:4000/api/events', {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          method: 'POST',
-          body: data,
-        }).then(result => {
-          console.log(result);
-          if (result.status === 200) {
-            result.json().then(value => {
-              console.log(value);
-              var data2 = new FormData();
-              console.log(value);
-              data2.append("image",image);
-              data2.append('eventId',value.eventId);
-              fetch('http://139.59.16.53:4000/api/event/uploadimage', {
-                headers: {
-                  'Authorization': `Bearer ${token}`,
-          },
-          method: 'POST',
-          body: data2,
-        }).then(response=>{
-          if (response.status === 200) {
-            response.json().then(val => {
-              history.replace("/home")
+      var data = new FormData();
+      const payload = {
+        user_id: user.userid,
+        name: eventName,
+        description: shortDesc,
+        start_time: startDate,
+        finish_time: endDate,
+        registrationEndTime: regEndDate,
+        eventMode: eventMode,
+        eventType: eventType,
+        tags: eventThemes,
+        regLink: regLink,
+        fees: fees,
+        about: about,
+        organizer: organizer,
+        feesType: feeType,
+        requirements: selectedrequirements,
+        college: collegeName,
+        addressType: addressType,
+        building: building,
+        regFields: allFields,
+        regMode: registrationMode,
+        participantsType: participantsType
+      };
+      console.log(payload);
+      data = JSON.stringify(payload);
+      // data.append("image",image);
+      console.log(data);
+      fetch('http://139.59.16.53:4000/api/events', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        method: 'POST',
+        body: data,
+      }).then(result => {
+        console.log(result);
+        if (result.status === 200) {
+          result.json().then(value => {
+            console.log(value);
+            var data2 = new FormData();
+            console.log(value);
+            data2.append("image", image);
+            // data2.append('eventId', value.eventId);
+            fetch(`http://139.59.16.53:4000/api/event/uploadimage?id=${value.eventId}`, {
+              headers: {
+                'Authorization': `Bearer ${token}`,
+              },
+              method: 'POST',
+              body: data2,
+            }).then(response => {
+              if (response.status === 200) {
+                response.json().then(val => {
+                  history.replace("/home")
+                })
+              }
             })
-          }
-        })
-              
-            })
-          }
-          else {
-            result.json().then(value => {
-              console.log(value);
-            })
-          }
-        })
 
-      
+          })
+        }
+        else {
+          result.json().then(value => {
+            console.log(value);
+          })
+        }
+      })
+
+
     }
     catch (error) {
       // setLoading(false);
@@ -291,13 +322,6 @@ function getStepContent(step) {
   return (
     <React.Fragment>
       <CssBaseline />
-      {/* <AppBar position="absolute" color="default" className={classes.appBar}>
-        <Toolbar>
-          <Typography variant="h6" color="inherit" noWrap>
-            Company name
-          </Typography>
-        </Toolbar>
-      </AppBar> */}
       <main className={classes.layout}>
         <Paper className={classes.paper}>
           <Typography component="h1" variant="h4" align="center">
@@ -322,10 +346,10 @@ function getStepContent(step) {
                 </Typography>
               </React.Fragment>
             ) : (
-              <React.Fragment>
-                {getStepContent(activeStep)}
-              </React.Fragment>
-            )}
+                <React.Fragment>
+                  {getStepContent(activeStep)}
+                </React.Fragment>
+              )}
           </React.Fragment>
         </Paper>
         <Copyright />

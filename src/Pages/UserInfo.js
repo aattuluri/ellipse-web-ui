@@ -73,7 +73,8 @@ const UserInfo = ({ history }) => {
         vertical: 'top',
         horizontal: 'center',
         message: 'success',
-        type: 'error'
+        type: 'error',
+        autoHide: 300
     });
     const [loading, setLoading] = React.useState(false);
     const { vertical, horizontal, open, message, type } = state;
@@ -85,21 +86,21 @@ const UserInfo = ({ history }) => {
 
         setState({ ...state, open: false });
     };
-    function getBase64(file, cb) {
-        let reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = function () {
-            console.log(reader.type);
-            console.log(reader.result.split(',')[1])
-            console.log(reader.result.split(',')[0])
-            console.log(reader.result)
+    // function getBase64(file, cb) {
+    //     let reader = new FileReader();
+    //     reader.readAsDataURL(file);
+    //     reader.onload = function () {
+    //         console.log(reader.type);
+    //         console.log(reader.result.split(',')[1])
+    //         console.log(reader.result.split(',')[0])
+    //         console.log(reader.result)
 
-            cb(reader.result)
-        };
-        reader.onerror = function (error) {
-            console.log('Error: ', error);
-        };
-    }
+    //         cb(reader.result)
+    //     };
+    //     reader.onerror = function (error) {
+    //         console.log('Error: ', error);
+    //     };
+    // }
     function handleChange(event) {
         if (event.target.files[0]) {
             setImage(event.target.files[0]);
@@ -116,44 +117,69 @@ const UserInfo = ({ history }) => {
         setLoading(true);
         const token = localStorage.getItem('token');
         const { gender, designation, college, bio } = event.target.elements;
-        console.log(token);
 
         try {
-            getBase64(image, (result) => {
-                var data = new FormData()
-                const payload = {
-                    gender: gender.value,
-                    designation: designation.value,
-                    collegeName: college.value,
-                    bio: bio.value,
-                    imageUrl: result
-                };
-                data = JSON.stringify(payload);
-                console.log(data);
-                // http://139.59.16.53:4000/api
-                fetch('http://139.59.16.53:4000/api/users/userdetails', {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    method: 'POST',
-                    body: data
-                }).then(response => {
-                    if (response.status === 200) {
-                        response.json().then(val => {
+            var data = new FormData()
+            const payload = {
+                gender: gender.value,
+                designation: designation.value,
+                collegeName: college.value,
+                bio: bio.value,
+            };
+            data = JSON.stringify(payload);
+            console.log(data);
+            // http://139.59.16.53:4000/api
+            fetch('http://139.59.16.53:4000/api/users/userdetails', {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                method: 'POST',
+                body: data
+            }).then(response => {
+                if (response.status === 200) {
+                    response.json().then(val => {
+                        console.log(val.message)
+                        if (image != null) {
+                            var data2 = new FormData()
+                            data2.append("image", image);
+                            fetch('http://139.59.16.53:4000/api/users/uploadImage', {
+                                headers: {
+                                    'Authorization': `Bearer ${token}`,
+                                },
+                                method: 'POST',
+                                body: data2
+                            }).then(res => {
+                                if (res.status === 200) {
+                                    setLoading(false);
+                                    setState({
+                                        open: true,
+                                        vertical: 'top',
+                                        horizontal: 'center',
+                                        message: "successful",
+                                        type: "success",
+                                        autoHide: 300
+                                    })
+                                }
+                            })
+                        }
+                        else {
+
                             setLoading(false);
                             setState({
                                 open: true,
                                 vertical: 'top',
                                 horizontal: 'center',
                                 message: "successful",
-                                type: "success"
+                                type: "success",
+                                autoHide: 300
                             })
 
-                        })
-                    }
-                })
+                        }
+                    })
+
+                }
             })
 
 
@@ -164,7 +190,8 @@ const UserInfo = ({ history }) => {
                 vertical: 'top',
                 horizontal: 'center',
                 message: error.message,
-                type: "error"
+                type: "error",
+                autoHide: 3000
             })
         }
     }

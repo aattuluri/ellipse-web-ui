@@ -16,6 +16,14 @@ import { makeStyles } from '@material-ui/core/styles';
 // import Grid from '@material-ui/core/Grid';
 import AboutEventPanel from '../Components/AboutEventPanel';
 import EventsTimeLinePanel from '../Components/EventTimeLinePanel';
+import EvenstAnnouncementsPanel from '../Components/EventsAnnouncementsPanel';
+import ChatPanel from '../Components/EventsChatPanel';
+import Paper from '@material-ui/core/Paper';
+import { TextField } from '@material-ui/core';
+import SendIcon from '@material-ui/icons/Send';
+import Box from '@material-ui/core/Box';
+import AuthContext from '../AuthContext';
+import { connect } from 'socket.io-client';
 
 
 function a11yProps(index) {
@@ -38,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
 
     },
     root: {
-        flexGrow: 1,
+        // flexGrow: 1,
         // width: '100%',
         // backgroundColor: theme.palette.background.paper,
     },
@@ -51,48 +59,155 @@ const useStyles = makeStyles((theme) => ({
         // height: '800px',
         minHeight: '90vh',
         maxHeight: '90vh',
+    },
+    root2: {
+        display: 'flex',
+        alignItems: "center",
+        justifyContent: 'center',
+        backgroundColor: theme.palette.secondary.main,
+        // marginBottom: theme.spacing(2),
+        padding: theme.spacing(1)
+
+    },
+    bottomBar: {
+        display: 'flex',
+        width: '90%',
+        backgroundColor: theme.palette.secondary.main
+    },
+    field: {
+        width: '100%'
+    },
+    action: {
+        width: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
     }
 }));
 
 function EventsDialog(props) {
     const event = props.event;
     const [value, setValue] = React.useState(0);
+    const user = React.useContext(AuthContext);
     const classes = useStyles();
     const token = localStorage.getItem('token');
-    // const [image, setImage] = React.useState(null);
-    // console.log(props.imageUrl);
-    // React.useEffect(() => {
-    //     setImage(props.imageUrl);
-    //     if(props.imageUrl === "undefined"){
-    //         fetch(`http://localhost:4000/api/event/image?id=${event.posterUrl}`, {
-    //       headers: {
-    //         'Authorization': `Bearer ${token}`,
-    //         'Content-Type': 'application/json',
-    //         'Accept': 'application/json'
-    //       },
-    //       method: 'GET'
-    //     }).then(response => {
-    //       if (response.status === 200) {
-    //         response.json().then(value => {
-    //           const img = value.image;
-    //           console.log(value.image);
-    //           setImage(img.type + "," + img.image_data)
-    //         })
-    //       }
-    
-    //     })
-    //     }
-        
-        
-    //   }, [])
+
+    const [chatMessages, setChatMessages] = React.useState([]);
+    // const [newmessage, setNewMessage] = React.useState(null);
+
+    const [newmessage, setNewMessage] = React.useState(null);
+    const [sendButtonDisabled, setSendButtonDisabled] = React.useState(true);
+    const [webSocket, setWebSocket] = React.useState(null);
+
+    React.useEffect(() => {
+        webConnect();
+        fetch(`http://139.59.16.53:4000/api/chat/getMessages?id=${event._id}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            method: 'GET',
+        }).then(response => {
+            response.json().then(value => {
+                // setEvent(value.event);
+                setChatMessages(value);
+                console.log(value);
+                // console.log(value);
+            })
+        })
+    }, [event])
+
+    // ws.onclose = ()=>{
+    //     console.log("closed");
+    // }
+    const handleNewMessage = (event, value) => {
+        console.log(event.target.value);
+        setSendButtonDisabled(false);
+        if (event.target.value == "") {
+            setSendButtonDisabled(true);
+        }
+
+        setNewMessage(event.target.value);
+    }
+
+    const webConnect = () => {
+        const ws = new WebSocket("ws://139.59.16.53:4000/");
+        ws.onopen = () => {
+            console.log("connected")
+            setWebSocket(ws);
+            // await ws.send(JSON.stringify({"hello":"hhh"}))
+            // ws.send(JSON.stringify({join:props.chatId}));
+            // setWebSocketOpen(true);
+            ws.onmessage = (message) => {
+                console.log(message);
+                const mes = JSON.parse(message.data);
+                const cMes = mes.msg;
+                console.log(cMes);
+                console.log(mes.room);
+                console.log(props.chatId);
+                if (mes.room === event._id) {
+                    setChatMessages(chatMessages => [...chatMessages, cMes]);
+                }
+
+            }
+        }
+        ws.onclose = () => {
+            check();
+            console.log("closed");
+        }
+    }
+
+    const check = () => {
+        if (!webSocket || webSocket.readyState === WebSocket.readyState) {
+            console.log("checking");
+            webConnect();
+        }
+    }
+
+
+    const handleSendClick = (e) => {
+
+        console.log("clicked")
+        webSocket.send(JSON.stringify({
+            room: event._id, msg: {
+                'id': user.userid,
+                'userName': user.name,
+                'userPic': user.imageUrl,
+                'message': newmessage,
+                'date': Date.now()
+            }
+        }));
+        setSendButtonDisabled(true);
+        setNewMessage("");
+    }
+    const handleKeyPress = (e) => {
+        console.log(sendButtonDisabled);
+        if (newmessage !== null  && newmessage !== "") {
+            if (e.keyCode == 13) {
+                e.preventDefault();
+                webSocket.send(JSON.stringify({
+                    room: event._id, msg: {
+                        'id': user.userid,
+                        'userName': user.name,
+                        'userPic': user.imageUrl,
+                        'message': newmessage,
+                        'date': Date.now()
+                    }
+                }));
+                setSendButtonDisabled(true);
+                setNewMessage("");
+            }
+        }
+
+    }
 
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
-    
+
     function handleClose() {
-        //   timerComponents = []
         props.handleClose();
 
     }
@@ -113,7 +228,6 @@ function EventsDialog(props) {
                 },
             }}
             classes={{ paper: classes.dialog }}
-
         >
             <DialogTitle id="scroll-dialog-title">
                 {event.name}
@@ -129,43 +243,76 @@ function EventsDialog(props) {
                     </IconButton>
                 </div>
                 <div className={classes.root}>
-                    <AppBar style={{ alignItems: 'center' }} position="static" color="secondary">
+                    <Paper className={classes.root2}>
                         <Tabs
                             value={value}
                             onChange={handleChange}
                             indicatorColor="primary"
                             textColor="primary"
                             variant="scrollable"
-                            scrollButtons="auto"
-                            aria-label="scrollable auto tabs example"
-                        //   centered
+                            scrollButtons="on"
                         >
                             <Tab label="About" {...a11yProps(0)} />
                             <Tab label="Timeline" {...a11yProps(1)} />
                             <Tab label="Announcements" {...a11yProps(2)} />
+                            <Tab label="Chat" {...a11yProps(3)} />
+
                         </Tabs>
-                    </AppBar>
+                    </Paper>
                 </div>
             </DialogTitle>
-            <DialogContent  dividers={true} >
-            <AboutEventPanel 
-            value={value} 
-            index={0} 
-            imageUrl={props.imageUrl} 
-            event={props.event}></AboutEventPanel>
-            <EventsTimeLinePanel value={value} index={1} event={props.event}></EventsTimeLinePanel>
+            <DialogContent dividers={true} >
+                <AboutEventPanel
+                    value={value}
+                    index={0}
+                    imageUrl={props.imageUrl}
+                    event={props.event}></AboutEventPanel>
+                <EventsTimeLinePanel value={value} index={1} event={props.event}></EventsTimeLinePanel>
+                <EvenstAnnouncementsPanel value={value} index={2} event={props.event}></EvenstAnnouncementsPanel>
+                <ChatPanel messages={chatMessages} value={value} index={3} event={props.event}></ChatPanel>
             </DialogContent>
-            <DialogActions>
-                {/* <div className={classes.bottomTags}>
-            {tags!= null && tags.map(val =>{
-                return <Chip variant="outlined" color="primary"  label={val}></Chip>
-            })}
-            <Chip variant="outlined" color="primary"  label="Free"></Chip>
-            </div> */}
+            <DialogActions className={value === 3 && classes.action}>
+                {/* <div
+                    role="tabpanel"
+                    > */}
+                {value === 3 && (
+                    <Box className={classes.bottomBar} display="flex"
+                        alignItems="center"
+                        justifyContent="center" hidden={value !== 3}>
 
-                <Button variant="contained" onClick={props.handleClose} color="primary">
-                    Register
-            </Button>
+                        <TextField
+                            className={classes.field}
+                            onKeyUp={handleKeyPress}
+                            fullWidth
+                            placeholder="Type your message"
+                            //    variant='filled'
+                            autoComplete='off'
+                            required
+                            id="shortdesc"
+                            name="shortdesc"
+                            multiline
+                            rows="1"
+                            value={newmessage}
+                            onChange={handleNewMessage}
+
+                        />
+
+                        <IconButton onKeyPress={handleKeyPress} onKeyDown={handleKeyPress} onClick={handleSendClick} disabled={sendButtonDisabled} className={classes.sendIcon}>
+                            <SendIcon></SendIcon>
+                        </IconButton>
+
+                    </Box>
+                )}
+                {/* </div> */}
+                <div
+                    role="tabpanel"
+                    hidden={value === 3}>
+                    {value != 3 && (
+                        <Button variant="contained" onClick={props.handleClose} color="primary">
+                            Register
+                        </Button>
+                    )}
+                </div>
             </DialogActions>
         </Dialog>
     )

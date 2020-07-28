@@ -24,6 +24,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import InfoIcon from '@material-ui/icons/Info';
 import AboutPanel from '../Components/AboutEventPanel';
 import TimeLinePanel from '../Components/EventTimeLinePanel';
+import DashboardPanel from '../Components/DashboardPanel';
 
 const drawerWidth = 240;
 
@@ -85,6 +86,8 @@ const useStyles = makeStyles((theme) => ({
   content: {
     flexGrow: 1,
     padding: theme.spacing(2),
+    height: '100vh',
+    overflow: 'auto',
   },
 }));
 
@@ -274,6 +277,9 @@ export default function MiniDrawer(props) {
         }
         {
           timilineSelected && event != null && <TimeLinePanel event = {event}></TimeLinePanel>
+        }
+        {
+          dashBoardSelected && event != null && <DashboardPanel event = {event}></DashboardPanel>
         }
         {/* <EventPost event = {event} ></EventPost> */}
         

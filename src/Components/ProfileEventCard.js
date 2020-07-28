@@ -24,24 +24,24 @@ export default function ImgMediaCard(props) {
     props.handleViewClick(props.event);
   }
 
-  React.useEffect(() => {
-    fetch(`http://139.59.16.53:4000/api/event/image?id=${event.posterUrl}`, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      method: 'GET'
-    }).then(response => {
-      if (response.status === 200) {
-        response.json().then(value => {
-          const img = value.image;
-          setImage(img.type + "," + img.image_data)
-        })
-      }
+  // React.useEffect(() => {
+  //   fetch(`http://139.59.16.53:4000/api/event/image?id=${event.posterUrl}`, {
+  //     headers: {
+  //       'Authorization': `Bearer ${token}`,
+  //       'Content-Type': 'application/json',
+  //       'Accept': 'application/json'
+  //     },
+  //     method: 'GET'
+  //   }).then(response => {
+  //     if (response.status === 200) {
+  //       response.json().then(value => {
+  //         const img = value.image;
+  //         setImage(img.type + "," + img.image_data)
+  //       })
+  //     }
 
-    })
-  }, [])
+  //   })
+  // }, [])
   return (
     <Card className={classes.root}>
       {/* <CardActionArea> */}

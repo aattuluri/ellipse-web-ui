@@ -36,6 +36,15 @@ const useStyles = makeStyles((theme) => ({
         padding: theme.spacing(1)
 
     },
+    root2: {
+        display: 'flex',
+        alignItems: "center",
+        justifyContent: 'center',
+        backgroundColor: theme.palette.primary.light,
+        marginBottom: theme.spacing(2),
+        padding: theme.spacing(1)
+
+    },
     media: {
         // height: 250,
         // paddingTop: '56.25%', // 16:9
@@ -93,7 +102,7 @@ function Eventcard(props) {
             <Grid item xs={12} sm={12} md={8}>
             <CardHeader
                 avatar={
-                    <Avatar className={classes.large} sizes="100" alt="" src={user.imageUrl}></Avatar>
+                    <Avatar className={classes.large} sizes="100" alt="" src={`http://139.59.16.53:4000/api/image?id=${user.imageUrl}`}></Avatar>
                 }
                 action={
                     <IconButton onClick={props.handleEditButton} aria-label="settings">
@@ -113,13 +122,15 @@ function Eventcard(props) {
         </Grid>
             
             <CardContent>
-                <Paper className={classes.root}>
+                <Paper className={classes.root2}>
                     <Tabs
                         value={value}
                         onChange={handleChange}
                         indicatorColor="primary"
                         textColor="primary"
-                        centered
+                        variant="scrollable"
+                        scrollButtons="on"
+                        // centered
                     >
                         
                         <Tab label="About" />

@@ -8,24 +8,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
-import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
-// import socketIOClient from "socket.io-client";
-// import socket from '../SocketClient';
-import ExpandLess from '@material-ui/icons/ExpandLess';
-import ExpandMore from '@material-ui/icons/ExpandMore';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-// import ListItemText from '@material-ui/core/ListItemText';
-import StarBorder from '@material-ui/icons/StarBorder';
-import Collapse from '@material-ui/core/Collapse';
-import Checkbox from '@material-ui/core/Checkbox';
-import { Route } from 'react-router';
-import ChatContactsPanel from '../Pages/ChatContactsPanel';
-import { Paper, IconButton } from '@material-ui/core';
-import TextField from '@material-ui/core/TextField';
-import { Box } from '@material-ui/core';
-import SendIcon from '@material-ui/icons/Send';
-import socket from '../SocketClient';
-import AuthContext from '../AuthContext';
+
 
 const useStyles = makeStyles((theme) => ({
 
@@ -40,61 +23,71 @@ const useStyles = makeStyles((theme) => ({
         width: theme.spacing(7),
         height: theme.spacing(7),
     },
-    
+    inline: {
+        // overflow: 'wrap'
+        // display: 'block'
+    }
+
 }));
 
 function ChatMessage(props) {
-    const token = localStorage.getItem('token');
-    const user = React.useContext(AuthContext);
+    // const token = localStorage.getItem('token');
+    // const user = React.useContext(AuthContext);
     const classes = useStyles();
-    // const [AdminId, setAdminId] = React.useState(null);
     const message = props.message;
-    const [name,setName] = React.useState('');
-    const [image,setImage] = React.useState(null);
-    const [userType,setUserType] = React.useState('Participant')
-   console.log(props.adminId)
+    const [userType, setUserType] = React.useState('')
+    const date = new Date(message.date);
+    // console.log(date.toLocaleTimeString([], {timeStyle: 'short'}))
     useEffect(() => {
-        if(props.adminId === message.id){
+        if (props.adminId === message.id) {
             setUserType('Admin')
         }
-        fetch(`http://139.59.16.53:4000/api/users/getuser?id=${message.id}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            method: 'GET',
-        }).then(response => {
-            response.json().then(value => {
-                console.log(value);
-                setName(value.name);
-                setImage(value.image);
-                // setEvent(value.event);
-                // setChatMessages(value);
-                // console.log(value);
-            })
-        })
-    }, [])
+    }, [props.adminId])
 
     return (
         <ListItem alignItems="flex-start">
-            <ListItemAvatar>
-                <Avatar alt={name} src={image} />
-            </ListItemAvatar>
+            {/* <ListItemAvatar>
+                <Avatar alt={name} src={`http://localhost:4000/api/image?id=${message.userPic}`} />
+            </ListItemAvatar> */}
             <ListItemText
                 primary={
                     <React.Fragment>
-                        {name}
+                        <Typography
+                            component="h6"
+                            variant="body2"
+                            className={classes.inline}
+                        >
+                            {message.userName}
+                        </Typography>
+
                         <Typography
                             component="span"
                             variant="body2"
                             className={classes.inline}
-                            color="textSecondary">
-                            {"("+userType+")"}
+                        >
+                            {userType}
                         </Typography>
                     </React.Fragment>
                 }
-                secondary={"  "+message.message}
+                secondary={<React.Fragment>
+                    <Typography
+                        component="span"
+                        variant="body1"
+                        color="textPrimary"
+                        className={classes.inline}
+                    >
+                        {message.message}
+                    </Typography>
+
+                    <Typography
+                        component="span"
+                        variant="body2"
+                        color="textSecondary"
+                        className={classes.inline}
+                    >
+                        {"   "+date.toLocaleTimeString([], {timeStyle: 'short'})}
+                    </Typography>
+                </React.Fragment>}
 
             />
         </ListItem>

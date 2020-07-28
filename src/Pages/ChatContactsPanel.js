@@ -99,7 +99,7 @@ function ChatPage(props) {
                                     <ListItemAvatar>
                                         <Avatar
                                             alt={`Avatar n°${value + 1}`}
-                                            src={`/static/images/avatar/${value + 1}.jpg`}
+                                            src={`http://139.59.16.53:4000/api/image?id=${value.posterUrl}`}
                                         />
                                     </ListItemAvatar>
                                 </ListItemIcon>

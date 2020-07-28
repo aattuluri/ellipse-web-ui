@@ -69,7 +69,7 @@ export default function AddressForm(props) {
   const [imageName, setImageName] = React.useState("");
   // const [addressType, setAddressType] = React.useState("");
   // const { vertical, horizontal, open, message, type } = state;
-  const eventTypes = ["Hackathon", "Coding Contest", "Webinar"];
+  const eventThemes = ["Hackathon", "Coding Contest", "Webinar"];
   const requirements = ["Laptop", "Basic HTML", "C++", "Machine Learning"];
   const colleges = ["VIT University", "GITAM University", "SRM University"];
 
@@ -95,11 +95,10 @@ export default function AddressForm(props) {
       const fileName = event.target.files[0].name;
       setImageName(fileName);
     }
-
   }
   function handleAddressTypeChange(evemt, value) {
     // setAddressType(value);
-    props.setAdressType(value);
+    props.setAddressType(value);
   }
 
   function handleRegLinkChange(event) {
@@ -113,22 +112,46 @@ export default function AddressForm(props) {
   function handleCollegeChange(event, value) {
     props.setCollegeName(value);
   }
+  function handleVenueCollegeChange(event, value) {
+    props.setVenueCollege(value);
+  }
 
-  console.log(props.eventMode)
+  function handleAboutChange(event) {
+    props.setAbout(event.target.value);
+  }
+  function handleParticipantsTypeChange(event,value){
+    props.setParticipantsType(value)
+  }
 
 
 
   return (
     <React.Fragment>
-
-      <form className={classes.form} onSubmit={props.handleEventPost} encType="multipart/form-data">
+      <form className={classes.form} onSubmit={props.handleNext} encType="multipart/form-data">
         <Grid container spacing={3}>
+        <Grid item xs={12}>
+          <TextField
+            multiline={true}
+            rows="5"
+            variant='outlined'
+            placeholder="Enter everything about your event in detail"
+            autoComplete='off'
+            required
+            id="about"
+            name="about"
+            label="About"
+            fullWidth
+            onChange={handleAboutChange}
+            value={props.about}
+          />
+        </Grid>
           <Grid item xs={12} lg={6}>
             <Autocomplete
               multiple
               id="tags-filled"
-              options={eventTypes.map((option) => option)}
+              options={eventThemes.map((option) => option)}
               freeSolo
+              value={props.eventThemes || []}
               onChange={handleeventTagsChange}
               renderTags={(value, getTagProps) =>
                 value.map((option, index) => (
@@ -175,7 +198,7 @@ export default function AddressForm(props) {
             />
 
           </Grid>
-          <Grid item xs={12} lg={6}>
+          {props.registrationMode != "ellipse" && <Grid item xs={12} lg={6}>
             <TextField
               autoComplete='off'
               required
@@ -183,9 +206,11 @@ export default function AddressForm(props) {
               name="regLink"
               label="Registration Link"
               fullWidth
+              value={props.regLink}
               onChange={handleRegLinkChange}
             />
-          </Grid>
+          </Grid> }
+          
           {props.feeType === "Paid" && <Grid item xs={12} lg={6}>
             <TextField
               autoComplete='off'
@@ -194,7 +219,7 @@ export default function AddressForm(props) {
               name="regFees"
               label="Registration Fees"
               fullWidth
-              helperText={"Enter 0 if your event is free"}
+              value={props.regFees}
               onChange={handleRegFees}
             />
           </Grid>}
@@ -205,15 +230,17 @@ export default function AddressForm(props) {
               id="organizer"
               name="organizer"
               label="Organizer"
+              value={props.organizer}
               fullWidth
             />
           </Grid>
-          <Grid item xs={12} lg={6}>
+          <Grid item xs={12}>
             <Autocomplete
               multiple
               id="tags-filled"
               options={requirements.map((option) => option)}
               freeSolo
+              value={props.requirements || []}
               onChange={handleRequirementsChange}
               renderTags={(value, getTagProps) =>
                 value.map((option, index) => (
@@ -225,28 +252,37 @@ export default function AddressForm(props) {
               )}
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12}>
               <Autocomplete
                 fullWidth
                 id="combo-box-demo"
                 options={colleges}
+                value={props.college || []}
                 getOptionLabel={(option) => option}
                 onChange={handleCollegeChange}
                 renderInput={(params) => <TextField fullWidth required {...params} label="College" />}
               />
             </Grid>
+            <Grid item xs={12}>
+              <FormLabel component="legend">Participation</FormLabel>
+              <RadioGroup aria-label="address" name="address" defaultValue="Free" onChange={handleParticipantsTypeChange} style={{ display: "inline" }}>
+                <FormControlLabel value="open" control={<Radio color="default" />} label="Open for all" />
+                <FormControlLabel value="onlycollege" control={<Radio color="default" />} label={`Only ${props.college}`} />
+              </RadioGroup>
+        </Grid>
           {props.eventMode === "offline" && <React.Fragment>
             <Grid item xs={12}>
               <FormLabel component="legend">Address</FormLabel>
-              <RadioGroup aria-label="address" name="address" defaultValue="College/University" onChange={handleAddressTypeChange} style={{ display: "inline" }}>
-                <FormControlLabel value="College/University" control={<Radio color="default" />} label="College/University" />
-                <FormControlLabel value="Other" control={<Radio color="default" />} label="Others" />
+              <RadioGroup aria-label="address" aria-disabled name="address" defaultValue="College/University" onChange={handleAddressTypeChange} style={{ display: "inline" }}>
+                <FormControlLabel  value="College/University" control={<Radio color="default" />} label="College/University" />
+                <FormControlLabel disabled value="Other" control={<Radio color="default" />} label="Others" />
               </RadioGroup>
             </Grid>
             <Grid item xs={12} lg={6}>
               <TextField
                 autoComplete='off'
-                // required
+                onChange={props.setBuilding}
+                value={props.building}
                 id="building"
                 name="building"
                 label="Room No & Building"
@@ -259,18 +295,21 @@ export default function AddressForm(props) {
                 id="combo-box-demo"
                 options={colleges}
                 getOptionLabel={(option) => option}
-                onChange={handleCollegeChange}
+                value={props.venueCollege}
+                onChange={handleVenueCollegeChange}
                 renderInput={(params) => <TextField fullWidth required {...params} label="Venue College" />}
               />
             </Grid>
-          </React.Fragment>}
 
-          <Grid item xs={12}>
+          </React.Fragment>}
+          {props.registrationMode != "ellipse" && <Grid item xs={12}>
             <FormControlLabel
               control={<Checkbox color="primary" name="terms" />}
               label="I accept the terms and conditions"
             />
           </Grid>
+          }
+          
         </Grid>
         <div className={classes.buttons}>
           <Button onClick={props.handleBack} className={classes.button}>

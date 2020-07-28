@@ -283,7 +283,7 @@ const NavigationBar = function ({ history }) {
           </div>
         </AppBar>
         <div>
-          <EventsDialog
+        <EventsDialog
             open={open}
             event={searchedEvent}
             name={searchedEvent.name}
@@ -295,7 +295,8 @@ const NavigationBar = function ({ history }) {
             mode={searchedEvent.eventMode}
             feeType={searchedEvent.feesType}
             imageUrl={image}
-            handleClose={handleClose}></EventsDialog>
+            handleClose={handleClose}>
+            </EventsDialog>
         </div>
       </React.Fragment>
     </div>

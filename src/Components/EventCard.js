@@ -72,6 +72,7 @@ function Eventcard(props) {
   }
   function handleRegClick() {
     props.handleReg(props.eventId);
+
   }
   function handleMoreButtonClick() {
     console.log("button clicked");

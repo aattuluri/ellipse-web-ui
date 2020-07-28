@@ -5,7 +5,7 @@ import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
 import IconButton from '@material-ui/core/IconButton';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
-// import tileData from './tileData';
+import InfoIcon from '@material-ui/icons/Info';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -38,59 +38,54 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-/**
- * The example data is structured as follows:
- *
- * import image from 'path/to/image.jpg';
- * [etc...]
- *
- * const tileData = [
- *   {
- *     img: image,
- *     title: 'Image',
- *     author: 'author',
- *   },
- *   {
- *     [etc...]
- *   },
- * ];
- */
-export default function GridListEvents() {
+export default function GridListEvents(props) {
 
-  const tileData = [
-    {
-      img: "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkdYZmP_DK3N6RjjWwVGagR2BjlZCe0c2jTg&usqp=CAU",
-      title: 'Image',
-      author: 'author',
-    },
-    {
-      img: "https://firebasestorage.googleapis.com/v0/b/campusthreadflutter.appspot.com/o/ProfilePics%2FJYU8h8QvNjUPQQvPlsNUbx9BJtm2.jpeg?alt=media&token=0b0701ce-03bc-4246-9b1f-be1d604d807a",
-      title: 'Image',
-      author: 'author',
-    },
-    {
-      img: "https://firebasestorage.googleapis.com/v0/b/campusthreadflutter.appspot.com/o/ProfilePics%2FJYU8h8QvNjUPQQvPlsNUbx9BJtm2.jpeg?alt=media&token=0b0701ce-03bc-4246-9b1f-be1d604d807a",
-      title: 'Image',
-      author: 'author',
-    },
-  ];
+
+  const collegeEvents = props.events;
   const classes = useStyles();
+
+  // const tileData = [
+  //   {
+  //     img: "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQkdYZmP_DK3N6RjjWwVGagR2BjlZCe0c2jTg&usqp=CAU",
+  //     title: 'Image',
+  //     author: 'author',
+  //   },
+  //   {
+  //     img: "https://firebasestorage.googleapis.com/v0/b/campusthreadflutter.appspot.com/o/ProfilePics%2FJYU8h8QvNjUPQQvPlsNUbx9BJtm2.jpeg?alt=media&token=0b0701ce-03bc-4246-9b1f-be1d604d807a",
+  //     title: 'Image',
+  //     author: 'author',
+  //   },
+  //   {
+  //     img: "https://firebasestorage.googleapis.com/v0/b/campusthreadflutter.appspot.com/o/ProfilePics%2FJYU8h8QvNjUPQQvPlsNUbx9BJtm2.jpeg?alt=media&token=0b0701ce-03bc-4246-9b1f-be1d604d807a",
+  //     title: 'Image',
+  //     author: 'author',
+  //   },
+  // ];
+
+
+  const handleMoreButtonClick = (event) => () => {
+    console.log("button clicked");
+    props.click(event, "");
+  }
+
+  
 
   return (
     <div className={classes.root}>
       <GridList className={classes.gridList} cols={2.5} >
-        {tileData.map((tile) => (
-          <GridListTile key={tile.img} rows={2}>
-            <img src={tile.img} alt={tile.title} className={classes.img} />
+        {collegeEvents.map((event) => (
+          
+          <GridListTile key={event._id} rows={1}>
+            <img src={`http://139.59.16.53:4000/api/image?id=${event.posterUrl}`} alt={event.name} className={classes.img} />
             <GridListTileBar
-              title={tile.title}
+              title={event.name}
               classes={{
                 root: classes.titleBar,
                 title: classes.title,
               }}
               actionIcon={
-                <IconButton aria-label={`star ${tile.title}`}>
-                  <StarBorderIcon className={classes.title} />
+                <IconButton aria-label={`star ${event.name}`} onClick={handleMoreButtonClick(event)}>
+                  <InfoIcon className={classes.title} />
                 </IconButton>
               }
             />

@@ -55,7 +55,7 @@ function Layout(props) {
         }).then(response => {
             response.json().then(value => {
                 // console.log(value);
-                setCurrentUser(value);
+                setCurrentUser(value[0]);
                 console.log(value);
                 // setAllEvents(value);
                 setOpen(false);

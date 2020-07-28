@@ -19,12 +19,19 @@ const useStyles = makeStyles((theme) => ({
         padding: theme.spacing(0),
         paddingBottom: theme.spacing(4),
         borderRadius: 30,
+        [theme.breakpoints.down('sm')]: {
+            margin: theme.spacing(0, 1),
+            paddingBottom: theme.spacing(2),
+          },
     },
     paperLeft: {
         margin: theme.spacing(8, 4),
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+        [theme.breakpoints.down('sm')]: {
+            margin: theme.spacing(3, 1),
+          },
     },
     paperimage: {
         margin: theme.spacing(1),
@@ -40,10 +47,18 @@ const useStyles = makeStyles((theme) => ({
     form: {
         width: '90%', 
         margin: theme.spacing(5),
+        [theme.breakpoints.down('sm')]: {
+            margin: theme.spacing(2),
+          },
     },
     submit: {
         margin: theme.spacing(3, 0, 2),
     },
+    iPhoneImage: {
+        [theme.breakpoints.down('sm')]: {
+            display: 'none'
+          },
+    }
 }));
 
 export default useStyles;

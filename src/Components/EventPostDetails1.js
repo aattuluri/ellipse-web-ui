@@ -93,9 +93,7 @@ export default function AddressForm(props) {
     // setEventType(value);
     props.setEventType(value);
   }
-  function handleAboutChange(event) {
-    props.setAbout(event.target.value);
-  }
+  
 
   function handleNext(event){
     event.preventDefault();
@@ -104,7 +102,13 @@ export default function AddressForm(props) {
   function handleFeeTypeChange(event,value){
     props.setFeeType(value)
   }
-
+  const steps = props.steps;
+  function handleRegistrationModeChange(event){
+    if(event.target.value === "ellipse"){
+      props.setSteps((steps) => [...steps,"Registration Form"])
+    }
+    props.setRegistrationMode(event.target.value);
+  }
   
 
   return (
@@ -227,25 +231,10 @@ export default function AddressForm(props) {
           />
         </Grid>
 
-        {/* <Grid item xs={12}>
-          <TextField
-            multiline={true}
-            rows="5"
-            variant='outlined'
-            placeholder="Enter everything about your event in detail"
-            autoComplete='off'
-            required
-            id="about"
-            name="about"
-            label="About"
-            fullWidth
-            onChange={handleAboutChange}
-            value={props.about}
-          />
-        </Grid> */}
+        
         <Grid item xs={12}>
           <FormControl fullWidth required>
-            <InputLabel htmlFor="outlined-age-native-simple">Mode</InputLabel>
+            <InputLabel htmlFor="outlined-age-native-simple">Registration</InputLabel>
             <Select
               fullWidth
               native
@@ -254,12 +243,12 @@ export default function AddressForm(props) {
                 name: 'registrationMode',
                 id: 'outlined-age-native-simple',
               }}
-              value={props.eventMode}
-              onChange={handleEventModeChange}
+              value={props.registrationMode}
+              onChange={handleRegistrationModeChange}
             >
               <option aria-label="None" value="" />
-              <option value="online">Online</option>
-              <option value="offline">Offline</option>
+              <option value="ellipse">Our Platform(Ellipse)</option>
+              <option value="other">Other</option>
             </Select>
           </FormControl>
         </Grid>
@@ -269,7 +258,7 @@ export default function AddressForm(props) {
                 <FormControlLabel value="Free" control={<Radio color="default" />} label="Free" />
                 <FormControlLabel value="Paid" control={<Radio color="default" />} label="Paid" />
               </RadioGroup>
-            </Grid>
+        </Grid>
       </Grid>
       
       <div className={classes.buttons}>

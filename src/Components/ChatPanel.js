@@ -24,9 +24,10 @@ import { Paper, IconButton } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import { Box } from '@material-ui/core';
 import SendIcon from '@material-ui/icons/Send';
-import socket from '../SocketClient';
+// import socket from '../SocketClient';
 import AuthContext from '../AuthContext';
 import ChatMessage from './ChatMessage';
+// import ws from '../SocketClient';
 
 const useStyles = makeStyles((theme) => ({
 
@@ -84,10 +85,41 @@ function ChatPanel(props) {
     const [chatMessages, setChatMessages] = React.useState([]);
     const [newmessage, setNewMessage] = React.useState(null);
     const [sendButtonDisabled,setSendButtonDisabled] = React.useState(true);
+    const [webSocketOpen,setWebSocketOpen] = React.useState(false);
+    const ws = new WebSocket("ws://139.59.16.53:4000/");
+    React.useEffect(() => {
+        console.log("sjsk")
+        ws.onopen = async  () =>{
+            console.log("connected")
+            // await ws.send(JSON.stringify({"hello":"hhh"}))
+            ws.send(JSON.stringify({join:props.chatId}));
+            setWebSocketOpen(true);
+            ws.onmessage= (message) =>{
+                console.log(message);
+                const mes = JSON.parse(message.data);
+                const cMes = mes.msg;
+                console.log(cMes);
+                console.log(mes.room);
+                console.log(props.chatId);
+                if(mes.room === props.chatId){
+                    setChatMessages(chatMessages => [...chatMessages,cMes]);
+                }
+                
+            }
+        }
+        
+    },[props.chatId])
+    
     if (chatId != props.chatId) {
-        socket.emit("initial_data");
+       
+        setChatMessages([]);
         setChatId(props.chatId);
-        socket.emit("joinroom",props.chatId);
+       
+        
+        // socket.send("initial_data",("hi"))
+        // socket.emit("initial_data");
+        
+        // socket.emit("joinroom",props.chatId);
         fetch(`http://139.59.16.53:4000/api/chat/getMessages?id=${props.chatId}`, {
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -103,22 +135,30 @@ function ChatPanel(props) {
             })
         })
     }
+// }
     useEffect(() => {
-        socket.on("message", data => {
-            console.log(data);
-            setChatMessages(chatMessages => [...chatMessages, data]);
-        })
+        // socket.on("message", data => {
+        //     console.log(data);
+        //     setChatMessages(chatMessages => [...chatMessages, data]);
+        // })
     }, [])
 
 
     function handleSendClick() {
-        socket.emit('newmessage',props.chatId, {
-            'message': newmessage,
+        ws.send(JSON.stringify({room:props.chatId,msg:{
             'id': user.userid,
+            'userName': user.name,
+            'userPic': user.imageUrl,
+            'message': newmessage,
             'date': Date.now()
-        })
-        setSendButtonDisabled(true);
-        setNewMessage("");
+        }}));
+        // socket.emit('newmessage',props.chatId, {
+            // 'message': newmessage,
+            // 'id': user.userid,
+            // 'date': Date.now()
+        // })
+        // setSendButtonDisabled(true);
+        // setNewMessage("");
     }
     function handleNewMessage(event, value) {
         console.log(event.target.value);
