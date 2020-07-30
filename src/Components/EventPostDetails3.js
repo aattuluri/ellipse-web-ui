@@ -1,29 +1,23 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField';
+
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { makeStyles } from '@material-ui/core/styles';
 
 //MaterialUI imports
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
-import IconButton from '@material-ui/core/IconButton';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+
 import Chip from '@material-ui/core/Chip';
-import CameraAltIcon from '@material-ui/icons/CameraAlt';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
+
 import FormLabel from '@material-ui/core/FormLabel';
-// import FormLabel from '@material-ui/core/FormLabel';
+
 import FormControl from '@material-ui/core/FormControl';
 import FormGroup from '@material-ui/core/FormGroup';
-// import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+
 import AddFieldDialog from '../Components/AddFieldDialog';
-import { keys } from '@material-ui/core/styles/createBreakpoints';
-import TagFacesIcon from '@material-ui/icons/TagFaces';
+// import { keys } from '@material-ui/core/styles/createBreakpoints';
+
 import Paper from '@material-ui/core/Paper';
 
 
@@ -81,7 +75,7 @@ export default function AddressForm(props) {
 
 
     const classes = useStyles();
-    const [loading, setLoading] = React.useState(false);
+    // const [loading, setLoading] = React.useState(false);
     const [open, setOpen] = React.useState(false);
     const handleClose = () => {
         setOpen(false);
@@ -104,7 +98,22 @@ export default function AddressForm(props) {
     //     'name': 'college',
     //     'type': 'String'
     // }])
-    const [fields, setFields] = React.useState({
+    // const [fields, setFields] = React.useState({
+    //     name: {
+    //         'name': 'name',
+    //         'type': 'String',
+    //     },
+    //     email: {
+    //         'name': 'email',
+    //         'type': 'String'
+    //     },
+    //     college: {
+    //         'name': 'college',
+    //         'type': 'String'
+    //     },
+        
+    // })
+    const fields = {
         name: {
             'name': 'name',
             'type': 'String',
@@ -118,7 +127,7 @@ export default function AddressForm(props) {
             'type': 'String'
         },
         
-    })
+    }
     const [selectedFields, setSelectedFields] = React.useState([]);
 
     console.log(fields.name);

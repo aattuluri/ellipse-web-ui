@@ -8,7 +8,7 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import IconButton from '@material-ui/core/IconButton';
 import MailIcon from '@material-ui/icons/Mail';
 import ShareIcon from '@material-ui/icons/Share';
-import AppBar from '@material-ui/core/AppBar';
+// import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Button from '@material-ui/core/Button';
@@ -19,11 +19,12 @@ import EventsTimeLinePanel from '../Components/EventTimeLinePanel';
 import EvenstAnnouncementsPanel from '../Components/EventsAnnouncementsPanel';
 import ChatPanel from '../Components/EventsChatPanel';
 import Paper from '@material-ui/core/Paper';
-import { TextField } from '@material-ui/core';
-import SendIcon from '@material-ui/icons/Send';
+// import { TextField } from '@material-ui/core';
+// import SendIcon from '@material-ui/icons/Send';
 import Box from '@material-ui/core/Box';
-import AuthContext from '../AuthContext';
-import { connect } from 'socket.io-client';
+import CloseIcon from '@material-ui/icons/Close';
+// import AuthContext from '../AuthContext';
+// import { connect } from 'socket.io-client';
 
 
 function a11yProps(index) {
@@ -82,125 +83,17 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
+        // minHeight: '50px'
     }
 }));
 
 function EventsDialog(props) {
     const event = props.event;
     const [value, setValue] = React.useState(0);
-    const user = React.useContext(AuthContext);
+    // const user = React.useContext(AuthContext);
     const classes = useStyles();
-    const token = localStorage.getItem('token');
+    // const token = localStorage.getItem('token');
 
-    const [chatMessages, setChatMessages] = React.useState([]);
-    // const [newmessage, setNewMessage] = React.useState(null);
-
-    const [newmessage, setNewMessage] = React.useState(null);
-    const [sendButtonDisabled, setSendButtonDisabled] = React.useState(true);
-    const [webSocket, setWebSocket] = React.useState(null);
-
-    React.useEffect(() => {
-        webConnect();
-        fetch(`http://139.59.16.53:4000/api/chat/getMessages?id=${event._id}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            method: 'GET',
-        }).then(response => {
-            response.json().then(value => {
-                // setEvent(value.event);
-                setChatMessages(value);
-                console.log(value);
-                // console.log(value);
-            })
-        })
-    }, [event])
-
-    // ws.onclose = ()=>{
-    //     console.log("closed");
-    // }
-    const handleNewMessage = (event, value) => {
-        console.log(event.target.value);
-        setSendButtonDisabled(false);
-        if (event.target.value == "") {
-            setSendButtonDisabled(true);
-        }
-
-        setNewMessage(event.target.value);
-    }
-
-    const webConnect = () => {
-        const ws = new WebSocket("ws://139.59.16.53:4000/");
-        ws.onopen = () => {
-            console.log("connected")
-            setWebSocket(ws);
-            // await ws.send(JSON.stringify({"hello":"hhh"}))
-            // ws.send(JSON.stringify({join:props.chatId}));
-            // setWebSocketOpen(true);
-            ws.onmessage = (message) => {
-                console.log(message);
-                const mes = JSON.parse(message.data);
-                const cMes = mes.msg;
-                console.log(cMes);
-                console.log(mes.room);
-                console.log(props.chatId);
-                if (mes.room === event._id) {
-                    setChatMessages(chatMessages => [...chatMessages, cMes]);
-                }
-
-            }
-        }
-        ws.onclose = () => {
-            check();
-            console.log("closed");
-        }
-    }
-
-    const check = () => {
-        if (!webSocket || webSocket.readyState === WebSocket.readyState) {
-            console.log("checking");
-            webConnect();
-        }
-    }
-
-
-    const handleSendClick = (e) => {
-
-        console.log("clicked")
-        webSocket.send(JSON.stringify({
-            room: event._id, msg: {
-                'id': user.userid,
-                'userName': user.name,
-                'userPic': user.imageUrl,
-                'message': newmessage,
-                'date': Date.now()
-            }
-        }));
-        setSendButtonDisabled(true);
-        setNewMessage("");
-    }
-    const handleKeyPress = (e) => {
-        console.log(sendButtonDisabled);
-        if (newmessage !== null  && newmessage !== "") {
-            if (e.keyCode == 13) {
-                e.preventDefault();
-                webSocket.send(JSON.stringify({
-                    room: event._id, msg: {
-                        'id': user.userid,
-                        'userName': user.name,
-                        'userPic': user.imageUrl,
-                        'message': newmessage,
-                        'date': Date.now()
-                    }
-                }));
-                setSendButtonDisabled(true);
-                setNewMessage("");
-            }
-        }
-
-    }
 
 
     const handleChange = (event, newValue) => {
@@ -232,14 +125,17 @@ function EventsDialog(props) {
             <DialogTitle id="scroll-dialog-title">
                 {event.name}
                 <div className={classes.icons}>
-                    <IconButton aria-label="add to favorites">
+                    {/* <IconButton aria-label="add to favorites">
                         <FavoriteIcon />
                     </IconButton>
                     <IconButton aria-label="share">
                         <MailIcon></MailIcon>
-                    </IconButton>
+                    </IconButton> */}
                     <IconButton aria-label="share">
                         <ShareIcon />
+                    </IconButton>
+                    <IconButton aria-label="close" className={classes.closeButton} onClick={handleClose}>
+                      <CloseIcon fontSize="large" />
                     </IconButton>
                 </div>
                 <div className={classes.root}>
@@ -265,49 +161,20 @@ function EventsDialog(props) {
                 <AboutEventPanel
                     value={value}
                     index={0}
-                    imageUrl={props.imageUrl}
                     event={props.event}></AboutEventPanel>
                 <EventsTimeLinePanel value={value} index={1} event={props.event}></EventsTimeLinePanel>
                 <EvenstAnnouncementsPanel value={value} index={2} event={props.event}></EvenstAnnouncementsPanel>
-                <ChatPanel messages={chatMessages} value={value} index={3} event={props.event}></ChatPanel>
+                {value === 3 && <ChatPanel value={value} index={3} event={props.event}></ChatPanel>}
             </DialogContent>
-            <DialogActions className={value === 3 && classes.action}>
-                {/* <div
-                    role="tabpanel"
-                    > */}
-                {value === 3 && (
-                    <Box className={classes.bottomBar} display="flex"
-                        alignItems="center"
-                        justifyContent="center" hidden={value !== 3}>
-
-                        <TextField
-                            className={classes.field}
-                            onKeyUp={handleKeyPress}
-                            fullWidth
-                            placeholder="Type your message"
-                            //    variant='filled'
-                            autoComplete='off'
-                            required
-                            id="shortdesc"
-                            name="shortdesc"
-                            multiline
-                            rows="1"
-                            value={newmessage}
-                            onChange={handleNewMessage}
-
-                        />
-
-                        <IconButton onKeyPress={handleKeyPress} onKeyDown={handleKeyPress} onClick={handleSendClick} disabled={sendButtonDisabled} className={classes.sendIcon}>
-                            <SendIcon></SendIcon>
-                        </IconButton>
-
-                    </Box>
-                )}
-                {/* </div> */}
+            <DialogActions className={classes.action}>
+                <Box className={classes.bottomBar} display="flex"
+                    alignItems="center"
+                    justifyContent="center" hidden={value !== 3}>
+                </Box>
                 <div
                     role="tabpanel"
                     hidden={value === 3}>
-                    {value != 3 && (
+                    {value !== 3 && (
                         <Button variant="contained" onClick={props.handleClose} color="primary">
                             Register
                         </Button>

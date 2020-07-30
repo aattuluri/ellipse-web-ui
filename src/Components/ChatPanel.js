@@ -1,26 +1,11 @@
 import React, { useEffect } from 'react';
-import { fade, makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
+
 import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-// import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import Avatar from '@material-ui/core/Avatar';
-import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
+
 // import socketIOClient from "socket.io-client";
-// import socket from '../SocketClient';
-import ExpandLess from '@material-ui/icons/ExpandLess';
-import ExpandMore from '@material-ui/icons/ExpandMore';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-// import ListItemText from '@material-ui/core/ListItemText';
-import StarBorder from '@material-ui/icons/StarBorder';
-import Collapse from '@material-ui/core/Collapse';
-import Checkbox from '@material-ui/core/Checkbox';
-import { Route } from 'react-router';
-import ChatContactsPanel from '../Pages/ChatContactsPanel';
-import { Paper, IconButton } from '@material-ui/core';
+
+import { IconButton } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import { Box } from '@material-ui/core';
 import SendIcon from '@material-ui/icons/Send';
@@ -85,7 +70,7 @@ function ChatPanel(props) {
     const [chatMessages, setChatMessages] = React.useState([]);
     const [newmessage, setNewMessage] = React.useState(null);
     const [sendButtonDisabled,setSendButtonDisabled] = React.useState(true);
-    const [webSocketOpen,setWebSocketOpen] = React.useState(false);
+    // const [webSocketOpen,setWebSocketOpen] = React.useState(false);
     const ws = new WebSocket("ws://139.59.16.53:4000/");
     React.useEffect(() => {
         console.log("sjsk")
@@ -93,7 +78,7 @@ function ChatPanel(props) {
             console.log("connected")
             // await ws.send(JSON.stringify({"hello":"hhh"}))
             ws.send(JSON.stringify({join:props.chatId}));
-            setWebSocketOpen(true);
+            // setWebSocketOpen(true);
             ws.onmessage= (message) =>{
                 console.log(message);
                 const mes = JSON.parse(message.data);
@@ -108,9 +93,9 @@ function ChatPanel(props) {
             }
         }
         
-    },[props.chatId])
+    },[props.chatId,ws])
     
-    if (chatId != props.chatId) {
+    if (chatId !== props.chatId) {
        
         setChatMessages([]);
         setChatId(props.chatId);
@@ -174,7 +159,7 @@ function ChatPanel(props) {
                 {/* <Box p={1} m={1} className={classes.middle}> */}
                     <List className={classes.root2}>
                         {chatMessages.map((value) => {
-                            const labelId = `checkbox-list-label-${value.id}`;
+                            
 
                             return (
                                 <ChatMessage adminId={props.adminId} message = {value}></ChatMessage>  
@@ -213,25 +198,3 @@ function ChatPanel(props) {
 
 export default ChatPanel;
 
-{/* <ListItem alignItems="flex-start">
-                                    <ListItemAvatar>
-                                        <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
-                                    </ListItemAvatar>
-                                    <ListItemText
-                                        primary={
-                                            <React.Fragment>
-                                                {"Lalith Reddy "}
-                                                <Typography
-                                                    component="span"
-                                                    variant="body2"
-                                                    className={classes.inline}
-                                                    color="textSecondary"
-                                                >
-                                                    (Admin)
-                                            </Typography>
-                                            </React.Fragment>
-                                        }
-                                        secondary={value.message}
-                                            
-                                    />
-                                </ListItem> */}

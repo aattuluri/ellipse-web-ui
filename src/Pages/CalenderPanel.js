@@ -7,7 +7,7 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import '../main.scss'
 import EventsDialog from '../Components/EventsDialog';
 import EventsContext from '../EventsContext';
-import AuthContext from '../AuthContext';
+// import AuthContext from '../AuthContext';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -24,8 +24,7 @@ const useStyles = makeStyles((theme) => ({
 
 function CalenderPanel(props) {
     // const { children, value, url, index, ...other } = props;
-    // const user = JSON.parse(localStorage.getItem('user'));
-    const user = React.useContext(AuthContext);
+    // const user = React.useContext(AuthContext);
     const token = localStorage.getItem('token');
     const classes = useStyles();
     // const [allEvents, setAllEvents] = React.useState([]);

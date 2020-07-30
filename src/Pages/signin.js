@@ -40,7 +40,7 @@ const Signin = ({ history }) => {
   });
   const [loading, setLoading] = React.useState(false);
   const { vertical, horizontal, open, message, type,autoHide } = state;
-  const [user,setUser] = React.useState(null);
+  // const [user,setUser] = React.useState(null);
   const [token,setToken] = React.useState(null);
   const [isUserVerified,setIsUserVerified] = React.useState(null);
   const handleClose = async (event, reason) => {

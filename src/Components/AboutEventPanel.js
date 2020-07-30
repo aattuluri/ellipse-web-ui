@@ -2,7 +2,10 @@ import React from 'react';
 import { Grid, Typography} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import  Chip  from '@material-ui/core/Chip';
-import AuthContext from '../AuthContext';
+// import AuthContext from '../AuthContext';
+
+
+
 const useStyles = makeStyles((theme) => ({
     root: {
         alignItems: "center",
@@ -41,9 +44,8 @@ const useStyles = makeStyles((theme) => ({
 function AboutEventPanel(props) {
     const classes = useStyles();
     const { children, value, url, index, ...other } = props;
-    // const user = JSON.parse(localStorage.getItem('user'));
-    const user = React.useContext(AuthContext);
-    // const url = user.imageUrl;
+    // const user = React.useContext(AuthContext);
+
     // const token = localStorage.getItem('token');
     const event = props.event;
     const tags = event.tags;
@@ -103,7 +105,7 @@ function AboutEventPanel(props) {
         }
 
         timerComponents.push(
-            <span>
+            <span key={interval}>
                 {timeLeft[interval]} {interval}{" "}
             </span>
         );
@@ -131,14 +133,14 @@ function AboutEventPanel(props) {
                         <Chip style={{marginLeft:'5px'}} variant="outlined" color="primary" label={event.feesType}></Chip>
                         <Chip style={{marginLeft:'5px'}} variant="outlined" color="primary" label={event.eventMode}></Chip>
                         {tags != null && tags.map(val => {
-                            return <Chip style={{marginLeft:'5px'}} variant="outlined" color="primary" label={val}></Chip>
+                            return <Chip key={val} style={{marginLeft:'5px'}} variant="outlined" color="primary" label={val}></Chip>
                         })}
                         </div>
                         
                     </Grid>
                     <Grid item xs={12}>
                         <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h4">About</Typography>
-                        <Typography color="textSecondary" variant="p">
+                        <Typography color="textSecondary" variant="body2">
                             {[...new Array(5)]
                                 .map(
                                     () => `Cras mattis consectetur purus sit amet fermentum. 

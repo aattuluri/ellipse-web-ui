@@ -22,6 +22,14 @@ const useStyles = makeStyles((theme) => ({
     submit: {
       margin: theme.spacing(3, 0, 2),
     },
+    closeButton: {
+      position: 'absolute',
+      right: theme.spacing(1),
+      top: theme.spacing(7),
+      [theme.breakpoints.down('md')]: {
+        top: theme.spacing(12),
+      }
+    }
   }));
 
   export default useStyles;

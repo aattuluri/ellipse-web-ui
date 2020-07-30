@@ -1,11 +1,11 @@
 
 import React from 'react';
 import clsx from 'clsx';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { makeStyles} from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import Typography from '@material-ui/core/Typography';
+// import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -25,6 +25,12 @@ import InfoIcon from '@material-ui/icons/Info';
 import AboutPanel from '../Components/AboutEventPanel';
 import TimeLinePanel from '../Components/EventTimeLinePanel';
 import DashboardPanel from '../Components/DashboardPanel';
+import TelegramIcon from '@material-ui/icons/Telegram';
+import ChatPanel from '../Components/EventsChatPanel';
+// import ChatTextField from '../Components/ChatTextField';
+import AuthContext from '../AuthContext';
+import { Typography } from '@material-ui/core';
+import CloseIcon from '@material-ui/icons/Close';
 
 const drawerWidth = 240;
 
@@ -39,6 +45,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'none',
   },
   drawer: {
+    position: 'relative',
     width: drawerWidth,
     flexShrink: 0,
     whiteSpace: 'nowrap',
@@ -46,6 +53,7 @@ const useStyles = makeStyles((theme) => ({
   },
   drawerOpen: {
     width: drawerWidth,
+    position: 'relative',
     transition: theme.transitions.create('width', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
@@ -53,6 +61,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.secondary.main,
   },
   drawerClose: {
+    position: 'relative',
     transition: theme.transitions.create('width', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
@@ -84,11 +93,31 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   content: {
+    // position: 'relative',
+    // display: 'flex',
     flexGrow: 1,
     padding: theme.spacing(2),
-    height: '100vh',
+    height: '84vh',
+    [theme.breakpoints.up('lg')]: {
+      height: '92vh',
+    },
     overflow: 'auto',
   },
+  // chat: {
+  //   // position: 'relative',
+  //   // position: 'fixed',
+  //   // overflow: 'auto',
+  //   // height: '92vh',
+  //   // width: '70%'
+  // },
+  closeButton: {
+    position: 'absolute',
+    right: theme.spacing(1),
+    top: theme.spacing(7),
+    [theme.breakpoints.down('md')]: {
+      top: theme.spacing(12),
+    }
+  }
 }));
 
 export default function MiniDrawer(props) {
@@ -100,11 +129,14 @@ export default function MiniDrawer(props) {
     timilineSelected: false,
     announcementSelected: false,
     settingsSelected: false,
-    editEventSelected: false
+    editEventSelected: false,
+    chatSelected: false
   })
   const token = localStorage.getItem('token');
+  const user = React.useContext(AuthContext);
   const id = props.match.params.eventId;
-  const [event,setEvent] = React.useState(null);
+  const [event,setEvent] = React.useState({});
+  const [adminAccess,setAdminAccess] = React.useState(false);
   React.useEffect(() => {
     fetch(`http://139.59.16.53:4000/api/event?id=${id}`, {
         headers: {
@@ -115,10 +147,14 @@ export default function MiniDrawer(props) {
         method: 'GET',
     }).then(response => {
         response.json().then(value => {
+          const ev = value.event;
+          if(ev.user_id == user.userid){
+            setAdminAccess(true);
+          }
             setEvent(value.event);
         })
     })
-}, [token])
+}, [token,id])
 
 
   const handleDrawerOpen = () => {
@@ -136,7 +172,8 @@ export default function MiniDrawer(props) {
     timilineSelected: false,
     announcementSelected: false,
     settingsSelected: false,
-    editEventSelected: false
+    editEventSelected: false,
+    chatSelected: false
     })
   }
 
@@ -147,7 +184,8 @@ export default function MiniDrawer(props) {
     timilineSelected: false,
     announcementSelected: false,
     settingsSelected: false,
-    editEventSelected: false
+    editEventSelected: false,
+    chatSelected: false
     })
   }
   function timelineClicked(){
@@ -157,7 +195,8 @@ export default function MiniDrawer(props) {
     timilineSelected: true,
     announcementSelected: false,
     settingsSelected: false,
-    editEventSelected: false
+    editEventSelected: false,
+    chatSelected: false
     })
   }
   function announcementsClicked(){
@@ -167,7 +206,8 @@ export default function MiniDrawer(props) {
     timilineSelected: false,
     announcementSelected: true,
     settingsSelected: false,
-    editEventSelected: false
+    editEventSelected: false,
+    chatSelected: false
     })
   }
   function settingsClicked(){
@@ -177,7 +217,8 @@ export default function MiniDrawer(props) {
     timilineSelected: false,
     announcementSelected: false,
     settingsSelected: true,
-    editEventSelected: false
+    editEventSelected: false,
+    chatSelected: false
     })
   }
   function editEventClicked(){
@@ -187,7 +228,19 @@ export default function MiniDrawer(props) {
     timilineSelected: false,
     announcementSelected: false,
     settingsSelected: false,
-    editEventSelected: true
+    editEventSelected: true,
+    chatSelected: false
+    })
+  }
+  function chatClicked(){
+    setSelected({
+      infoSelected: false,
+      dashBoardSelected: false,
+    timilineSelected: false,
+    announcementSelected: false,
+    settingsSelected: false,
+    editEventSelected: false,
+    chatSelected: true
     })
   }
   const {
@@ -196,7 +249,14 @@ export default function MiniDrawer(props) {
     timilineSelected,
     announcementSelected,
     settingsSelected,
-    editEventSelected} = selected;
+    editEventSelected,chatSelected} = selected;
+
+
+    function handleCloseButton(){
+      props.history.goBack();
+    }
+
+
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -213,8 +273,8 @@ export default function MiniDrawer(props) {
           }),
         }}
       >
-        <div className={classes.toolbar} />
-        <div className={classes.mobToolbar} />
+        {/* <div className={classes.toolbar} /> */}
+        {/* <div className={classes.mobToolbar} /> */}
         <div className={classes.toolbar}>
           {open ?
             <IconButton onClick={handleDrawerClose}>
@@ -236,7 +296,7 @@ export default function MiniDrawer(props) {
             <ListItemIcon >
               <TimelineIcon></TimelineIcon>
             </ListItemIcon>
-            <ListItemText primary="Timeline" />
+            <ListItemText primary="Schedule" />
           </ListItem>
           <ListItem button onClick={announcementsClicked} selected={announcementSelected}>
             <ListItemIcon>
@@ -244,9 +304,17 @@ export default function MiniDrawer(props) {
             </ListItemIcon>
             <ListItemText primary="Announcements" />
           </ListItem>
+          <ListItem button onClick={chatClicked} selected={chatSelected}>
+            <ListItemIcon>
+              <TelegramIcon></TelegramIcon>
+            </ListItemIcon>
+            <ListItemText primary="Chat" />
+          </ListItem>
         </List>
         <Divider />
-        <List>
+        {
+
+        adminAccess && <List>
           <ListItem button onClick={dashBoardClicked} selected={dashBoardSelected}>
             <ListItemIcon >
               <DashboardIcon />
@@ -266,9 +334,13 @@ export default function MiniDrawer(props) {
             <ListItemText primary="Settings" />
           </ListItem>
         </List>
+        }
       </Drawer>
       <main className={classes.content}>
-        {/* <EventsTabPanel></EventsTabPanel> */}
+      <Typography align= 'center' variant="h4" style={{paddingBottom:"20px",paddingTop:"10px"}}>{event.name}</Typography>
+      <IconButton aria-label="close" className={classes.closeButton} onClick={handleCloseButton}>
+          <CloseIcon fontSize="large" />
+      </IconButton>
         {
           infoSelected && event != null && <AboutPanel event = {event}></AboutPanel>
         }
@@ -281,7 +353,11 @@ export default function MiniDrawer(props) {
         {
           dashBoardSelected && event != null && <DashboardPanel event = {event}></DashboardPanel>
         }
-        {/* <EventPost event = {event} ></EventPost> */}
+        {
+          chatSelected && event != null && <div className={classes.chat} ><ChatPanel open={open} event = {event}></ChatPanel></div>
+        }
+
+        
         
       </main>
     </div>

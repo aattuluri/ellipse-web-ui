@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import Button from '@material-ui/core/Button';
 import EventCard from '../Components/EventCard';
 import { makeStyles } from '@material-ui/core/styles';
@@ -18,7 +18,7 @@ import MobileSortPanel from '../Components/MobileSortPanel';
 import ImageDialog from '../Components/ImageDialog';
 import EventsContext from '../EventsContext';
 import Skeleton from '@material-ui/lab/Skeleton';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 import AuthContext from '../AuthContext';
 import GridListEvents from '../Components/GridListEvents';
 
@@ -51,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
         margin: theme.spacing(1),
         position: 'sticky',
         top: theme.spacing(10),
-        zIndex: 3,
+        // zIndex: 3,
         // borderRadius: theme.spacing(50)
     },
     postButton: {
@@ -140,7 +140,8 @@ function EventsTabPanel({ history }) {
     const allEvents = React.useContext(EventsContext);
     
     if (!token) {
-        return <Redirect to="/" />;
+        // return <Redirect to="/" />;
+        history.replace("/")
     }
     const handleClose = () => {
         setOpen(false);
@@ -363,8 +364,8 @@ function EventsTabPanel({ history }) {
     }
     function handleImageDialogOpen(image) {
         // console.log(image);
-        setSelectedImage(image);
-        setImageDialogOpen(true);
+        // setSelectedImage(image);
+        // setImageDialogOpen(true);
     }
 
     function handleRegistrationButton(event) {

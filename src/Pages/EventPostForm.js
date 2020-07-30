@@ -12,6 +12,9 @@ import EventPostDetails1 from '../Components/EventPostDetails1';
 import EventPostDetails2 from '../Components/EventPostDetails2';
 import EventPostDetails3 from '../Components/EventPostDetails3';
 import AuthContext from '../AuthContext';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+
 
 function Copyright() {
   return (
@@ -63,6 +66,14 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(3),
     marginLeft: theme.spacing(1),
   },
+  closeButton: {
+    position: 'absolute',
+    right: theme.spacing(1),
+    top: theme.spacing(7),
+    [theme.breakpoints.down('md')]: {
+      top: theme.spacing(12),
+    }
+  }
 }));
 
 
@@ -99,7 +110,7 @@ export default function Checkout({ history }) {
   const [eventThemes, setEventThemes] = React.useState(null);
   const [selectedrequirements, setSelectedRequirements] = React.useState(null);
   const [image, setImage] = React.useState(null);
-  const [imageType, setImageType] = React.useState(null);
+  // const [imageType, setImageType] = React.useState(null);
   // const [imageName, setImageName] = React.useState("");
   const [addressType, setAddressType] = React.useState("college");
   const [collegeName, setCollegeName] = React.useState(user.collegeName);
@@ -175,7 +186,7 @@ export default function Checkout({ history }) {
             setRegLink={setRegLink}
             setFees={setFees}
             setRequirements={setSelectedRequirements}
-            setPosterType={setImageType}
+            // setPosterType={setImageType}
             setOrganizer={setOrganizer}
             setAddressType={setAddressType}
             setCollegeName={setCollegeName}
@@ -183,8 +194,7 @@ export default function Checkout({ history }) {
             setVenueCollege={setVenueCollege}
             setAbout={setAbout}
             setParticipantsType={setParticipantsType}
-            registrationMode={registrationMode}
-            handleNext={registrationMode == "ellipse" ? handleNext : handlePostwithoutregFileds} />
+            handleNext={registrationMode === "ellipse" ? handleNext : handlePostwithoutregFileds} />
         );
       case 2:
         return (
@@ -200,18 +210,18 @@ export default function Checkout({ history }) {
   }
 
 
-  console.log(fields);
-  function getBase64(file, cb) {
-    let reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = function () {
-      cb(reader.result.split(',')[0], reader.result.split(',')[1])
-    };
-    reader.onerror = function (error) {
-      console.log('Error: ', error);
-    };
-  }
-  console.log(steps);
+  // console.log(fields);
+  // function getBase64(file, cb) {
+  //   let reader = new FileReader();
+  //   reader.readAsDataURL(file);
+  //   reader.onload = function () {
+  //     cb(reader.result.split(',')[0], reader.result.split(',')[1])
+  //   };
+  //   reader.onerror = function (error) {
+  //     console.log('Error: ', error);
+  //   };
+  // }
+  // console.log(steps);
   // const handleClose = async (event, reason) => {
   //   if (message === "Signedup successfully") {
   //     // history.replace("/otpverification")
@@ -319,10 +329,17 @@ console.log(fields);
     setActiveStep(activeStep - 1);
   };
 
+  function handleCloseButton(){
+    history.goBack();
+  }
+
   return (
     <React.Fragment>
       <CssBaseline />
       <main className={classes.layout}>
+      <IconButton aria-label="close" className={classes.closeButton} onClick={handleCloseButton}>
+          <CloseIcon fontSize="large" />
+      </IconButton>
         <Paper className={classes.paper}>
           <Typography component="h1" variant="h4" align="center">
             Post your Event

@@ -29,7 +29,7 @@ function Alert(props) {
 const Signup = ({ history }) => {
   const classes = useStyles();
   const [token, setToken] = React.useState("");
-  const [currentUser, setCurrentUser] = React.useState(null);
+  // const [currentUser, setCurrentUser] = React.useState(null);
   const [state, setState] = React.useState({
     open: false,
     vertical: 'top',
@@ -45,7 +45,6 @@ const Signup = ({ history }) => {
 
     if (message === "Signedup successfully") {
       localStorage.setItem('token', token);
-      localStorage.setItem('user', currentUser);
       history.replace("/otpverification")
     }
 
@@ -152,7 +151,7 @@ const Signup = ({ history }) => {
       <Snackbar
         anchorOrigin={{ vertical, horizontal }}
         open={open}
-        autoHideDuration={6000}
+        autoHideDuration={autoHide}
         onClose={handleClose}
         key={vertical + horizontal}
       >

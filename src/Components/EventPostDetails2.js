@@ -52,6 +52,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function AddressForm(props) {
 
+  const token = localStorage.getItem('token');
 
   const classes = useStyles();
   // const [loading, setLoading] = React.useState(false);
@@ -71,9 +72,26 @@ export default function AddressForm(props) {
   // const { vertical, horizontal, open, message, type } = state;
   const eventThemes = ["Hackathon", "Coding Contest", "Webinar"];
   const requirements = ["Laptop", "Basic HTML", "C++", "Machine Learning"];
-  const colleges = ["VIT University", "GITAM University", "SRM University"];
+  const [colleges,setColleges] = React.useState([]);
+  // const colleges = ["VIT University", "GITAM University", "SRM University"];
 
 
+  React.useEffect(()=>{
+    fetch('http://139.59.16.53:4000/colleges', {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                method: 'GET',
+            }).then(response =>{
+              // console.log(response);
+              response.json().then(value =>{
+                // console.log(value);
+                setColleges(value);
+              })
+            })
+  },[])
 
 
   function handleeventTagsChange(event, values) {
@@ -89,7 +107,7 @@ export default function AddressForm(props) {
     if (event.target.files[0]) {
       // setImage(event.target.files[0]);
       props.setPoster(event.target.files[0]);
-      const filePath = event.target.files[0].type;
+      // const filePath = event.target.files[0].type;
       props.setPosterType(event.target.files[0].type);
       // console.log(event.target.files[0].name);
       const fileName = event.target.files[0].name;
@@ -110,7 +128,7 @@ export default function AddressForm(props) {
   }
 
   function handleCollegeChange(event, value) {
-    props.setCollegeName(value);
+    props.setCollegeName(value.name);
   }
   function handleVenueCollegeChange(event, value) {
     props.setVenueCollege(value);
@@ -198,7 +216,7 @@ export default function AddressForm(props) {
             />
 
           </Grid>
-          {props.registrationMode != "ellipse" && <Grid item xs={12} lg={6}>
+          {props.registrationMode !== "ellipse" && <Grid item xs={12} lg={6}>
             <TextField
               autoComplete='off'
               required
@@ -258,7 +276,7 @@ export default function AddressForm(props) {
                 id="combo-box-demo"
                 options={colleges}
                 value={props.college || []}
-                getOptionLabel={(option) => option}
+                getOptionLabel={(option) => option.name}
                 onChange={handleCollegeChange}
                 renderInput={(params) => <TextField fullWidth required {...params} label="College" />}
               />
@@ -302,7 +320,7 @@ export default function AddressForm(props) {
             </Grid>
 
           </React.Fragment>}
-          {props.registrationMode != "ellipse" && <Grid item xs={12}>
+          {props.registrationMode !== "ellipse" && <Grid item xs={12}>
             <FormControlLabel
               control={<Checkbox color="primary" name="terms" />}
               label="I accept the terms and conditions"

@@ -8,58 +8,12 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-import Link from '@material-ui/core/Link';
+// import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
 import { Grid, Button } from '@material-ui/core';
+import Checkbox from '@material-ui/core/Checkbox';
 
-const columns = [
-  { id: 'name', label: 'Name', minWidth: 170 },
-  { id: 'code', label: 'ISO\u00a0Code', minWidth: 100 },
-  {
-    id: 'population',
-    label: 'Population',
-    minWidth: 170,
-    align: 'right',
-    format: (value) => value.toLocaleString('en-US'),
-  },
-  {
-    id: 'size',
-    label: 'Size\u00a0(km\u00b2)',
-    minWidth: 170,
-    align: 'right',
-    format: (value) => value.toLocaleString('en-US'),
-  },
-  {
-    id: 'density',
-    label: 'Density',
-    minWidth: 170,
-    align: 'right',
-    format: (value) => value.toFixed(2),
-  },
-];
 
-function createData(name, code, population, size) {
-  const density = population / size;
-  return { name, code, population, size, density };
-}
-
-const rows = [
-  createData('India', 'IN', 1324171354, 3287263),
-  createData('China', 'CN', 1403500365, 9596961),
-  createData('Italy', 'IT', 60483973, 301340),
-  createData('United States', 'US', 327167434, 9833520),
-  createData('Canada', 'CA', 37602103, 9984670),
-  createData('Australia', 'AU', 25475400, 7692024),
-  createData('Germany', 'DE', 83019200, 357578),
-  createData('Ireland', 'IE', 4857000, 70273),
-  createData('Mexico', 'MX', 126577691, 1972550),
-  createData('Japan', 'JP', 126317000, 377973),
-  createData('France', 'FR', 67022000, 640679),
-  createData('United Kingdom', 'GB', 67545757, 242495),
-  createData('Russia', 'RU', 146793744, 17098246),
-  createData('Nigeria', 'NG', 200962417, 923768),
-  createData('Brazil', 'BR', 210147125, 8515767),
-];
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -75,7 +29,7 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'column',
     backgroundColor: theme.palette.secondary.main,
   },
-  buttonsPaper:{
+  buttonsPaper: {
     backgroundColor: theme.palette.primary.light,
     padding: theme.spacing(3),
     height: 140,
@@ -90,14 +44,51 @@ const useStyles = makeStyles(theme => ({
   },
   button: {
     margin: theme.spacing(1),
-    borderRadius: theme.spacing(5)  
+    borderRadius: theme.spacing(5)
   }
 }));
 
-export default function StickyHeadTable() {
+export default function StickyHeadTable(props) {
   const classes = useStyles();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const token = localStorage.getItem('token');
+  const [regData, setRegData] = React.useState([]);
+  const [headers, setHeaders] = React.useState([]);
+  const [rowValues, setRowValues] = React.useState([]);
+  const [selected, setSelected] = React.useState([]);
+  const event = props.event;
+
+
+  const handleSelectAllClick = (event) => {
+    if (event.target.checked) {
+      const newSelecteds = rowValues.map((n) => n.name);
+      setSelected(newSelecteds);
+      return;
+    }
+    setSelected([]);
+  };
+
+
+  const handleClick = (event, name) => {
+    const selectedIndex = selected.indexOf(name);
+    let newSelected = [];
+
+    if (selectedIndex === -1) {
+      newSelected = newSelected.concat(selected, name);
+    } else if (selectedIndex === 0) {
+      newSelected = newSelected.concat(selected.slice(1));
+    } else if (selectedIndex === selected.length - 1) {
+      newSelected = newSelected.concat(selected.slice(0, -1));
+    } else if (selectedIndex > 0) {
+      newSelected = newSelected.concat(
+        selected.slice(0, selectedIndex),
+        selected.slice(selectedIndex + 1),
+      );
+    }
+
+    setSelected(newSelected);
+  };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -108,21 +99,48 @@ export default function StickyHeadTable() {
     setPage(0);
   };
 
+  React.useEffect(() => {
+    fetch(`http://139.59.16.53:4000/api/event/registeredEvents?id=${event._id}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      method: 'GET',
+    }).then(response => {
+      response.json().then(value => {
+        console.log(value);
+        setRegData(value.data);
+        const firstdata = value[0].data;
+        const columnNames = Object.keys(firstdata);
+        columnNames.forEach(item => {
+          setHeaders((headers => [...headers, { id: item, label: item, minWidth: 170 }]))
+        })
+        value.forEach(d => {
+          setRowValues(rowValues => [...rowValues, d.data])
+        })
+
+      })
+    })
+  }, [])
+  const isSelected = (name) => selected.indexOf(name) !== -1;
+  
+
   return (
 
     <Grid container spacing={3}>
-    <Grid item xs={12} md={4} lg={9}>
-    <Paper className={classes.buttonsPaper}>
-    <Button variant="outlined" className={classes.button}>Add Announcement</Button>
-    <Button variant="contained" className={classes.button}>Send Message</Button>
-    </Paper>
-    </Grid>
+      <Grid item xs={12} md={4} lg={9}>
+        <Paper className={classes.buttonsPaper}>
+          <Button variant="outlined" className={classes.button}>Add Announcement</Button>
+          <Button variant="contained" className={classes.button}>Send Emails to Selected</Button>
+        </Paper>
+      </Grid>
       <Grid item xs={12} md={4} lg={3} >
 
         <Paper className={classes.fixedHeightPaper}>
           <Typography>Total Registrations</Typography>
           <Typography component="p" variant="h4">
-            300
+            {rowValues.length}
             </Typography>
         </Paper>
       </Grid>
@@ -131,9 +149,19 @@ export default function StickyHeadTable() {
           <TableContainer className={classes.container}>
             <Table stickyHeader aria-label="sticky table">
               <TableHead>
-                <TableRow>
-                  {columns.map((column) => (
+                <TableRow >
+                  <TableCell padding="checkbox">
+                    <Checkbox
+                      color="default"
+                      checked={rowValues.length > 0 && selected.length === rowValues.length}
+                      onChange={handleSelectAllClick}
+                      indeterminate={selected.length > 0 && selected.length < rowValues.length}
+                      inputProps={{ 'aria-label': 'select all fields' }}
+                    />
+                  </TableCell>
+                  {headers.map((column) => (
                     <TableCell
+
                       key={column.id}
                       align={column.align}
                       style={{ minWidth: column.minWidth }}
@@ -144,10 +172,21 @@ export default function StickyHeadTable() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                {rowValues.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                  const isItemSelected = isSelected(row.name);
                   return (
-                    <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-                      {columns.map((column) => {
+                    <TableRow hover role="checkbox" tabIndex={-1} key={row.name}
+                      onClick={(event) => handleClick(event, row.name)}
+                      role="checkbox"
+                      selected={isItemSelected}>
+                      <TableCell padding="checkbox">
+                        <Checkbox
+
+                          checked={isItemSelected}
+                          color="default"
+                          inputProps={{ 'aria-label': 'select all fields' }}
+                        /></TableCell>
+                      {headers.map((column) => {
                         const value = row[column.id];
                         return (
                           <TableCell key={column.id} align={column.align}>
@@ -164,7 +203,7 @@ export default function StickyHeadTable() {
           <TablePagination
             rowsPerPageOptions={[10, 25, 100]}
             component="div"
-            count={rows.length}
+            count={rowValues.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onChangePage={handleChangePage}

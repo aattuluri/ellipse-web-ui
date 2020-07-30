@@ -64,6 +64,7 @@ function Alert(props) {
 }
 
 const UserInfo = ({ history }) => {
+    const token = localStorage.getItem('token');
     const classes = useStyles();
     // const [currentUser, setCurrentUser] = React.useState(null);
     const [imageUrl, setImageurl] = React.useState("");
@@ -78,6 +79,7 @@ const UserInfo = ({ history }) => {
     });
     const [loading, setLoading] = React.useState(false);
     const { vertical, horizontal, open, message, type } = state;
+    const [colleges,setColleges] = React.useState([]);
     const handleClose = async (event, reason) => {
 
         if (message === "successful") {
@@ -86,6 +88,22 @@ const UserInfo = ({ history }) => {
 
         setState({ ...state, open: false });
     };
+    React.useEffect(()=>{
+        fetch('http://139.59.16.53:4000/colleges', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    method: 'GET',
+                }).then(response =>{
+                  // console.log(response);
+                  response.json().then(value =>{
+                    // console.log(value);
+                    setColleges(value);
+                  })
+                })
+      },[])
     // function getBase64(file, cb) {
     //     let reader = new FileReader();
     //     reader.readAsDataURL(file);
@@ -115,21 +133,20 @@ const UserInfo = ({ history }) => {
     async function handleSignUp(event) {
         event.preventDefault();
         setLoading(true);
-        const token = localStorage.getItem('token');
-        const { gender, designation, college, bio } = event.target.elements;
+        const { gender, designation, collegeId, bio } = event.target.elements;
 
         try {
             var data = new FormData()
             const payload = {
                 gender: gender.value,
                 designation: designation.value,
-                collegeName: college.value,
+                collegeId: collegeId.value,
                 bio: bio.value,
             };
             data = JSON.stringify(payload);
-            console.log(data);
+            // console.log(data);
             // http://139.59.16.53:4000/api
-            fetch('http://139.59.16.53:4000/api/users/userdetails', {
+            fetch('http://localhost:4000/api/users/userdetails', {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
@@ -285,6 +302,7 @@ const UserInfo = ({ history }) => {
                             </FormControl>
                         </Grid>
                         <Grid item xs={12}>
+                        
                             <FormControl variant="outlined" fullWidth required>
                                 <InputLabel htmlFor="outlined-age-native-simple">Your College</InputLabel>
                                 <Select
@@ -292,14 +310,17 @@ const UserInfo = ({ history }) => {
                                     native
                                     label="College"
                                     inputProps={{
-                                        name: 'college',
+                                        name: 'collegeId',
                                         id: 'outlined-age-native-simple',
                                     }}
                                 >
                                     <option aria-label="None" value="" />
-                                    <option value="VIT University">VIT University</option>
-                                    <option value="GITAM University">GITAM University</option>
-                                    <option value="SRM University">SRM University</option>
+                                    {colleges.map((coll,index) =>{
+                                        return <option value={coll._id}>{coll.name}</option>
+                                    })}
+                                    
+                                    {/* <option value="GITAM University">GITAM University</option>
+                                    <option value="SRM University">SRM University</option> */}
                                 </Select>
                             </FormControl>
                         </Grid>

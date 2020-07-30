@@ -22,7 +22,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 // import MoreIcon from '@material-ui/icons/MoreVert';
 // import HomeIcon from '@material-ui/icons/Home';
-import TelegramIcon from '@material-ui/icons/Telegram';
+// import TelegramIcon from '@material-ui/icons/Telegram';
 import EventIcon from '@material-ui/icons/Event';
 // import Box from '@material-ui/core/Box';
 // import TabPanel from './EventsTabpanel';
@@ -56,7 +56,14 @@ const NavigationBar = function ({ history }) {
   const [open, setOpen] = React.useState(false);
   const allEvents = React.useContext(EventsContext);
   useEffect(() => {
-    setValue(parseInt(localStorage.getItem('tabIndex')));
+    if (localStorage.getItem('tabIndex') != null) {
+      const tabIndex = parseInt(localStorage.getItem('tabIndex'));
+      if (tabIndex != null) {
+        setValue(tabIndex);
+      }
+    }
+
+
     // fetch('https://ellipseserver1.herokuapp.com/api/events', {
     //   headers: {
     //     'Authorization': `Bearer ${token}`,
@@ -82,21 +89,21 @@ const NavigationBar = function ({ history }) {
     console.log(value);
     if (value != null) {
       fetch(`http://139.59.16.53:4000/api/event/image?id=${value.posterUrl}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            method: 'GET'
-        }).then(response => {
-            if (response.status === 200) {
-                response.json().then(value => {
-                    const img = value.image;
-                    setImage(img.type + "," + img.image_data)
-                })
-            }
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        method: 'GET'
+      }).then(response => {
+        if (response.status === 200) {
+          response.json().then(value => {
+            const img = value.image;
+            setImage(img.type + "," + img.image_data)
+          })
+        }
 
-        })
+      })
       setSearchedEvent(value);
       // setImage(value.posterUrl)
       setOpen(true);
@@ -133,9 +140,13 @@ const NavigationBar = function ({ history }) {
   const token = localStorage.getItem('token');
   const [image, setImage] = React.useState(null);
   // console.log(currentUser);
-  if (!currentUser) {
-    return <Redirect to="/" />;
+  if(!token){
+    history.replace('/');
   }
+  // if (!currentUser) {
+  //   return <Redirect to="/" />;
+  // }
+  
 
 
 
@@ -191,9 +202,9 @@ const NavigationBar = function ({ history }) {
   function handleProfileClick() {
     history.push("/profile")
   }
-  function handleChatClick(){
-    history.push('/chat')
-  }
+  // function handleChatClick() {
+  //   history.push('/chat')
+  // }
   const handleClose = () => {
     setOpen(false);
   };
@@ -233,7 +244,7 @@ const NavigationBar = function ({ history }) {
                 >
                   <Tab onClick={handleHomeClick} icon={<HomeIcon />} aria-label="phone" />
                   <Tab onClick={handleeventClick} icon={<EventIcon />} aria-label="phone" />
-                  <Tab onClick={handleChatClick} icon={<TelegramIcon />} aria-label="favorite" />
+                  {/* <Tab onClick={handleChatClick} icon={<TelegramIcon />} aria-label="favorite" /> */}
                   <Tab icon={<ExploreIcon />} aria-label="person" />
                   <Tab onClick={handleProfileClick} icon={<PersonPinIcon />} aria-label="person" />
                 </Tabs>
@@ -271,11 +282,11 @@ const NavigationBar = function ({ history }) {
                 variant="fullWidth"
                 indicatorColor="primary"
                 textColor="primary"
-                aria-label="icon tabs example"
+              // aria-label="icon tabs example"
               >
                 <Tab onClick={handleHomeClick} icon={<HomeIcon />} aria-label="home" />
                 <Tab onClick={handleeventClick} icon={<EventIcon />} aria-label="event" />
-                <Tab onClick={handleChatClick} icon={<TelegramIcon />} aria-label="messages" />
+                {/* <Tab onClick={handleChatClick} icon={<TelegramIcon />} aria-label="messages" /> */}
                 <Tab icon={<ExploreIcon />} aria-label="explore" />
                 <Tab onClick={handleProfileClick} icon={<PersonPinIcon />} aria-label="person" />
               </Tabs>
@@ -283,7 +294,7 @@ const NavigationBar = function ({ history }) {
           </div>
         </AppBar>
         <div>
-        <EventsDialog
+         { open && <EventsDialog
             open={open}
             event={searchedEvent}
             name={searchedEvent.name}
@@ -296,7 +307,7 @@ const NavigationBar = function ({ history }) {
             feeType={searchedEvent.feesType}
             imageUrl={image}
             handleClose={handleClose}>
-            </EventsDialog>
+          </EventsDialog>}
         </div>
       </React.Fragment>
     </div>

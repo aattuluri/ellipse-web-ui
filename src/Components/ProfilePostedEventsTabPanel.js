@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 // import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import ProfileEventCard from '../Components/ProfileEventCard';
@@ -23,31 +23,9 @@ function ProfilePostsTabPanel(props) {
     const [open, setOpen] = React.useState(false);
     // const [allEvents, setAllEvents] = React.useState([]);
     const user = React.useContext(AuthContext);
-    const token = localStorage.getItem('token');
+    // const token = localStorage.getItem('token');
     const allEvents = React.useContext(EventsContext);
-    // useEffect(() => {
-    //     fetch('http://139.59.16.53:4000/api/events', {
-    //         headers: {
-    //             'Authorization': `Bearer ${token}`,
-    //             'Content-Type': 'application/json',
-    //             'Accept': 'application/json'
-    //         },
-    //         method: 'GET'
-    //     }).then(response => {
-    //         response.json().then(value => {
-            
-                
-    //             value.filter((val)=>{
-    //                 return val.user_id === user._id;
-    //             })
-    //             // console.log( value.filter((val)=>{
-    //             //     return val.user_id === user._id;
-    //             // }));
-    //             setAllEvents(value);
-                
-    //         })
-    //     })
-    // }, [token,user._id])
+    
     const postedEvents = allEvents.filter((val)=>{
         return val.user_id === user.userid;
     });

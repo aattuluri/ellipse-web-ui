@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 // import Grid from '@material-ui/core/Grid';
 
@@ -15,10 +15,10 @@ import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 // import ListItemText from '@material-ui/core/ListItemText';
-import StarBorder from '@material-ui/icons/StarBorder';
+// import StarBorder from '@material-ui/icons/StarBorder';
 import Collapse from '@material-ui/core/Collapse';
 // import Checkbox from '@material-ui/core/Checkbox';
-import { Route } from 'react-router';
+// import { Route } from 'react-router';
 // import ChatPanel from '../Components/ChatPanel';
 import { Paper } from '@material-ui/core';
 import EventsContext from '../EventsContext';

@@ -102,7 +102,7 @@ export default function AddressForm(props) {
   function handleFeeTypeChange(event,value){
     props.setFeeType(value)
   }
-  const steps = props.steps;
+  // const steps = props.steps;
   function handleRegistrationModeChange(event){
     if(event.target.value === "ellipse"){
       props.setSteps((steps) => [...steps,"Registration Form"])

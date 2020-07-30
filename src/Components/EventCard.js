@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 // import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 // import clsx from 'clsx';
@@ -10,13 +10,13 @@ import CardActions from '@material-ui/core/CardActions';
 // import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 // import { red } from '@material-ui/core/colors';
-import FavoriteIcon from '@material-ui/icons/Favorite';
+// import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShareIcon from '@material-ui/icons/Share';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { makeStyles } from '@material-ui/core/styles';
 // import PlayCircleFilledWhiteIcon from '@material-ui/icons/PlayCircleFilledWhite';
 import Button from '@material-ui/core/Button';
-import MailIcon from '@material-ui/icons/Mail';
+// import MailIcon from '@material-ui/icons/Mail';
 // import Timeline from '@material-ui/lab/Timeline';
 // import TimelineItem from '@material-ui/lab/TimelineItem';
 // import TimelineSeparator from '@material-ui/lab/TimelineSeparator';
@@ -28,6 +28,13 @@ import Chip from '@material-ui/core/Chip';
 // import TimelineOppositeContent from '@material-ui/lab/TimelineOppositeContent';
 import { Link } from 'react-router-dom';
 import CameraAltOutlinedIcon from '@material-ui/icons/CameraAltOutlined';
+import Paper from '@material-ui/core/Paper';
+import Popper from '@material-ui/core/Popper';
+import MenuItem from '@material-ui/core/MenuItem';
+import MenuList from '@material-ui/core/MenuList';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import Grow from '@material-ui/core/Grow';
+// import RegEventsContext from '../RegEventsContext';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -50,6 +57,9 @@ const useStyles = makeStyles((theme) => ({
   },
   button: {
     margin: theme.spacing(0.5),
+  },
+  morePopup: {
+    zIndex: '5'
   }
 }));
 
@@ -62,61 +72,110 @@ function Eventcard(props) {
   const startDate = new Date(props.startTime);
   const endDate = new Date(props.endTime);
   const regEndDate = new Date(props.regEndTime);
-  const [image, setImage] = React.useState(null);
+  // const [image, setImage] = React.useState(null);
   const event = props.event;
   // console.log(typeof (props.startTime));
-  const token = localStorage.getItem('token');
+  // const token = localStorage.getItem('token');
+  const [open, setOpen] = React.useState(false);
+  const anchorRef = React.useRef(null);
+  const [imageLoaded, setImageLoaded] = React.useState(false);
+  // const regEvents = React.useContext(RegEventsContext);
+  const [regName, setRegName] = React.useState("Register")
+  const [disableRegButton, setDisableRegButton] = React.useState(false);
+
+ 
+
+  const handleToggle = () => {
+    setOpen((prevOpen) => !prevOpen);
+  };
+
+  const handleClose = (event) => {
+    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  function handleListKeyDown(event) {
+    if (event.key === 'Tab') {
+      event.preventDefault();
+      setOpen(false);
+    }
+  }
+
+  // return focus to the button when we transitioned from !open -> open
+  const prevOpen = React.useRef(open);
+  React.useEffect(() => {
+    if (prevOpen.current === true && open === false) {
+      anchorRef.current.focus();
+    }
+    prevOpen.current = open;
+  }, [open]);
   function handleImageClick() {
     console.log("hello")
-    props.imageDialog(image);
+    // props.imageDialog(image);
   }
   function handleRegClick() {
     props.handleReg(props.eventId);
 
   }
   function handleMoreButtonClick() {
-    console.log("button clicked");
-    props.click(props.eventId, image);
+    // console.log("button clicked");
+    props.click(props.eventId);
   }
-  useEffect(() => {
-    // fetch(`http://139.59.16.53:4000/api/event/image?id=${event.posterUrl}`, {
-    //   headers: {
-    //     'Authorization': `Bearer ${token}`,
-    //     'Content-Type': 'application/json',
-    //     'Accept': 'application/json'
-    //   },
-    //   method: 'GET'
-    // }).then(response => {
-    //   if (response.status === 200) {
-    //     response.json().then(value => {
-    //       const img = value.image;
-    //       setImage(img.type + "," + img.image_data)
-    //     })
-    //   }
 
-    // })
-  }, [])
 
   return (
     <Card className={classes.root}>
       <CardHeader
         avatar={
-          // image != null ?
-            <img onClick={handleImageClick} alt="profile" height="160" width="150" src={`http://139.59.16.53:4000/api/image?id=${event.posterUrl}`}></img>
-            // :
-            // <div
-            //   style={{
-            //     height: "160px",
-            //     width: "150px"
-            //   }}>
-            //   <CameraAltOutlinedIcon color="disabled" style={{ height: "160px", width: "150px" }} />
-            // </div>
+          <React.Fragment>
+            <img
+              style={{ display: imageLoaded ? 'block' : 'none' }}
+              onClick={handleImageClick}
+              onLoad={() => setImageLoaded(true)}
+              alt="Event Image" height="160" width="150"
+              src={`http://139.59.16.53:4000/api/image?id=${event.posterUrl}`}>
+
+            </img>
+            {!imageLoaded && <div
+              style={{
+                height: "160px",
+                width: "150px"
+              }}>
+              <CameraAltOutlinedIcon color="disabled" style={{ height: "160px", width: "150px" }} />
+            </div>}
+          </React.Fragment>
 
         }
         action={
-          <IconButton aria-label="settings">
-            <MoreVertIcon />
-          </IconButton>
+          <div>
+            <IconButton ref={anchorRef}
+              aria-controls={open ? 'menu-list-grow' : undefined}
+              aria-haspopup="true"
+              onClick={handleToggle}>
+              <MoreVertIcon />
+            </IconButton>
+            <Popper className={classes.morePopup} open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
+              {({ TransitionProps, placement }) => (
+                <Grow
+                  {...TransitionProps}
+                  style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
+                >
+                  <Paper>
+                    <ClickAwayListener onClickAway={handleClose}>
+                      <MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
+                        <MenuItem onClick={handleClose}>Share</MenuItem>
+                        <MenuItem onClick={handleClose}>Report</MenuItem>
+                        {/* <MenuItem onClick={handleClose}>Logout</MenuItem> */}
+                      </MenuList>
+                    </ClickAwayListener>
+                  </Paper>
+                </Grow>
+              )}
+            </Popper>
+          </div>
         }
         title={
           <Typography variant="h5" color="textPrimary" component="p">
@@ -134,12 +193,12 @@ function Eventcard(props) {
         {/* <Typography variant="body2" color="textPrimary" component="p">
           Details
         </Typography> */}
-        <Chip variant="outlined" color="textSecondary" size="small" label={props.eventMode}></Chip>
-        <Chip style={{ marginLeft: "4px" }} variant="outlined" color="textSecondary" size="small" label={props.feeType}></Chip>
-        <Chip style={{ marginLeft: "4px" }} variant="outlined" color="textSecondary" size="small" label={props.eventType}></Chip>
-        <Chip style={{ marginLeft: "4px" }} variant="outlined" color="textSecondary" size="small" label={"Reg ends at " + regEndDate.toDateString()}></Chip>
-        <Chip style={{ marginLeft: "4px" }} variant="outlined" color="textSecondary" size="small" label={"Starts at " + startDate.toDateString()}></Chip>
-        <Chip style={{ marginLeft: "4px" }} variant="outlined" color="textSecondary" size="small" label={"Ends at  " + endDate.toDateString()}></Chip>
+        <Chip variant="outlined" color="inherit" size="small" label={props.eventMode}></Chip>
+        <Chip style={{ marginLeft: "4px" }} variant="outlined" color="inherit" size="small" label={props.feeType}></Chip>
+        <Chip style={{ marginLeft: "4px" }} variant="outlined" color="inherit" size="small" label={props.eventType}></Chip>
+        <Chip style={{ marginLeft: "4px" }} variant="outlined" color="inherit" size="small" label={"Reg ends at " + regEndDate.toDateString()}></Chip>
+        <Chip style={{ marginLeft: "4px" }} variant="outlined" color="inherit" size="small" label={"Starts at " + startDate.toDateString()}></Chip>
+        <Chip style={{ marginLeft: "4px" }} variant="outlined" color="inherit" size="small" label={"Ends at  " + endDate.toDateString()}></Chip>
         {/* <Grid container component="main">
           <Grid item xs={6} sm={6} md={6}>
             <Typography variant="h6" component="p">
@@ -188,23 +247,29 @@ function Eventcard(props) {
 
       </CardContent>
       <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites">
+        {/* <IconButton aria-label="add to favorites">
           <FavoriteIcon />
-        </IconButton>
-        <IconButton aria-label="share">
+        </IconButton> */}
+        {/* <IconButton aria-label="share">
           <MailIcon></MailIcon>
-        </IconButton>
-        <IconButton aria-label="share">
+        </IconButton> */}
+        {/* <IconButton aria-label="share">
           <ShareIcon />
-        </IconButton>
+        </IconButton> */}
         <div className={classes.buttonDiv}>
           <Button size="small" color="primary" variant="outlined" className={classes.button} onClick={handleMoreButtonClick}>
-            Learn More
+            See More
         </Button>
-          <Button size="small" color="primary" variant="contained" className={classes.button} onClick={handleRegClick}>
-            {/* <Link to={"/event/"+event._id} target="blank">Register</Link> */}
-          Register
-        </Button>
+          {
+            event.regMode === "ellipse" ? <Button disabled={event.registered ? true : false} size="small" color="primary" variant="contained" className={classes.button} onClick={handleRegClick}>
+              {/* <Link to={"/event/"+event._id} target="blank">Register</Link> */}
+              {event.registered ? "Registered" : "Register"}
+            </Button> : <Button disabled={event.registered ? true : false} size="small" color="primary" variant="contained" className={classes.button}>
+                {/* <Link to={"https://www.google.com/"} target="blank">Register</Link> */}
+                <a href={event.regLink} style={{textDecoration:'none',color:'#000000'}} target="blank">Register</a>
+              </Button>
+          }
+
         </div>
 
       </CardActions>

@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 // import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import ProfileEventCard from '../Components/ProfileEventCard';
 import EventsDialog from '../Components/EventsDialog';
 import { Typography } from '@material-ui/core';
 import AuthContext from '../AuthContext';
+import EventsContext from '../EventsContext';
 
 // const useStyles = makeStyles((theme) => ({
 //     // backdrop: {
@@ -21,39 +22,18 @@ import AuthContext from '../AuthContext';
 function ProfileEventsTabPanel(props) {
     const { children, value, url, index, ...other } = props;
     const [open, setOpen] = React.useState(false);
-    const [allEvents, setAllEvents] = React.useState([]);
+    // const [allEvents, setAllEvents] = React.useState([]);
     const user = React.useContext(AuthContext);
-    const token = localStorage.getItem('token');
-    // useEffect(() => {
-    //     fetch('http://139.59.16.53:4000/api/events', {
-    //         headers: {
-    //             'Authorization': `Bearer ${token}`,
-    //             'Content-Type': 'application/json',
-    //             'Accept': 'application/json'
-    //         },
-    //         method: 'GET'
-    //     }).then(response => {
-    //         response.json().then(value => {
-            
-                
-    //             value.filter((val)=>{
-    //                 return val.user_id === user._id;
-    //             })
-    //             // console.log( value.filter((val)=>{
-    //             //     return val.user_id === user._id;
-    //             // }));
-    //             setAllEvents(value);
-                
-    //         })
-    //     })
-    // }, [token,user._id])
-    const postedEvents = allEvents.filter((val)=>{
-        return val.user_id === user._id;
+    const allEvents = React.useContext(EventsContext);
+    // const token = localStorage.getItem('token');
+    
+    const regEvents = allEvents.filter((val)=>{
+        return val.registered === true;
     });
     const [selectedEvent,setSellectedEvent] = React.useState("");
     function handleViewClick(event){
         setSellectedEvent(event);
-        setOpen(true);
+        // setOpen(true);
     } 
 
     function handleClose(){
@@ -68,14 +48,14 @@ function ProfileEventsTabPanel(props) {
             {value === index && (
                 <div>
                 <Grid container component="main" alignItems="center" justify="center" spacing={1}>
-                {/* {postedEvents.map((event,index) => {
+                {regEvents.map((event,index) => {
                     return(<Grid item xs={12} sm={12} md={4} key={index}>
                     <ProfileEventCard event={event} handleViewClick={handleViewClick} name={event.name} image={url}></ProfileEventCard>
                     </Grid>) 
-                })} */}
-                <div>
+                })}
+                {regEvents === null && <div>
                 <Typography align="center" alignItems="center">No registered Events</Typography>
-                </div>
+                </div>}
                 
                 <EventsDialog
                     open={open}
@@ -92,27 +72,8 @@ function ProfileEventsTabPanel(props) {
                     url={user.imageUrl}>
                     {/* imageDialog={handleImageDialogOpen} */}
                 </EventsDialog>
-                    {/* <Grid item xs={12} sm={12} md={4}>
-                    <ProfileEventCard image={url}></ProfileEventCard>
-                    </Grid>
-                    <Grid item xs={12} sm={12} md={4}>
-                    <ProfileEventCard image={url}></ProfileEventCard>
-                    </Grid>
-                    <Grid item xs={12} sm={12} md={4}>
-                    <ProfileEventCard image={url}></ProfileEventCard>
-                    </Grid>
-                    <Grid item xs={12} sm={12} md={4}>
-                    <ProfileEventCard image={url}></ProfileEventCard>
-                    </Grid>
-                    <Grid item xs={12} sm={12} md={4}>
-                    <ProfileEventCard image={url}></ProfileEventCard>
-                    </Grid>
-                    <Grid item xs={12} sm={12} md={4}>
-                    <ProfileEventCard image={url}></ProfileEventCard>
-                    </Grid> */}
+                    
                 </Grid>
-                
-                {/* <ProfileEventCard></ProfileEventCard> */}
                 </div>
             )}
         </div>

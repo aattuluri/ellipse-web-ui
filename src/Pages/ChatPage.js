@@ -1,27 +1,11 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-// import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import Avatar from '@material-ui/core/Avatar';
-import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
-// import socketIOClient from "socket.io-client";
-// import socket from '../SocketClient';
-import ExpandLess from '@material-ui/icons/ExpandLess';
-import ExpandMore from '@material-ui/icons/ExpandMore';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-// import ListItemText from '@material-ui/core/ListItemText';
-import StarBorder from '@material-ui/icons/StarBorder';
-import Collapse from '@material-ui/core/Collapse';
-import Checkbox from '@material-ui/core/Checkbox';
-import { Route } from 'react-router';
+import Paper from '@material-ui/core/Paper'
 import ChatPanel from '../Components/ChatPanel';
 import ChatContactsPanel from '../Pages/ChatContactsPanel';
-import { Typography, Paper } from '@material-ui/core';
+// import { Typography, Paper } from '@material-ui/core';
 // import socket from '../SocketClient';
 
 const useStyles = makeStyles((theme) => ({

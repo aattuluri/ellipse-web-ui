@@ -4,11 +4,11 @@ import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
+// import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { makeStyles } from '@material-ui/core/styles';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormLabel from '@material-ui/core/FormLabel';
+// import { makeStyles } from '@material-ui/core/styles';
+// import FormControlLabel from '@material-ui/core/FormControlLabel';
+// import FormLabel from '@material-ui/core/FormLabel';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
@@ -18,15 +18,15 @@ import { Grid } from '@material-ui/core';
 
 
 
-const useStyles = makeStyles((theme) => ({
-    dialog:{
-        backgroundColor: theme.palette.secondary.main
-    }
-}));
+// const useStyles = makeStyles((theme) => ({
+//     dialog:{
+//         backgroundColor: theme.palette.secondary.main
+//     }
+// }));
 
 
 export default function FormDialog(props) {
-    const classes = useStyles();
+    // const classes = useStyles();
 //   const [open, setOpen] = React.useState(false);
 
 //   const handleClickOpen = () => {
@@ -52,7 +52,7 @@ function handleOptionsChange(event,values){
     setSelectedOptions(values);
 }
 function handleAddButton(){
-    if(type != "radiobutton" && type != "checkbox"){
+    if(type !== "radiobutton" && type !== "checkbox"){
         props.handleAdd({[name]:{'name':name,'type':type}},name);
     }
     else{

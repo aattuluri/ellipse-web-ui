@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 // import Copyright from '../Components/copyright';
 // import useStyles from '../Themes/SignupPageStyles';
 import { withRouter } from 'react-router';
@@ -8,7 +8,6 @@ import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
 import Select from '@material-ui/core/Select';
@@ -17,21 +16,21 @@ import FormControl from '@material-ui/core/FormControl';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import IconButton from '@material-ui/core/IconButton';
-import InputAdornment from '@material-ui/core/InputAdornment';
+// import IconButton from '@material-ui/core/IconButton';
+// import InputAdornment from '@material-ui/core/InputAdornment';
 import DateFnsUtils from '@date-io/date-fns';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Chip from '@material-ui/core/Chip';
-import CameraAltIcon from '@material-ui/icons/CameraAlt';
+// import CameraAltIcon from '@material-ui/icons/CameraAlt';
 import { MuiPickersUtilsProvider, DateTimePicker, } from '@material-ui/pickers';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 // import FormControlLabel from '@material-ui/core/FormControlLabel';
 // import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
-import { Typography } from '@material-ui/core';
+// import { Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { set } from 'date-fns';
+// import { set } from 'date-fns';
 
 //function for alert
 function Alert(props) {
@@ -74,33 +73,36 @@ const EventEdit = (props) => {
     type: 'error'
   });
 
-  const [name,setName] = React.useState(null);
-  const [desc,setDesc] = React.useState(null);
+  const [name, setName] = React.useState(null);
+  const [desc, setDesc] = React.useState(null);
   const [startDate, setStartDate] = React.useState(null);
   const [endDate, setendDate] = React.useState(null);
   const [regEndDate, setRegEndDate] = React.useState(null);
-  const [eventMode,setEventMode] = React.useState(null);
+  const [eventMode, setEventMode] = React.useState(null);
   const [eventType, setEventType] = React.useState(null);
   const [eventThemes, setEventThemes] = React.useState([]);
-  const [regLink,setRegLink] = React.useState(null);
-  const [regFees,setRegFees] = React.useState(null);
-  const [about,setAbout] = React.useState(null);
+  const [regLink, setRegLink] = React.useState(null);
+  const [regFees, setRegFees] = React.useState(null);
+  const [about, setAbout] = React.useState(null);
   const [selectedrequirements, setSelectedRequirements] = React.useState([]);
-  const [image, setImage] = React.useState(null);
-  const [imageName, setImageName] = React.useState("");
-  const [addressType,setAddressType] = React.useState("");
-  const [feeType,setFeeType] = React.useState("Free");
-  const [collegeName,setCollegeName] = React.useState(null);
+  // const [image, setImage] = React.useState(null);
+  // const [imageName, setImageName] = React.useState("");
+  // const [addressType,setAddressType] = React.useState("");
+  const [feeType, setFeeType] = React.useState("Free");
+  const [collegeName, setCollegeName] = React.useState(null);
+  const [regMode, setRegMode] = React.useState(null);
+  const [organizer, setOrganizer] = React.useState(null);
+  const [participantType, setParticipantsType] = React.useState("open");
   const { vertical, horizontal, open, message, type } = state;
-  
 
-  const u = localStorage.getItem('user');
+
+
   const token = localStorage.getItem('token');
-  const user = JSON.parse(u);
+
 
   const eventTypes = ["Hackathon", "Coding Contest", "Webinar"];
   const requirements = ["Laptop", "Basic HTML", "C++", "Machine Learning"];
-  const colleges = ["VIT University","GITAM University","SRM University"];
+  const colleges = ["VIT University", "GITAM University", "SRM University"];
 
   const handleStartDateChange = (date) => {
     setStartDate(date);
@@ -111,7 +113,7 @@ const EventEdit = (props) => {
   const handleRegEndDateChange = (date) => {
     setRegEndDate(date)
   };
-console.log(regEndDate);
+  console.log(regEndDate);
   React.useEffect(() => {
     console.log(event);
     setEventThemes(event.tags);
@@ -127,21 +129,24 @@ console.log(regEndDate);
     setRegFees(event.fees);
     setSelectedRequirements(event.requirements);
     setFeeType(event.feesType);
-    setCollegeName(event.college)
-}, [token])
+    setCollegeName(event.college);
+    setRegMode(event.regMode);
+    setOrganizer(event.organizer);
+    setParticipantsType(event.participantsType)
+  }, [token, event])
 
 
 
-  function getBase64(file, cb) {
-    let reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = function () {
-      cb(reader.result)
-    };
-    reader.onerror = function (error) {
-      console.log('Error: ', error);
-    };
-  }
+  // function getBase64(file, cb) {
+  //   let reader = new FileReader();
+  //   reader.readAsDataURL(file);
+  //   reader.onload = function () {
+  //     cb(reader.result)
+  //   };
+  //   reader.onerror = function (error) {
+  //     console.log('Error: ', error);
+  //   };
+  // }
 
   const handleClose = async (event, reason) => {
     if (message === "Saved changes successfully") {
@@ -158,66 +163,68 @@ console.log(regEndDate);
     try {
       console.log("started");
       // getBase64(image, (result) => {
-        var data = new FormData();
-        const payload = {
-          eventId: event._id,
-          name: name,
-          description: desc,
-          start_time: startDate,
-          finish_time: endDate,
-          registrationEndTime: regEndDate,
-          eventMode: eventMode,
-          eventType: eventType,
-          tags: eventThemes,
-          // poster: result,
-          regLink: regLink,
-          fees: regFees,
-          about: about,
-          feesType: feeType,
-          college: collegeName,
-          // organizer: organizer.value,
-          requirements: selectedrequirements,
-        };
-        data = JSON.stringify(payload);
-        console.log(data);
-        fetch('http://139.59.16.53:4000/api/updateevent', {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          method: 'POST',
-          body: data
-        }).then(result => {
-          if (result.status === 200) {
-            result.json().then(value => {
-              console.log(value);
-              event = value.event;
-              // history.replace("/home")
-              setLoading(false);
-              setState({
-                open: true,
-                vertical: 'top',
-                horizontal: 'center',
-                message: "Saved changes successfully",
-                type: "success"
-              })
+      var data = new FormData();
+      const payload = {
+        eventId: event._id,
+        name: name,
+        description: desc,
+        start_time: startDate,
+        finish_time: endDate,
+        registrationEndTime: regEndDate,
+        eventMode: eventMode,
+        eventType: eventType,
+        tags: eventThemes,
+        // poster: result,
+        regLink: regLink,
+        fees: regFees,
+        about: about,
+        feesType: feeType,
+        college: collegeName,
+        organizer: organizer,
+        requirements: selectedrequirements,
+        participantsType: participantType,
+        regMode: regMode
+      };
+      data = JSON.stringify(payload);
+      console.log(data);
+      fetch('http://139.59.16.53:4000/api/updateevent', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        method: 'POST',
+        body: data
+      }).then(result => {
+        if (result.status === 200) {
+          result.json().then(value => {
+            console.log(value);
+            event = value.event;
+            // history.replace("/home")
+            setLoading(false);
+            setState({
+              open: true,
+              vertical: 'top',
+              horizontal: 'center',
+              message: "Saved changes successfully",
+              type: "success"
             })
-          }
-          else {
-            result.json().then(value => {
-              console.log(value);
-              setLoading(false);
-              setState({
-                open: true,
-                vertical: 'top',
-                horizontal: 'center',
-                message: value,
-                type: "error"
-              })
+          })
+        }
+        else {
+          result.json().then(value => {
+            console.log(value);
+            setLoading(false);
+            setState({
+              open: true,
+              vertical: 'top',
+              horizontal: 'center',
+              message: value,
+              type: "error"
             })
-          }
-        })
+          })
+        }
+      })
 
       // })
     }
@@ -240,29 +247,29 @@ console.log(regEndDate);
   function handleeventTagsChange(event, values) {
     setEventThemes(values);
   }
-  function handleRequirementsChange(event,values){
+  function handleRequirementsChange(event, values) {
     setSelectedRequirements(values);
   }
 
-  function handleChange(event) {
-    if (event.target.files[0]) {
-      setImage(event.target.files[0]);
-      const fileName = event.target.files[0].name;
-      setImageName(fileName);
-    }
+  // function handleChange(event) {
+  //   if (event.target.files[0]) {
+  //     setImage(event.target.files[0]);
+  //     const fileName = event.target.files[0].name;
+  //     setImageName(fileName);
+  //   }
 
-  }
+  // }
 
-  function handleAddressTypeChange(evemt,value){
-    setAddressType(value);
+  function handleAddressTypeChange(evemt, value) {
+    // setAddressType(value);
   }
-  function handleName(event){
+  function handleName(event) {
     setName(event.target.value)
   }
-  function handleDesc(event){
+  function handleDesc(event) {
     setDesc(event.target.value);
   }
-  function handleFeeTypeChange(event,value){
+  function handleFeeTypeChange(event, value) {
     // props.setFeeType(value)
     setFeeType(value);
   }
@@ -271,16 +278,21 @@ console.log(regEndDate);
     // props.setCollegeName(value);
     setCollegeName(value);
   }
-  function handleEventMode(event){
+  function handleEventMode(event) {
     setEventMode(event.target.value);
   }
 
-  function handleRegLink(event){
+  function handleRegLink(event) {
     setRegLink(event.target.value);
   }
-  function handleFees(event){
+  function handleFees(event) {
     setRegFees(event.target.value);
   }
+  function handleParticipantsTypeChange(event, value) {
+    setParticipantsType(value)
+  }
+
+
 
   return (
     <Container component="main" maxWidth="lg">
@@ -469,24 +481,25 @@ console.log(regEndDate);
             </Grid> */}
             <Grid item xs={12}>
               <FormLabel component="legend">Entry Fee</FormLabel>
-              <RadioGroup aria-label="address" name="address"  value={feeType || ""} onChange={handleFeeTypeChange} style={{ display: "inline" }}>
+              <RadioGroup aria-label="address" name="address" value={feeType || ""} onChange={handleFeeTypeChange} style={{ display: "inline" }}>
                 <FormControlLabel value="Free" control={<Radio color="default" />} label="Free" />
                 <FormControlLabel value="Paid" control={<Radio color="default" />} label="Paid" />
               </RadioGroup>
             </Grid>
-            <Grid item xs={12} lg={6}>
-              <TextField
-                autoComplete='off'
-                required
-                id="regLink"
-                name="regLink"
-                label="Registration Link"
-                fullWidth
-                value={regLink  || ""}
-                onChange={handleRegLink}
-              />
-            </Grid>
-            {feeType === "Paid"&&<Grid item xs={12} lg={6}>
+            {regMode !== "ellipse" &&
+              <Grid item xs={12} lg={6}>
+                <TextField
+                  autoComplete='off'
+                  required
+                  id="regLink"
+                  name="regLink"
+                  label="Registration Link"
+                  fullWidth
+                  value={regLink || ""}
+                  onChange={handleRegLink}
+                />
+              </Grid>}
+            {feeType === "Paid" && <Grid item xs={12} lg={6}>
               <TextField
                 autoComplete='off'
                 // required
@@ -496,12 +509,13 @@ console.log(regEndDate);
                 label="Registration Fees"
                 onChange={handleFees}
                 fullWidth
-                // helperText={"Enter 0 if your event is free"}
+              // helperText={"Enter 0 if your event is free"}
               />
-            </Grid> }
+            </Grid>}
             <Grid item xs={12} sm={6}>
               <Autocomplete
                 fullWidth
+                disabled
                 id="combo-box-demo"
                 options={colleges}
                 getOptionLabel={(option) => option}
@@ -510,16 +524,37 @@ console.log(regEndDate);
                 renderInput={(params) => <TextField fullWidth required {...params} label="College" />}
               />
             </Grid>
-            
-            
+            <Grid item xs={12} sm={6}>
+              <FormControl fullWidth required>
+                <InputLabel htmlFor="outlined-age-native-simple">Registration</InputLabel>
+                <Select
+                  fullWidth
+                  native
+                  disabled
+                  label="Registration"
+                  inputProps={{
+                    name: 'registrationMode',
+                    id: 'outlined-age-native-simple',
+                  }}
+                  value={regMode || ""}
+                // onChange={handleRegistrationModeChange}
+                >
+                  <option aria-label="None" value="" />
+                  <option value="ellipse">Our Platform(Ellipse)</option>
+                  <option value="other">Other</option>
+                </Select>
+              </FormControl>
+            </Grid>
             <Grid item xs={12} lg={6}>
               <TextField
+                disabled
                 autoComplete='off'
                 required
                 id="organizer"
                 name="organizer"
                 label="Organizer"
                 fullWidth
+                value={organizer || ""}
               />
             </Grid>
             <Grid item xs={12} lg={6}>
@@ -541,26 +576,33 @@ console.log(regEndDate);
                 )}
               />
             </Grid>
-            {eventMode==="offline" && <Grid item xs={12}>
+            <Grid item xs={12}>
+              <FormLabel component="legend">Participation</FormLabel>
+              <RadioGroup name="participanttype" value={participantType} onChange={handleParticipantsTypeChange} style={{ display: "inline" }}>
+                <FormControlLabel value="open" control={<Radio color="default" />} label="Open for all" />
+                <FormControlLabel value="onlycollege" control={<Radio color="default" />} label={`Only ${collegeName}`} />
+              </RadioGroup>
+            </Grid>
+            {eventMode === "offline" && <Grid item xs={12}>
               <FormLabel component="legend">Address</FormLabel>
-              <RadioGroup aria-label="address" name="address" defaultValue="College/University" onChange={handleAddressTypeChange} style={{display: "inline"}}>
+              <RadioGroup aria-label="address" name="address" defaultValue="College/University" onChange={handleAddressTypeChange} style={{ display: "inline" }}>
                 <FormControlLabel value="College/University" control={<Radio color="default" />} label="College/University" />
                 <FormControlLabel value="Other" control={<Radio color="default" />} label="Others" />
               </RadioGroup>
             </Grid>}
-            {eventMode==="offline" && 
-            <Grid item xs={12} lg={6}>
-              <TextField
-                autoComplete='off'
-                // required
-                id="building"
-                name="building"
-                label="Room No & Building"
-                fullWidth
-              />
-            </Grid>
+            {eventMode === "offline" &&
+              <Grid item xs={12} lg={6}>
+                <TextField
+                  autoComplete='off'
+                  // required
+                  id="building"
+                  name="building"
+                  label="Room No & Building"
+                  fullWidth
+                />
+              </Grid>
             }
-            {eventMode==="offline" && <Grid item xs={12} sm={6}>
+            {eventMode === "offline" && <Grid item xs={12} sm={6}>
               <Autocomplete
                 fullWidth
                 id="combo-box-demo"
@@ -578,7 +620,7 @@ console.log(regEndDate);
                 placeholder="Enter everything about your event in detail"
                 autoComplete='off'
                 required
-                value={about  || ""}
+                value={about || ""}
                 id="about"
                 name="about"
                 label="About"
