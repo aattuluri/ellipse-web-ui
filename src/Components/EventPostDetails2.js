@@ -73,11 +73,12 @@ export default function AddressForm(props) {
   const eventThemes = ["Hackathon", "Coding Contest", "Webinar"];
   const requirements = ["Laptop", "Basic HTML", "C++", "Machine Learning"];
   const [colleges,setColleges] = React.useState([]);
-  // const colleges = ["VIT University", "GITAM University", "SRM University"];
+  const [collegesNames,setCollegesName] = React.useState([]);
+  // const colleges = ["VIT University,Vellore", "GITAM University", "SRM University"];
 
 
   React.useEffect(()=>{
-    fetch('http://139.59.16.53:4000/colleges', {
+    fetch('http://localhost:4000/colleges', {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
@@ -87,8 +88,11 @@ export default function AddressForm(props) {
             }).then(response =>{
               // console.log(response);
               response.json().then(value =>{
-                // console.log(value);
+                console.log(value);
                 setColleges(value);
+                value.forEach((v)=>{
+                  setCollegesName((collegesNames)=>[...collegesNames,v.name])
+                })
               })
             })
   },[])
@@ -108,7 +112,7 @@ export default function AddressForm(props) {
       // setImage(event.target.files[0]);
       props.setPoster(event.target.files[0]);
       // const filePath = event.target.files[0].type;
-      props.setPosterType(event.target.files[0].type);
+      // props.setPosterType(event.target.files[0].type);
       // console.log(event.target.files[0].name);
       const fileName = event.target.files[0].name;
       setImageName(fileName);
@@ -128,7 +132,8 @@ export default function AddressForm(props) {
   }
 
   function handleCollegeChange(event, value) {
-    props.setCollegeName(value.name);
+    console.log(value);
+    props.setCollegeName(value);
   }
   function handleVenueCollegeChange(event, value) {
     props.setVenueCollege(value);
@@ -216,7 +221,7 @@ export default function AddressForm(props) {
             />
 
           </Grid>
-          {props.registrationMode !== "ellipse" && <Grid item xs={12} lg={6}>
+          {props.registrationMode !== "form" && <Grid item xs={12} lg={6}>
             <TextField
               autoComplete='off'
               required
@@ -241,7 +246,7 @@ export default function AddressForm(props) {
               onChange={handleRegFees}
             />
           </Grid>}
-          <Grid item xs={12} lg={6}>
+          {/* <Grid item xs={12} lg={6}>
             <TextField
               autoComplete='off'
               required
@@ -251,7 +256,7 @@ export default function AddressForm(props) {
               value={props.organizer}
               fullWidth
             />
-          </Grid>
+          </Grid> */}
           <Grid item xs={12}>
             <Autocomplete
               multiple
@@ -274,26 +279,26 @@ export default function AddressForm(props) {
               <Autocomplete
                 fullWidth
                 id="combo-box-demo"
-                options={colleges}
+                options={collegesNames}
                 value={props.college || []}
-                getOptionLabel={(option) => option.name}
+                getOptionLabel={(option) => option}
                 onChange={handleCollegeChange}
                 renderInput={(params) => <TextField fullWidth required {...params} label="College" />}
               />
             </Grid>
             <Grid item xs={12}>
               <FormLabel component="legend">Participation</FormLabel>
-              <RadioGroup aria-label="address" name="address" defaultValue="Free" onChange={handleParticipantsTypeChange} style={{ display: "inline" }}>
+              <RadioGroup aria-label="address" name="address" defaultValue="open" onChange={handleParticipantsTypeChange} style={{ display: "inline" }}>
                 <FormControlLabel value="open" control={<Radio color="default" />} label="Open for all" />
                 <FormControlLabel value="onlycollege" control={<Radio color="default" />} label={`Only ${props.college}`} />
               </RadioGroup>
         </Grid>
-          {props.eventMode === "offline" && <React.Fragment>
+          {props.eventMode === "Offline" && <React.Fragment>
             <Grid item xs={12}>
               <FormLabel component="legend">Address</FormLabel>
-              <RadioGroup aria-label="address" aria-disabled name="address" defaultValue="College/University" onChange={handleAddressTypeChange} style={{ display: "inline" }}>
-                <FormControlLabel  value="College/University" control={<Radio color="default" />} label="College/University" />
-                <FormControlLabel disabled value="Other" control={<Radio color="default" />} label="Others" />
+              <RadioGroup aria-label="address" aria-disabled name="address" defaultValue="college" onChange={handleAddressTypeChange} style={{ display: "inline" }}>
+                <FormControlLabel  value="college" control={<Radio color="default" />} label="College/University" />
+                <FormControlLabel disabled value="other" control={<Radio color="default" />} label="Others" />
               </RadioGroup>
             </Grid>
             <Grid item xs={12} lg={6}>
@@ -311,7 +316,7 @@ export default function AddressForm(props) {
               <Autocomplete
                 fullWidth
                 id="combo-box-demo"
-                options={colleges}
+                options={collegesNames}
                 getOptionLabel={(option) => option}
                 value={props.venueCollege}
                 onChange={handleVenueCollegeChange}
@@ -320,7 +325,7 @@ export default function AddressForm(props) {
             </Grid>
 
           </React.Fragment>}
-          {props.registrationMode !== "ellipse" && <Grid item xs={12}>
+          {props.registrationMode !== "form" && <Grid item xs={12}>
             <FormControlLabel
               control={<Checkbox color="primary" name="terms" />}
               label="I accept the terms and conditions"
@@ -338,7 +343,7 @@ export default function AddressForm(props) {
             variant="contained"
             color="primary"
             className={classes.button}
-          >Post
+          >{props.registrationMode !== "form" ? "POST" : "NEXT"}
         </Button>
         </div>
       </form>

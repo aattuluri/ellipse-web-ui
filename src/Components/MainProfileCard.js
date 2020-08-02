@@ -102,7 +102,7 @@ function Eventcard(props) {
             <Grid item xs={12} sm={12} md={8}>
             <CardHeader
                 avatar={
-                    <Avatar className={classes.large} sizes="100" alt="" src={`http://139.59.16.53:4000/api/image?id=${user.imageUrl}`}></Avatar>
+                    <Avatar className={classes.large} sizes="100" alt="" src={`http://139.59.16.53:4000/api/image?id=${user.profile_pic}`}></Avatar>
                 }
                 action={
                     <IconButton onClick={props.handleEditButton} aria-label="settings">

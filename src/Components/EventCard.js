@@ -35,6 +35,8 @@ import MenuList from '@material-ui/core/MenuList';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Grow from '@material-ui/core/Grow';
 // import RegEventsContext from '../RegEventsContext';
+import EventReportDialog from './EventReportDialog';
+import EventShareDialog from  './EventShareDialog';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -68,12 +70,12 @@ const useStyles = makeStyles((theme) => ({
 
 function Eventcard(props) {
   const classes = useStyles();
-
-  const startDate = new Date(props.startTime);
-  const endDate = new Date(props.endTime);
-  const regEndDate = new Date(props.regEndTime);
-  // const [image, setImage] = React.useState(null);
   const event = props.event;
+  const startDate = new Date(event.start_time);
+  const endDate = new Date(event.finish_time);
+  const regEndDate = new Date(event.registration_end_time);
+  // const [image, setImage] = React.useState(null);
+  
   // console.log(typeof (props.startTime));
   // const token = localStorage.getItem('token');
   const [open, setOpen] = React.useState(false);
@@ -82,6 +84,8 @@ function Eventcard(props) {
   // const regEvents = React.useContext(RegEventsContext);
   const [regName, setRegName] = React.useState("Register")
   const [disableRegButton, setDisableRegButton] = React.useState(false);
+  const [reportDialogOpen,setReportDialogOpen] = React.useState(false);
+  const [shareDialogOpen,setShareDialogOpen] = React.useState(false);
 
  
 
@@ -124,6 +128,18 @@ function Eventcard(props) {
     // console.log("button clicked");
     props.click(props.eventId);
   }
+  function handleReportClick(){
+    setReportDialogOpen(true);
+  }
+  function handleReportClose(){
+    setReportDialogOpen(false);
+  }
+  function handleShareClose(){
+    setShareDialogOpen(false);
+  }
+  function handleShareClick(){
+    setShareDialogOpen(true);
+  }
 
 
   return (
@@ -136,7 +152,7 @@ function Eventcard(props) {
               onClick={handleImageClick}
               onLoad={() => setImageLoaded(true)}
               alt="Event Image" height="160" width="150"
-              src={`http://139.59.16.53:4000/api/image?id=${event.posterUrl}`}>
+              src={`http://139.59.16.53:4000/api/image?id=${event.poster_url}`}>
 
             </img>
             {!imageLoaded && <div
@@ -166,8 +182,8 @@ function Eventcard(props) {
                   <Paper>
                     <ClickAwayListener onClickAway={handleClose}>
                       <MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
-                        <MenuItem onClick={handleClose}>Share</MenuItem>
-                        <MenuItem onClick={handleClose}>Report</MenuItem>
+                        <MenuItem onClick={handleShareClick}>Share</MenuItem>
+                        <MenuItem onClick={handleReportClick}>Report</MenuItem>
                         {/* <MenuItem onClick={handleClose}>Logout</MenuItem> */}
                       </MenuList>
                     </ClickAwayListener>
@@ -190,12 +206,22 @@ function Eventcard(props) {
         }
       />
       <CardContent>
+      <EventReportDialog 
+      event = {event} 
+      open={reportDialogOpen} 
+      handleClose={handleReportClose}>
+
+      </EventReportDialog>
+      <EventShareDialog
+      event = {event} 
+      open={shareDialogOpen} 
+      handleClose={handleShareClose}></EventShareDialog>
         {/* <Typography variant="body2" color="textPrimary" component="p">
           Details
         </Typography> */}
-        <Chip variant="outlined" color="inherit" size="small" label={props.eventMode}></Chip>
-        <Chip style={{ marginLeft: "4px" }} variant="outlined" color="inherit" size="small" label={props.feeType}></Chip>
-        <Chip style={{ marginLeft: "4px" }} variant="outlined" color="inherit" size="small" label={props.eventType}></Chip>
+        <Chip variant="outlined" color="inherit" size="small" label={event.event_mode}></Chip>
+        <Chip style={{ marginLeft: "4px" }} variant="outlined" color="inherit" size="small" label={event.fee_type}></Chip>
+        <Chip style={{ marginLeft: "4px" }} variant="outlined" color="inherit" size="small" label={event.event_type}></Chip>
         <Chip style={{ marginLeft: "4px" }} variant="outlined" color="inherit" size="small" label={"Reg ends at " + regEndDate.toDateString()}></Chip>
         <Chip style={{ marginLeft: "4px" }} variant="outlined" color="inherit" size="small" label={"Starts at " + startDate.toDateString()}></Chip>
         <Chip style={{ marginLeft: "4px" }} variant="outlined" color="inherit" size="small" label={"Ends at  " + endDate.toDateString()}></Chip>
@@ -261,12 +287,10 @@ function Eventcard(props) {
             See More
         </Button>
           {
-            event.regMode === "ellipse" ? <Button disabled={event.registered ? true : false} size="small" color="primary" variant="contained" className={classes.button} onClick={handleRegClick}>
-              {/* <Link to={"/event/"+event._id} target="blank">Register</Link> */}
+            event.reg_mode === "form" ? <Button disabled={event.registered ? true : false} size="small" color="primary" variant="contained" className={classes.button} onClick={handleRegClick}>
               {event.registered ? "Registered" : "Register"}
             </Button> : <Button disabled={event.registered ? true : false} size="small" color="primary" variant="contained" className={classes.button}>
-                {/* <Link to={"https://www.google.com/"} target="blank">Register</Link> */}
-                <a href={event.regLink} style={{textDecoration:'none',color:'#000000'}} target="blank">Register</a>
+                <a href={event.reg_link} style={{textDecoration:'none',color:'#000000'}} target="blank">Register</a>
               </Button>
           }
 

@@ -27,7 +27,7 @@ function ProfilePostsTabPanel(props) {
     const allEvents = React.useContext(EventsContext);
     
     const postedEvents = allEvents.filter((val)=>{
-        return val.user_id === user.userid;
+        return val.user_id === user.user_id;
     });
 
     const [selectedEvent,setSellectedEvent] = React.useState("");

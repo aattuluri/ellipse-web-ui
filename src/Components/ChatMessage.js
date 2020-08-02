@@ -8,6 +8,8 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 // import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 // import Avatar from '@material-ui/core/Avatar';
+import InfoIcon from '@material-ui/icons/Info';
+import { ListItemAvatar } from '@material-ui/core';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -49,6 +51,7 @@ function ChatMessage(props) {
             {/* <ListItemAvatar>
                 <Avatar alt={name} src={`http://localhost:4000/api/image?id=${message.userPic}`} />
             </ListItemAvatar> */}
+            <ListItemAvatar style={{display:'none'}} ><InfoIcon></InfoIcon></ListItemAvatar>
             <ListItemText
                 primary={
                     <React.Fragment>
@@ -57,7 +60,7 @@ function ChatMessage(props) {
                             variant="body2"
                             className={classes.inline}
                         >
-                            {message.userName}
+                            {message.user_name}
                         </Typography>
 
                         <Typography

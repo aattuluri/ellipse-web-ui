@@ -6,6 +6,23 @@ import Avatar from '@material-ui/core/Avatar';
 
 import AuthContext from '../AuthContext';
 import ChatTextField from './ChatTextField';
+import { Typography, List, ListSubheader } from '@material-ui/core';
+import Paper from '@material-ui/core/Paper';
+import Popper from '@material-ui/core/Popper';
+import MenuItem from '@material-ui/core/MenuItem';
+import MenuList from '@material-ui/core/MenuList';
+import Menu from '@material-ui/core/Menu';
+// import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import ListItemText from '@material-ui/core/ListItemText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Dialog from '@material-ui/core/Dialog';
+import PersonIcon from '@material-ui/icons/Person';
+import AddIcon from '@material-ui/icons/Add';
+import DeleteIcon from '@material-ui/icons/Delete';
+import ReplyIcon from '@material-ui/icons/Reply';
+import InfoIcon from '@material-ui/icons/Info';
 
 
 
@@ -29,7 +46,20 @@ const useStyles = makeStyles((theme) => ({
         display: "flex",
         justifyContent: "flex-end",
     },
-    
+    root6: {
+        display: "flex",
+        justifyContent: "center",
+        //         position: "sticky",
+        //   position: "-webkit-sticky",
+        //   top: 0,
+
+    },
+    stickyHeader: {
+        position: "sticky",
+        position: "-webkit-sticky",
+        top: 0,
+    },
+
     topBar: {
         // display: 'fixed'
     },
@@ -42,6 +72,13 @@ const useStyles = makeStyles((theme) => ({
         overflow: 'auto',
         //    textOverflow: "ellipsis"
     },
+    root7: {
+        display: "flex",
+        justifyContent: "center",
+        position: "sticky",
+        position: "-webkit-sticky",
+        top: 0,
+    },
     bottomBar: {
         position: 'absolute',
         // flexGrow: 1,
@@ -49,7 +86,7 @@ const useStyles = makeStyles((theme) => ({
         right: theme.spacing(4),
         bottom: theme.spacing(4),
         left: "200px",
-        padding: theme.spacing(0,3),
+        padding: theme.spacing(0, 3),
         backgroundColor: theme.palette.background.paper,
         borderRadius: theme.spacing(5),
     }
@@ -62,35 +99,35 @@ export default function JustifyContent(props) {
     const token = localStorage.getItem('token');
     const event = props.event;
     const open = props.open;
+    const [dialogOpen, setDialogOpen] = React.useState(false);
 
 
     const [reference, setReferenece] = React.useState(null);
-    const [chatMessages,setChatMessages] = React.useState([]);
+    const [chatMessages, setChatMessages] = React.useState([]);
     const classes = useStyles();
+    var counterDate = null;
 
-    // const [sendButtonDisabled, setSendButtonDisabled] = React.useState(true);
+    const handleClose = () => {
+        setDialogOpen(false);
+    };
     const [webSocket, setWebSocket] = React.useState(null);
-    // const chatMessages = props.chatMessages
-    // const ws = new WebSocket("ws://localhost:4000/");
+
     const webConnect = () => {
         const ws = new WebSocket("ws://139.59.16.53:4000/");
         ws.onopen = () => {
             console.log("connected")
             setWebSocket(ws);
-            // await ws.send(JSON.stringify({"hello":"hhh"}))
-            // ws.send(JSON.stringify({join:props.chatId}));
-            // setWebSocketOpen(true);
             ws.onmessage = (message) => {
-                // console.log(message);
                 const mes = JSON.parse(message.data);
                 const cMes = mes.msg;
-                // console.log(cMes);
-                // console.log(mes.room);
-                // console.log(props.chatId);
-                if (mes.room === event._id) {
+                if (mes.event_id === event._id) {
+                    console.log(cMes);
                     setChatMessages(chatMessages => [...chatMessages, cMes]);
                 }
 
+            }
+            if (reference != null) {
+                reference.scrollIntoView({ behavior: "smooth" })
             }
         }
         ws.onclose = () => {
@@ -99,7 +136,7 @@ export default function JustifyContent(props) {
         }
     }
     React.useEffect(() => {
-        fetch(`http://139.59.16.53:4000/api/chat/getMessages?id=${event._id}`, {
+        fetch(`http://139.59.16.53:4000/api/chat/load_messages?id=${event._id}`, {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
@@ -108,23 +145,34 @@ export default function JustifyContent(props) {
             method: 'GET',
         }).then(response => {
             response.json().then(value => {
-                // setEvent(value.event);
                 setChatMessages(value);
                 webConnect();
-                // console.log(value);
+                if (reference != null) {
+                    reference.scrollIntoView({ behavior: "smooth" })
+                }
             })
         })
-        return () =>{
-            // webSocket.close();
+        if (reference != null) {
+            reference.scrollIntoView({ behavior: "smooth" })
+        }
+        return () => {
             setChatMessages([]);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-       
-    }, [event._id,token])
+
+    }, [event._id, token])
 
 
 
-   
+    React.useEffect(() => {
+        if (reference != null) {
+            reference.scrollIntoView({ behavior: "smooth" })
+        }
+    }, [chatMessages])
+
+
+
+
 
     const check = () => {
         if (!webSocket || webSocket.readyState === WebSocket.readyState) {
@@ -134,22 +182,26 @@ export default function JustifyContent(props) {
     }
 
 
-    if (reference != null) {
-        reference.scrollIntoView({ behavior: "smooth" })
-    }
+
 
     const handleSendClick = (message) => {
 
         console.log("clicked")
         webSocket.send(JSON.stringify({
-            room: event._id, msg: {
-                'id': user.userid,
-                'userName': user.name,
-                'userPic': user.imageUrl,
+            action: "send_message",
+            event_id: event._id,
+            msg: {
+                'id': user.user_id + Date.now(),
+                'user_id': user.user_id,
+                'user_name': user.name,
+                'user_pic': user.profile_pic,
                 'message': message,
                 'date': Date.now()
             }
         }));
+        if (reference != null) {
+            reference.scrollIntoView({ behavior: "smooth" })
+        }
     }
 
     return (
@@ -159,20 +211,83 @@ export default function JustifyContent(props) {
             {...other}>
             {value === index && (
                 <div >
-                    {/* <Dialog open={true}> */}
-                    {/* <DialogContent> */}
+                    <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={dialogOpen}>
+                        <List>
+                            <ListItem button>
+                                <ListItemAvatar>
+                                    <Avatar>
+                                        <ReplyIcon />
+                                    </Avatar>
+                                </ListItemAvatar>
+                                <ListItemText primary="Reply" />
+                            </ListItem>
+                            <ListItem autoFocus button>
+                                <ListItemAvatar>
+                                    <Avatar>
+                                        <DeleteIcon />
+                                    </Avatar>
+                                </ListItemAvatar>
+                                <ListItemText primary="Delete" />
+                            </ListItem>
+                        </List>
+                    </Dialog>
+
                     <Box className={classes.topBar}>
                         {
                             chatMessages.map((value, index) => {
 
-                                if (value.id === user.userid) {
+                                const currentDate = new Date();
+                                const messageDate = new Date(value.date);
+                                if (messageDate.toDateString() !== counterDate) {
+                                    counterDate = messageDate.toDateString();
+                                    if (value.user_id === user.user_id) {
+                                        return (<React.Fragment>
+
+                                            <Box m={1} p={1} key={index} position="sticky" className={classes.root6}>
+                                                <Typography variant="body2">{currentDate.toDateString() == messageDate.toDateString() ? "Today" : messageDate.toDateString()}</Typography>
+                                            </Box>
+
+                                            <Box m={1} p={1} key={index} className={classes.root3}>
+
+                                                <Box className={classes.root2} whiteSpace="normal" onClick={() => setDialogOpen(true)} >
+                                                    <ChatMessage message={value} ></ChatMessage>
+                                                </Box>
+                                                <Box className={classes.root5}>
+                                                    <Avatar alt={value.userName} src={`http:///139.59.16.53:4000/api/image?id=${value.user_pic}`} />
+                                                </Box>
+                                            </Box></React.Fragment>);
+
+                                    }
+                                    else {
+                                        return (<React.Fragment>
+
+
+                                            <Box m={1} p={1} key={index} className={classes.root6}>
+                                                <Typography variant="body2">{currentDate.toDateString() == messageDate.toDateString() ? "Today" : messageDate.toDateString()}</Typography>
+                                            </Box>
+
+
+                                            <Box m={1} key={index} className={classes.root}>
+                                                <Box className={classes.root4}>
+                                                    <Avatar alt={value.userName} src={`http:///139.59.16.53:4000/api/image?id=${value.user_pic}`} />
+                                                </Box>
+                                                <Box className={classes.root2} whiteSpace="normal" >
+                                                    <ChatMessage message={value}></ChatMessage>
+                                                </Box>
+                                            </Box></React.Fragment>);
+                                    }
+
+
+                                }
+
+                                if (value.user_id === user.user_id) {
                                     return (<Box m={1} p={1} key={index} className={classes.root3}>
 
-                                        <Box className={classes.root2} whiteSpace="normal">
+                                        <Box className={classes.root2} onClick={() => setDialogOpen(true)} whiteSpace="normal">
                                             <ChatMessage message={value}></ChatMessage>
                                         </Box>
                                         <Box className={classes.root5}>
-                                            <Avatar alt={value.userName} src={`http://139.59.16.53:4000/api/image?id=${value.userPic}`} />
+                                            <Avatar alt={value.userName} src={`http:///139.59.16.53:4000/api/image?id=${value.user_pic}`} />
                                         </Box>
                                     </Box>);
 
@@ -180,7 +295,7 @@ export default function JustifyContent(props) {
                                 else {
                                     return (<Box m={1} key={index} className={classes.root}>
                                         <Box className={classes.root4}>
-                                            <Avatar alt={value.userName} src={`http://139.59.16.53:4000/api/image?id=${value.userPic}`} />
+                                            <Avatar alt={value.userName} src={`http:///139.59.16.53:4000/api/image?id=${value.user_pic}`} />
                                         </Box>
                                         <Box className={classes.root2} whiteSpace="normal">
                                             <ChatMessage message={value}></ChatMessage>
@@ -190,11 +305,11 @@ export default function JustifyContent(props) {
 
                             })
                         }
-                        <div style={{ float: "left", clear: "both",paddingBottom:'60px',}}
+                        <div style={{ float: "left", clear: "both", paddingBottom: '60px', }}
                             ref={(el) => { setReferenece(el) }}>
                         </div>
                         <div>
-                        <ChatTextField open={open} handleSend={handleSendClick}  ></ChatTextField>
+                            <ChatTextField open={open} handleSend={handleSendClick}  ></ChatTextField>
                         </div>
                     </Box>
 

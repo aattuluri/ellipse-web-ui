@@ -12,6 +12,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 import { Grid, Button } from '@material-ui/core';
 import Checkbox from '@material-ui/core/Checkbox';
+import AddAnnouncementForm from './AddAnnouncementForm';
 
 
 
@@ -57,6 +58,7 @@ export default function StickyHeadTable(props) {
   const [headers, setHeaders] = React.useState([]);
   const [rowValues, setRowValues] = React.useState([]);
   const [selected, setSelected] = React.useState([]);
+  const [announcementDialog,setAnnouncementDialog] = React.useState(false);
   const event = props.event;
 
 
@@ -124,14 +126,23 @@ export default function StickyHeadTable(props) {
     })
   }, [])
   const isSelected = (name) => selected.indexOf(name) !== -1;
+
+  function handleAddAnnouncement(){
+    setAnnouncementDialog(true);
+  }
+
+  function handleAnnoucementClose(){
+    setAnnouncementDialog(false);
+  }
   
 
   return (
 
     <Grid container spacing={3}>
+    <AddAnnouncementForm open={announcementDialog} id={event._id} handleClose={handleAnnoucementClose}></AddAnnouncementForm>
       <Grid item xs={12} md={4} lg={9}>
         <Paper className={classes.buttonsPaper}>
-          <Button variant="outlined" className={classes.button}>Add Announcement</Button>
+          <Button variant="outlined" onClick={handleAddAnnouncement} className={classes.button}>Add Announcement</Button>
           <Button variant="contained" className={classes.button}>Send Emails to Selected</Button>
         </Paper>
       </Grid>

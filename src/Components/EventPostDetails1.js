@@ -104,8 +104,11 @@ export default function AddressForm(props) {
   }
   // const steps = props.steps;
   function handleRegistrationModeChange(event){
-    if(event.target.value === "ellipse"){
+    if(event.target.value === "form"){
       props.setSteps((steps) => [...steps,"Registration Form"])
+    }
+    else if(event.target.value === "link"){
+      props.setSteps(['About', 'More Details']);
     }
     props.setRegistrationMode(event.target.value);
   }
@@ -214,8 +217,8 @@ export default function AddressForm(props) {
               onChange={handleEventModeChange}
             >
               <option aria-label="None" value="" />
-              <option value="online">Online</option>
-              <option value="offline">Offline</option>
+              <option value="Online">Online</option>
+              <option value="Offline">Offline</option>
             </Select>
           </FormControl>
         </Grid>
@@ -247,8 +250,8 @@ export default function AddressForm(props) {
               onChange={handleRegistrationModeChange}
             >
               <option aria-label="None" value="" />
-              <option value="ellipse">Our Platform(Ellipse)</option>
-              <option value="other">Other</option>
+              <option value="form">Our Platform(Ellipse)</option>
+              <option value="link">Other</option>
             </Select>
           </FormControl>
         </Grid>

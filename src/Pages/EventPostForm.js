@@ -14,6 +14,17 @@ import EventPostDetails3 from '../Components/EventPostDetails3';
 import AuthContext from '../AuthContext';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Backdrop from '@material-ui/core/Backdrop';
+
+
+
+//function for alert
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 
 function Copyright() {
@@ -73,7 +84,11 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down('md')]: {
       top: theme.spacing(12),
     }
-  }
+  },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: '#fff',
+  },
 }));
 
 
@@ -82,16 +97,18 @@ export default function Checkout({ history }) {
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
   const token = localStorage.getItem('token');
-  // const user = JSON.parse(u);
   const user = React.useContext(AuthContext);
-  // const [loading, setLoading] = React.useState(false);
-  // const [state, setState] = React.useState({
-  //   open: false,
-  //   vertical: 'top',
-  //   horizontal: 'center',
-  //   message: 'success',
-  //   type: 'error'
-  // });
+  const [state, setState] = React.useState({
+    open: false,
+    vertical: 'top',
+    horizontal: 'center',
+    message: 'success',
+    type: 'error',
+    autoHide: 300
+  });
+  const [loading, setLoading] = React.useState(false);
+  const { vertical, horizontal, open, message, type, autoHide } = state;
+
   const [eventName, setEventName] = React.useState(null);
   const [shortDesc, setShortDesc] = React.useState(null);
   const [eventMode, setEventMode] = React.useState(null);
@@ -112,22 +129,23 @@ export default function Checkout({ history }) {
   const [image, setImage] = React.useState(null);
   // const [imageType, setImageType] = React.useState(null);
   // const [imageName, setImageName] = React.useState("");
-  const [addressType, setAddressType] = React.useState("college");
-  const [collegeName, setCollegeName] = React.useState(user.collegeName);
+  const [addressType, setAddressType] = React.useState(null);
+  const [collegeName, setCollegeName] = React.useState(user.college_name);
+  // const [collegeId,setCollegeId] = React.useState(user.college_id)
   const [building, setBuildingAdress] = React.useState(null);
-  const [organizer, setOrganizer] = React.useState(user.name + "," + user.collegeName);
-  const [venueCollege,setVenueCollege] = React.useState(null);
-  const [participantsType,setParticipantsType] = React.useState("open");
+  const [organizer, setOrganizer] = React.useState(user.name + "," + user.college_name);
+  const [venueCollege, setVenueCollege] = React.useState(null);
+  const [participantsType, setParticipantsType] = React.useState("open");
   // const { vertical, horizontal, open, message, type } = state;
 
-  const [fields,setFields] = React.useState([]);
+  const [fields, setFields] = React.useState([]);
 
-  function setRegFields(f){
+  function setRegFields(f) {
     console.log(f);
     setFields(f);
   }
 
-  function handlePostwithoutregFileds(e){
+  function handlePostwithoutregFileds(e) {
     e.preventDefault();
     handleEventPost(null);
   }
@@ -179,7 +197,7 @@ export default function Checkout({ history }) {
             building={building}
             organizer={organizer}
             registrationMode={registrationMode}
-            venueCollege ={venueCollege}
+            venueCollege={venueCollege}
             participantsType={participantsType}
             setThemes={setEventThemes}
             setPoster={setImage}
@@ -194,13 +212,13 @@ export default function Checkout({ history }) {
             setVenueCollege={setVenueCollege}
             setAbout={setAbout}
             setParticipantsType={setParticipantsType}
-            handleNext={registrationMode === "ellipse" ? handleNext : handlePostwithoutregFileds} />
+            handleNext={registrationMode === "form" ? handleNext : handlePostwithoutregFileds} />
         );
       case 2:
         return (
           <EventPostDetails3
-            handleBack={handleBack} 
-            fields={fields} 
+            handleBack={handleBack}
+            fields={fields}
             setFields={setRegFields} handlePost={handleEventPost}>
 
           </EventPostDetails3>);
@@ -231,37 +249,42 @@ export default function Checkout({ history }) {
 
 
 
-console.log(fields);
+  console.log(fields);
 
-  const handleEventPost =  (allFields)=> {
+  const handleEventPost = (allFields) => {
     console.log(allFields);
+    var oAllowed = false;
+    if (participantsType === "open") {
+      oAllowed = true
+    }
     // event.preventDefault();
-    // setLoading(true);
+    setLoading(true);
     // const { eventName, shortdesc, eventMode,regLink,regFees,organizer,about } = event.target.elements;
     try {
       var data = new FormData();
       const payload = {
-        user_id: user.userid,
+        user_id: user.user_id,
         name: eventName,
         description: shortDesc,
         start_time: startDate,
         finish_time: endDate,
-        registrationEndTime: regEndDate,
-        eventMode: eventMode,
-        eventType: eventType,
+        registration_end_time: regEndDate,
+        event_mode: eventMode,
+        event_type: eventType,
         tags: eventThemes,
-        regLink: regLink,
-        fees: fees,
+        reg_link: regLink,
+        fee: fees,
         about: about,
-        organizer: organizer,
-        feesType: feeType,
+        // organizer: organizer,
+        fee_type: feeType,
         requirements: selectedrequirements,
-        college: collegeName,
-        addressType: addressType,
-        building: building,
-        regFields: allFields,
-        regMode: registrationMode,
-        participantsType: participantsType
+        college_name: collegeName,
+        // college_id: collegeId,
+        venue_type: addressType,
+        venue: building,
+        reg_fields: allFields,
+        reg_mode: registrationMode,
+        o_allowed: oAllowed
       };
       console.log(payload);
       data = JSON.stringify(payload);
@@ -293,7 +316,15 @@ console.log(fields);
             }).then(response => {
               if (response.status === 200) {
                 response.json().then(val => {
-                  history.replace("/home")
+                  setLoading(false);
+                  setState({
+                    open: true,
+                    vertical: 'top',
+                    horizontal: 'center',
+                    message: "Event Added Successfully",
+                    type: "success",
+                    autoHide: "4000"
+                  })
                 })
               }
             })
@@ -310,14 +341,15 @@ console.log(fields);
 
     }
     catch (error) {
-      // setLoading(false);
-      // setState({
-      //   open: true,
-      //   vertical: 'top',
-      //   horizontal: 'center',
-      //   message: error.message,
-      //   type: "error"
-      // })
+      setLoading(false);
+      setState({
+        open: true,
+        vertical: 'top',
+        horizontal: 'center',
+        message: error.message,
+        type: "error",
+        autoHide: '5000',
+      })
     }
   }
 
@@ -329,17 +361,37 @@ console.log(fields);
     setActiveStep(activeStep - 1);
   };
 
-  function handleCloseButton(){
+  function handleCloseButton() {
     history.goBack();
   }
+
+  const handleClose = async (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    if (message === "Event Added Successfully") {
+      history.replace("/home");
+    }
+    setState({ ...state, open: false });
+  };
 
   return (
     <React.Fragment>
       <CssBaseline />
+      <Snackbar
+        anchorOrigin={{ vertical, horizontal }}
+        open={open}
+        autoHideDuration={autoHide}
+        onClose={handleClose}
+        key={vertical + horizontal}
+      >
+        <Alert onClose={handleClose} severity={type}>{message}</Alert>
+      </Snackbar>
+      {<Backdrop open={loading} className={classes.backdrop}><CircularProgress></CircularProgress></Backdrop>}
       <main className={classes.layout}>
-      <IconButton aria-label="close" className={classes.closeButton} onClick={handleCloseButton}>
+        <IconButton aria-label="close" className={classes.closeButton} onClick={handleCloseButton}>
           <CloseIcon fontSize="large" />
-      </IconButton>
+        </IconButton>
         <Paper className={classes.paper}>
           <Typography component="h1" variant="h4" align="center">
             Post your Event

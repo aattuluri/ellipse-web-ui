@@ -148,7 +148,7 @@ export default function MiniDrawer(props) {
     }).then(response => {
         response.json().then(value => {
           const ev = value.event;
-          if(ev.user_id == user.userid){
+          if(ev.user_id == user.user_id){
             setAdminAccess(true);
           }
             setEvent(value.event);

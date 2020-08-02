@@ -21,6 +21,11 @@ import Skeleton from '@material-ui/lab/Skeleton';
 // import { Link } from 'react-router-dom';
 import AuthContext from '../AuthContext';
 import GridListEvents from '../Components/GridListEvents';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import Avatar from '@material-ui/core/Avatar';
+import Divider from '@material-ui/core/Divider';
 
 
 // function a11yProps(index) {
@@ -43,6 +48,7 @@ const useStyles = makeStyles((theme) => ({
         // color: theme.palette.grey[500],
 
     },
+
     rpaper: {
         padding: theme.spacing(1),
         textAlign: 'center',
@@ -50,9 +56,20 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: theme.palette.primary.light,
         margin: theme.spacing(1),
         position: 'sticky',
+        height: '89vh',
+        [theme.breakpoints.down('md')]: {
+            display: 'none',
+        },
         top: theme.spacing(10),
         // zIndex: 3,
         // borderRadius: theme.spacing(50)
+    },
+    subRpaper: {
+        backgroundColor: theme.palette.primary.light,
+        position: 'relative',
+        overflow: 'auto',
+        maxHeight: '89vh',
+
     },
     postButton: {
         borderRadius: theme.spacing(50),
@@ -65,15 +82,25 @@ const useStyles = makeStyles((theme) => ({
         position: 'sticky',
         top: theme.spacing(10),
         marginLeft: theme.spacing(1),
-
+        // height: '89vh',
         [theme.breakpoints.down('sm')]: {
             display: 'none',
         },
         // bottom: 0,
         // zIndex: 3,
     },
+    leftSubPaper: {
+        backgroundColor: theme.palette.primary.light,
+        position: 'relative',
+        overflow: 'auto',
+        maxHeight: '89vh',
+        [theme.breakpoints.down('md')]: {
+            maxHeight: '78vh',
+        },
+    },
     root2: {
         marginTop: theme.spacing(3),
+        marginLeft: theme.spacing(0),
         width: '100%',
         maxWidth: 360,
         backgroundColor: theme.palette.secondary.main,
@@ -138,7 +165,13 @@ function EventsTabPanel({ history }) {
     const [filterDialogOpen, setFilterDialogOpen] = React.useState(false);
     const [selectedImage, setSelectedImage] = React.useState(null);
     const allEvents = React.useContext(EventsContext);
-    
+    const [registerdEvents, setRegisteredEvents] = React.useState([]);
+
+    React.useEffect(() => {
+        // console.log(allEvents);
+        setRegisteredEvents(allEvents.filter((value) => value.registered === true))
+    }, [allEvents])
+    // console.log(registerdEvents);
     if (!token) {
         // return <Redirect to="/" />;
         history.replace("/")
@@ -175,9 +208,9 @@ function EventsTabPanel({ history }) {
         setSortCollegeType(value);
     }
     async function handleSortApplyButton() {
-        console.log(sortStartDate);
-        console.log(modeSortChecked);
-        console.log(sortCollegeType);
+        // console.log(sortStartDate);
+        // console.log(modeSortChecked);
+        // console.log(sortCollegeType);
         if (sortStartDate != null && sortEndDate != null) {
             const dateRangeSortedEvents = sortByDateRange(sortStartDate, sortEndDate, allEvents);
             setSortedEventsArray(dateRangeSortedEvents);
@@ -191,7 +224,7 @@ function EventsTabPanel({ history }) {
                     const feeSortedEvents = sortByCost(typeSortedEvents);
                     setSortedEventsArray(feeSortedEvents);
                     setIsFiltered(true);
-                    if (sortCollegeType === user.collegeName) {
+                    if (sortCollegeType === user.college_name) {
                         const collegeSortedEvents = sortByCollege(feeSortedEvents);
                         setSortedEventsArray(collegeSortedEvents);
                         setIsFiltered(true);
@@ -202,7 +235,7 @@ function EventsTabPanel({ history }) {
                 const feeSortedEvents = sortByCost(dateRangeSortedEvents);
                 setSortedEventsArray(feeSortedEvents);
                 setIsFiltered(true);
-                if (sortCollegeType === user.collegeName) {
+                if (sortCollegeType === user.college_name) {
                     const collegeSortedEvents = sortByCollege(feeSortedEvents);
                     setSortedEventsArray(collegeSortedEvents);
                     setIsFiltered(true);
@@ -276,8 +309,8 @@ function EventsTabPanel({ history }) {
 
     function sortByDateRange(date1, date2, sEvents) {
         var sortedEvents = [];
-        console.log(typeof (date1));
-        console.log(typeof (date1));
+        // console.log(typeof (date1));
+        // console.log(typeof (date1));
         sEvents.forEach(sEvent => {
             const d = new Date(sEvent.start_time);
             if (date1.getTime() <= d.getTime() && d.getTime() <= date2.getTime()) {
@@ -305,12 +338,8 @@ function EventsTabPanel({ history }) {
     }
     function sortByMode(sEvents) {
         var sortedEvents = [];
-        console.log(sEvents);
-        console.log(modeSortChecked);
         sEvents.forEach(sevent => {
-            // console.log(checked);
-            console.log(sevent.eventMode);
-            if (modeSortChecked.includes(sevent.eventMode)) {
+            if (modeSortChecked.includes(sevent.event_mode)) {
                 console.log("ddd");
                 sortedEvents.push(sevent);
             }
@@ -321,26 +350,18 @@ function EventsTabPanel({ history }) {
 
     function sortByCost(sEvents) {
         var sortedEvents = [];
-        console.log(sEvents);
         sEvents.forEach(sevent => {
-            // console.log(checked);
-            console.log(sevent.eventMode);
-            if (feeSortChecked.includes(sevent.feesType)) {
-                console.log("ddd");
+            if (feeSortChecked.includes(sevent.fee_type)) {
                 sortedEvents.push(sevent);
             }
         })
-        console.log(sortedEvents);
         return sortedEvents;
     }
 
     function sortByCollege(sEvents) {
         var sortedEvents = [];
         sEvents.forEach(sevent => {
-            // console.log(checked);
-            console.log(sevent.eventMode);
             if (user.collegeName === sevent.college) {
-                console.log("ddd");
                 sortedEvents.push(sevent);
             }
         })
@@ -381,19 +402,21 @@ function EventsTabPanel({ history }) {
             <Grid container component="main" >
                 <Grid item xs={false} md={3} lg={2} style={{ padding: "10px" }} >
                     <Paper className={classes.root}>
-                        <SortLeftPanel
-                            handleSortDateChange={handleSortDateChange}
-                            sortStartDate={sortStartDate}
-                            handleEndSortDateChange={handleEndSortDateChange}
-                            sortEndDate={sortEndDate}
-                            handleSortCollegeChange={handleSortCollegeChange}
-                            feeChecked={feeSortChecked}
-                            modeChecked={modeSortChecked}
-                            setFeeChecked={setFeeSortChecked}
-                            setModeChecked={setModeSortChecked}
-                            handleSortApplyButton={handleSortApplyButton}
-                            handlesortDiscardButton={handlesortDiscardButton}>
-                        </SortLeftPanel>
+                        <Paper className={classes.leftSubPaper}>
+                            <SortLeftPanel
+                                handleSortDateChange={handleSortDateChange}
+                                sortStartDate={sortStartDate}
+                                handleEndSortDateChange={handleEndSortDateChange}
+                                sortEndDate={sortEndDate}
+                                handleSortCollegeChange={handleSortCollegeChange}
+                                feeChecked={feeSortChecked}
+                                modeChecked={modeSortChecked}
+                                setFeeChecked={setFeeSortChecked}
+                                setModeChecked={setModeSortChecked}
+                                handleSortApplyButton={handleSortApplyButton}
+                                handlesortDiscardButton={handlesortDiscardButton}>
+                            </SortLeftPanel>
+                        </Paper>
                     </Paper>
                     <Button className={classes.mobileFilterButton} variant="outlined" onClick={handlefilterButtonClicked} >Filters</Button>
 
@@ -402,7 +425,7 @@ function EventsTabPanel({ history }) {
                     <Typography variant="h5" style={{ paddingTop: '5px' }}>
                         Your College Events
                 </Typography>
-                    <GridListEvents click={handleClick} events={allEvents.filter((event) => event.college === user.collegeName)} ></GridListEvents>
+                    <GridListEvents click={handleClick} events={allEvents.filter((event) => event.college_name === user.college_name)} ></GridListEvents>
 
 
 
@@ -466,19 +489,39 @@ function EventsTabPanel({ history }) {
                         <AddIcon />
                     </Fab>
                     <Paper className={classes.rpaper}>
-                        <Button
-                            onClick={handlePostButtonClick}
-                            variant="contained"
-                            fullWidth
-                            size="large"
-                            className={classes.postButton} >
-                            Post Event
+                        <Paper className={classes.subRpaper}>
+                            <Button
+                                onClick={handlePostButtonClick}
+                                variant="contained"
+                                fullWidth
+                                size="large"
+                                className={classes.postButton} >
+                                Post Event
                         </Button>
-                        <List className={classes.root2}>
-                            {/* <Divider variant="inset" component="li" /> */}
-                            <Typography>No Registered Events</Typography>
-                        </List>
+                            <List className={classes.root2}>
+                                
+                                <Typography variant="body2">Registered Events</Typography>
+                                {
+                                    registerdEvents.map((event, index) => {
+                                        return <React.Fragment><ListItem key={index} button>
+                                            <ListItemAvatar>
+                                                <Avatar variant="square"
+                                                    alt={event.name}
+                                                    src={`http:///139.59.16.53:4000/api/image?id=${event.poster_url}`}
+                                                />
+                                            </ListItemAvatar>
+                                            <ListItemText  primary={event.name} />
+                                            
+                                        </ListItem>
+                                        <Divider  /></React.Fragment>
+                                    })
+                                }
+                            </List>
+                           
+
+                        </Paper>
                     </Paper>
+
                 </Grid>
             </Grid>
             <div>

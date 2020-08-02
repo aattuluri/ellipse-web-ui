@@ -140,13 +140,13 @@ const UserInfo = ({ history }) => {
             const payload = {
                 gender: gender.value,
                 designation: designation.value,
-                collegeId: collegeId.value,
+                college_id: collegeId.value,
                 bio: bio.value,
             };
             data = JSON.stringify(payload);
             // console.log(data);
             // http://139.59.16.53:4000/api
-            fetch('http://localhost:4000/api/users/userdetails', {
+            fetch('http://139.59.16.53:4000/api/users/userdetails', {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',

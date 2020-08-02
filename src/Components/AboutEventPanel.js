@@ -52,7 +52,7 @@ function AboutEventPanel(props) {
     const [timeLabel,setTimeLabel] = React.useState("Registration Ends in")
     const calculateTimeLeft = () => {
         
-        var difference = +new Date(event.registrationEndTime) - +new Date();
+        var difference = +new Date(event.registration_end_time) - +new Date();
         let timeLeft = {};
         // console.log(difference);
         if(difference < 0){
@@ -74,7 +74,7 @@ function AboutEventPanel(props) {
     };
 
     const getTimeLabel = () =>{
-        var difference = +new Date(event.registrationEndTime) - +new Date();
+        var difference = +new Date(event.registration_end_time) - +new Date();
         let label = "Registration ends in"
         // console.log(difference);
         if(difference < 0){
@@ -119,7 +119,7 @@ function AboutEventPanel(props) {
                 <div className={classes.root}>
                 <Grid container component="main">
                     <Grid item xs={12} sm={12} md={4} lg={4} >
-                        <img style={{ maxWidth: '250px' }} alt="event poster" src={`http://139.59.16.53:4000/api/image?id=${event.posterUrl}`}  ></img>
+                        <img style={{ maxWidth: '250px' }} alt="event poster" src={`http://139.59.16.53:4000/api/image?id=${event.poster_url}`}  ></img>
                     </Grid>
                     <Grid item xs={12} sm={12} md={8} lg={8}>
                         <Typography>{event.description} This impressive paella is a perfect party dish and a fun meal to cook together with your guests. Add 1 cup of frozen peas along with the mussels, if you like.</Typography>
@@ -128,10 +128,10 @@ function AboutEventPanel(props) {
                         {/* <Typography>Starts at {event.start_time}</Typography>
                         <Typography>Ends at {event.finish_time}</Typography> */}
                         <div style={{marginTop:'10px'}}>
-                        <Chip variant="outlined" color="primary" label={event.eventType}></Chip>
+                        <Chip variant="outlined" color="primary" label={event.event_type}></Chip>
 
-                        <Chip style={{marginLeft:'5px'}} variant="outlined" color="primary" label={event.feesType}></Chip>
-                        <Chip style={{marginLeft:'5px'}} variant="outlined" color="primary" label={event.eventMode}></Chip>
+                        <Chip style={{marginLeft:'5px'}} variant="outlined" color="primary" label={event.fee_type}></Chip>
+                        <Chip style={{marginLeft:'5px'}} variant="outlined" color="primary" label={event.event_mode}></Chip>
                         {tags != null && tags.map(val => {
                             return <Chip key={val} style={{marginLeft:'5px'}} variant="outlined" color="primary" label={val}></Chip>
                         })}

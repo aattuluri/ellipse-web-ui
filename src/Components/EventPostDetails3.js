@@ -14,7 +14,6 @@ import FormLabel from '@material-ui/core/FormLabel';
 
 import FormControl from '@material-ui/core/FormControl';
 import FormGroup from '@material-ui/core/FormGroup';
-
 import AddFieldDialog from '../Components/AddFieldDialog';
 // import { keys } from '@material-ui/core/styles/createBreakpoints';
 
@@ -80,57 +79,25 @@ export default function AddressForm(props) {
     const handleClose = () => {
         setOpen(false);
     };
-    //   const [state, setState] = React.useState({
-    //     open: false,
-    //     vertical: 'top',
-    //     horizontal: 'center',
-    //     message: 'success',
-    //     type: 'error'
-    //   });
-    // const [fields, setFields] = React.useState([{
-    //     'name': 'name',
-    //     'type': 'String',
-    // },
-    // {
-    //     'name': 'email',
-    //     'type': 'String'
-    // }, {
-    //     'name': 'college',
-    //     'type': 'String'
-    // }])
-    // const [fields, setFields] = React.useState({
-    //     name: {
-    //         'name': 'name',
-    //         'type': 'String',
-    //     },
-    //     email: {
-    //         'name': 'email',
-    //         'type': 'String'
-    //     },
-    //     college: {
-    //         'name': 'college',
-    //         'type': 'String'
-    //     },
-        
-    // })
+    
     const fields = {
         name: {
-            'name': 'name',
-            'type': 'String',
+            'title': 'Name',
+            'field': 'short_text',
         },
         email: {
-            'name': 'email',
-            'type': 'String'
+            'title': 'Email',
+            'field': 'short_text'
         },
         college: {
-            'name': 'college',
-            'type': 'String'
+            'title': 'College',
+            'field': 'short_text'
         },
         
     }
     const [selectedFields, setSelectedFields] = React.useState([]);
 
-    console.log(fields.name);
+    // console.log(fields.name);
     const [state, setState] = React.useState({
         name: false,
         email: false,
@@ -145,7 +112,7 @@ export default function AddressForm(props) {
             setSelectedFields(selectedFields => [...selectedFields, fields[sName]]);
         }
         else if(!event.target.checked){
-            setSelectedFields(selectedFields => selectedFields.filter((chip) => chip.name !== sName));
+            setSelectedFields(selectedFields => selectedFields.filter((chip) => chip.title !== sName));
         }
         
     };
@@ -159,7 +126,7 @@ export default function AddressForm(props) {
     }
     const handleDelete = (chipToDelete) => () => {
         setState({...state,[chipToDelete.name]: false})
-        setSelectedFields(selectedFields => selectedFields.filter((chip) => chip.name !== chipToDelete.name));
+        setSelectedFields(selectedFields => selectedFields.filter((chip) => chip.title !== chipToDelete.title));
     };
 
     async function handlePostButton(e){
@@ -222,7 +189,7 @@ export default function AddressForm(props) {
                                 <li key={data.key}>
                                     <Chip
                                         
-                                        label={data.name}
+                                        label={data.title}
                                         onDelete={data.label === 'React' ? undefined : handleDelete(data)}
                                         className={classes.chip}
                                     />

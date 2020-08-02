@@ -45,12 +45,14 @@ const useStyles = makeStyles((theme) => ({
     root: {
         background: theme.palette.primary.light,
         position: 'sticky',
-        top: theme.spacing(10),
+        // top: theme.spacing(10),
         marginLeft: theme.spacing(1),
 
         [theme.breakpoints.down('sm')]: {
             display: 'none',
+            // top: theme.spacing(20)
         },
+    
     },
     root2: {
         marginTop: theme.spacing(5),
@@ -163,7 +165,7 @@ function SortLeftPanel(props) {
                         </FormControl> */}
                 <Typography style={{ paddingTop: "10px" }}>Event Mode</Typography>
                 <List className={classes.root}>
-                    {["online", "offline"].map((value) => {
+                    {["Online", "Offline"].map((value) => {
                         const labelId = `checkbox-list-label-${value}`;
                         return (
                             <ListItem key={value} role={undefined} dense button onClick={handleModeToggle(value)}>
@@ -207,7 +209,7 @@ function SortLeftPanel(props) {
                 <Typography>College</Typography>
                 <RadioGroup aria-label="address" name="address" defaultValue="All" onChange={props.handleSortCollegeChange} style={{ display: "inline" }}>
                     <List className={classes.root}>
-                        {["All", `${user.collegeName}`].map((value) => {
+                        {["All", `${user.college_name}`].map((value) => {
 
                             return (
                                 <ListItem key={value} role={undefined} dense button >

@@ -52,11 +52,11 @@ function handleOptionsChange(event,values){
     setSelectedOptions(values);
 }
 function handleAddButton(){
-    if(type !== "radiobutton" && type !== "checkbox"){
-        props.handleAdd({[name]:{'name':name,'type':type}},name);
+    if(type !== "radiobutton" && type !== "checkbox" && type !== "dropdown"){
+        props.handleAdd({[name]:{'title':name,'field':type}},name);
     }
     else{
-        props.handleAdd({[name]:{'name':name,'type':type,'options':selectedOptions}},name);
+        props.handleAdd({[name]:{'title':name,'field':type,'options':selectedOptions}},name);
     }
     props.handleClose()
     
@@ -102,15 +102,21 @@ function handleAddButton(){
               onChange={handleTypeChange}
             >
               <option aria-label="None" value="" />
-              <option value="String">String</option>
+              <option value="short_text">Short Text</option>
+              <option value="long_desc">Long Description</option>
+              <option value="dropdown">Drop Down</option>
+              <option value="date">Date & Time</option>
+              
+              
               {/* <option value="Number">Number</option> */}
               {/* <option value="Bool">Bool</option> */}
               <option value="radiobutton">Radio Button</option>
               <option value="checkbox">Check Box</option>
+              <option value="link">Link</option>
             </Select>
           </FormControl>
           </Grid>
-          { (type === "radiobutton" || type === "checkbox") &&
+          { (type === "radiobutton" || type === "checkbox" || type === "dropdown") &&
             <Grid item xs={12}>
           <Autocomplete
               multiple

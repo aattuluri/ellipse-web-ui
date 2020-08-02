@@ -63,45 +63,9 @@ function AboutEventPanel(props) {
   const event = props.event;
   const startDate = new Date(event.start_time);
   const endDate = new Date(event.finish_time);
-  const regEndDate = new Date(event.registrationEndTime);
-  // const event = props.event;
-  // const tags = event.tags;
-  // const calculateTimeLeft = () => {
-  //   const difference = +new Date(event.registrationEndTime) - +new Date();
-  //   let timeLeft = {};
+  const regEndDate = new Date(event.registration_end_time);
+  
 
-  //   if (difference > 0) {
-  //     timeLeft = {
-  //       days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-  //       hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-  //       minutes: Math.floor((difference / 1000 / 60) % 60),
-  //       seconds: Math.floor((difference / 1000) % 60)
-  //     };
-  //   }
-
-  //   return timeLeft;
-  // };
-
-  // const [timeLeft, setTimeLeft] = React.useState(calculateTimeLeft());
-
-  // React.useEffect(() => {
-  //   setTimeout(() => {
-  //     setTimeLeft(calculateTimeLeft());
-  //   }, 1000);
-  // });
-
-  // const timerComponents = [];
-  // Object.keys(timeLeft).forEach(interval => {
-  //   if (!timeLeft[interval]) {
-  //     return;
-  //   }
-
-  //   timerComponents.push(
-  //     <span>
-  //       {timeLeft[interval]} {interval}{" "}
-  //     </span>
-  //   );
-  // });
   return (
     <div
       role="tabpanel"

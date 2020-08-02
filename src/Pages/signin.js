@@ -39,10 +39,10 @@ const Signin = ({ history }) => {
     autoHide: 300
   });
   const [loading, setLoading] = React.useState(false);
-  const { vertical, horizontal, open, message, type,autoHide } = state;
+  const { vertical, horizontal, open, message, type, autoHide } = state;
   // const [user,setUser] = React.useState(null);
-  const [token,setToken] = React.useState(null);
-  const [isUserVerified,setIsUserVerified] = React.useState(null);
+  const [token, setToken] = React.useState(null);
+  const [isUserVerified, setIsUserVerified] = React.useState(null);
   const handleClose = async (event, reason) => {
     if (reason === 'clickaway') {
       return;
@@ -52,15 +52,15 @@ const Signin = ({ history }) => {
       // localStorage.setItem('user', user);
 
       // console.log(JSON.parse(user).collegeName);
-      if(isUserVerified){
-        
-          history.push('/home');
-        
+      if (isUserVerified) {
+
+        history.push('/home');
+
       }
-      else{
+      else {
         history.push('/otpverification')
       }
-      
+
     }
     setState({ ...state, open: false });
   };
@@ -85,13 +85,13 @@ const Signin = ({ history }) => {
         body: data
       }).then((response) => {
         console.log(response);
-        if(response.status === 200){
+        if (response.status === 200) {
           // console.log
           response.json().then((value) => {
             setToken(value.token);
             setIsUserVerified(value.isVerified);
             // setUser(JSON.stringify(value.userDetails));
-  
+
             setLoading(false);
             setState({
               open: true,
@@ -103,34 +103,36 @@ const Signin = ({ history }) => {
             });
           })
         }
-        else{
+        else {
           setLoading(false);
-          setState({ 
+          setState({
             open: true,
-            vertical: 'top', 
-            horizontal: 'center', 
-            message: "invalid credentials", 
-            type: "error",autoHide:6000 })
+            vertical: 'top',
+            horizontal: 'center',
+            message: "invalid credentials",
+            type: "error", autoHide: 6000
+          })
         }
-        
+
       })
     } catch (error) {
 
       setLoading(false);
-      setState({ 
-        open: true, 
-        vertical: 'top', 
-        horizontal: 'center', 
-        message: error.message, 
+      setState({
+        open: true,
+        vertical: 'top',
+        horizontal: 'center',
+        message: error.message,
         type: "error",
-        autoHide:6000 })
+        autoHide: 6000
+      })
     }
   }
   const lToken = localStorage.getItem('token');
-  if(lToken){
+  if (lToken) {
     return <Redirect to="/home" />;
   }
- 
+
 
 
   return (
@@ -166,7 +168,7 @@ const Signin = ({ history }) => {
             </Grid>
           </div>
           {/* </div> */}
-          
+
         </div>
       </Grid>
 
@@ -221,7 +223,6 @@ const Signin = ({ history }) => {
               </Button>
 
             </div>
-
             <Grid container>
               <Grid item xs>
                 <Link href="/forgotpassword" variant="body2">

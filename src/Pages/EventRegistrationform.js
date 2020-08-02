@@ -26,6 +26,13 @@ import Backdrop from '@material-ui/core/Backdrop';
 import AuthContext from '../AuthContext';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
+import FormLabel from '@material-ui/core/FormLabel';
+import { MuiPickersUtilsProvider, DateTimePicker, } from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns';
+import FormControl from '@material-ui/core/FormControl';
+import FormGroup from '@material-ui/core/FormGroup';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
 
 
 //function for alert
@@ -49,13 +56,20 @@ const Signup = (props) => {
   const [loading, setLoading] = React.useState(false);
   // const [fields, setFields] = React.useState([]);
   const [normalFields, setNormalFields] = React.useState([]);
+  const [dropDownFields, setDropDownFields] = React.useState([]);
   const [checkboxFields, setCheckBoxFields] = React.useState([]);
   const [radioFields, setRadioFields] = React.useState([]);
+  const [dateFields, setDateFields] = React.useState([]);
+  const [longDescFields, setLongDescFields] = React.useState([]);
+  // const [dateFields,setDateFields] = React.useState([]);
+  const [linkFields, setLinkFields] = React.useState([]);
+
   const { vertical, horizontal, open, message, type, autoHide } = state;
   const id = props.match.params.eventId;
   const [backDropOpen, setBackDropOpen] = React.useState(true);
   const [event, setEvent] = React.useState(null);
-  const colleges = ["VIT University", "GITAM University", "SRM University"];
+  const [checkedValues, setCheckedValues] = React.useState([]);
+  const colleges = ["VIT University,Vellore", "GITAM University", "SRM University"];
   React.useEffect(() => {
     fetch(`http://139.59.16.53:4000/api/event?id=${id}`, {
       headers: {
@@ -69,28 +83,35 @@ const Signup = (props) => {
       response.json().then(value => {
         setEvent(value.event);
         // setFields(value.event.regFields);
-        const allFields = value.event.regFields;
+        const allFields = value.event.reg_fields;
+        console.log(allFields);
         if (allFields != null) {
           allFields.forEach(f => {
-            if (f.name === "name") {
-              setFormValues(formValues => ({ ...formValues, [f.name]: user.name }))
+            if (f.title === "Name") {
+              setFormValues(formValues => ({ ...formValues, [f.title]: user.name }))
             }
-            else if (f.name === "email") {
-              setFormValues(formValues => ({ ...formValues, [f.name]: user.email }));
+            else if (f.title === "Email") {
+              setFormValues(formValues => ({ ...formValues, [f.title]: user.email }));
             }
-            else if (f.name === "college") {
-              setFormValues(formValues => ({ ...formValues, [f.name]: user.collegeName }));
+            else if (f.title === "College") {
+              setFormValues(formValues => ({ ...formValues, [f.title]: user.college_name }));
             }
             else {
-              setFormValues(formValues => ({ ...formValues, [f.name]: null }));
+              setFormValues(formValues => ({ ...formValues, [f.title]: null }));
+            }
+            if (f.field === "checkbox") {
+
             }
 
           })
-          const filteredFields = allFields.filter(f => f.type !== "checkbox")
-          setNormalFields(filteredFields.filter(f => f.type !== "radiobutton"))
-          setCheckBoxFields(allFields.filter((f) => f.type === "checkbox"));
-          setRadioFields(allFields.filter(f => f.type === "radiobutton"))
-          // allFields
+          // const filteredFields = allFields.filter(f => f.field !== "checkbox")
+          setNormalFields(allFields.filter(f => f.field === "short_text"));
+          setLongDescFields(allFields.filter((f) => f.field === "long_desc"));
+          setCheckBoxFields(allFields.filter((f) => f.field === "checkbox"));
+          setRadioFields(allFields.filter(f => f.field === "radiobutton"));
+          setDateFields(allFields.filter((f) => f.field === "date"));
+          // setLongDescFields(allFields.filter((f) => f.field === "long_desc"));
+          setDropDownFields(allFields.filter(f => f.field == "dropdown"));
         }
         setBackDropOpen(false);
       })
@@ -101,7 +122,7 @@ const Signup = (props) => {
     if (message === "Registered successfully") {
       props.history.push('/home')
     }
-
+    setState({ ...state, open: false });
   }
 
   function handleChange(event) {
@@ -111,10 +132,55 @@ const Signup = (props) => {
     setFormValues({ ...formValues, [name]: values });
 
   }
+  const handleChange3 = (name) => (event) => {
+    if (event.target.checked) {
+      setCheckedValues(checkedValues => [...checkedValues, { [name]: event.target.name }]);
+      const array = [];
+      checkedValues.forEach((v, i) => {
+        if (v[name]) {
+          array.push(v[name])
+        }
+      });
+      array.push(event.target.name);
+      setFormValues({ ...formValues, [name]: array });
+    }
+  }
+
+  const handleDateChange = (name) => (date) => {
+    // console.log(name);
+    // console.log(date);
+    setFormValues({ ...formValues, [name]: date })
+  };
+
+  const handleLondDescChange = (event) => {
+    setFormValues({ ...formValues, [event.target.name]: event.target.value })
+  }
+
+  function handleradioChange(event, value) {
+    // console.log(event.target.name);
+    // console.log(value);
+    setFormValues({ ...formValues, [event.target.name]: value });
+    // props.setFeeType(value)
+  }
 
   function handleEventRegistration(e) {
     e.preventDefault();
-    setLoading(true);
+    // setLoading(true);
+    // console.log(checkedValues);
+    console.log(formValues);
+    const formkeys = Object.keys(formValues);
+    formkeys.forEach(v =>{
+      if(formValues[v] === null){
+        setState({
+          open: true,
+          vertical: 'top',
+          horizontal: 'center',
+          message: 'Please fill in all fields',
+          type: "error",
+          autoHide: 4000
+        });
+      }
+    })
     try {
       var data = new FormData();
       const d = { data: formValues }
@@ -158,7 +224,7 @@ const Signup = (props) => {
 
   }
 
-  function handleBack(){
+  function handleBack() {
     props.history.goBack();
   }
 
@@ -181,7 +247,7 @@ const Signup = (props) => {
         <CircularProgress color="inherit" />
       </Backdrop>
       <IconButton aria-label="close" className={classes.closeButton} onClick={handleBack}>
-          <CloseIcon fontSize="large" />
+        <CloseIcon fontSize="large" />
       </IconButton>
       {event != null &&
         <div className={classes.paper}>
@@ -192,18 +258,36 @@ const Signup = (props) => {
 
             <Grid container spacing={2}>
               {normalFields.map((field, index) => {
-                if (field.name === "college") {
+                if (field.title === "College") {
                   return (
                     <Grid item xs={12}>
                       <Autocomplete
                         fullWidth
-                        id={field.name}
+                        id={field.title}
                         options={colleges}
                         getOptionLabel={(option) => option}
                         onChange={handleChange}
-                        value={formValues[field.name]}
+                        value={formValues[field.title]}
                         disabled
-                        renderInput={(params) => <TextField name={field.name} fullWidth required {...params} label={field.name} />}
+                        renderInput={(params) => <TextField name={field.title} fullWidth required {...params} label={field.title} />}
+                      />
+                    </Grid>)
+                }
+                else if (field.title === "Email") {
+                  return (
+                    <Grid item xs={12}>
+                      <TextField
+                        autoComplete='off'
+                        name={field.title}
+                        disabled
+                        // variant="outlined"
+                        required
+                        fullWidth
+                        id={field.title}
+                        onChange={handleChange}
+                        value={formValues[field.title]}
+                        label={field.title}
+                        autoFocus
                       />
                     </Grid>)
                 }
@@ -212,14 +296,14 @@ const Signup = (props) => {
                     <Grid item xs={12}>
                       <TextField
                         autoComplete='off'
-                        name={field.name}
+                        name={field.title}
                         // variant="outlined"
                         required
                         fullWidth
-                        id={field.name}
+                        id={field.title}
                         onChange={handleChange}
-                        value={formValues[field.name]}
-                        label={field.name}
+                        value={formValues[field.title]}
+                        label={field.title}
                         autoFocus
                       />
                     </Grid>)
@@ -229,7 +313,18 @@ const Signup = (props) => {
               {checkboxFields.map((field, index) => {
                 return (
                   <Grid item xs={12}>
-                    <Autocomplete
+                    <FormControl component="fieldset" className={classes.formControl}>
+                      <FormLabel component="legend">{field.title}</FormLabel>
+                      <FormGroup class={classes.formgroup}>
+                        {field.options.map((option) => {
+                          return <FormControlLabel
+                            control={<Checkbox color="primary" onChange={handleChange3(field.title)} name={option} />}
+                            label={option}
+                          />
+                        })}
+                      </FormGroup>
+                    </FormControl>
+                    {/* <Autocomplete
                       id={field.name}
                       multiple
                       // value={}
@@ -244,6 +339,27 @@ const Signup = (props) => {
                       renderInput={(params) => (
                         <TextField {...params} name={field.name} label={field.name} placeholder={field.name} />
                       )}
+                    /> */}
+                  </Grid>
+                )
+              })}
+              {dropDownFields.map((field, index) => {
+                return (
+                  <Grid item xs={12}>
+                    <Autocomplete
+                      id={field.title}
+                      options={field.options.map((option) => option)}
+                      // freeSolo
+                      // onChange={handleeventTagsChange}
+                      onChange={handleChange2(field.title)}
+                      renderTags={(value, getTagProps) =>
+                        value.map((option, index) => (
+                          <Chip variant="outlined" label={option} {...getTagProps({ index })} />
+                        ))
+                      }
+                      renderInput={(params) => (
+                        <TextField {...params} name={field.name} label={field.title} placeholder={field.name} />
+                      )}
                     />
                   </Grid>
                 )
@@ -251,24 +367,67 @@ const Signup = (props) => {
               {radioFields.map((field, index) => {
                 return (
                   <Grid item xs={12}>
-                    <Autocomplete
-                      id={field.name}
-                      options={field.options.map((option) => option)}
-                      // freeSolo
-                      // onChange={handleeventTagsChange}
-                      onChange={handleChange2(field.name)}
-                      renderTags={(value, getTagProps) =>
-                        value.map((option, index) => (
-                          <Chip variant="outlined" label={option} {...getTagProps({ index })} />
-                        ))
-                      }
-                      renderInput={(params) => (
-                        <TextField {...params} name={field.name} label={field.name} placeholder={field.name} />
-                      )}
-                    />
+                    <FormLabel required component="legend">{field.title}</FormLabel>
+                    <RadioGroup required aria-label="address" name={field.title} value={formValues[field.title]} onChange={handleradioChange} style={{ display: "inline" }}>
+                    {field.options.map((option)=>{
+                      return <FormControlLabel value={option} control={<Radio color="default" />} label={option} />
+                    })}
+                      
+                      {/* <FormControlLabel value="Paid" control={<Radio color="default" />} label="Paid" /> */}
+                    </RadioGroup>
                   </Grid>
                 )
               })}
+              {
+                dateFields.map((field, index) => {
+                  return (
+                    <Grid item xs={12}>
+                      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        <DateTimePicker
+                          // minDate={Date.now()}
+                          fullWidth
+                          required
+                          variant="inline"
+                          format="dd MMM yyyy hh:mm a zzz"
+                          margin="normal"
+                          id="startDate"
+                          label="Start Date"
+                          name="startDate"
+                          value={formValues[field.title]}
+                          onChange={handleDateChange(field.title)}
+                          KeyboardButtonProps={{
+                            'aria-label': 'change date',
+                          }}
+                        />
+                      </MuiPickersUtilsProvider>
+
+                    </Grid>
+                  )
+                })
+              }
+              {
+                longDescFields.map((field, index) => {
+                  return (
+                    <Grid item xs={12}>
+                      <TextField
+                        multiline={true}
+                        rows="5"
+                        variant='outlined'
+                        placeholder={field.title}
+                        autoComplete='off'
+                        required
+                        id={field.title}
+                        name={field.title}
+                        label={field.title}
+                        fullWidth
+                        onChange={handleLondDescChange}
+                      // value={props.about}
+                      />
+                    </Grid>
+                  )
+                })
+              }
+
               <Grid item xs={12}>
                 <FormControlLabel
                   control={<Checkbox color="primary" name="terms" />}
