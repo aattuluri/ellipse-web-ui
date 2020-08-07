@@ -54,7 +54,7 @@ export default function StickyHeadTable(props) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const token = localStorage.getItem('token');
-  const [regData, setRegData] = React.useState([]);
+  // const [regData, setRegData] = React.useState([]);
   const [headers, setHeaders] = React.useState([]);
   const [rowValues, setRowValues] = React.useState([]);
   const [selected, setSelected] = React.useState([]);
@@ -111,9 +111,10 @@ export default function StickyHeadTable(props) {
       method: 'GET',
     }).then(response => {
       response.json().then(value => {
-        console.log(value);
-        setRegData(value.data);
-        const firstdata = value[0].data;
+        // console.log(value);
+        // setRegData(value.data);
+        if(value.length > 0){
+          const firstdata = value[0].data;
         const columnNames = Object.keys(firstdata);
         columnNames.forEach(item => {
           setHeaders((headers => [...headers, { id: item, label: item, minWidth: 170 }]))
@@ -121,10 +122,12 @@ export default function StickyHeadTable(props) {
         value.forEach(d => {
           setRowValues(rowValues => [...rowValues, d.data])
         })
+        }
+        
 
       })
     })
-  }, [])
+  }, [token,event._id])
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
   function handleAddAnnouncement(){
@@ -188,7 +191,6 @@ export default function StickyHeadTable(props) {
                   return (
                     <TableRow hover role="checkbox" tabIndex={-1} key={row.name}
                       onClick={(event) => handleClick(event, row.name)}
-                      role="checkbox"
                       selected={isItemSelected}>
                       <TableCell padding="checkbox">
                         <Checkbox

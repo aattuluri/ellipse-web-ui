@@ -43,22 +43,65 @@ const Signin = ({ history }) => {
   // const [user,setUser] = React.useState(null);
   const [token, setToken] = React.useState(null);
   const [isUserVerified, setIsUserVerified] = React.useState(null);
+  const [email, setEmail] = React.useState(null);
   const handleClose = async (event, reason) => {
+    // console.log(isUserVerified);
     if (reason === 'clickaway') {
       return;
     }
     if (message === "Signedin successfully") {
       localStorage.setItem('token', token);
       // localStorage.setItem('user', user);
-
+      // console.log(isUserVerified);
       // console.log(JSON.parse(user).collegeName);
       if (isUserVerified) {
-
+        localStorage.setItem('token', token);
+        // console.log(isUserVerified);
         history.push('/home');
-
       }
       else {
-        history.push('/otpverification')
+        try {
+          var data2 = new FormData();
+          const payload2 = {
+            email: email
+          };
+          data2 = JSON.stringify(payload2)
+          fetch('http://139.59.16.53:4000/api/users/sendverificationemail', {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+            },
+            method: 'POST',
+            body: data2
+          }).then((result) => {
+            console.log(result);
+            result.json().then((res) => {
+              if (res.message === "success") {
+                localStorage.setItem('token', token);
+                history.push('/otpverification')
+                setState({
+                  open: true,
+                  vertical: 'top',
+                  horizontal: 'center',
+                  message: 'Signedup successfully',
+                  type: "success",
+                  autoHide: 300
+                });
+              }
+            })
+
+          })
+        } catch (error) {
+          // setLoading(false);
+          setState({
+            open: true,
+            vertical: 'top',
+            horizontal: 'center',
+            message: error.message,
+            type: "error"
+          })
+        }
+
       }
 
     }
@@ -90,6 +133,7 @@ const Signin = ({ history }) => {
           response.json().then((value) => {
             setToken(value.token);
             setIsUserVerified(value.isVerified);
+            setEmail(value.useremail);
             // setUser(JSON.stringify(value.userDetails));
 
             setLoading(false);
@@ -235,7 +279,6 @@ const Signin = ({ history }) => {
                 </Link>
               </Grid>
             </Grid>
-
             <Box mt={5}>
               <Copyright />
             </Box>

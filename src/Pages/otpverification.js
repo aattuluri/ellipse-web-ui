@@ -31,10 +31,11 @@ const OTPver = ({ history }) => {
         vertical: 'top',
         horizontal: 'center',
         message: 'success',
-        type: 'error'
+        type: 'error',
+        autoHide: 300
     });
     const [loading, setLoading] = React.useState(false);
-    const { vertical, horizontal, open, message, type } = state;
+    const { vertical, horizontal, open, message, type,autoHide} = state;
 
     function handleClose() {
         console.log("message")
@@ -75,7 +76,8 @@ const OTPver = ({ history }) => {
                             vertical: 'top',
                             horizontal: 'center',
                             message: "verified",
-                            type: 'success'
+                            type: 'success',
+                            autoHide: 300
                         })
 
                     }
@@ -86,7 +88,8 @@ const OTPver = ({ history }) => {
                             vertical: 'top',
                             horizontal: 'center',
                             message: "incorrect otp",
-                            type: 'error'
+                            type: 'error',
+                            autoHide: 3000
                         })
                     }
                     else {
@@ -96,7 +99,8 @@ const OTPver = ({ history }) => {
                             vertical: 'top',
                             horizontal: 'center',
                             message: "Something went wrong try again",
-                            type: 'error'
+                            type: 'error',
+                            autoHide: 3000
                         })
                     }
                 })
@@ -123,7 +127,7 @@ const OTPver = ({ history }) => {
             <Snackbar
                 anchorOrigin={{ vertical, horizontal }}
                 open={open}
-                autoHideDuration={6000}
+                autoHideDuration={autoHide}
                 onClose={handleClose}
                 key={vertical + horizontal}
             >

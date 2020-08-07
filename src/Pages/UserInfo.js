@@ -78,7 +78,7 @@ const UserInfo = ({ history }) => {
         autoHide: 300
     });
     const [loading, setLoading] = React.useState(false);
-    const { vertical, horizontal, open, message, type } = state;
+    const { vertical, horizontal, open, message, type,autoHide } = state;
     const [colleges,setColleges] = React.useState([]);
     const handleClose = async (event, reason) => {
 
@@ -103,22 +103,8 @@ const UserInfo = ({ history }) => {
                     setColleges(value);
                   })
                 })
-      },[])
-    // function getBase64(file, cb) {
-    //     let reader = new FileReader();
-    //     reader.readAsDataURL(file);
-    //     reader.onload = function () {
-    //         console.log(reader.type);
-    //         console.log(reader.result.split(',')[1])
-    //         console.log(reader.result.split(',')[0])
-    //         console.log(reader.result)
-
-    //         cb(reader.result)
-    //     };
-    //     reader.onerror = function (error) {
-    //         console.log('Error: ', error);
-    //     };
-    // }
+      },[token])
+  
     function handleChange(event) {
         if (event.target.files[0]) {
             setImage(event.target.files[0]);
@@ -219,7 +205,7 @@ const UserInfo = ({ history }) => {
             <Snackbar
                 anchorOrigin={{ vertical, horizontal }}
                 open={open}
-                autoHideDuration={6000}
+                autoHideDuration={autoHide}
                 onClose={handleClose}
                 key={vertical + horizontal}
             >
@@ -316,7 +302,7 @@ const UserInfo = ({ history }) => {
                                 >
                                     <option aria-label="None" value="" />
                                     {colleges.map((coll,index) =>{
-                                        return <option value={coll._id}>{coll.name}</option>
+                                        return <option key={index} value={coll._id}>{coll.name}</option>
                                     })}
                                     
                                     {/* <option value="GITAM University">GITAM University</option>

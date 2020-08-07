@@ -7,7 +7,7 @@ import Dialog from '@material-ui/core/Dialog';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import Button from '@material-ui/core/Button';
+// import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 // import Grid from '@material-ui/core/Grid';
 import UpdateInfoTabPanel from './UpdateInfoTabPanel';
@@ -42,7 +42,12 @@ const useStyles = makeStyles((theme) => ({
         position: 'absolute',
         left: theme.spacing(1),
         bottom: theme.spacing(1),
-    }
+    },
+    dialog: {
+        // height: '800px',
+        minHeight: '90vh',
+        maxHeight: '90vh',
+    },
 }));
 
 function UpdateProfile(props) {
@@ -71,6 +76,7 @@ function UpdateProfile(props) {
                     boxShadow: 'none',
                 },
             }}
+            classes={{ paper: classes.dialog }}
 
         >
             <DialogTitle id="scroll-dialog-title">
@@ -101,7 +107,6 @@ function UpdateProfile(props) {
                         >
                             <Tab label="Update info" {...a11yProps(0)} />
                             <Tab label="Change Password" {...a11yProps(1)} />
-                            {/* <Tab label="Announcements" {...a11yProps(2)} /> */}
                         </Tabs>
                     </AppBar>
                 </div>
@@ -112,7 +117,7 @@ function UpdateProfile(props) {
                 
             </DialogContent>
             <DialogActions alignItems="center">
-            <Button>Update Profile</Button>
+            {/* <Button>Update Profile</Button> */}
             </DialogActions>
         </Dialog>
     )

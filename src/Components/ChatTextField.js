@@ -56,6 +56,7 @@ export default function JustifyContent(props) {
                 [classes.close]: !props.open,
               }))
         }
+        // eslint-disable-next-line
     },[props.open])
     const handleNewMessage = (event) => {
         setNewMessage(event.target.value);
@@ -75,7 +76,7 @@ export default function JustifyContent(props) {
     const handleKeyPress = (e) => {
         // console.log(sendButtonDisabled);
         if (newmessage !== null && newmessage !== "") {
-            if (e.keyCode === 13) {
+            if (e.keyCode === 13 && !e.shiftKey) {
                 e.preventDefault();
                 props.handleSend(newmessage);
                 setSendButtonDisabled(true);
@@ -98,7 +99,7 @@ export default function JustifyContent(props) {
                 placeholder="Type your message"
                 multiline
                 onChange={handleNewMessage}
-                value={newmessage}
+                value={newmessage || ""}
                 rowsMax="3"
                 onKeyUp={handleKeyPress}
             >

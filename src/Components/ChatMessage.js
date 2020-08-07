@@ -10,6 +10,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 // import Avatar from '@material-ui/core/Avatar';
 import InfoIcon from '@material-ui/icons/Info';
 import { ListItemAvatar } from '@material-ui/core';
+import Box from '@material-ui/core/Box';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -26,8 +27,16 @@ const useStyles = makeStyles((theme) => ({
         height: theme.spacing(7),
     },
     inline: {
+        whiteSpace: 'pre-line',
+        // paddingRight: theme.spacing(4)
         // overflow: 'wrap'
         // display: 'block'
+    },
+    date: {
+        // alignContent: 'flex-end'
+        // textAlign: 'right'
+        display: "flex",
+        justifyContent: "flex-end",
     }
 
 }));
@@ -58,7 +67,7 @@ function ChatMessage(props) {
                         <Typography
                             component="h6"
                             variant="body2"
-                            className={classes.inline}
+                            // className={classes.inline}
                         >
                             {message.user_name}
                         </Typography>
@@ -66,7 +75,8 @@ function ChatMessage(props) {
                         <Typography
                             component="span"
                             variant="body2"
-                            className={classes.inline}
+                            color="textSecondary"
+                            // className={classes.inline}
                         >
                             {userType}
                         </Typography>
@@ -81,15 +91,18 @@ function ChatMessage(props) {
                     >
                         {message.message}
                     </Typography>
-
+                    <Box>
                     <Typography
+                    inline
                         component="span"
                         variant="body2"
                         color="textSecondary"
-                        className={classes.inline}
+                        // align="right"
+                        className={classes.date}
                     >
                         {"   "+date.toLocaleTimeString([], {timeStyle: 'short'})}
                     </Typography>
+                    </Box>
                 </React.Fragment>}
 
             />

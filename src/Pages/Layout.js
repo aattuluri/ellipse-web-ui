@@ -6,7 +6,7 @@ import EventsContext from '../EventsContext';
 import AuthContext from '../AuthContext';
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import RegEventsContext from '../RegEventsContext';
+// import RegEventsContext from '../RegEventsContext';
 import { Redirect } from 'react-router';
 // import Button from '@material-ui/core/Button';
 
@@ -35,7 +35,9 @@ function Layout(props) {
     const [allEvents, setAllEvents] = React.useState([]);
     const [currentUser, setCurrentUser] = React.useState(null);
     const [open, setOpen] = React.useState(true);
-    const [registeredEvents, setRegisteredEvents] = React.useState([]);
+    const [authorized,setAuthorized] = React.useState(true);
+    const [userDetailsDone,setUserDetailsDone] = React.useState(true);
+    // const [registeredEvents, setRegisteredEvents] = React.useState([]);
 
 
     React.useEffect(() => {
@@ -47,13 +49,20 @@ function Layout(props) {
             },
             method: 'GET'
         }).then(response => {
+            if (response.status === 200) {
             response.json().then(value => {
-                // console.log(value);
                 setCurrentUser(value[0]);
-                // console.log(value);
-                // setAllEvents(value);
+                if(value[0].college_name === null){
+                    setUserDetailsDone(false);
+                }
                 setOpen(false);
+                
             })
+        }
+        else if(response.status === 401){
+            localStorage.removeItem('token');
+            setAuthorized(false);
+        }
         })
         fetch('http://139.59.16.53:4000/api/events', {
             headers: {
@@ -70,28 +79,22 @@ function Layout(props) {
                     setAllEvents(value);
                 })
             }
+            else if(response.status === 401){
+                localStorage.removeItem('token');
+                setAuthorized(false);
+            }
 
         })
-        // fetch('http://localhost:4000/api/event/registeredEvents', {
-        //     headers: {
-        //         'Authorization': `Bearer ${token}`,
-        //         'Content-Type': 'application/json',
-        //         'Accept': 'application/json'
-        //     },
-        //     method: 'GET'
-        // }).then(response => {
-        //     if (response.status === 200) {
-        //         response.json().then(value => {
-        //             // console.log(value);
-        //             setRegisteredEvents(value);
-        //         })
-        //     }
-
-        // })
 
     }, [token])
     if(!token){
         return <Redirect to = "/"></Redirect>
+     }
+     if(!authorized){
+        return <Redirect to = "/"></Redirect>
+     }
+     if(!userDetailsDone){
+        return <Redirect to = "/userinfo"></Redirect>
      }
 
     return (
@@ -109,11 +112,10 @@ function Layout(props) {
                         </div>
                     }
                     {
-                        currentUser == null && <div>
-                            <Backdrop className={classes.backdrop} open={open}>
+                        currentUser == null && <Backdrop className={classes.backdrop} open={open}>
                                 <CircularProgress color="inherit" />
                             </Backdrop>
-                        </div>
+                    
                     }
                 {/* </RegEventsContext.Provider> */}
             </EventsContext.Provider>

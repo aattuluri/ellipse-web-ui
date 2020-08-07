@@ -2,6 +2,7 @@ import React from 'react';
 import { Grid, Typography} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import  Chip  from '@material-ui/core/Chip';
+import { cleanup } from '@testing-library/react';
 // import AuthContext from '../AuthContext';
 
 
@@ -92,10 +93,15 @@ function AboutEventPanel(props) {
 
     React.useEffect(() => {
         
-        setTimeout(() => {
+        const x = setTimeout(() => {
             setTimeLabel(getTimeLabel());
             setTimeLeft(calculateTimeLeft());
         }, 1000);
+
+        return ()=>{
+            cleanup();
+            clearTimeout(x);
+        }
     });
 
     const timerComponents = [];

@@ -31,6 +31,7 @@ import ChatPanel from '../Components/EventsChatPanel';
 import AuthContext from '../AuthContext';
 import { Typography } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
+import AnnouncementPanel from '../Components/EventsAnnouncementsPanel';
 
 const drawerWidth = 240;
 
@@ -148,13 +149,13 @@ export default function MiniDrawer(props) {
     }).then(response => {
         response.json().then(value => {
           const ev = value.event;
-          if(ev.user_id == user.user_id){
+          if(ev.user_id === user.user_id){
             setAdminAccess(true);
           }
             setEvent(value.event);
         })
     })
-}, [token,id])
+}, [token,id,user.user_id])
 
 
   const handleDrawerOpen = () => {
@@ -355,6 +356,9 @@ export default function MiniDrawer(props) {
         }
         {
           chatSelected && event != null && <div className={classes.chat} ><ChatPanel open={open} event = {event}></ChatPanel></div>
+        }
+        {
+          announcementSelected && event != null && <AnnouncementPanel event = {event}></AnnouncementPanel>
         }
 
         

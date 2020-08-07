@@ -9,16 +9,19 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 // import { makeStyles } from '@material-ui/core/styles';
 // import FormControlLabel from '@material-ui/core/FormControlLabel';
 // import FormLabel from '@material-ui/core/FormLabel';
-import Select from '@material-ui/core/Select';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormControl from '@material-ui/core/FormControl';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import Chip from '@material-ui/core/Chip';
+// import Select from '@material-ui/core/Select';
+// import InputLabel from '@material-ui/core/InputLabel';
+// import FormControl from '@material-ui/core/FormControl';
+// import Autocomplete from '@material-ui/lab/Autocomplete';
+// import Chip from '@material-ui/core/Chip';
 import { Grid } from '@material-ui/core';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormLabel from '@material-ui/core/FormLabel';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 
 
@@ -28,16 +31,27 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 //     }
 // }));
 
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
 
 export default function AnnouncementForm(props) {
 
   const token = localStorage.getItem('token');
-  const id = props.id;
   const [title,setTitle] = React.useState(null);
   const [desc,setDesc] = React.useState(null);
   const [visibility,setVisibility] = React.useState("All");
-  const fieldOptions = [];
-  const [selectedOptions, setSelectedOptions] = React.useState(['option1', 'option2']);
+  const [state, setState] = React.useState({
+    open: false,
+    vertical: 'top',
+    horizontal: 'center',
+    message: 'success',
+    type: 'error',
+    autoHide: 300
+  });
+  const [loading, setLoading] = React.useState(false);
+  const { vertical, horizontal, open, message, type,autoHide } = state;
   function handleTitleChange(event) {
     setTitle(event.target.value);
   }
@@ -46,14 +60,10 @@ export default function AnnouncementForm(props) {
     // if(event.target.value == "radio")
   }
 
-  function handleOptionsChange(event, values) {
-    console.log(values);
-    setSelectedOptions(values);
-  }
 
   function handleVisibilityChange(event,value){
     console.log(value);
-    // setVisibility(value);
+    setVisibility(value);
   }
   function handleAddButton() {
     console.log(visibility);
@@ -78,44 +88,57 @@ export default function AnnouncementForm(props) {
         console.log(response);
         response.json().then(value => {
           console.log(value);
-          // setLoading(false);
-          // setState({
-          //   open: true,
-          //   vertical: 'top',
-          //   horizontal: 'center',
-          //   message: 'Registered successfully',
-          //   type: "success",
-          //   autoHide: 200
-          // });
+          setLoading(false);
+          setState({
+            open: true,
+            vertical: 'top',
+            horizontal: 'center',
+            message: 'Added successfully',
+            type: "success",
+            autoHide: 2000
+          });
         })
       })
     }
     catch (error) {
-      // setLoading(false);
-      // setState({
-      //   open: true,
-      //   vertical: 'top',
-      //   horizontal: 'center',
-      //   message: error.message,
-      //   type: "error",
-      //   autoHide: 6000
-      // })
+      setLoading(false);
+      setState({
+        open: true,
+        vertical: 'top',
+        horizontal: 'center',
+        message: error.message,
+        type: "error",
+        autoHide: 6000
+      })
 
     }
     props.handleClose()
 
   }
+  const handleClose = async (event, reason) => {
+    // console.log(token);
 
+    setState({ ...state, open: false });
+  };
 
   return (
     <div>
+    <Snackbar
+        anchorOrigin={{ vertical, horizontal }}
+        open={open}
+        autoHideDuration={autoHide}
+        onClose={handleClose}
+        key={vertical + horizontal}
+      >
+        <Alert onClose={handleClose} severity={type}>{message}</Alert>
+      </Snackbar>
       <Dialog open={props.open} fullWidth={true} PaperProps={{
         style: {
           backgroundColor: "#1C1C1E",
           // boxShadow: 'none',
         },
       }} onClose={props.handleClose} aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title">Add nnouncement</DialogTitle>
+        <DialogTitle id="form-dialog-title">Add Announcement</DialogTitle>
         <DialogContent>
           <Grid container spacing={2} >
             <Grid item xs={12}>
@@ -162,8 +185,8 @@ export default function AnnouncementForm(props) {
           <Button onClick={props.handleClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleAddButton} color="primary">
-            Add
+          <Button onClick={handleAddButton} disabled={loading} color="primary">
+          {loading ? <CircularProgress color="primary" size={24} /> : "Add"}
           </Button>
         </DialogActions>
       </Dialog>

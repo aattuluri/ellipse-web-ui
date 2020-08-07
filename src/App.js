@@ -15,6 +15,7 @@ import EventPostForm from './Pages/EventPostForm';
 import ChatPage from './Pages/ChatPage';
 import EventDetails from './Pages/EventDetails';
 import EventRegisterForm from './Pages/EventRegistrationform';
+import ExplorePanel from './Pages/ExplorePanel';
 
 function App() {
 
@@ -43,6 +44,7 @@ function App() {
               <Route exact path="/chat" component={ChatPage}></Route>
               <Route exact path="/event/:eventId" component={EventDetails} />
               <Route exact path="/event/register/:eventId" component={EventRegisterForm} />
+              <Route exact path="/yourevents" component={ExplorePanel}></Route>
               {/* <Route exact path="/eventdetails" component={EventDetails} /> */}
               
             </Layout>

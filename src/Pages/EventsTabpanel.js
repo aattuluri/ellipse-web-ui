@@ -8,7 +8,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Grid from '@material-ui/core/Grid';
 import { Typography } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
-import { withRouter, Redirect } from "react-router";
+import { withRouter} from "react-router";
 import List from '@material-ui/core/List';
 import EventsDialog from '../Components/EventsDialog';
 import Fab from '@material-ui/core/Fab';
@@ -143,6 +143,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function EventsTabPanel({ history }) {
+    localStorage.setItem('tabIndex',0);
     // const { children, value, url, index, ...other } = props;
     // const user = JSON.parse(localStorage.getItem('user'));
     // const url = user.imageUrl;
@@ -391,10 +392,13 @@ function EventsTabPanel({ history }) {
 
     function handleRegistrationButton(event) {
         setSelectedEvent(event);
-        // history.push({pathName: `/event/register/${event._id}`,events:event})
         history.push('/event/register/' + event._id);
-        // history.push('/events')
-        // return <Link to="/events"></Link>
+    }
+
+    const handleRegisterdEventClick = (event) => () => {
+        setSelectedEvent(event);
+        setOpen(true);
+
     }
 
     return (
@@ -503,9 +507,10 @@ function EventsTabPanel({ history }) {
                                 <Typography variant="body2">Registered Events</Typography>
                                 {
                                     registerdEvents.map((event, index) => {
-                                        return <React.Fragment><ListItem key={index} button>
+                                        return <React.Fragment key={index} >
+                                        <ListItem onClick={handleRegisterdEventClick(event)} key={index} button>
                                             <ListItemAvatar>
-                                                <Avatar variant="square"
+                                                <Avatar  variant="square"
                                                     alt={event.name}
                                                     src={`http:///139.59.16.53:4000/api/image?id=${event.poster_url}`}
                                                 />
@@ -530,6 +535,7 @@ function EventsTabPanel({ history }) {
                     event={selectedEvent}
                     imageUrl={selectedImage}
                     handleClose={handleClose}
+                    handleReg={handleRegistrationButton}
                 >
                     imageDialog={handleImageDialogOpen}
                 </EventsDialog>

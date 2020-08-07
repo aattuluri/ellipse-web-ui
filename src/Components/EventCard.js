@@ -11,7 +11,7 @@ import CardActions from '@material-ui/core/CardActions';
 import IconButton from '@material-ui/core/IconButton';
 // import { red } from '@material-ui/core/colors';
 // import FavoriteIcon from '@material-ui/icons/Favorite';
-import ShareIcon from '@material-ui/icons/Share';
+// import ShareIcon from '@material-ui/icons/Share';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { makeStyles } from '@material-ui/core/styles';
 // import PlayCircleFilledWhiteIcon from '@material-ui/icons/PlayCircleFilledWhite';
@@ -26,7 +26,7 @@ import Button from '@material-ui/core/Button';
 import Chip from '@material-ui/core/Chip';
 // import PublicIcon from '@material-ui/icons/Public';
 // import TimelineOppositeContent from '@material-ui/lab/TimelineOppositeContent';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 import CameraAltOutlinedIcon from '@material-ui/icons/CameraAltOutlined';
 import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
@@ -82,8 +82,8 @@ function Eventcard(props) {
   const anchorRef = React.useRef(null);
   const [imageLoaded, setImageLoaded] = React.useState(false);
   // const regEvents = React.useContext(RegEventsContext);
-  const [regName, setRegName] = React.useState("Register")
-  const [disableRegButton, setDisableRegButton] = React.useState(false);
+  // const [regName, setRegName] = React.useState("Register")
+  // const [disableRegButton, setDisableRegButton] = React.useState(false);
   const [reportDialogOpen,setReportDialogOpen] = React.useState(false);
   const [shareDialogOpen,setShareDialogOpen] = React.useState(false);
 
@@ -151,7 +151,7 @@ function Eventcard(props) {
               style={{ display: imageLoaded ? 'block' : 'none' }}
               onClick={handleImageClick}
               onLoad={() => setImageLoaded(true)}
-              alt="Event Image" height="160" width="150"
+              alt="Event Poster" height="160" width="150"
               src={`http://139.59.16.53:4000/api/image?id=${event.poster_url}`}>
 
             </img>

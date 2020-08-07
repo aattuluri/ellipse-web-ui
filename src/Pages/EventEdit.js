@@ -117,22 +117,29 @@ const EventEdit = (props) => {
   React.useEffect(() => {
     console.log(event);
     setEventThemes(event.tags);
-    setEventType(event.eventType);
+    setEventType(event.event_type);
     setName(event.name);
     setDesc(event.description);
     setStartDate(event.start_time);
     setendDate(event.finish_time);
-    setRegEndDate(event.registrationEndTime);
-    setEventMode(event.eventMode);
-    setRegLink(event.regLink);
+    setRegEndDate(event.registration_end_time);
+    setEventMode(event.event_mode);
+    setRegLink(event.reg_link);
     setAbout(event.about);
     setRegFees(event.fees);
     setSelectedRequirements(event.requirements);
-    setFeeType(event.feesType);
-    setCollegeName(event.college);
-    setRegMode(event.regMode);
+    setFeeType(event.fee_type);
+    setCollegeName(event.college_name);
+    setRegMode(event.reg_mode);
     setOrganizer(event.organizer);
-    setParticipantsType(event.participantsType)
+    // setParticipantsType(event.o_allowed)
+    if(event.o_allowed === true){
+      setParticipantsType("open")
+    }
+    else{
+      setParticipantsType("onlycollege")
+    }
+
   }, [token, event])
 
 
@@ -159,6 +166,10 @@ const EventEdit = (props) => {
   async function handleEventPost(e) {
     e.preventDefault();
     setLoading(true);
+    var oAllowed = false;
+    if (participantType === "open") {
+      oAllowed = true
+    }
     // console
     try {
       console.log("started");
@@ -170,20 +181,20 @@ const EventEdit = (props) => {
         description: desc,
         start_time: startDate,
         finish_time: endDate,
-        registrationEndTime: regEndDate,
-        eventMode: eventMode,
-        eventType: eventType,
+        registration_end_time: regEndDate,
+        event_mode: eventMode,
+        event_type: eventType,
         tags: eventThemes,
         // poster: result,
-        regLink: regLink,
-        fees: regFees,
+        reg_link: regLink,
+        fee: regFees,
         about: about,
-        feesType: feeType,
+        fee_type: feeType,
         college: collegeName,
         organizer: organizer,
         requirements: selectedrequirements,
-        participantsType: participantType,
-        regMode: regMode
+        o_allowed: oAllowed,
+        reg_mode: regMode
       };
       data = JSON.stringify(payload);
       console.log(data);
@@ -409,8 +420,8 @@ const EventEdit = (props) => {
                   }}
                 >
                   <option aria-label="None" value="" />
-                  <option value="online">Online</option>
-                  <option value="offline">Offline</option>
+                  <option value="Online">Online</option>
+                  <option value="Offline">Offline</option>
                 </Select>
               </FormControl>
             </Grid>
@@ -486,7 +497,7 @@ const EventEdit = (props) => {
                 <FormControlLabel value="Paid" control={<Radio color="default" />} label="Paid" />
               </RadioGroup>
             </Grid>
-            {regMode !== "ellipse" &&
+            {regMode !== "form" &&
               <Grid item xs={12} lg={6}>
                 <TextField
                   autoComplete='off'
@@ -540,8 +551,8 @@ const EventEdit = (props) => {
                 // onChange={handleRegistrationModeChange}
                 >
                   <option aria-label="None" value="" />
-                  <option value="ellipse">Our Platform(Ellipse)</option>
-                  <option value="other">Other</option>
+                  <option value="form">Our Platform(Ellipse)</option>
+                  <option value="link">Other</option>
                 </Select>
               </FormControl>
             </Grid>

@@ -65,7 +65,7 @@ export default function AddressForm(props) {
 
 
   function handleEventNameChange(event) {
-    console.log(event.target.value);
+    // console.log(event.target.value);
     props.setName(event.target.value)
   }
 
@@ -125,7 +125,7 @@ export default function AddressForm(props) {
             name="eventName"
             label="Name"
             fullWidth
-            value={props.name}
+            value={props.name || ""}
             onChange={handleEventNameChange}
           />
         </Grid>
@@ -137,7 +137,7 @@ export default function AddressForm(props) {
             name="shortdesc"
             label="Short Description"
             fullWidth
-            value={props.desc}
+            value={props.desc || ""}
             onChange={handleDescChange}
           />
         </Grid>
@@ -155,9 +155,7 @@ export default function AddressForm(props) {
               name="startDate"
               value={props.startDate}
               onChange={handleStartDateChange}
-              KeyboardButtonProps={{
-                'aria-label': 'change date',
-              }}
+              
             />
           </MuiPickersUtilsProvider>
 
@@ -176,9 +174,6 @@ export default function AddressForm(props) {
               name="endDate"
               value={props.endDate}
               onChange={handleendDateChange}
-              KeyboardButtonProps={{
-                'aria-label': 'change date',
-              }}
             />
           </MuiPickersUtilsProvider>
         </Grid>
@@ -196,9 +191,6 @@ export default function AddressForm(props) {
               name="regEndDate"
               value={props.regEndDate}
               onChange={handleRegEndDateChange}
-              KeyboardButtonProps={{
-                'aria-label': 'change date',
-              }}
             />
           </MuiPickersUtilsProvider>
         </Grid>
@@ -211,9 +203,9 @@ export default function AddressForm(props) {
               label="Mode"
               inputProps={{
                 name: 'eventMode',
-                id: 'outlined-age-native-simple',
+                id: 'eventMode',
               }}
-              value={props.eventMode}
+              value={props.eventMode || ""}
               onChange={handleEventModeChange}
             >
               <option aria-label="None" value="" />
@@ -244,9 +236,9 @@ export default function AddressForm(props) {
               label="Registration"
               inputProps={{
                 name: 'registrationMode',
-                id: 'outlined-age-native-simple',
+                id: 'registaration mode',
               }}
-              value={props.registrationMode}
+              value={props.registrationMode || ""}
               onChange={handleRegistrationModeChange}
             >
               <option aria-label="None" value="" />

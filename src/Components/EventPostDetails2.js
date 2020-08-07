@@ -72,13 +72,13 @@ export default function AddressForm(props) {
   // const { vertical, horizontal, open, message, type } = state;
   const eventThemes = ["Hackathon", "Coding Contest", "Webinar"];
   const requirements = ["Laptop", "Basic HTML", "C++", "Machine Learning"];
-  const [colleges,setColleges] = React.useState([]);
+  // const [colleges,setColleges] = React.useState([]);
   const [collegesNames,setCollegesName] = React.useState([]);
   // const colleges = ["VIT University,Vellore", "GITAM University", "SRM University"];
 
 
   React.useEffect(()=>{
-    fetch('http://localhost:4000/colleges', {
+    fetch('http://139.59.16.53:4000/colleges', {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
@@ -88,14 +88,14 @@ export default function AddressForm(props) {
             }).then(response =>{
               // console.log(response);
               response.json().then(value =>{
-                console.log(value);
-                setColleges(value);
+                // console.log(value);
+                // setColleges(value);
                 value.forEach((v)=>{
                   setCollegesName((collegesNames)=>[...collegesNames,v.name])
                 })
               })
             })
-  },[])
+  },[token])
 
 
   function handleeventTagsChange(event, values) {
@@ -165,13 +165,13 @@ export default function AddressForm(props) {
             label="About"
             fullWidth
             onChange={handleAboutChange}
-            value={props.about}
+            value={props.about || ""}
           />
         </Grid>
           <Grid item xs={12} lg={6}>
             <Autocomplete
               multiple
-              id="tags-filled"
+              id="themes"
               options={eventThemes.map((option) => option)}
               freeSolo
               value={props.eventThemes || []}
@@ -229,7 +229,7 @@ export default function AddressForm(props) {
               name="regLink"
               label="Registration Link"
               fullWidth
-              value={props.regLink}
+              value={props.regLink || ""}
               onChange={handleRegLinkChange}
             />
           </Grid> }
@@ -242,7 +242,7 @@ export default function AddressForm(props) {
               name="regFees"
               label="Registration Fees"
               fullWidth
-              value={props.regFees}
+              value={props.regFees || ""}
               onChange={handleRegFees}
             />
           </Grid>}

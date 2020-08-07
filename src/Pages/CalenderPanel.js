@@ -22,16 +22,17 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function CalenderPanel(props) {
+function CalenderPanel({history}) {
+    localStorage.setItem('tabIndex',1)
     // const { children, value, url, index, ...other } = props;
     // const user = React.useContext(AuthContext);
-    const token = localStorage.getItem('token');
+    // const token = localStorage.getItem('token');
     const classes = useStyles();
     // const [allEvents, setAllEvents] = React.useState([]);
     const [events, setEvents] = React.useState([]);
     const [open, setOpen] = React.useState(false);
     const [selectedEvent, setSelectedEvent] = React.useState([]);
-    const [image, setImage] = React.useState(null);
+    // const [image, setImage] = React.useState(null);
     const allEvents = React.useContext(EventsContext);
 
     useEffect(() => {
@@ -41,24 +42,6 @@ function CalenderPanel(props) {
                 [...events, { id: JSON.stringify(y), title: y.name, start: y.start_time, end: y.finish_time }]
             )
         })
-        //     fetch(' https://ellipseserver1.herokuapp.com/api/events', {
-        //         headers: {
-        //             'Authorization': `Bearer ${token}`,
-        //             'Content-Type': 'application/json',
-        //             'Accept': 'application/json'
-        //         },
-        //         method: 'GET'
-        //     }).then(response => {
-        //         response.json().then(value => {
-        //             value.forEach(y => {
-        //                 console.log(y.start_time);
-        //                 setEvents(events =>
-        //                     [...events, { id: JSON.stringify(y), title: y.name, start: y.start_time, end: y.finish_time }]
-        //                 )
-        //             })
-        //             setAllEvents(value);
-        //         })
-        //     })
 
     }, [allEvents])
 
@@ -66,26 +49,14 @@ function CalenderPanel(props) {
         setOpen(false);
     };
 
+    function handleRegistrationButton(event) {
+        setOpen(false);
+        // setSelectedEvent(event);
+        history.push('/event/register/' + event._id);
+    }
+
 
     function handleEventClick(info) {
-        // console.log(JSON.parse(info.event.id).name);
-        const e = JSON.parse(info.event.id);
-        fetch(`http://139.59.16.53:4000/api/event/image?id=${e.posterUrl}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            method: 'GET'
-        }).then(response => {
-            if (response.status === 200) {
-                response.json().then(value => {
-                    const img = value.image;
-                    setImage(img.type + "," + img.image_data)
-                })
-            }
-
-        })
         setSelectedEvent(JSON.parse(info.event.id))
         setOpen(true);
     }
@@ -126,15 +97,8 @@ function CalenderPanel(props) {
                         open={open}
                         event={selectedEvent}
                         handleClose={handleClose}
-                        name={selectedEvent.name}
-                        startTime={selectedEvent.start_time}
-                        endTime={selectedEvent.finish_time}
-                        regEndTime={selectedEvent.registrationEndTime}
-                        type={selectedEvent.eventType}
-                        tags={selectedEvent.tags}
-                        mode={selectedEvent.eventMode}
-                        feeType={selectedEvent.feesType}
-                        imageUrl={image}></EventsDialog>
+                        handleReg={handleRegistrationButton}
+                        ></EventsDialog>
                 </div>
             </div>
 

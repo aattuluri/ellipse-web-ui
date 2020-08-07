@@ -4,9 +4,9 @@ import DialogContent from '@material-ui/core/DialogContent';
 // import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
-import FavoriteIcon from '@material-ui/icons/Favorite';
+// import FavoriteIcon from '@material-ui/icons/Favorite';
 import IconButton from '@material-ui/core/IconButton';
-import MailIcon from '@material-ui/icons/Mail';
+// import MailIcon from '@material-ui/icons/Mail';
 import ShareIcon from '@material-ui/icons/Share';
 // import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
@@ -23,6 +23,7 @@ import Paper from '@material-ui/core/Paper';
 // import SendIcon from '@material-ui/icons/Send';
 import Box from '@material-ui/core/Box';
 import CloseIcon from '@material-ui/icons/Close';
+import EventShareDialog from './EventShareDialog';
 // import AuthContext from '../AuthContext';
 // import { connect } from 'socket.io-client';
 
@@ -93,6 +94,7 @@ function EventsDialog(props) {
     // const user = React.useContext(AuthContext);
     const classes = useStyles();
     // const token = localStorage.getItem('token');
+    const [shareDialogOpen,setShareDialogOpen] = React.useState(false);
 
 
 
@@ -104,6 +106,19 @@ function EventsDialog(props) {
         props.handleClose();
 
     }
+
+    function handleRegClick() {
+        props.handleReg(event);
+
+    }
+
+    function handleShareClick(){
+        setShareDialogOpen(true);
+      }
+
+      function handleShareClose(){
+        setShareDialogOpen(false);
+      }
 
     return (
         <Dialog
@@ -131,11 +146,11 @@ function EventsDialog(props) {
                     <IconButton aria-label="share">
                         <MailIcon></MailIcon>
                     </IconButton> */}
-                    <IconButton aria-label="share">
+                    <IconButton aria-label="share" onClick={handleShareClick}>
                         <ShareIcon />
                     </IconButton>
                     <IconButton aria-label="close" className={classes.closeButton} onClick={handleClose}>
-                      <CloseIcon fontSize="large" />
+                        <CloseIcon fontSize="large" />
                     </IconButton>
                 </div>
                 <div className={classes.root}>
@@ -158,6 +173,10 @@ function EventsDialog(props) {
                 </div>
             </DialogTitle>
             <DialogContent dividers={true} >
+            <EventShareDialog
+      event = {event} 
+      open={shareDialogOpen} 
+      handleClose={handleShareClose}></EventShareDialog>
                 <AboutEventPanel
                     value={value}
                     index={0}
@@ -175,9 +194,17 @@ function EventsDialog(props) {
                     role="tabpanel"
                     hidden={value === 3}>
                     {value !== 3 && (
-                        <Button variant="contained" onClick={props.handleClose} color="primary">
-                            Register
-                        </Button>
+                        <div className={classes.buttonDiv}>
+
+                            {
+                                event.reg_mode === "form" ? <Button disabled={event.registered ? true : false} size="small" color="primary" variant="contained" className={classes.button} onClick={handleRegClick}>
+                                    {event.registered ? "Registered" : "Register"}
+                                </Button> : <Button disabled={event.registered ? true : false} size="small" color="primary" variant="contained" className={classes.button}>
+                                        <a href={event.reg_link} style={{ textDecoration: 'none', color: '#000000' }} target="blank">Register</a>
+                                    </Button>
+                            }
+
+                        </div>
                     )}
                 </div>
             </DialogActions>

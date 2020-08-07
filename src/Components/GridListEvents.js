@@ -43,7 +43,7 @@ export default function GridListEvents(props) {
 
   const collegeEvents = props.events;
   const classes = useStyles();
-  console.log(collegeEvents);
+  // console.log(collegeEvents);
 
   // const tileData = [
   //   {
@@ -65,7 +65,7 @@ export default function GridListEvents(props) {
 
 
   const handleMoreButtonClick = (event) => () => {
-    console.log("button clicked");
+    // console.log("button clicked");
     props.click(event, "");
   }
 

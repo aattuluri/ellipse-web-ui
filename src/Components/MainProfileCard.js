@@ -75,6 +75,7 @@ const useStyles = makeStyles((theme) => ({
 
 
 function Eventcard(props) {
+    localStorage.setItem('tabIndex',3)
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
     // const user = JSON.parse(localStorage.getItem('user'));
@@ -133,15 +134,15 @@ function Eventcard(props) {
                         // centered
                     >
                         
-                        <Tab label="About" />
+                        {/* <Tab label="About" /> */}
                         <Tab label="Registered Events" />
                         <Tab label="Posted Events" />
                         
                     </Tabs>
                 </Paper>
                 <div>
-                <ProfileEventsTabPanel url={user.imageUrl} value={value} index={1}></ProfileEventsTabPanel>
-                <ProfilePostedEventsTabPanel url={user.imageUrl} value={value} index={2}></ProfilePostedEventsTabPanel>
+                <ProfileEventsTabPanel url={user.imageUrl} value={value} index={0}></ProfileEventsTabPanel>
+                <ProfilePostedEventsTabPanel url={user.imageUrl} value={value} index={1}></ProfilePostedEventsTabPanel>
                 {/* <ProfileEventsTabPanel url={user.imageUrl} value={value} index={2}></ProfileEventsTabPanel> */}
                 {/* <ProfileEventCard></ProfileEventCard> */}
                 {/* <ProfileEventCard></ProfileEventCard> */}

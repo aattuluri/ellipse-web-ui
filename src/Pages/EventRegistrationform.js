@@ -33,6 +33,7 @@ import FormControl from '@material-ui/core/FormControl';
 import FormGroup from '@material-ui/core/FormGroup';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
+// import { set } from 'date-fns';
 
 
 //function for alert
@@ -111,12 +112,14 @@ const Signup = (props) => {
           setRadioFields(allFields.filter(f => f.field === "radiobutton"));
           setDateFields(allFields.filter((f) => f.field === "date"));
           // setLongDescFields(allFields.filter((f) => f.field === "long_desc"));
-          setDropDownFields(allFields.filter(f => f.field == "dropdown"));
+          setDropDownFields(allFields.filter(f => f.field === "dropdown"));
+          setLinkFields(allFields.filter(f => f.field === "link"));
+        
         }
         setBackDropOpen(false);
       })
     })
-  }, [token, id])
+  }, [token, id,user])
 
   function handleClose() {
     if (message === "Registered successfully") {
@@ -425,6 +428,25 @@ const Signup = (props) => {
                       />
                     </Grid>
                   )
+                })
+              }
+              {
+                linkFields.map((field,index)=>{
+                  return (
+                    <Grid item xs={12}>
+                      <TextField
+                        autoComplete='off'
+                        name={field.title}
+                        // variant="outlined"
+                        required
+                        fullWidth
+                        id={field.title}
+                        onChange={handleChange}
+                        value={formValues[field.title]}
+                        label={field.title}
+                        autoFocus
+                      />
+                    </Grid>)
                 })
               }
 

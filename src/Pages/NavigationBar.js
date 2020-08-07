@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { withRouter, Redirect } from "react-router";
+import { withRouter } from "react-router";
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import PersonPinIcon from '@material-ui/icons/PersonPin';
@@ -35,7 +35,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
 import EventsDialog from '../Components/EventsDialog';
 import EventsContext from '../EventsContext';
-import AuthContext from '../AuthContext';
+// import AuthContext from '../AuthContext';
 
 
 
@@ -62,22 +62,6 @@ const NavigationBar = function ({ history }) {
         setValue(tabIndex);
       }
     }
-
-
-    // fetch('https://ellipseserver1.herokuapp.com/api/events', {
-    //   headers: {
-    //     'Authorization': `Bearer ${token}`,
-    //     'Content-Type': 'application/json',
-    //     'Accept': 'application/json'
-    //   },
-    //   method: 'GET'
-    // }).then(response => {
-    //   response.json().then(value => {
-    //     console.log(value);
-    //     setAllEvents(value);
-    //     // setFinalEvents(value);
-    //   })
-    // })
   }, [])
 
 
@@ -86,28 +70,11 @@ const NavigationBar = function ({ history }) {
   //   // history.push("/event/1")
   // }
   function handleSearchChange(event, value) {
-    console.log(value);
-    if (value != null) {
-      fetch(`http://139.59.16.53:4000/api/event/image?id=${value.posterUrl}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        method: 'GET'
-      }).then(response => {
-        if (response.status === 200) {
-          response.json().then(value => {
-            const img = value.image;
-            setImage(img.type + "," + img.image_data)
-          })
-        }
-
-      })
-      setSearchedEvent(value);
+    // console.log(value);
+    setSearchedEvent(value);
       // setImage(value.posterUrl)
       setOpen(true);
-    }
+    
   }
 
   const handleChange = (event, newValue) => {
@@ -129,26 +96,12 @@ const NavigationBar = function ({ history }) {
     handleMobileMenuClose();
   };
 
-  // const handleMobileMenuOpen = (event) => {
-  //   setMobileMoreAnchorEl(event.currentTarget);
-  // };
-  // localStorage.removeItem('user');
-  // localStorage.removeItem('token');
-  // console.log(localStorage.getItem('user'));
-  // const currentUser = localStorage.getItem('user');
-  const currentUser = React.useContext(AuthContext);
   const token = localStorage.getItem('token');
-  const [image, setImage] = React.useState(null);
-  // console.log(currentUser);
   if(!token){
     history.replace('/');
   }
-  // if (!currentUser) {
-  //   return <Redirect to="/" />;
-  // }
+
   
-
-
 
   function handleSignout(event) {
     console.log(token);
@@ -163,7 +116,6 @@ const NavigationBar = function ({ history }) {
       result.json().then((data) => {
         if (data.message === "success") {
           localStorage.removeItem('token');
-          localStorage.removeItem('user');
           localStorage.removeItem('tabIndex');
           history.replace("/")
         }
@@ -202,12 +154,21 @@ const NavigationBar = function ({ history }) {
   function handleProfileClick() {
     history.push("/profile")
   }
+  function handleExploreClick(){
+    history.push("/yourevents")
+  }
   // function handleChatClick() {
   //   history.push('/chat')
   // }
   const handleClose = () => {
     setOpen(false);
   };
+
+  function handleRegistrationButton(event) {
+    setOpen(false);
+    // setSelectedEvent(event);
+    history.push('/event/register/' + event._id);
+}
 
   return (
     <div className={classes.grow}>
@@ -223,7 +184,7 @@ const NavigationBar = function ({ history }) {
               </div>
               <Autocomplete
                 freeSolo
-                id="combo-box-demo"
+                id="search"
                 placeholder="search.."
                 options={allEvents}
                 getOptionLabel={(option) => option.name}
@@ -242,10 +203,10 @@ const NavigationBar = function ({ history }) {
                   textColor="primary"
                   aria-label="icon tabs example"
                 >
-                  <Tab onClick={handleHomeClick} icon={<HomeIcon />} aria-label="phone" />
-                  <Tab onClick={handleeventClick} icon={<EventIcon />} aria-label="phone" />
+                  <Tab onClick={handleHomeClick} icon={<HomeIcon />} aria-label="home" />
+                  <Tab onClick={handleeventClick} icon={<EventIcon />} aria-label="event" />
                   {/* <Tab onClick={handleChatClick} icon={<TelegramIcon />} aria-label="favorite" /> */}
-                  <Tab icon={<ExploreIcon />} aria-label="person" />
+                  <Tab onClick={handleExploreClick} icon={<ExploreIcon />} aria-label="person" />
                   <Tab onClick={handleProfileClick} icon={<PersonPinIcon />} aria-label="person" />
                 </Tabs>
               </Paper>
@@ -287,7 +248,7 @@ const NavigationBar = function ({ history }) {
                 <Tab onClick={handleHomeClick} icon={<HomeIcon />} aria-label="home" />
                 <Tab onClick={handleeventClick} icon={<EventIcon />} aria-label="event" />
                 {/* <Tab onClick={handleChatClick} icon={<TelegramIcon />} aria-label="messages" /> */}
-                <Tab icon={<ExploreIcon />} aria-label="explore" />
+                <Tab onClick={handleExploreClick} icon={<ExploreIcon />} aria-label="explore" />
                 <Tab onClick={handleProfileClick} icon={<PersonPinIcon />} aria-label="person" />
               </Tabs>
             </Paper>
@@ -297,15 +258,7 @@ const NavigationBar = function ({ history }) {
          { open && <EventsDialog
             open={open}
             event={searchedEvent}
-            name={searchedEvent.name}
-            startTime={searchedEvent.start_time}
-            endTime={searchedEvent.finish_time}
-            regEndTime={searchedEvent.registrationEndTime}
-            type={searchedEvent.eventType}
-            tags={searchedEvent.tags}
-            mode={searchedEvent.eventMode}
-            feeType={searchedEvent.feesType}
-            imageUrl={image}
+            handleReg={handleRegistrationButton}
             handleClose={handleClose}>
           </EventsDialog>}
         </div>

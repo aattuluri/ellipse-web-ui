@@ -6,23 +6,16 @@ import Avatar from '@material-ui/core/Avatar';
 
 import AuthContext from '../AuthContext';
 import ChatTextField from './ChatTextField';
-import { Typography, List, ListSubheader } from '@material-ui/core';
-import Paper from '@material-ui/core/Paper';
-import Popper from '@material-ui/core/Popper';
-import MenuItem from '@material-ui/core/MenuItem';
-import MenuList from '@material-ui/core/MenuList';
-import Menu from '@material-ui/core/Menu';
-// import List from '@material-ui/core/List';
+import { Typography, List} from '@material-ui/core';
+
 import ListItem from '@material-ui/core/ListItem';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemText from '@material-ui/core/ListItemText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
-import PersonIcon from '@material-ui/icons/Person';
-import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import ReplyIcon from '@material-ui/icons/Reply';
-import InfoIcon from '@material-ui/icons/Info';
+import { cleanup } from '@testing-library/react';
+// import InfoIcon from '@material-ui/icons/Info';
 
 
 
@@ -30,6 +23,7 @@ const useStyles = makeStyles((theme) => ({
     root: {
         display: "flex",
         justifyContent: "flex-start",
+        // minWidth: "200px"
         // bgcolor:"background.paper"
         // backgroundColor: theme.palette.primary.dark,
 
@@ -39,26 +33,25 @@ const useStyles = makeStyles((theme) => ({
         borderRadius: theme.spacing(1),
         textDecorationColor: theme.palette.secondary.light,
         maxWidth: '65%',
+        minWidth: '20%',
         overflow: 'auto',
         // textOverflow: "ellipsis"
     },
     root3: {
         display: "flex",
         justifyContent: "flex-end",
+        minWidth: theme.spacing(30)
     },
     root6: {
         display: "flex",
         justifyContent: "center",
-        //         position: "sticky",
-        //   position: "-webkit-sticky",
-        //   top: 0,
 
     },
-    stickyHeader: {
-        position: "sticky",
-        position: "-webkit-sticky",
-        top: 0,
-    },
+    // stickyHeader: {
+    //     position: "sticky",
+    //     position: "-webkit-sticky",
+    //     top: 0,
+    // },
 
     topBar: {
         // display: 'fixed'
@@ -72,13 +65,13 @@ const useStyles = makeStyles((theme) => ({
         overflow: 'auto',
         //    textOverflow: "ellipsis"
     },
-    root7: {
-        display: "flex",
-        justifyContent: "center",
-        position: "sticky",
-        position: "-webkit-sticky",
-        top: 0,
-    },
+    // root7: {
+    //     display: "flex",
+    //     justifyContent: "center",
+    //     // position: "sticky",
+    //     position: "-webkit-sticky",
+    //     top: 0,
+    // },
     bottomBar: {
         position: 'absolute',
         // flexGrow: 1,
@@ -157,9 +150,9 @@ export default function JustifyContent(props) {
         }
         return () => {
             setChatMessages([]);
+            cleanup()
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-
     }, [event._id, token])
 
 
@@ -168,7 +161,11 @@ export default function JustifyContent(props) {
         if (reference != null) {
             reference.scrollIntoView({ behavior: "smooth" })
         }
-    }, [chatMessages])
+        // eslint-disable-next-line
+        return () => {
+            cleanup()
+        }
+    }, [chatMessages,reference])
 
 
 
@@ -241,13 +238,13 @@ export default function JustifyContent(props) {
                                 if (messageDate.toDateString() !== counterDate) {
                                     counterDate = messageDate.toDateString();
                                     if (value.user_id === user.user_id) {
-                                        return (<React.Fragment>
+                                        return (<React.Fragment key={index}>
 
                                             <Box m={1} p={1} key={index} position="sticky" className={classes.root6}>
-                                                <Typography variant="body2">{currentDate.toDateString() == messageDate.toDateString() ? "Today" : messageDate.toDateString()}</Typography>
+                                                <Typography variant="body2">{currentDate.toDateString() === messageDate.toDateString() ? "Today" : messageDate.toDateString()}</Typography>
                                             </Box>
 
-                                            <Box m={1} p={1} key={index} className={classes.root3}>
+                                            <Box m={1} p={1} key={index+1} className={classes.root3}>
 
                                                 <Box className={classes.root2} whiteSpace="normal" onClick={() => setDialogOpen(true)} >
                                                     <ChatMessage message={value} ></ChatMessage>
@@ -263,7 +260,7 @@ export default function JustifyContent(props) {
 
 
                                             <Box m={1} p={1} key={index} className={classes.root6}>
-                                                <Typography variant="body2">{currentDate.toDateString() == messageDate.toDateString() ? "Today" : messageDate.toDateString()}</Typography>
+                                                <Typography variant="body2">{currentDate.toDateString() === messageDate.toDateString() ? "Today" : messageDate.toDateString()}</Typography>
                                             </Box>
 
 

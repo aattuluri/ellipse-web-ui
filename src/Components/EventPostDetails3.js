@@ -117,7 +117,7 @@ export default function AddressForm(props) {
         
     };
     const { name, email, college} = state;
-    console.log(selectedFields);
+    // console.log(selectedFields);
     function handleAddMoreButton() {
         setOpen(true);
     }
@@ -131,7 +131,7 @@ export default function AddressForm(props) {
 
     async function handlePostButton(e){
         e.preventDefault();
-        console.log(selectedFields);
+        // console.log(selectedFields);
         await props.setFields(selectedFields);
         props.handlePost(selectedFields);
         // console.log(selectedFields);
@@ -149,7 +149,7 @@ export default function AddressForm(props) {
                     <Grid item xs={12}>
                         <FormControl component="fieldset" className={classes.formControl}>
                             <FormLabel component="legend">Fields for your Registration Form</FormLabel>
-                            <FormGroup  class={classes.formgroup}>
+                            <FormGroup  className={classes.formgroup}>
                                 <FormControlLabel
                                     control={<Checkbox  color="primary" checked={name} onChange={handleChange} name="name" />}
                                     label="Name"

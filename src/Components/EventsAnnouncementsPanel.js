@@ -2,8 +2,8 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 
 import Typography from '@material-ui/core/Typography';
-import CardContent from '@material-ui/core/CardContent';
-import Card from '@material-ui/core/Card';
+// import CardContent from '@material-ui/core/CardContent';
+// import Card from '@material-ui/core/Card';
 import Box from '@material-ui/core/Box';
 
 const useStyles = makeStyles((theme) => ({
@@ -58,11 +58,11 @@ export default function CustomizedTimeline(props) {
       method: 'GET',
     }).then(response => {
       response.json().then(value => {
-        console.log(value);
+        // console.log(value);
         setAnnouncements(value);
       })
     })
-  }, [])
+  }, [token,event._id])
 
   return (
     <div

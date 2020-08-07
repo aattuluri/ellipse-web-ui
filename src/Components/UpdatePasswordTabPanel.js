@@ -95,7 +95,7 @@ function UpdatePasswordTabPanel(props) {
         };
         data = JSON.stringify(payload);
         console.log(data);
-        fetch('https://ellipseserver1.herokuapp.com/api/users/updatepassword', {
+        fetch('http://139.59.16.53:4000/api/users/updatepassword', {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
@@ -168,6 +168,7 @@ function UpdatePasswordTabPanel(props) {
                     <div className={classes.paper}>
                         <form className={classes.form} onSubmit={handleUpdatePassword}>
                             <Grid container spacing={2} justify="center" >
+                            
 
                                 <Grid item xs={12}>
                                     <TextField

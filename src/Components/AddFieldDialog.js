@@ -48,7 +48,7 @@ function handleTypeChange(event){
     // if(event.target.value == "radio")
 }
 function handleOptionsChange(event,values){
-    console.log(values);
+    // console.log(values);
     setSelectedOptions(values);
 }
 function handleAddButton(){

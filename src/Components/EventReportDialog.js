@@ -4,30 +4,35 @@ import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-// import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-// import { makeStyles } from '@material-ui/core/styles';
-// import FormControlLabel from '@material-ui/core/FormControlLabel';
-// import FormLabel from '@material-ui/core/FormLabel';
-import Select from '@material-ui/core/Select';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormControl from '@material-ui/core/FormControl';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import Chip from '@material-ui/core/Chip';
 import { Grid } from '@material-ui/core';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
-
-
-// const useStyles = makeStyles((theme) => ({
-//     dialog:{
-//         backgroundColor: theme.palette.secondary.main
-//     }
-// }));
+//function for alert
+function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 
 export default function EventReportDialog(props) {
     // const classes = useStyles();
-    
+    const token = localStorage.getItem('token');
+    const [state, setState] = React.useState({
+        open: false,
+        vertical: 'top',
+        horizontal: 'center',
+        message: 'success',
+        type: 'error',
+        autoHide: 300
+    });
+    const [loading, setLoading] = React.useState(false);
+    const { vertical, horizontal, open, message, type, autoHide } = state;
+    const handleClose = async (event, reason) => {
+
+        setState({ ...state, open: false });
+    };
     const [title, setTitle] = React.useState(null);
     const [desc, setDesc] = React.useState(null);
     const event = props.event;
@@ -36,24 +41,69 @@ export default function EventReportDialog(props) {
         setTitle(event.target.value);
     }
 
-    function handleDescChange(event){
+    function handleDescChange(event) {
         setDesc(event.target.value);
     }
 
     function handleAddButton() {
-        // if (type !== "radiobutton" && type !== "checkbox" && type !== "dropdown") {
-        //     props.handleAdd({ [name]: { 'name': name, 'type': type } }, name);
-        // }
-        // else {
-        //     props.handleAdd({ [name]: { 'name': name, 'type': type, 'options': selectedOptions } }, name);
-        // }
-        // props.handleClose()
-
+        setLoading(true)
+        try {
+            var data = new FormData()
+            const payload = {
+                event_id: event._id,
+                title: title,
+                description: desc
+            };
+            data = JSON.stringify(payload);
+            fetch('http://139.59.16.53:4000/api/event/report', {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                method: 'POST',
+                body: data
+            }).then(result => {
+                // console.log(result);
+                result.json().then((res) => {
+                    if (res.message === "success") {
+                        setLoading(false)
+                        props.handleClose()
+                        setState({
+                            open: true,
+                            vertical: 'top',
+                            horizontal: 'center',
+                            message: 'Successfull',
+                            type: "success",
+                            autoHide: 3000
+                        });
+                    }
+                })
+            })
+        } catch (error) {
+            setLoading(false);
+            setState({
+                open: true,
+                vertical: 'top',
+                horizontal: 'center',
+                message: error.message,
+                type: "error",
+                autoHide: 3000
+            })
+        }
     }
 
 
     return (
         <div>
+            <Snackbar
+                anchorOrigin={{ vertical, horizontal }}
+                open={open}
+                autoHideDuration={autoHide}
+                onClose={handleClose}
+                key={vertical + horizontal}
+            >
+                <Alert onClose={handleClose} severity={type}>{message}</Alert>
+            </Snackbar>
             <Dialog open={props.open} fullWidth={true} PaperProps={{
                 style: {
                     backgroundColor: "#1C1C1E",
@@ -71,7 +121,7 @@ export default function EventReportDialog(props) {
                                 label="Issue Title"
                                 name="title"
                                 fullWidth
-                                value={title}
+                                value={title || ""}
                                 required
                                 onChange={handleTitleChange}
                             />
@@ -83,7 +133,7 @@ export default function EventReportDialog(props) {
                                 label="Issue Description"
                                 name="desc"
                                 fullWidth
-                                value={desc}
+                                value={desc || ""}
                                 required
                                 onChange={handleDescChange}
                             />
@@ -97,7 +147,7 @@ export default function EventReportDialog(props) {
                         Cancel
                     </Button>
                     <Button onClick={handleAddButton} color="primary">
-                        Send
+                        {loading ? <CircularProgress color="primary" size={24} /> : "Send"}
                     </Button>
                 </DialogActions>
             </Dialog>

@@ -141,7 +141,7 @@ export default function Checkout({ history }) {
   const [fields, setFields] = React.useState([]);
 
   function setRegFields(f) {
-    console.log(f);
+    // console.log(f);
     setFields(f);
   }
 
@@ -151,7 +151,7 @@ export default function Checkout({ history }) {
   }
 
   const [steps, setSteps] = React.useState(['About', 'More Details'])
-  console.log(feeType);
+  // console.log(feeType);
   function getStepContent(step) {
     switch (step) {
       case 0:
@@ -249,10 +249,10 @@ export default function Checkout({ history }) {
 
 
 
-  console.log(fields);
+  // console.log(fields);
 
   const handleEventPost = (allFields) => {
-    console.log(allFields);
+    // console.log(allFields);
     var oAllowed = false;
     if (participantsType === "open") {
       oAllowed = true
@@ -286,10 +286,10 @@ export default function Checkout({ history }) {
         reg_mode: registrationMode,
         o_allowed: oAllowed
       };
-      console.log(payload);
+      // console.log(payload);
       data = JSON.stringify(payload);
       // data.append("image",image);
-      console.log(data);
+      // console.log(data);
       fetch('http://139.59.16.53:4000/api/events', {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -299,12 +299,12 @@ export default function Checkout({ history }) {
         method: 'POST',
         body: data,
       }).then(result => {
-        console.log(result);
+        // console.log(result);
         if (result.status === 200) {
           result.json().then(value => {
-            console.log(value);
+            // console.log(value);
             var data2 = new FormData();
-            console.log(value);
+            // console.log(value);
             data2.append("image", image);
             // data2.append('eventId', value.eventId);
             fetch(`http://139.59.16.53:4000/api/event/uploadimage?id=${value.eventId}`, {

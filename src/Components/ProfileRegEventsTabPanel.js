@@ -47,7 +47,7 @@ function ProfileEventsTabPanel(props) {
             {...other}>
             {value === index && (
                 <div>
-                <Grid container component="main" alignItems="center" justify="center" spacing={1}>
+                <Grid container component="main" alignItems="center" spacing={1}>
                 {regEvents.map((event,index) => {
                     return(<Grid item xs={12} sm={12} md={4} key={index}>
                     <ProfileEventCard event={event} handleViewClick={handleViewClick} name={event.name} image={url}></ProfileEventCard>
