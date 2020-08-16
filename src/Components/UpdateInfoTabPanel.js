@@ -75,6 +75,8 @@ function UpdateInfoTabPanel(props) {
     const [gender, setGender] = React.useState(null);
     const [designation, setDesignation] = React.useState(null);
     const [collegeName, setCollegeName] = React.useState(null);
+    const [collegeId,setCollegeId] = React.useState(null);
+    const [collegesName,setCollegesName] = React.useState([]);
     const [imageUrl,setImageurl] = React.useState(null);
     const [imageUpdated,setImageUpdated] = React.useState(false);
     const [state, setState] = React.useState({
@@ -94,6 +96,7 @@ function UpdateInfoTabPanel(props) {
         setUserName(user.username);
         setDesignation(user.designation);
         setCollegeName(user.college_name);
+        setCollegeId(user.college_id);
         setBio(user.bio);
         setGender(user.gender);
         fetch('http://139.59.16.53:4000/colleges', {
@@ -106,11 +109,15 @@ function UpdateInfoTabPanel(props) {
         }).then(response => {
             response.json().then(value => {
                 setColleges(value);
+                value.forEach((v)=>{
+                    setCollegesName((collegesNames)=>[...collegesNames,v.name])
+                  })
+                // setCollegeNames()
             })
         })
         // eslint-disable-next-line
     }, [token])
-    console.log(user.college_name);
+    // console.log(user.college_name);
 
     const handleClose = async (event, reason) => {
 
@@ -148,6 +155,13 @@ function UpdateInfoTabPanel(props) {
     }
     function handleCollege(event,value){
         setCollegeName(value);
+        colleges.forEach(c=>{
+            if(c.name === value){
+            //   props.collegeId(c._id)
+            setCollegeId(c._id);
+            }
+          })
+        
     }
     function handleUserName(event,value){
         setUserName(event.target.value);
@@ -168,7 +182,8 @@ function UpdateInfoTabPanel(props) {
                 name: name,
                 email: email,
                 username: userName,
-                college_name: collegeName,
+                // college_name: collegeName,
+                college_id: collegeId,
                 designation : designation,
                 gender: gender,
                 // college_id: collegeId.value,
@@ -192,7 +207,7 @@ function UpdateInfoTabPanel(props) {
                         if (imageUpdated) {
                             var data2 = new FormData()
                             data2.append("image", image);
-                            fetch('http://139.59.16.53:4000/api/users/uploadImage', {
+                            fetch('http://localhost:4000/api/users/uploadImage', {
                                 headers: {
                                     'Authorization': `Bearer ${token}`,
                                 },
@@ -321,7 +336,7 @@ function UpdateInfoTabPanel(props) {
                             <Autocomplete
                                 fullWidth
                                 id="college"
-                                options={colleges}
+                                options={collegesName}
                                 getOptionLabel={(option) => option}
                                 // onChange={handleChange}
                                 value={collegeName}

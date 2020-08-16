@@ -13,6 +13,7 @@ import Typography from '@material-ui/core/Typography';
 import { Grid, Button } from '@material-ui/core';
 import Checkbox from '@material-ui/core/Checkbox';
 import AddAnnouncementForm from './AddAnnouncementForm';
+import SendEmailForm from './SendEmailForm';
 
 
 
@@ -58,13 +59,14 @@ export default function StickyHeadTable(props) {
   const [headers, setHeaders] = React.useState([]);
   const [rowValues, setRowValues] = React.useState([]);
   const [selected, setSelected] = React.useState([]);
-  const [announcementDialog,setAnnouncementDialog] = React.useState(false);
+  const [announcementDialog, setAnnouncementDialog] = React.useState(false);
+  const [sendEmailDialog, setSendEmailDialog] = React.useState(false);
   const event = props.event;
 
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = rowValues.map((n) => n.name);
+      const newSelecteds = rowValues.map((n) => n.Email);
       setSelected(newSelecteds);
       return;
     }
@@ -73,6 +75,7 @@ export default function StickyHeadTable(props) {
 
 
   const handleClick = (event, name) => {
+    console.log(name);
     const selectedIndex = selected.indexOf(name);
     let newSelected = [];
 
@@ -111,42 +114,49 @@ export default function StickyHeadTable(props) {
       method: 'GET',
     }).then(response => {
       response.json().then(value => {
-        // console.log(value);
-        // setRegData(value.data);
-        if(value.length > 0){
+        if (value.length > 0) {
           const firstdata = value[0].data;
-        const columnNames = Object.keys(firstdata);
-        columnNames.forEach(item => {
-          setHeaders((headers => [...headers, { id: item, label: item, minWidth: 170 }]))
-        })
-        value.forEach(d => {
-          setRowValues(rowValues => [...rowValues, d.data])
-        })
+          const columnNames = Object.keys(firstdata);
+          columnNames.forEach(item => {
+            setHeaders((headers => [...headers, { id: item, label: item, minWidth: 170 }]))
+          })
+          value.forEach(d => {
+            setRowValues(rowValues => [...rowValues, d.data])
+          })
         }
-        
+
 
       })
     })
-  }, [token,event._id])
+  }, [token, event._id])
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
-  function handleAddAnnouncement(){
+  function handleAddAnnouncement() {
     setAnnouncementDialog(true);
   }
 
-  function handleAnnoucementClose(){
+  function handleAnnoucementClose() {
     setAnnouncementDialog(false);
   }
-  
+
+  function handleSendEmail() {
+    console.log(selected);
+    setSendEmailDialog(true);
+  }
+  function handleSendEmailClose() {
+    setSendEmailDialog(false);
+  }
+
 
   return (
 
     <Grid container spacing={3}>
-    <AddAnnouncementForm open={announcementDialog} id={event._id} handleClose={handleAnnoucementClose}></AddAnnouncementForm>
+      <SendEmailForm open={sendEmailDialog} emails={selected} handleClose={handleSendEmailClose}></SendEmailForm>
+      <AddAnnouncementForm open={announcementDialog} id={event._id} handleClose={handleAnnoucementClose}></AddAnnouncementForm>
       <Grid item xs={12} md={4} lg={9}>
         <Paper className={classes.buttonsPaper}>
           <Button variant="outlined" onClick={handleAddAnnouncement} className={classes.button}>Add Announcement</Button>
-          <Button variant="contained" className={classes.button}>Send Emails to Selected</Button>
+          <Button variant="contained" onClick={handleSendEmail} className={classes.button}>Send Emails to Selected</Button>
         </Paper>
       </Grid>
       <Grid item xs={12} md={4} lg={3} >
@@ -155,7 +165,7 @@ export default function StickyHeadTable(props) {
           <Typography>Total Registrations</Typography>
           <Typography component="p" variant="h4">
             {rowValues.length}
-            </Typography>
+          </Typography>
         </Paper>
       </Grid>
       <Grid item xs={12}>
@@ -175,7 +185,6 @@ export default function StickyHeadTable(props) {
                   </TableCell>
                   {headers.map((column) => (
                     <TableCell
-
                       key={column.id}
                       align={column.align}
                       style={{ minWidth: column.minWidth }}
@@ -187,14 +196,13 @@ export default function StickyHeadTable(props) {
               </TableHead>
               <TableBody>
                 {rowValues.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                  const isItemSelected = isSelected(row.name);
+                  const isItemSelected = isSelected(row.Email);
                   return (
-                    <TableRow hover role="checkbox" tabIndex={-1} key={row.name}
-                      onClick={(event) => handleClick(event, row.name)}
+                    <TableRow hover role="checkbox" tabIndex={-1} key={row.Email}
+                      onClick={(event) => handleClick(event, row.Email)}
                       selected={isItemSelected}>
                       <TableCell padding="checkbox">
                         <Checkbox
-
                           checked={isItemSelected}
                           color="default"
                           inputProps={{ 'aria-label': 'select all fields' }}

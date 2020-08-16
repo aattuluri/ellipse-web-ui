@@ -123,6 +123,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function MiniDrawer(props) {
   const classes = useStyles();
+  localStorage.removeItem('eventid')
   const [open, setOpen] = React.useState(true);
   const [selected,setSelected] = React.useState({
     infoSelected: true,

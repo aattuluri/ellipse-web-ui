@@ -484,7 +484,6 @@ function EventsTabPanel({ history }) {
                                     handleReg={handleRegistrationButton}
                                     event={event}
                                 >
-
                                 </EventCard>)
                         })}
                 </Grid>

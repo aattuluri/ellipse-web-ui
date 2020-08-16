@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import { Typography } from '@material-ui/core';
+// import { Typography } from '@material-ui/core';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid'
 import '../main.scss'
@@ -71,7 +71,7 @@ function CalenderPanel({history}) {
                 <Grid container component="main" spacing={2}>
 
                     <Grid item xs={12} sm={12} md={4} lg={2} >
-                        <Typography index={0}>Filters</Typography>
+                        {/* <Typography index={0}>Filters</Typography> */}
                         {/* <Calendar onChange={setCalenderValue} value={calenderValue} ></Calendar> */}
 
                     </Grid>

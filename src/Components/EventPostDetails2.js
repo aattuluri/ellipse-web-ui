@@ -72,7 +72,7 @@ export default function AddressForm(props) {
   // const { vertical, horizontal, open, message, type } = state;
   const eventThemes = ["Hackathon", "Coding Contest", "Webinar"];
   const requirements = ["Laptop", "Basic HTML", "C++", "Machine Learning"];
-  // const [colleges,setColleges] = React.useState([]);
+  const [colleges,setColleges] = React.useState([]);
   const [collegesNames,setCollegesName] = React.useState([]);
   // const colleges = ["VIT University,Vellore", "GITAM University", "SRM University"];
 
@@ -86,10 +86,8 @@ export default function AddressForm(props) {
                 },
                 method: 'GET',
             }).then(response =>{
-              // console.log(response);
               response.json().then(value =>{
-                // console.log(value);
-                // setColleges(value);
+                setColleges(value);
                 value.forEach((v)=>{
                   setCollegesName((collegesNames)=>[...collegesNames,v.name])
                 })
@@ -134,6 +132,12 @@ export default function AddressForm(props) {
   function handleCollegeChange(event, value) {
     console.log(value);
     props.setCollegeName(value);
+    colleges.forEach(c=>{
+      if(c.name === value){
+        props.collegeId(c._id)
+      }
+    })
+    // props.setCollegeId()
   }
   function handleVenueCollegeChange(event, value) {
     props.setVenueCollege(value);

@@ -64,10 +64,10 @@ const useStyles = makeStyles((theme) => ({
         listStyle: 'none',
         padding: theme.spacing(0.5),
         margin: 0,
-      },
-      chip: {
+    },
+    chip: {
         margin: theme.spacing(0.5),
-      },
+    },
 }));
 
 export default function AddressForm(props) {
@@ -79,21 +79,24 @@ export default function AddressForm(props) {
     const handleClose = () => {
         setOpen(false);
     };
-    
+
     const fields = {
         name: {
             'title': 'Name',
             'field': 'short_text',
+            'options': []
         },
         email: {
             'title': 'Email',
-            'field': 'short_text'
+            'field': 'short_text',
+            'options': []
         },
         college: {
             'title': 'College',
-            'field': 'short_text'
+            'field': 'short_text',
+            'options': []
         },
-        
+
     }
     const [selectedFields, setSelectedFields] = React.useState([]);
 
@@ -108,15 +111,15 @@ export default function AddressForm(props) {
         setState({ ...state, [event.target.name]: event.target.checked });
         // console.log(event.target.name);
         const sName = event.target.name;
-        if(event.target.checked){
+        if (event.target.checked) {
             setSelectedFields(selectedFields => [...selectedFields, fields[sName]]);
         }
-        else if(!event.target.checked){
+        else if (!event.target.checked) {
             setSelectedFields(selectedFields => selectedFields.filter((chip) => chip.title !== sName));
         }
-        
+
     };
-    const { name, email, college} = state;
+    const { name, email, college } = state;
     // console.log(selectedFields);
     function handleAddMoreButton() {
         setOpen(true);
@@ -125,11 +128,11 @@ export default function AddressForm(props) {
         setSelectedFields(selectedFields => [...selectedFields, addingField[fName]]);
     }
     const handleDelete = (chipToDelete) => () => {
-        setState({...state,[chipToDelete.name]: false})
+        setState({ ...state, [chipToDelete.name]: false })
         setSelectedFields(selectedFields => selectedFields.filter((chip) => chip.title !== chipToDelete.title));
     };
 
-    async function handlePostButton(e){
+    async function handlePostButton(e) {
         e.preventDefault();
         // console.log(selectedFields);
         await props.setFields(selectedFields);
@@ -149,9 +152,9 @@ export default function AddressForm(props) {
                     <Grid item xs={12}>
                         <FormControl component="fieldset" className={classes.formControl}>
                             <FormLabel component="legend">Fields for your Registration Form</FormLabel>
-                            <FormGroup  className={classes.formgroup}>
+                            <FormGroup className={classes.formgroup}>
                                 <FormControlLabel
-                                    control={<Checkbox  color="primary" checked={name} onChange={handleChange} name="name" />}
+                                    control={<Checkbox color="primary" checked={name} onChange={handleChange} name="name" />}
                                     label="Name"
                                 />
                                 <FormControlLabel
@@ -183,19 +186,19 @@ export default function AddressForm(props) {
                         </Button>
                     </Grid>
                     <Grid>
-                    <Paper component="ul" className={classes.root}>
-                        {selectedFields.map((data) => {
-                            return (
-                                <li key={data.key}>
-                                    <Chip
-                                        
-                                        label={data.title}
-                                        onDelete={data.label === 'React' ? undefined : handleDelete(data)}
-                                        className={classes.chip}
-                                    />
-                                </li>
-                            );
-                        })}
+                        <Paper component="ul" className={classes.root}>
+                            {selectedFields.map((data) => {
+                                return (
+                                    <li key={data.key}>
+                                        <Chip
+
+                                            label={data.title}
+                                            onDelete={data.label === 'React' ? undefined : handleDelete(data)}
+                                            className={classes.chip}
+                                        />
+                                    </li>
+                                );
+                            })}
                         </Paper>
                     </Grid>
                     <Grid item xs={12}>

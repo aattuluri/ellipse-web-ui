@@ -6,26 +6,11 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 // import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-// import { makeStyles } from '@material-ui/core/styles';
-// import FormControlLabel from '@material-ui/core/FormControlLabel';
-// import FormLabel from '@material-ui/core/FormLabel';
-// import Select from '@material-ui/core/Select';
-// import InputLabel from '@material-ui/core/InputLabel';
-// import FormControl from '@material-ui/core/FormControl';
-// import Autocomplete from '@material-ui/lab/Autocomplete';
-// import Chip from '@material-ui/core/Chip';
 import { Grid, IconButton } from '@material-ui/core';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 
-
-
-// const useStyles = makeStyles((theme) => ({
-//     dialog:{
-//         backgroundColor: theme.palette.secondary.main
-//     }
-// }));
 
 function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -49,7 +34,7 @@ export default function EventShareDialog(props) {
     const { vertical, horizontal, open, message, type, autoHide } = state;
 
     React.useEffect(() => {
-        setTitle(`http://staging.ellipseapp.com/event/un/${event._id}`)
+        setTitle(`http://139.59.16.53:3000/un/event/${event._id}`)
     }, [event._id])
 
     function handleTitleChange(event) {

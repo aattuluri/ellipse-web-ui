@@ -200,6 +200,7 @@ const Signup = (props) => {
         console.log(response);
         response.json().then(value => {
           console.log(value);
+          
           setLoading(false);
           setState({
             open: true,

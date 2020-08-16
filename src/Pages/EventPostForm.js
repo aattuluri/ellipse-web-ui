@@ -131,7 +131,7 @@ export default function Checkout({ history }) {
   // const [imageName, setImageName] = React.useState("");
   const [addressType, setAddressType] = React.useState(null);
   const [collegeName, setCollegeName] = React.useState(user.college_name);
-  // const [collegeId,setCollegeId] = React.useState(user.college_id)
+  const [collegeId,setCollegeId] = React.useState(user.college_id)
   const [building, setBuildingAdress] = React.useState(null);
   const [organizer, setOrganizer] = React.useState(user.name + "," + user.college_name);
   const [venueCollege, setVenueCollege] = React.useState(null);
@@ -208,6 +208,7 @@ export default function Checkout({ history }) {
             setOrganizer={setOrganizer}
             setAddressType={setAddressType}
             setCollegeName={setCollegeName}
+            setCollegeId={setCollegeId}
             setBuilding={setBuildingAdress}
             setVenueCollege={setVenueCollege}
             setAbout={setAbout}
@@ -279,7 +280,7 @@ export default function Checkout({ history }) {
         fee_type: feeType,
         requirements: selectedrequirements,
         college_name: collegeName,
-        // college_id: collegeId,
+        college_id: collegeId,
         venue_type: addressType,
         venue: building,
         reg_fields: allFields,

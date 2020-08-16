@@ -70,18 +70,16 @@ const NavigationBar = function ({ history }) {
   //   // history.push("/event/1")
   // }
   function handleSearchChange(event, value) {
-    // console.log(value);
-    setSearchedEvent(value);
-      // setImage(value.posterUrl)
+    if(value){
+      console.log(value);
+      setSearchedEvent(value);
       setOpen(true);
-    
+    }
   }
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
-    // console.log(typeof (newValue));
     localStorage.setItem('tabIndex', newValue);
-    // console.log(localStorage.getItem('tabIndex'));
   };
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);

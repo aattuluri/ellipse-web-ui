@@ -53,7 +53,7 @@ function handleOptionsChange(event,values){
 }
 function handleAddButton(){
     if(type !== "radiobutton" && type !== "checkbox" && type !== "dropdown"){
-        props.handleAdd({[name]:{'title':name,'field':type}},name);
+        props.handleAdd({[name]:{'title':name,'field':type,'options': []}},name);
     }
     else{
         props.handleAdd({[name]:{'title':name,'field':type,'options':selectedOptions}},name);

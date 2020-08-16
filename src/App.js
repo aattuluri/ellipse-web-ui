@@ -16,6 +16,7 @@ import ChatPage from './Pages/ChatPage';
 import EventDetails from './Pages/EventDetails';
 import EventRegisterForm from './Pages/EventRegistrationform';
 import ExplorePanel from './Pages/ExplorePanel';
+import UnregisteredPage from './Pages/UnregisteredPage';
 
 function App() {
 
@@ -35,6 +36,8 @@ function App() {
             <Route exact path="/userinfo" component={UserInfo}></Route>
             <Route exact path="/userdetails" component={UserDetails}></Route>
             <Route exact path="/otpverification" component={OTPVer}></Route>
+            <Route exact path="/un/event/:eventId" component={UnregisteredPage}></Route>
+            {/* <Route exact path="/resetforgotpassword" component ={ForgotPassword2}></Route> */}
             
             <Layout>
             <Route path="/home" component={EventsTabPanel}></Route>
@@ -45,8 +48,6 @@ function App() {
               <Route exact path="/event/:eventId" component={EventDetails} />
               <Route exact path="/event/register/:eventId" component={EventRegisterForm} />
               <Route exact path="/yourevents" component={ExplorePanel}></Route>
-              {/* <Route exact path="/eventdetails" component={EventDetails} /> */}
-              
             </Layout>
           </Switch>
           

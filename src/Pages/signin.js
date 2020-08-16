@@ -51,13 +51,17 @@ const Signin = ({ history }) => {
     }
     if (message === "Signedin successfully") {
       localStorage.setItem('token', token);
-      // localStorage.setItem('user', user);
-      // console.log(isUserVerified);
-      // console.log(JSON.parse(user).collegeName);
       if (isUserVerified) {
         localStorage.setItem('token', token);
         // console.log(isUserVerified);
-        history.push('/home');
+        const eventId = localStorage.getItem('eventid');
+        if(eventId){
+          history.push(`/event/${eventId}`)
+        }
+        else{
+          history.push('/home');
+        }
+       
       }
       else {
         try {
@@ -92,13 +96,14 @@ const Signin = ({ history }) => {
 
           })
         } catch (error) {
-          // setLoading(false);
+          setLoading(false);
           setState({
             open: true,
             vertical: 'top',
             horizontal: 'center',
             message: error.message,
-            type: "error"
+            type: "error",
+            autoHide: 3000
           })
         }
 

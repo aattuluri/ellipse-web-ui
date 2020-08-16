@@ -83,7 +83,14 @@ const UserInfo = ({ history }) => {
     const handleClose = async (event, reason) => {
 
         if (message === "successful") {
+            const eventId = localStorage.getItem('eventid');
+        if(eventId){
+          history.push(`/event/${eventId}`)
+        }
+        else{
             history.replace("/home")
+        }
+            
         }
 
         setState({ ...state, open: false });

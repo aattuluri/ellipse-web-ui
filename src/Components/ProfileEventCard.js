@@ -8,6 +8,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { Link } from 'react-router-dom';
+import EventShareDialog from '../Components/EventShareDialog';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -20,10 +21,17 @@ export default function ImgMediaCard(props) {
   const event = props.event;
   // const [image, setImage] = React.useState(null);
   // const token = localStorage.getItem('token');
+  const [shareDialogOpen,setShareDialogOpen] = React.useState(false);
   function handleViewButtonClick(){
     props.handleViewClick(props.event);
   }
 
+  function handleShareClose(){
+    setShareDialogOpen(false);
+  }
+  function handleShareClick(){
+    setShareDialogOpen(true);
+  }
 
   return (
     <Card className={classes.root}>
@@ -40,13 +48,17 @@ export default function ImgMediaCard(props) {
         </CardContent>
 
       <CardActions>
-        <Button  size="small" color="primary">
+        <Button  size="small" color="primary" onClick={handleShareClick}>
           Share
         </Button>
         <Button onClick={handleViewButtonClick} size="small" color="primary">
         <Link to={{pathname:`/event/${event._id}`,state:{event: props.event}}}   style={{textDecoration:'none',color:'#ffffff'}}>View</Link>
         </Button>
       </CardActions>
+      <EventShareDialog
+      event = {event} 
+      open={shareDialogOpen} 
+      handleClose={handleShareClose}></EventShareDialog>
     </Card>
   );
 }
