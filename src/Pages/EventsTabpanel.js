@@ -16,7 +16,7 @@ import AddIcon from '@material-ui/icons/Add';
 import SortLeftPanel from '../Components/SortLeftPanel';
 import MobileSortPanel from '../Components/MobileSortPanel';
 import ImageDialog from '../Components/ImageDialog';
-import EventsContext from '../EventsContext';
+// import EventsContext from '../EventsContext';
 import Skeleton from '@material-ui/lab/Skeleton';
 // import { Link } from 'react-router-dom';
 import AuthContext from '../AuthContext';
@@ -26,6 +26,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import Divider from '@material-ui/core/Divider';
+import ActiveEventsContext from '../ActiveEventsContext';
 
 
 // function a11yProps(index) {
@@ -165,7 +166,7 @@ function EventsTabPanel({ history }) {
     const [modeSortChecked, setModeSortChecked] = React.useState([0]);
     const [filterDialogOpen, setFilterDialogOpen] = React.useState(false);
     const [selectedImage, setSelectedImage] = React.useState(null);
-    const allEvents = React.useContext(EventsContext);
+    const allEvents = React.useContext(ActiveEventsContext);
     const [registerdEvents, setRegisteredEvents] = React.useState([]);
 
     React.useEffect(() => {
@@ -370,6 +371,8 @@ function EventsTabPanel({ history }) {
     }
 
     function handlesortDiscardButton() {
+        setModeSortChecked([0])
+        setFeeSortChecked([0])
         setSortedEventsArray([]);
         // setSortEventMode(null);
         setIsFiltered(false);

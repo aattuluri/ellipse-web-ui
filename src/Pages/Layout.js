@@ -4,6 +4,7 @@ import { Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import EventsContext from '../EventsContext';
 import AuthContext from '../AuthContext';
+import ActiveEventsContext from '../ActiveEventsContext';
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
 // import RegEventsContext from '../RegEventsContext';
@@ -33,6 +34,7 @@ function Layout(props) {
 
 
     const [allEvents, setAllEvents] = React.useState([]);
+    const [activeEvents,setActiveEvents] = React.useState(null);
     const [currentUser, setCurrentUser] = React.useState(null);
     const [open, setOpen] = React.useState(true);
     const [authorized, setAuthorized] = React.useState(true);
@@ -79,6 +81,11 @@ function Layout(props) {
                         return new Date(a.start_time) - new Date(b.start_time);
                     })
                     setAllEvents(value);
+                    setActiveEvents(value.filter(e =>{
+                        const cDate = new Date();
+                        const eDate = new Date(e.finish_time);
+                        return cDate < eDate
+                    }))
                 })
             }
             else if (response.status === 401) {
@@ -102,9 +109,10 @@ function Layout(props) {
     return (
         <AuthContext.Provider value={currentUser}>
             <EventsContext.Provider value={allEvents}>
+            <ActiveEventsContext.Provider value={activeEvents}>
                 {/* <RegEventsContext.Provider value={registeredEvents}> */}
                 {
-                    currentUser != null && allEvents != null && <div>
+                    currentUser != null && allEvents != null && activeEvents != null && <div>
                         <Paper className={classes.root}>
                             <NavigationBar></NavigationBar>
                         </Paper>
@@ -120,6 +128,7 @@ function Layout(props) {
 
                 }
                 {/* </RegEventsContext.Provider> */}
+                </ActiveEventsContext.Provider>
             </EventsContext.Provider>
         </AuthContext.Provider>
 

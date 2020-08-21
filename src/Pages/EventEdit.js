@@ -30,8 +30,11 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormLabel from '@material-ui/core/FormLabel';
 // import { Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+// import Icon from '@material-ui/core/Icon';
 // import { set } from 'date-fns';
-
+import Badge from '@material-ui/core/Badge';
+import EditIcon from '@material-ui/icons/Edit';
+import IconButton from '@material-ui/core/IconButton';
 //function for alert
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -93,6 +96,9 @@ const EventEdit = (props) => {
   const [regMode, setRegMode] = React.useState(null);
   const [organizer, setOrganizer] = React.useState(null);
   const [participantType, setParticipantsType] = React.useState("open");
+  const [image, setImage] = React.useState(null);
+  const [imageUrl,setImageurl] = React.useState(null);
+  const [imageUpdated,setImageUpdated] = React.useState(false);
   const { vertical, horizontal, open, message, type } = state;
 
 
@@ -105,6 +111,7 @@ const EventEdit = (props) => {
   const colleges = ["VIT University", "GITAM University", "SRM University"];
 
   const handleStartDateChange = (date) => {
+    console.log(date)
     setStartDate(date);
   };
   const handleendDateChange = (date) => {
@@ -133,27 +140,15 @@ const EventEdit = (props) => {
     setRegMode(event.reg_mode);
     setOrganizer(event.organizer);
     // setParticipantsType(event.o_allowed)
-    if(event.o_allowed === true){
+    if (event.o_allowed === true) {
       setParticipantsType("open")
     }
-    else{
+    else {
       setParticipantsType("onlycollege")
     }
 
   }, [token, event])
 
-
-
-  // function getBase64(file, cb) {
-  //   let reader = new FileReader();
-  //   reader.readAsDataURL(file);
-  //   reader.onload = function () {
-  //     cb(reader.result)
-  //   };
-  //   reader.onerror = function (error) {
-  //     console.log('Error: ', error);
-  //   };
-  // }
 
   const handleClose = async (event, reason) => {
     if (message === "Saved changes successfully") {
@@ -211,7 +206,30 @@ const EventEdit = (props) => {
           result.json().then(value => {
             console.log(value);
             event = value.event;
-            // history.replace("/home")
+            if (imageUpdated) {
+              var data2 = new FormData()
+              data2.append("image", image);
+              fetch(`http://139.59.16.53:4000/api/event/uploadimage?id=${event._id}`, {
+                  headers: {
+                      'Authorization': `Bearer ${token}`,
+                  },
+                  method: 'POST',
+                  body: data2
+              }).then(res => {
+                  if (res.status === 200) {
+                      setLoading(false);
+                      setState({
+                          open: true,
+                          vertical: 'top',
+                          horizontal: 'center',
+                          message: "successful",
+                          type: "success",
+                          autoHide: 300
+                      })
+                  }
+              })
+          }
+          else{
             setLoading(false);
             setState({
               open: true,
@@ -220,6 +238,9 @@ const EventEdit = (props) => {
               message: "Saved changes successfully",
               type: "success"
             })
+          }
+            // history.replace("/home")
+            
           })
         }
         else {
@@ -304,6 +325,20 @@ const EventEdit = (props) => {
   }
 
 
+  function handleChange(event) {
+    if (event.target.files[0]) {
+      setImage(event.target.files[0]);
+    //   setImageAsFile(imageFile => (image))
+      const url = URL.createObjectURL(event.target.files[0]);
+    //   const fileType = event.target.files[0].type;
+      setImageurl(url)
+      setImageUpdated(true);
+    //   setImageType(fileType.substr(fileType.indexOf('/') + 1));
+    }
+
+}
+
+
 
   return (
     <Container component="main" maxWidth="lg">
@@ -320,6 +355,22 @@ const EventEdit = (props) => {
       <div className={classes.paper}>
         <form className={classes.form} onSubmit={handleEventPost}>
           <Grid container spacing={3}>
+            <Grid item xs={12} >
+              <input id="contained-button-file" required type="file" accept="image/*" onChange={handleChange} style={{ display: "none" }}></input>
+              <Badge
+                overlap="circle"
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'right',
+                }}
+                badgeContent={<label htmlFor="contained-button-file">
+                  <IconButton style={{ backgroundColor: "black" }} color="primary" aria-label="upload picture" component="span">
+                    <EditIcon></EditIcon>
+                  </IconButton>
+                </label>}>
+                <img height="160" width="150" alt="poster" src={imageUpdated ? imageUrl : `http://139.59.16.53:4000/api/image?id=${event.poster_url}`} ></img>
+              </Badge>
+            </Grid>
             <Grid item xs={12} lg={6}>
               <TextField
                 autoComplete='off'
@@ -347,7 +398,7 @@ const EventEdit = (props) => {
             <Grid item xs={12} sm={6} lg={4}>
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <DateTimePicker
-                  minDate={Date.now()}
+                  // minDate={Date.now()}
                   fullWidth
                   required
                   variant="inline"
@@ -368,7 +419,7 @@ const EventEdit = (props) => {
             <Grid item xs={12} sm={6} lg={4}>
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <DateTimePicker
-                  minDate={Date.now()}
+                  // minDate={Date.now()}
                   fullWidth
                   required
                   variant="inline"
@@ -388,7 +439,7 @@ const EventEdit = (props) => {
             <Grid item xs={12} sm={12} lg={4}>
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <DateTimePicker
-                  minDate={Date.now()}
+                  // minDate={Date.now()}
                   fullWidth
                   required
                   variant="inline"
@@ -556,7 +607,7 @@ const EventEdit = (props) => {
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={12} lg={6}>
+            {/* <Grid item xs={12} lg={6}>
               <TextField
                 disabled
                 autoComplete='off'
@@ -567,7 +618,7 @@ const EventEdit = (props) => {
                 fullWidth
                 value={organizer || ""}
               />
-            </Grid>
+            </Grid> */}
             <Grid item xs={12} lg={6}>
               <Autocomplete
                 multiple

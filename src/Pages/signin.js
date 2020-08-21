@@ -44,6 +44,7 @@ const Signin = ({ history }) => {
   const [token, setToken] = React.useState(null);
   const [isUserVerified, setIsUserVerified] = React.useState(null);
   const [email, setEmail] = React.useState(null);
+  const abortController = new AbortController();
   const handleClose = async (event, reason) => {
     // console.log(isUserVerified);
     if (reason === 'clickaway') {
@@ -56,9 +57,11 @@ const Signin = ({ history }) => {
         // console.log(isUserVerified);
         const eventId = localStorage.getItem('eventid');
         if(eventId){
+          abortController.abort()
           history.push(`/event/${eventId}`)
         }
         else{
+          abortController.abort()
           history.push('/home');
         }
        
@@ -71,6 +74,7 @@ const Signin = ({ history }) => {
           };
           data2 = JSON.stringify(payload2)
           fetch('http://139.59.16.53:4000/api/users/sendverificationemail', {
+            signal: abortController.signal,
             headers: {
               'Authorization': `Bearer ${token}`,
               'Content-Type': 'application/json'
@@ -78,9 +82,10 @@ const Signin = ({ history }) => {
             method: 'POST',
             body: data2
           }).then((result) => {
-            console.log(result);
+            // console.log(result);
             result.json().then((res) => {
               if (res.message === "success") {
+                abortController.abort()
                 localStorage.setItem('token', token);
                 history.push('/otpverification')
                 setState({
@@ -123,8 +128,9 @@ const Signin = ({ history }) => {
         password: password.value
       };
       data = JSON.stringify(payload);
-      console.log(data);
+      // console.log(data);
       fetch('http://139.59.16.53:4000/api/users/login', {
+        signal: abortController.signal,
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json'
@@ -132,7 +138,7 @@ const Signin = ({ history }) => {
         method: 'POST',
         body: data
       }).then((response) => {
-        console.log(response);
+        // console.log(response);
         if (response.status === 200) {
           // console.log
           response.json().then((value) => {
@@ -212,7 +218,7 @@ const Signin = ({ history }) => {
 
               <img src={GoogleBadge} alt="playstore" height="100px" width="250px"></img><br></br>
             </Grid>
-            <Grid item xs={12} sm={12} className={classes.iPhoneImage} md={12} elevation={12} square >
+            <Grid item xs={12} sm={12} className={classes.iPhoneImage} md={12} elevation={12} >
               <img src={AppleBadge} alt="appstore" height="70px" width="220px"></img>
             </Grid>
           </div>
@@ -221,7 +227,7 @@ const Signin = ({ history }) => {
         </div>
       </Grid>
 
-      <Grid item xs={12} sm={12} md={5} elevation={6} square>
+      <Grid item xs={12} sm={12} md={5} elevation={6}>
         <div className={classes.paperRight} >
 
           <Avatar className={classes.avatar}>
@@ -295,28 +301,3 @@ const Signin = ({ history }) => {
   );
 }
 export default withRouter(Signin);
-
-
- // const { currentUser } = useContext(AuthContext);
-  // console.log(currentUser);
-  // if (currentUser) {
-  //   console.log(currentUser);
-  //   return <Redirect to="/home" />;
-  // }
-  // useEffect(() => {
-  // localStorage.removeItem('user');
-  // const token = localStorage.getItem('token');
-  // const currentUser = localStorage.getItem('user');
-
-  //   if(currentUser){
-  //     console.log(JSON.parse(currentUser));
-  //   }
-  //   // 
-  //   // console.log(currentUser.email)
-  // console.log(token);
-  // console.log(localStorage.getItem('user'))
-  // if(token){
-  //   console.log(token);
-  //   return <Redirect to="/home" />;
-  // }
-  // }, []);

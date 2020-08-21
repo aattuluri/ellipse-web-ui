@@ -36,6 +36,8 @@ import TextField from '@material-ui/core/TextField';
 import EventsDialog from '../Components/EventsDialog';
 import EventsContext from '../EventsContext';
 // import AuthContext from '../AuthContext';
+import NotificationsDialog from '../Components/NotficationsDialog';
+
 
 
 
@@ -54,6 +56,7 @@ const NavigationBar = function ({ history }) {
   // const [loading, setLoading] = React.useState(false);
   // const eventypes = ["Hackathon", "Coding Contest", "Webinar"];
   const [open, setOpen] = React.useState(false);
+  const [notificationsOpen,setNotificationsOpen] = React.useState(false);
   const allEvents = React.useContext(EventsContext);
   useEffect(() => {
     if (localStorage.getItem('tabIndex') != null) {
@@ -102,7 +105,6 @@ const NavigationBar = function ({ history }) {
   
 
   function handleSignout(event) {
-    console.log(token);
 
     fetch('http://139.59.16.53:4000/api/users/logout', {
       headers: {
@@ -160,12 +162,17 @@ const NavigationBar = function ({ history }) {
   // }
   const handleClose = () => {
     setOpen(false);
+    setNotificationsOpen(false);
   };
 
   function handleRegistrationButton(event) {
     setOpen(false);
     // setSelectedEvent(event);
     history.push('/event/register/' + event._id);
+}
+
+function handleNotificationClick(){
+  setNotificationsOpen(true);
 }
 
   return (
@@ -212,7 +219,7 @@ const NavigationBar = function ({ history }) {
 
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
-              <IconButton aria-label="show 17 new notifications" color="inherit">
+              <IconButton aria-label="notifications" color="inherit" onClick={handleNotificationClick}>
                 <Badge badgeContent={0} color="secondary">
                   <NotificationsIcon />
                 </Badge>
@@ -259,6 +266,7 @@ const NavigationBar = function ({ history }) {
             handleReg={handleRegistrationButton}
             handleClose={handleClose}>
           </EventsDialog>}
+          <NotificationsDialog open={notificationsOpen} handleClose={handleClose}></NotificationsDialog>
         </div>
       </React.Fragment>
     </div>

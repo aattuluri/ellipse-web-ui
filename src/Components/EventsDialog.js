@@ -164,7 +164,7 @@ function EventsDialog(props) {
                             scrollButtons="on"
                         >
                             <Tab label="About" {...a11yProps(0)} />
-                            <Tab label="Timeline" {...a11yProps(1)} />
+                            <Tab label="Schedule" {...a11yProps(1)} />
                             <Tab label="Announcements" {...a11yProps(2)} />
                             <Tab label="Chat" {...a11yProps(3)} />
 

@@ -93,7 +93,7 @@ function ChatMessage(props) {
                     </Typography>
                     <Box>
                     <Typography
-                    inline
+                    // inline
                         component="span"
                         variant="body2"
                         color="textSecondary"

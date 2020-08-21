@@ -130,6 +130,7 @@ function ChatPanel(props) {
 
 
     function handleSendClick() {
+        // console.log(Date.now)
         ws.send(JSON.stringify({room:props.chatId,msg:{
             'id': user.userid,
             'userName': user.name,

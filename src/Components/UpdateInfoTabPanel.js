@@ -207,7 +207,7 @@ function UpdateInfoTabPanel(props) {
                         if (imageUpdated) {
                             var data2 = new FormData()
                             data2.append("image", image);
-                            fetch('http://localhost:4000/api/users/uploadImage', {
+                            fetch('http://139.59.16.53:4000/api/users/uploadImage', {
                                 headers: {
                                     'Authorization': `Bearer ${token}`,
                                 },
@@ -300,7 +300,7 @@ function UpdateInfoTabPanel(props) {
                             <TextField
                                 autoComplete="fullName"
                                 name="fullName"
-                                value={name}
+                                value={name || ""}
                                 onChange={handleName}
                                 id="fullName"
                                 label="Full Name"

@@ -183,7 +183,8 @@ export default function JustifyContent(props) {
 
     const handleSendClick = (message) => {
 
-        console.log("clicked")
+        const d = new Date();
+        console.log(d.toISOString())
         webSocket.send(JSON.stringify({
             action: "send_message",
             event_id: event._id,
@@ -193,7 +194,7 @@ export default function JustifyContent(props) {
                 'user_name': user.name,
                 'user_pic': user.profile_pic,
                 'message': message,
-                'date': Date.now()
+                'date': d.toISOString()
             }
         }));
         if (reference != null) {
@@ -232,9 +233,10 @@ export default function JustifyContent(props) {
                     <Box className={classes.topBar}>
                         {
                             chatMessages.map((value, index) => {
-
                                 const currentDate = new Date();
+                                console.log(value.date)
                                 const messageDate = new Date(value.date);
+                                console.log(messageDate);
                                 if (messageDate.toDateString() !== counterDate) {
                                     counterDate = messageDate.toDateString();
                                     if (value.user_id === user.user_id) {

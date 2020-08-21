@@ -34,7 +34,7 @@ export default function EventShareDialog(props) {
     const { vertical, horizontal, open, message, type, autoHide } = state;
 
     React.useEffect(() => {
-        setTitle(`http://139.59.16.53:3000/un/event/${event._id}`)
+        setTitle(`http://staging.ellipseapp.com/un/event/${event._id}`)
     }, [event._id])
 
     function handleTitleChange(event) {
