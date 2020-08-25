@@ -193,7 +193,7 @@ const EventEdit = (props) => {
       };
       data = JSON.stringify(payload);
       console.log(data);
-      fetch('http://localhost:4000/api/updateevent', {
+      fetch('http://139.59.16.53:4000/api/updateevent', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',

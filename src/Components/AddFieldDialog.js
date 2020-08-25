@@ -34,7 +34,7 @@ export default function FormDialog(props) {
     setSelectedOptions(values);
   }
   function handleAddButton() {
-    if (type !== "radiobutton" && type !== "checkbox" && type !== "dropdown") {
+    if (type !== "radiobuttons" && type !== "checkboxes" && type !== "dropdown") {
       props.handleAdd({ [name]: { 'title': name, 'field': type, 'options': [] } }, name);
     }
     else {
@@ -94,7 +94,7 @@ export default function FormDialog(props) {
                 </Select>
               </FormControl>
             </Grid>
-            {(type === "radiobutton" || type === "checkbox" || type === "dropdown") &&
+            {(type === "radiobuttons" || type === "checkboxes" || type === "dropdown") &&
               <Grid item xs={12}>
                 <Autocomplete
                   multiple

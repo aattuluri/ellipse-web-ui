@@ -36,7 +36,7 @@ function Layout(props) {
     const token = localStorage.getItem('token');
     const classes = useStyles();
     const [allEvents, setAllEvents] = React.useState([]);
-    const [activeEvents,setActiveEvents] = React.useState(null);
+    const [activeEvents,setActiveEvents] = React.useState([]);
     const [currentUser, setCurrentUser] = React.useState(null);
     const [open, setOpen] = React.useState(true);
     const [authorized, setAuthorized] = React.useState(true);
@@ -111,7 +111,7 @@ function Layout(props) {
             <EventsContext.Provider value={allEvents}>
             <ActiveEventsContext.Provider value={activeEvents}>
                 {
-                    currentUser != null && allEvents != null && activeEvents != null && <div>
+                    currentUser != null  && <div>
                         <Paper className={classes.root}>
                             <NavigationBar></NavigationBar>
                         </Paper>
