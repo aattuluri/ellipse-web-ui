@@ -1,17 +1,14 @@
 import React from 'react';
+
+//Material UI Imports
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Paper from '@material-ui/core/Paper';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
-// import Button from '@material-ui/core/Button';
 import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
-import EventPostDetails1 from '../Components/EventPostDetails1';
-import EventPostDetails2 from '../Components/EventPostDetails2';
-import EventPostDetails3 from '../Components/EventPostDetails3';
-import AuthContext from '../AuthContext';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Snackbar from '@material-ui/core/Snackbar';
@@ -19,14 +16,18 @@ import MuiAlert from '@material-ui/lab/Alert';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Backdrop from '@material-ui/core/Backdrop';
 
-
+//Components imports
+import EventPostDetails1 from '../Components/EventPostDetails1';
+import EventPostDetails2 from '../Components/EventPostDetails2';
+import EventPostDetails3 from '../Components/EventPostDetails3';
+import AuthContext from '../AuthContext';
 
 //function for alert
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-
+//function for copy right
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -95,9 +96,10 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Checkout({ history }) {
   const classes = useStyles();
-  const [activeStep, setActiveStep] = React.useState(0);
   const token = localStorage.getItem('token');
   const user = React.useContext(AuthContext);
+  const [activeStep, setActiveStep] = React.useState(0);
+  const [steps, setSteps] = React.useState(['About', 'More Details']);
   const [state, setState] = React.useState({
     open: false,
     vertical: 'top',
@@ -127,31 +129,19 @@ export default function Checkout({ history }) {
   const [eventThemes, setEventThemes] = React.useState(null);
   const [selectedrequirements, setSelectedRequirements] = React.useState(null);
   const [image, setImage] = React.useState(null);
-  // const [imageType, setImageType] = React.useState(null);
-  // const [imageName, setImageName] = React.useState("");
   const [addressType, setAddressType] = React.useState(null);
   const [collegeName, setCollegeName] = React.useState(user.college_name);
-  const [collegeId,setCollegeId] = React.useState(user.college_id)
+  const [collegeId, setCollegeId] = React.useState(user.college_id)
   const [building, setBuildingAdress] = React.useState(null);
   const [organizer, setOrganizer] = React.useState(user.name + "," + user.college_name);
   const [venueCollege, setVenueCollege] = React.useState(null);
   const [participantsType, setParticipantsType] = React.useState("open");
-  // const { vertical, horizontal, open, message, type } = state;
-
   const [fields, setFields] = React.useState([]);
 
-  function setRegFields(f) {
-    // console.log(f);
-    setFields(f);
-  }
 
-  function handlePostwithoutregFileds(e) {
-    e.preventDefault();
-    handleEventPost(null);
-  }
 
-  const [steps, setSteps] = React.useState(['About', 'More Details'])
-  // console.log(feeType);
+
+
   function getStepContent(step) {
     switch (step) {
       case 0:
@@ -204,7 +194,6 @@ export default function Checkout({ history }) {
             setRegLink={setRegLink}
             setFees={setFees}
             setRequirements={setSelectedRequirements}
-            // setPosterType={setImageType}
             setOrganizer={setOrganizer}
             setAddressType={setAddressType}
             setCollegeName={setCollegeName}
@@ -221,7 +210,6 @@ export default function Checkout({ history }) {
             handleBack={handleBack}
             fields={fields}
             setFields={setRegFields} handlePost={handleEventPost}>
-
           </EventPostDetails3>);
       default:
         throw new Error('Unknown step');
@@ -229,38 +217,12 @@ export default function Checkout({ history }) {
   }
 
 
-  // console.log(fields);
-  // function getBase64(file, cb) {
-  //   let reader = new FileReader();
-  //   reader.readAsDataURL(file);
-  //   reader.onload = function () {
-  //     cb(reader.result.split(',')[0], reader.result.split(',')[1])
-  //   };
-  //   reader.onerror = function (error) {
-  //     console.log('Error: ', error);
-  //   };
-  // }
-  // console.log(steps);
-  // const handleClose = async (event, reason) => {
-  //   if (message === "Signedup successfully") {
-  //     // history.replace("/otpverification")
-  //   }
-  //   // setState({ ...state, open: false });
-  // };
-
-
-
-  // console.log(fields);
-
   const handleEventPost = (allFields) => {
-    // console.log(allFields);
     var oAllowed = false;
     if (participantsType === "open") {
       oAllowed = true
     }
-    // event.preventDefault();
     setLoading(true);
-    // const { eventName, shortdesc, eventMode,regLink,regFees,organizer,about } = event.target.elements;
     try {
       var data = new FormData();
       const payload = {
@@ -287,10 +249,7 @@ export default function Checkout({ history }) {
         reg_mode: registrationMode,
         o_allowed: oAllowed
       };
-      // console.log(payload);
       data = JSON.stringify(payload);
-      // data.append("image",image);
-      // console.log(data);
       fetch('http://139.59.16.53:4000/api/events', {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -300,14 +259,10 @@ export default function Checkout({ history }) {
         method: 'POST',
         body: data,
       }).then(result => {
-        // console.log(result);
         if (result.status === 200) {
           result.json().then(value => {
-            // console.log(value);
             var data2 = new FormData();
-            // console.log(value);
             data2.append("image", image);
-            // data2.append('eventId', value.eventId);
             fetch(`http://139.59.16.53:4000/api/event/uploadimage?id=${value.eventId}`, {
               headers: {
                 'Authorization': `Bearer ${token}`,
@@ -352,6 +307,14 @@ export default function Checkout({ history }) {
         autoHide: '5000',
       })
     }
+  }
+
+  function setRegFields(f) {
+    setFields(f);
+  }
+
+  function handlePostwithoutregFileds() {
+    handleEventPost(null);
   }
 
   const handleNext = () => {
@@ -408,11 +371,7 @@ export default function Checkout({ history }) {
             {activeStep === steps.length ? (
               <React.Fragment>
                 <Typography variant="h5" gutterBottom>
-                  Thank you for your order.
-                </Typography>
-                <Typography variant="subtitle1">
-                  Your order number is #2001539. We have emailed your order confirmation, and will
-                  send you an update when your order has shipped.
+                  Thank you.
                 </Typography>
               </React.Fragment>
             ) : (

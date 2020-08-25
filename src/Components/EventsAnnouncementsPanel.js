@@ -2,8 +2,6 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 
 import Typography from '@material-ui/core/Typography';
-// import CardContent from '@material-ui/core/CardContent';
-// import Card from '@material-ui/core/Card';
 import Box from '@material-ui/core/Box';
 
 const useStyles = makeStyles((theme) => ({
@@ -11,33 +9,25 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'flex-start',
     alignContent: 'flex-start',
-    // marginLeft: theme.spacing(5),
     width: '100%'
 
   },
   paper: {
     padding: '6px 16px',
-    // display: 'flex',
-    // alignItems: 'left',
-    // justifyContent: 'left',
-    // backgroundColor: theme.palette.secondary.main,
   },
   secondaryTail: {
     backgroundColor: theme.palette.secondary.main,
   },
   timiline: {
-    // display:'flex',
-    // alignItems: 'flex-start',
 
-    // backgroundColor: theme.palette.primary.dark
   },
-  root3:{
+  root3: {
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(2)
   },
-  root5:{
+  root5: {
     display: "flex",
-        justifyContent: "flex-end",
+    justifyContent: "flex-end",
   }
 }));
 
@@ -58,11 +48,10 @@ export default function CustomizedTimeline(props) {
       method: 'GET',
     }).then(response => {
       response.json().then(value => {
-        // console.log(value);
         setAnnouncements(value);
       })
     })
-  }, [token,event._id])
+  }, [token, event._id])
 
   return (
     <div
@@ -76,7 +65,6 @@ export default function CustomizedTimeline(props) {
               const date = new Date(a.time)
 
               return <Box m={1} p={1} key={index} className={classes.root3}>
-
                 <Box className={classes.root2} whiteSpace="normal">
                   <Typography className={classes.title}>
                     {a.title}
@@ -87,15 +75,13 @@ export default function CustomizedTimeline(props) {
                 </Box>
                 <Box className={classes.root5}>
                   <Typography variant="body2" >
-                  {date.toDateString()}{" "+date.toLocaleTimeString()}
+                    {date.toDateString()}{" " + date.toLocaleTimeString()}
                   </Typography>
                 </Box>
               </Box>
             })
           }
         </div>
-
-
       )}
     </div>
   );

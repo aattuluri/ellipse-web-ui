@@ -4,7 +4,6 @@ import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-// import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { Grid, IconButton } from '@material-ui/core';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
@@ -21,7 +20,6 @@ export default function EventShareDialog(props) {
     // const classes = useStyles();
 
     const [title, setTitle] = React.useState(null);
-
     const event = props.event;
     const [state, setState] = React.useState({
         open: false,
@@ -42,7 +40,6 @@ export default function EventShareDialog(props) {
     }
 
     const handleClose = async (event, reason) => {
-
         setState({ ...state, open: false });
     };
 

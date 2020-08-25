@@ -1,4 +1,6 @@
 import React from 'react';
+
+
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -63,7 +65,6 @@ export default function EventReportDialog(props) {
                 method: 'POST',
                 body: data
             }).then(result => {
-                // console.log(result);
                 result.json().then((res) => {
                     if (res.message === "success") {
                         setLoading(false)
