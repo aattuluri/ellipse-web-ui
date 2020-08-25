@@ -93,9 +93,6 @@ function MobileSortPanel(props) {
                         defaultValue=''
                         value={props.sortStartDate}
                         onChange={props.handleSortDateChange}
-                        KeyboardButtonProps={{
-                            'aria-label': 'change date',
-                        }}
                     />
                     <DatePicker
                         //   minDate={Date.now()}
