@@ -99,7 +99,7 @@ function UpdateInfoTabPanel(props) {
         setCollegeId(user.college_id);
         setBio(user.bio);
         setGender(user.gender);
-        fetch('http://139.59.16.53:4000/colleges', {
+        fetch('http://139.59.16.53:4000/api/colleges', {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
@@ -173,8 +173,8 @@ function UpdateInfoTabPanel(props) {
     function handleUpdateButton(event){
         event.preventDefault();
         setLoading(true);
-        console.log(name);
-        console.log(userName)
+        // console.log(name);
+        // console.log(userName)
 
         try {
             var data = new FormData()

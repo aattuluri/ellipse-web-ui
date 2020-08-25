@@ -193,7 +193,7 @@ const EventEdit = (props) => {
       };
       data = JSON.stringify(payload);
       console.log(data);
-      fetch('http://139.59.16.53:4000/api/updateevent', {
+      fetch('http://localhost:4000/api/updateevent', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -353,10 +353,10 @@ const EventEdit = (props) => {
         <Alert onClose={handleClose} severity={type}>{message}</Alert>
       </Snackbar>
       <div className={classes.paper}>
-        <form className={classes.form} onSubmit={handleEventPost}>
+        <form className={classes.form} novalidate onSubmit={handleEventPost}>
           <Grid container spacing={3}>
             <Grid item xs={12} >
-              <input id="contained-button-file" required type="file" accept="image/*" onChange={handleChange} style={{ display: "none" }}></input>
+              <input id="contained-button-file" type="file" accept="image/*" onChange={handleChange} style={{ display: "none" }}></input>
               <Badge
                 overlap="circle"
                 anchorOrigin={{
@@ -374,7 +374,7 @@ const EventEdit = (props) => {
             <Grid item xs={12} lg={6}>
               <TextField
                 autoComplete='off'
-                required
+                // required
                 id="eventName"
                 name="eventName"
                 label="Event name"
@@ -386,7 +386,7 @@ const EventEdit = (props) => {
             <Grid item xs={12} lg={6}>
               <TextField
                 autoComplete='off'
-                required
+                // required
                 id="shortdesc"
                 name="shortdesc"
                 label="Short Description"
@@ -457,7 +457,7 @@ const EventEdit = (props) => {
               </MuiPickersUtilsProvider>
             </Grid>
             <Grid item xs={12} sm={6}>
-              <FormControl fullWidth required>
+              <FormControl fullWidth>
                 <InputLabel htmlFor="outlined-age-native-simple">Event Mode</InputLabel>
                 <Select
                   fullWidth
@@ -552,7 +552,7 @@ const EventEdit = (props) => {
               <Grid item xs={12} lg={6}>
                 <TextField
                   autoComplete='off'
-                  required
+                  // required
                   id="regLink"
                   name="regLink"
                   label="Registration Link"
@@ -587,7 +587,7 @@ const EventEdit = (props) => {
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <FormControl fullWidth required>
+              <FormControl fullWidth >
                 <InputLabel htmlFor="outlined-age-native-simple">Registration</InputLabel>
                 <Select
                   fullWidth
@@ -645,14 +645,14 @@ const EventEdit = (props) => {
                 <FormControlLabel value="onlycollege" control={<Radio color="default" />} label={`Only ${collegeName}`} />
               </RadioGroup>
             </Grid>
-            {eventMode === "offline" && <Grid item xs={12}>
+            {eventMode === "Offline" && <Grid item xs={12}>
               <FormLabel component="legend">Address</FormLabel>
               <RadioGroup aria-label="address" name="address" defaultValue="College/University" onChange={handleAddressTypeChange} style={{ display: "inline" }}>
                 <FormControlLabel value="College/University" control={<Radio color="default" />} label="College/University" />
                 <FormControlLabel value="Other" control={<Radio color="default" />} label="Others" />
               </RadioGroup>
             </Grid>}
-            {eventMode === "offline" &&
+            {eventMode === "Offline" &&
               <Grid item xs={12} lg={6}>
                 <TextField
                   autoComplete='off'
@@ -664,7 +664,7 @@ const EventEdit = (props) => {
                 />
               </Grid>
             }
-            {eventMode === "offline" && <Grid item xs={12} sm={6}>
+            {eventMode === "Offline" && <Grid item xs={12} sm={6}>
               <Autocomplete
                 fullWidth
                 id="combo-box-demo"
@@ -681,7 +681,7 @@ const EventEdit = (props) => {
                 variant='outlined'
                 placeholder="Enter everything about your event in detail"
                 autoComplete='off'
-                required
+                // required
                 value={about || ""}
                 id="about"
                 name="about"

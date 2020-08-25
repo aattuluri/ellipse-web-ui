@@ -103,15 +103,11 @@ function handleAddButton(){
             >
               <option aria-label="None" value="" />
               <option value="short_text">Short Text</option>
-              <option value="long_desc">Long Description</option>
+              <option value="paragraph">Long Description</option>
               <option value="dropdown">Drop Down</option>
               <option value="date">Date & Time</option>
-              
-              
-              {/* <option value="Number">Number</option> */}
-              {/* <option value="Bool">Bool</option> */}
-              <option value="radiobutton">Radio Button</option>
-              <option value="checkbox">Check Box</option>
+              <option value="radiobuttons">Radio Button</option>
+              <option value="checkboxes">Check Box</option>
               <option value="link">Link</option>
             </Select>
           </FormControl>

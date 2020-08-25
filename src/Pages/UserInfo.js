@@ -96,7 +96,7 @@ const UserInfo = ({ history }) => {
         setState({ ...state, open: false });
     };
     React.useEffect(()=>{
-        fetch('http://139.59.16.53:4000/colleges', {
+        fetch('http://139.59.16.53:4000/api/colleges', {
                     headers: {
                         'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json',

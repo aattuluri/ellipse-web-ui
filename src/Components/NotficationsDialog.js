@@ -20,17 +20,41 @@ const useStyles = makeStyles((theme) => ({
         minHeight: '90vh',
         maxHeight: '90vh',
     },
-    root3:{
+    root3: {
         backgroundColor: theme.palette.background.paper,
         padding: theme.spacing(2)
+    },
+    root5:{
+        display: "flex",
+            justifyContent: "flex-end",
+      },
+      secondaryTail: {
+        backgroundColor: theme.palette.secondary.main,
       },
 }));
 
 
 export default function FormDialog(props) {
     const classes = useStyles();
-
-
+    const token = localStorage.getItem('token');
+    const [notificationms,setNotifications] = React.useState([]);
+    React.useEffect(() => {
+        fetch('http://139.59.16.53:4000/api/get_notifications', {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            method: 'GET'
+        }).then(response => {
+            if (response.status === 200) {
+                response.json().then(value => {
+                    // console.log(value)
+                    setNotifications(value);
+                })
+            }
+        })
+    }, [token])
 
 
 
@@ -45,57 +69,27 @@ export default function FormDialog(props) {
                 <DialogTitle id="form-dialog-title">Notifications</DialogTitle>
                 <Divider></Divider>
                 <DialogContent>
-                    <Box m={1} p={1}  className={classes.root3}>
-
+                {
+                    notificationms.map((n,index)=>{
+                        const date = new Date(n.time)
+                       return <Box m={1} p={1} className={classes.root3}>
                         <Box className={classes.root2} whiteSpace="normal">
                             <Typography className={classes.title}>
-                                "Hello"
+                                {n.title}
                             </Typography>
                             <Typography className={classes.pos}>
-                                "HJokjnckjd"
+                                {n.description}
                             </Typography>
                         </Box>
                         <Box className={classes.root5}>
                             <Typography variant="body2" >
-                                {/* {date.toDateString()}{" " + date.toLocaleTimeString()} */}
-                                "lalith"
+                                {date.toDateString()}{" " + date.toLocaleTimeString()}
                             </Typography>
                         </Box>
                     </Box>
-                    <Box m={1} p={1}  className={classes.root3}>
-
-<Box className={classes.root2} whiteSpace="normal">
-    <Typography className={classes.title}>
-        "Hello"
-    </Typography>
-    <Typography className={classes.pos}>
-        "HJokjnckjd"
-    </Typography>
-</Box>
-<Box className={classes.root5}>
-    <Typography variant="body2" >
-        {/* {date.toDateString()}{" " + date.toLocaleTimeString()} */}
-        "lalith"
-    </Typography>
-</Box>
-</Box>
- <Box m={1} p={1}  className={classes.root3}>
-
-<Box className={classes.root2} whiteSpace="normal">
-    <Typography className={classes.title}>
-        "Hello"
-    </Typography>
-    <Typography className={classes.pos}>
-        "HJokjnckjd"
-    </Typography>
-</Box>
-<Box className={classes.root5}>
-    <Typography variant="body2" >
-        {/* {date.toDateString()}{" " + date.toLocaleTimeString()} */}
-        "lalith"
-    </Typography>
-</Box>
-</Box>
+                    })
+                }
+                    
                 </DialogContent>
             </Dialog>
         </div>
