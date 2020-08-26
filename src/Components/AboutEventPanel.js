@@ -119,7 +119,7 @@ function AboutEventPanel(props) {
                 <div className={classes.root}>
                     <Grid container component="main">
                         <Grid item xs={12} sm={12} md={4} lg={4} >
-                            <img style={{ maxWidth: '250px' }} alt="event poster" src={`http://139.59.16.53:4000/api/image?id=${event.poster_url}`}  ></img>
+                            <img style={{ maxWidth: '250px' }} alt="event poster" src={process.env.REACT_APP_API_URL+`/api/image?id=${event.poster_url}`}  ></img>
                         </Grid>
                         <Grid item xs={12} sm={12} md={8} lg={8}>
                             <Typography>{event.description} This impressive paella is a perfect party dish and a fun meal to cook together with your guests. Add 1 cup of frozen peas along with the mussels, if you like.</Typography>

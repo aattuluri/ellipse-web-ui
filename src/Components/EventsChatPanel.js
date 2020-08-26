@@ -101,7 +101,7 @@ export default function JustifyContent(props) {
     const [webSocket, setWebSocket] = React.useState(null);
 
     const webConnect = () => {
-        const ws = new WebSocket("ws://139.59.16.53:4000/");
+        const ws = new WebSocket(process.env.REACT_APP_WESOCKET_URL);
         ws.onopen = () => {
             console.log("connected")
             setWebSocket(ws);
@@ -124,7 +124,7 @@ export default function JustifyContent(props) {
         }
     }
     React.useEffect(() => {
-        fetch(`http://139.59.16.53:4000/api/chat/load_messages?id=${event._id}`, {
+        fetch(process.env.REACT_APP_API_URL+`/api/chat/load_messages?id=${event._id}`, {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',

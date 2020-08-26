@@ -57,7 +57,7 @@ export default function EventReportDialog(props) {
                 description: desc
             };
             data = JSON.stringify(payload);
-            fetch('http://139.59.16.53:4000/api/event/report', {
+            fetch(process.env.REACT_APP_API_URL+'/api/event/report', {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'

@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Login from './Pages/signin';
 import SignUp from './Pages/signup';
 import ForgotPassword from './Pages/ForgotPassword';
-import UserDetails from './Pages/UserDetails';
 import { AuthProvider } from "./Auth";
 import OTPVer from './Pages/otpverification';
 import UserInfo from './Pages/UserInfo';
@@ -34,7 +33,6 @@ function App() {
             <Route exact path="/signup" component={SignUp} />
             <Route exact path="/forgotpassword" component={ForgotPassword} />
             <Route exact path="/userinfo" component={UserInfo}></Route>
-            <Route exact path="/userdetails" component={UserDetails}></Route>
             <Route exact path="/otpverification" component={OTPVer}></Route>
             <Route exact path="/un/event/:eventId" component={UnregisteredPage}></Route>
             {/* <Route exact path="/resetforgotpassword" component ={ForgotPassword2}></Route> */}

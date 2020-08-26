@@ -95,7 +95,7 @@ function UpdatePasswordTabPanel(props) {
         };
         data = JSON.stringify(payload);
         console.log(data);
-        fetch('http://139.59.16.53:4000/api/users/updatepassword', {
+        fetch(process.env.REACT_APP_API_URL+'/api/users/updatepassword', {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',

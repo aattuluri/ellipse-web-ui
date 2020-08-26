@@ -193,7 +193,7 @@ const EventEdit = (props) => {
       };
       data = JSON.stringify(payload);
       console.log(data);
-      fetch('http://139.59.16.53:4000/api/updateevent', {
+      fetch(process.env.REACT_APP_API_URL+'/api/updateevent', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -209,7 +209,7 @@ const EventEdit = (props) => {
             if (imageUpdated) {
               var data2 = new FormData()
               data2.append("image", image);
-              fetch(`http://139.59.16.53:4000/api/event/uploadimage?id=${event._id}`, {
+              fetch(process.env.REACT_APP_API_URL+`/api/event/uploadimage?id=${event._id}`, {
                   headers: {
                       'Authorization': `Bearer ${token}`,
                   },
@@ -368,7 +368,7 @@ const EventEdit = (props) => {
                     <EditIcon></EditIcon>
                   </IconButton>
                 </label>}>
-                <img height="160" width="150" alt="poster" src={imageUpdated ? imageUrl : `http://139.59.16.53:4000/api/image?id=${event.poster_url}`} ></img>
+                <img height="160" width="150" alt="poster" src={imageUpdated ? imageUrl : process.env.REACT_APP_API_URL+`/api/image?id=${event.poster_url}`} ></img>
               </Badge>
             </Grid>
             <Grid item xs={12} lg={6}>

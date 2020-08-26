@@ -12,6 +12,7 @@ import NavigationBar from './NavigationBar';
 import EventsContext from '../EventsContext';
 import AuthContext from '../AuthContext';
 import ActiveEventsContext from '../ActiveEventsContext';
+// import dot from 'dote'
 
 
 
@@ -41,10 +42,11 @@ function Layout(props) {
     const [open, setOpen] = React.useState(true);
     const [authorized, setAuthorized] = React.useState(true);
     const [userDetailsDone, setUserDetailsDone] = React.useState(true);
+    
 
 
     React.useEffect(() => {
-        fetch('http://139.59.16.53:4000/api/users/me', {
+        fetch(process.env.REACT_APP_API_URL+'/api/users/me', {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
@@ -67,7 +69,7 @@ function Layout(props) {
                 setAuthorized(false);
             }
         })
-        fetch('http://139.59.16.53:4000/api/events', {
+        fetch(process.env.REACT_APP_API_URL+'/api/events', {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',

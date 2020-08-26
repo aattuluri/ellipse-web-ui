@@ -62,7 +62,7 @@ export default function AnnouncementForm(props) {
       const d = { event_id: props.id, title: title, description: desc, visible_all: visible_all }
       data = JSON.stringify(d);
       console.log(data);
-      fetch(`http://139.59.16.53:4000/api/event/add_announcement`, {
+      fetch(process.env.REACT_APP_API_URL+`/api/event/add_announcement`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',

@@ -56,7 +56,7 @@ const OTPver = ({ history }) => {
             // data.append(JSON.stringify(payload));
             data = JSON.stringify(payload);
             const token = localStorage.getItem("token");
-            fetch('http://139.59.16.53:4000/api/users/verifyotp', {
+            fetch(process.env.REACT_APP_API_URL+'/api/users/verifyotp', {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',

@@ -105,7 +105,7 @@ export default function StickyHeadTable(props) {
   };
 
   React.useEffect(() => {
-    fetch(`http://139.59.16.53:4000/api/event/registeredEvents?id=${event._id}`, {
+    fetch(process.env.REACT_APP_API_URL+`/api/event/registeredEvents?id=${event._id}`, {
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json',

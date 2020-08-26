@@ -39,7 +39,7 @@ export default function CustomizedTimeline(props) {
   const [announcements, setAnnouncements] = React.useState([]);
 
   React.useEffect(() => {
-    fetch(`http://139.59.16.53:4000/api/event/get_announcements?id=${event._id}`, {
+    fetch(process.env.REACT_APP_API_URL+`/api/event/get_announcements?id=${event._id}`, {
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json',

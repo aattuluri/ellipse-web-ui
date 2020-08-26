@@ -99,7 +99,7 @@ function UpdateInfoTabPanel(props) {
         setCollegeId(user.college_id);
         setBio(user.bio);
         setGender(user.gender);
-        fetch('http://139.59.16.53:4000/api/colleges', {
+        fetch(process.env.REACT_APP_API_URL+'/api/colleges', {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
@@ -192,7 +192,7 @@ function UpdateInfoTabPanel(props) {
             data = JSON.stringify(payload);
             console.log(data);
             // http://139.59.16.53:4000/api
-            fetch('http://139.59.16.53:4000/api/users/updateprofile', {
+            fetch(process.env.REACT_APP_API_URL+'/api/users/updateprofile', {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
@@ -207,7 +207,7 @@ function UpdateInfoTabPanel(props) {
                         if (imageUpdated) {
                             var data2 = new FormData()
                             data2.append("image", image);
-                            fetch('http://139.59.16.53:4000/api/users/uploadImage', {
+                            fetch(process.env.REACT_APP_API_URL+'/api/users/uploadImage', {
                                 headers: {
                                     'Authorization': `Bearer ${token}`,
                                 },
@@ -291,7 +291,7 @@ function UpdateInfoTabPanel(props) {
                                             <EditIcon></EditIcon>
                                         </IconButton>
                                     </label>}>
-                                    <Avatar className={classes.large} sizes="100" alt="" src={imageUpdated ? imageUrl : `http://139.59.16.53:4000/api/image?id=${user.profile_pic}`}></Avatar>
+                                    <Avatar className={classes.large} sizes="100" alt="" src={imageUpdated ? imageUrl : process.env.REACT_APP_API_URL+`/api/image?id=${user.profile_pic}`}></Avatar>
                                 </Badge>
                             </Grid>
                         </Grid>

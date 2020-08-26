@@ -126,7 +126,7 @@ function Eventcard(props) {
               onClick={handleImageClick}
               onLoad={() => setImageLoaded(true)}
               alt="Event Poster" height="160" width="150"
-              src={`http://139.59.16.53:4000/api/image?id=${event.poster_url}`}>
+              src={process.env.REACT_APP_API_URL+`/api/image?id=${event.poster_url}`}>
 
             </img>
             {!imageLoaded && <div

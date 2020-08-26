@@ -96,7 +96,7 @@ const UserInfo = ({ history }) => {
         setState({ ...state, open: false });
     };
     React.useEffect(()=>{
-        fetch('http://139.59.16.53:4000/api/colleges', {
+        fetch(process.env.REACT_APP_API_URL+'/api/colleges', {
                     headers: {
                         'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json',
@@ -139,7 +139,7 @@ const UserInfo = ({ history }) => {
             data = JSON.stringify(payload);
             // console.log(data);
             // http://139.59.16.53:4000/api
-            fetch('http://139.59.16.53:4000/api/users/userdetails', {
+            fetch(process.env.REACT_APP_API_URL+'/api/users/userdetails', {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
@@ -154,7 +154,7 @@ const UserInfo = ({ history }) => {
                         if (image != null) {
                             var data2 = new FormData()
                             data2.append("image", image);
-                            fetch('http://139.59.16.53:4000/api/users/uploadImage', {
+                            fetch(process.env.REACT_APP_API_URL+'/api/users/uploadImage', {
                                 headers: {
                                     'Authorization': `Bearer ${token}`,
                                 },

@@ -32,7 +32,7 @@ function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
+      <Link color="inherit" href="https://ellipseapp.com/">
         Your Website
       </Link>{' '}
       {new Date().getFullYear()}
@@ -250,7 +250,7 @@ export default function Checkout({ history }) {
         o_allowed: oAllowed
       };
       data = JSON.stringify(payload);
-      fetch('http://139.59.16.53:4000/api/events', {
+      fetch(process.env.REACT_APP_API_URL+'/api/events', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -263,7 +263,7 @@ export default function Checkout({ history }) {
           result.json().then(value => {
             var data2 = new FormData();
             data2.append("image", image);
-            fetch(`http://139.59.16.53:4000/api/event/uploadimage?id=${value.eventId}`, {
+            fetch(process.env.REACT_APP_API_URL+`/api/event/uploadimage?id=${value.eventId}`, {
               headers: {
                 'Authorization': `Bearer ${token}`,
               },

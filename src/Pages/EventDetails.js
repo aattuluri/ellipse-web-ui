@@ -140,7 +140,7 @@ export default function MiniDrawer(props) {
   const [event,setEvent] = React.useState({});
   const [adminAccess,setAdminAccess] = React.useState(false);
   React.useEffect(() => {
-    fetch(`http://139.59.16.53:4000/api/event?id=${id}`, {
+    fetch(process.env.REACT_APP_API_URL+`/api/event?id=${id}`, {
         headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',

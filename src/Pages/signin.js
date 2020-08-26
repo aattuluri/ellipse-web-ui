@@ -73,7 +73,7 @@ const Signin = ({ history }) => {
             email: email
           };
           data2 = JSON.stringify(payload2)
-          fetch('http://139.59.16.53:4000/api/users/sendverificationemail', {
+          fetch(process.env.REACT_APP_API_URL+'/api/users/sendverificationemail', {
             signal: abortController.signal,
             headers: {
               'Authorization': `Bearer ${token}`,
@@ -129,7 +129,7 @@ const Signin = ({ history }) => {
       };
       data = JSON.stringify(payload);
       // console.log(data);
-      fetch('http://139.59.16.53:4000/api/users/login', {
+      fetch(process.env.REACT_APP_API_URL+'/api/users/login', {
         signal: abortController.signal,
         headers: {
           'Content-Type': 'application/json',
