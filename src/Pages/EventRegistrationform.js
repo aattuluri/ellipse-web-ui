@@ -72,7 +72,7 @@ const Signup = (props) => {
   const [checkedValues, setCheckedValues] = React.useState([]);
   const colleges = ["VIT University,Vellore", "GITAM University", "SRM University"];
   React.useEffect(() => {
-    fetch(`http://139.59.16.53:4000/api/event?id=${id}`, {
+    fetch(process.env.REACT_APP_API_URL+`/api/event?id=${id}`, {
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json',
@@ -107,9 +107,9 @@ const Signup = (props) => {
           })
           // const filteredFields = allFields.filter(f => f.field !== "checkbox")
           setNormalFields(allFields.filter(f => f.field === "short_text"));
-          setLongDescFields(allFields.filter((f) => f.field === "long_desc"));
-          setCheckBoxFields(allFields.filter((f) => f.field === "checkbox"));
-          setRadioFields(allFields.filter(f => f.field === "radiobutton"));
+          setLongDescFields(allFields.filter((f) => f.field === "paragraph"));
+          setCheckBoxFields(allFields.filter((f) => f.field === "checkboxes"));
+          setRadioFields(allFields.filter(f => f.field === "radiobuttons"));
           setDateFields(allFields.filter((f) => f.field === "date"));
           // setLongDescFields(allFields.filter((f) => f.field === "long_desc"));
           setDropDownFields(allFields.filter(f => f.field === "dropdown"));
@@ -188,7 +188,7 @@ const Signup = (props) => {
       var data = new FormData();
       const d = { data: formValues }
       data = JSON.stringify(d);
-      fetch(`http://139.59.16.53:4000/api/event/register?id=${id}`, {
+      fetch(process.env.REACT_APP_API_URL+`/api/event/register?id=${id}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',

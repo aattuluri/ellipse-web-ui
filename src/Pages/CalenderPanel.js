@@ -180,7 +180,7 @@ function CalenderPanel({history}) {
                                             <ListItemAvatar>
                                                 <Avatar  variant="square"
                                                     alt={event.name}
-                                                    src={`http:///139.59.16.53:4000/api/image?id=${event.poster_url}`}
+                                                    src={process.env.REACT_APP_API_URL+`/api/image?id=${event.poster_url}`}
                                                 />
                                             </ListItemAvatar>
                                             <ListItemText  primary={event.name} />

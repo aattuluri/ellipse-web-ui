@@ -106,7 +106,7 @@ const NavigationBar = function ({ history }) {
 
   function handleSignout(event) {
 
-    fetch('http://139.59.16.53:4000/api/users/logout', {
+    fetch(process.env.REACT_APP_API_URL+'/api/users/logout', {
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'

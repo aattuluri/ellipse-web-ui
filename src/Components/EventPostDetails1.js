@@ -1,10 +1,11 @@
 import React from 'react';
+
+
+//MaterialUI imports
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { makeStyles } from '@material-ui/core/styles';
-
-//MaterialUI imports
 import Button from '@material-ui/core/Button';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -53,19 +54,9 @@ const useStyles = makeStyles((theme) => ({
 export default function AddressForm(props) {
 
   const classes = useStyles();
-
-  // const [startDate, setStartDate] = React.useState(null);
-  // const [endDate, setendDate] = React.useState(null);
-  // const [regEndDate, setRegEndDate] = React.useState(null);
-  // const [eventType, setEventType] = React.useState(null);
-
   const eventTypes = ["Hackathon", "Coding Contest", "Webinar"];
- 
-
-
 
   function handleEventNameChange(event) {
-    // console.log(event.target.value);
     props.setName(event.target.value)
   }
 
@@ -74,15 +65,12 @@ export default function AddressForm(props) {
   }
 
   const handleStartDateChange = (date) => {
-    // setStartDate(date);
     props.setStartDate(date);
   };
   const handleendDateChange = (date) => {
-    // setendDate(date);
     props.setEndDate(date);
   };
   const handleRegEndDateChange = (date) => {
-    // setRegEndDate(date)
     props.setRegEndDate(date);
   };
 
@@ -90,29 +78,27 @@ export default function AddressForm(props) {
     props.setEventMode(event.target.value);
   }
   function handleeventTypsChange(event, value) {
-    // setEventType(value);
     props.setEventType(value);
   }
-  
 
-  function handleNext(event){
+
+  function handleNext(event) {
     event.preventDefault();
     props.handleNext();
   }
-  function handleFeeTypeChange(event,value){
+  function handleFeeTypeChange(event, value) {
     props.setFeeType(value)
   }
-  // const steps = props.steps;
-  function handleRegistrationModeChange(event){
-    if(event.target.value === "form"){
-      props.setSteps((steps) => [...steps,"Registration Form"])
+  function handleRegistrationModeChange(event) {
+    if (event.target.value === "form") {
+      props.setSteps((steps) => [...steps, "Registration Form"])
     }
-    else if(event.target.value === "link"){
+    else if (event.target.value === "link") {
       props.setSteps(['About', 'More Details']);
     }
     props.setRegistrationMode(event.target.value);
   }
-  
+
 
   return (
     <form className={classes.form} onSubmit={handleNext}>
@@ -155,7 +141,7 @@ export default function AddressForm(props) {
               name="startDate"
               value={props.startDate}
               onChange={handleStartDateChange}
-              
+
             />
           </MuiPickersUtilsProvider>
 
@@ -226,7 +212,7 @@ export default function AddressForm(props) {
           />
         </Grid>
 
-        
+
         <Grid item xs={12}>
           <FormControl fullWidth required>
             <InputLabel htmlFor="outlined-age-native-simple">Registration</InputLabel>
@@ -248,14 +234,14 @@ export default function AddressForm(props) {
           </FormControl>
         </Grid>
         <Grid item xs={12}>
-              <FormLabel component="legend">Entry Fee</FormLabel>
-              <RadioGroup aria-label="address" name="address" defaultValue="Free" onChange={handleFeeTypeChange} style={{ display: "inline" }}>
-                <FormControlLabel value="Free" control={<Radio color="default" />} label="Free" />
-                <FormControlLabel value="Paid" control={<Radio color="default" />} label="Paid" />
-              </RadioGroup>
+          <FormLabel component="legend">Entry Fee</FormLabel>
+          <RadioGroup aria-label="address" name="address" defaultValue="Free" onChange={handleFeeTypeChange} style={{ display: "inline" }}>
+            <FormControlLabel value="Free" control={<Radio color="default" />} label="Free" />
+            <FormControlLabel value="Paid" control={<Radio color="default" />} label="Paid" />
+          </RadioGroup>
         </Grid>
       </Grid>
-      
+
       <div className={classes.buttons}>
         <Button
           type="submit"

@@ -1,15 +1,20 @@
 import React from 'react';
-import NavigationBar from './NavigationBar';
+import { Redirect } from 'react-router';
+
+//Material Imports
+import Backdrop from '@material-ui/core/Backdrop';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+
+//Components impoprts
+import NavigationBar from './NavigationBar';
 import EventsContext from '../EventsContext';
 import AuthContext from '../AuthContext';
 import ActiveEventsContext from '../ActiveEventsContext';
-import Backdrop from '@material-ui/core/Backdrop';
-import CircularProgress from '@material-ui/core/CircularProgress';
-// import RegEventsContext from '../RegEventsContext';
-import { Redirect } from 'react-router';
-// import Button from '@material-ui/core/Button';
+// import dot from 'dote'
+
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -31,19 +36,17 @@ function Layout(props) {
 
     const token = localStorage.getItem('token');
     const classes = useStyles();
-
-
     const [allEvents, setAllEvents] = React.useState([]);
-    const [activeEvents,setActiveEvents] = React.useState(null);
+    const [activeEvents,setActiveEvents] = React.useState([]);
     const [currentUser, setCurrentUser] = React.useState(null);
     const [open, setOpen] = React.useState(true);
     const [authorized, setAuthorized] = React.useState(true);
     const [userDetailsDone, setUserDetailsDone] = React.useState(true);
-    // const [registeredEvents, setRegisteredEvents] = React.useState([]);
+    
 
 
     React.useEffect(() => {
-        fetch('http://139.59.16.53:4000/api/users/me', {
+        fetch(process.env.REACT_APP_API_URL+'/api/users/me', {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
@@ -66,7 +69,7 @@ function Layout(props) {
                 setAuthorized(false);
             }
         })
-        fetch('http://139.59.16.53:4000/api/events', {
+        fetch(process.env.REACT_APP_API_URL+'/api/events', {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
@@ -76,7 +79,6 @@ function Layout(props) {
         }).then(response => {
             if (response.status === 200) {
                 response.json().then(value => {
-                    // console.log(value);
                     value.sort((a, b) => {
                         return new Date(a.start_time) - new Date(b.start_time);
                     })
@@ -110,9 +112,8 @@ function Layout(props) {
         <AuthContext.Provider value={currentUser}>
             <EventsContext.Provider value={allEvents}>
             <ActiveEventsContext.Provider value={activeEvents}>
-                {/* <RegEventsContext.Provider value={registeredEvents}> */}
                 {
-                    currentUser != null && allEvents != null && activeEvents != null && <div>
+                    currentUser != null  && <div>
                         <Paper className={classes.root}>
                             <NavigationBar></NavigationBar>
                         </Paper>
@@ -127,7 +128,6 @@ function Layout(props) {
                     </Backdrop>
 
                 }
-                {/* </RegEventsContext.Provider> */}
                 </ActiveEventsContext.Provider>
             </EventsContext.Provider>
         </AuthContext.Provider>

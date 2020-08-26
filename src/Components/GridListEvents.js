@@ -77,7 +77,7 @@ export default function GridListEvents(props) {
         {collegeEvents.map((event) => (
           
           <GridListTile key={event._id} rows={1}>
-            <img src={`http://139.59.16.53:4000/api/image?id=${event.poster_url}`} alt={event.name} className={classes.img} />
+            <img src={process.env.REACT_APP_API_URL+`/api/image?id=${event.poster_url}`} alt={event.name} className={classes.img} />
             <GridListTileBar
               title={event.name}
               classes={{

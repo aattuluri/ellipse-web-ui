@@ -39,7 +39,7 @@ export default function ImgMediaCard(props) {
         <CardMedia
           component="img"
           height="180"
-          image={`http://139.59.16.53:4000/api/image?id=${event.poster_url}`}
+          image={process.env.REACT_APP_API_URL+`/api/image?id=${event.poster_url}`}
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="h2">

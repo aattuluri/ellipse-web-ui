@@ -1,8 +1,5 @@
 import React from 'react';
-import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import { makeStyles } from '@material-ui/core/styles';
+
 
 //MaterialUI imports
 import Button from '@material-ui/core/Button';
@@ -15,6 +12,10 @@ import CameraAltIcon from '@material-ui/icons/CameraAlt';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormLabel from '@material-ui/core/FormLabel';
+import Grid from '@material-ui/core/Grid';
+import TextField from '@material-ui/core/TextField';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import { makeStyles } from '@material-ui/core/styles';
 
 
 
@@ -24,7 +25,6 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    // backgroundColor: theme.palette.secondary.main,
     padding: theme.spacing(3),
     borderRadius: 30,
 
@@ -53,71 +53,49 @@ const useStyles = makeStyles((theme) => ({
 export default function AddressForm(props) {
 
   const token = localStorage.getItem('token');
-
   const classes = useStyles();
-  // const [loading, setLoading] = React.useState(false);
-  // const [state, setState] = React.useState({
-  //   open: false,
-  //   vertical: 'top',
-  //   horizontal: 'center',
-  //   message: 'success',
-  //   type: 'error'
-  // });
-
-  // const [eventThemes, setEventThemes] = React.useState(null);
-  // const [selectedrequirements, setSelectedRequirements] = React.useState(null);
-  // const [image, setImage] = React.useState(null);
   const [imageName, setImageName] = React.useState("");
-  // const [addressType, setAddressType] = React.useState("");
-  // const { vertical, horizontal, open, message, type } = state;
   const eventThemes = ["Hackathon", "Coding Contest", "Webinar"];
   const requirements = ["Laptop", "Basic HTML", "C++", "Machine Learning"];
-  const [colleges,setColleges] = React.useState([]);
-  const [collegesNames,setCollegesName] = React.useState([]);
+  const [colleges, setColleges] = React.useState([]);
+  const [collegesNames, setCollegesName] = React.useState([]);
   // const colleges = ["VIT University,Vellore", "GITAM University", "SRM University"];
 
 
-  React.useEffect(()=>{
-    fetch('http://139.59.16.53:4000/api/colleges', {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                method: 'GET',
-            }).then(response =>{
-              response.json().then(value =>{
-                setColleges(value);
-                value.forEach((v)=>{
-                  setCollegesName((collegesNames)=>[...collegesNames,v.name])
-                })
-              })
-            })
-  },[token])
+  React.useEffect(() => {
+    fetch(process.env.REACT_APP_API_URL+'/api/colleges', {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      method: 'GET',
+    }).then(response => {
+      response.json().then(value => {
+        setColleges(value);
+        value.forEach((v) => {
+          setCollegesName((collegesNames) => [...collegesNames, v.name])
+        })
+      })
+    })
+  }, [token])
 
 
   function handleeventTagsChange(event, values) {
-    // setEventThemes(values);
     props.setThemes(values);
   }
   function handleRequirementsChange(event, values) {
-    // setSelectedRequirements(values);
     props.setRequirements(values);
   }
 
   function handleChange(event) {
     if (event.target.files[0]) {
-      // setImage(event.target.files[0]);
       props.setPoster(event.target.files[0]);
-      // const filePath = event.target.files[0].type;
-      // props.setPosterType(event.target.files[0].type);
-      // console.log(event.target.files[0].name);
       const fileName = event.target.files[0].name;
       setImageName(fileName);
     }
   }
   function handleAddressTypeChange(evemt, value) {
-    // setAddressType(value);
     props.setAddressType(value);
   }
 
@@ -132,12 +110,11 @@ export default function AddressForm(props) {
   function handleCollegeChange(event, value) {
     console.log(value);
     props.setCollegeName(value);
-    colleges.forEach(c=>{
-      if(c.name === value){
+    colleges.forEach(c => {
+      if (c.name === value) {
         props.collegeId(c._id)
       }
     })
-    // props.setCollegeId()
   }
   function handleVenueCollegeChange(event, value) {
     props.setVenueCollege(value);
@@ -146,32 +123,39 @@ export default function AddressForm(props) {
   function handleAboutChange(event) {
     props.setAbout(event.target.value);
   }
-  function handleParticipantsTypeChange(event,value){
+  function handleParticipantsTypeChange(event, value) {
     props.setParticipantsType(value)
+  }
+  function handleBuildingChange(event) {
+    props.setBuilding(event.target.value);
+  }
+  function handleNext(event) {
+    event.preventDefault();
+    props.handleNext();
   }
 
 
 
   return (
     <React.Fragment>
-      <form className={classes.form} onSubmit={props.handleNext} encType="multipart/form-data">
+      <form className={classes.form} onSubmit={handleNext}>
         <Grid container spacing={3}>
-        <Grid item xs={12}>
-          <TextField
-            multiline={true}
-            rows="5"
-            variant='outlined'
-            placeholder="Enter everything about your event in detail"
-            autoComplete='off'
-            required
-            id="about"
-            name="about"
-            label="About"
-            fullWidth
-            onChange={handleAboutChange}
-            value={props.about || ""}
-          />
-        </Grid>
+          <Grid item xs={12}>
+            <TextField
+              multiline={true}
+              rows="5"
+              variant='outlined'
+              placeholder="Enter everything about your event in detail"
+              autoComplete='off'
+              required
+              id="about"
+              name="about"
+              label="About"
+              fullWidth
+              onChange={handleAboutChange}
+              value={props.about || ""}
+            />
+          </Grid>
           <Grid item xs={12} lg={6}>
             <Autocomplete
               multiple
@@ -236,8 +220,8 @@ export default function AddressForm(props) {
               value={props.regLink || ""}
               onChange={handleRegLinkChange}
             />
-          </Grid> }
-          
+          </Grid>}
+
           {props.feeType === "Paid" && <Grid item xs={12} lg={6}>
             <TextField
               autoComplete='off'
@@ -250,17 +234,6 @@ export default function AddressForm(props) {
               onChange={handleRegFees}
             />
           </Grid>}
-          {/* <Grid item xs={12} lg={6}>
-            <TextField
-              autoComplete='off'
-              required
-              id="organizer"
-              name="organizer"
-              label="Organizer"
-              value={props.organizer}
-              fullWidth
-            />
-          </Grid> */}
           <Grid item xs={12}>
             <Autocomplete
               multiple
@@ -280,35 +253,35 @@ export default function AddressForm(props) {
             />
           </Grid>
           <Grid item xs={12}>
-              <Autocomplete
-                fullWidth
-                id="combo-box-demo"
-                options={collegesNames}
-                value={props.college || []}
-                getOptionLabel={(option) => option}
-                onChange={handleCollegeChange}
-                renderInput={(params) => <TextField fullWidth required {...params} label="College" />}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <FormLabel component="legend">Participation</FormLabel>
-              <RadioGroup aria-label="address" name="address" defaultValue="open" onChange={handleParticipantsTypeChange} style={{ display: "inline" }}>
-                <FormControlLabel value="open" control={<Radio color="default" />} label="Open for all" />
-                <FormControlLabel value="onlycollege" control={<Radio color="default" />} label={`Only ${props.college}`} />
-              </RadioGroup>
-        </Grid>
+            <Autocomplete
+              fullWidth
+              id="combo-box-demo"
+              options={collegesNames}
+              value={props.college || []}
+              getOptionLabel={(option) => option}
+              onChange={handleCollegeChange}
+              renderInput={(params) => <TextField fullWidth required {...params} label="College" />}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <FormLabel component="legend">Participation</FormLabel>
+            <RadioGroup aria-label="address" name="address" defaultValue="open" onChange={handleParticipantsTypeChange} style={{ display: "inline" }}>
+              <FormControlLabel value="open" control={<Radio color="default" />} label="Open for all" />
+              <FormControlLabel value="onlycollege" control={<Radio color="default" />} label={`Only ${props.college}`} />
+            </RadioGroup>
+          </Grid>
           {props.eventMode === "Offline" && <React.Fragment>
             <Grid item xs={12}>
               <FormLabel component="legend">Address</FormLabel>
               <RadioGroup aria-label="address" aria-disabled name="address" defaultValue="college" onChange={handleAddressTypeChange} style={{ display: "inline" }}>
-                <FormControlLabel  value="college" control={<Radio color="default" />} label="College/University" />
+                <FormControlLabel value="college" control={<Radio color="default" />} label="College/University" />
                 <FormControlLabel disabled value="other" control={<Radio color="default" />} label="Others" />
               </RadioGroup>
             </Grid>
             <Grid item xs={12} lg={6}>
               <TextField
                 autoComplete='off'
-                onChange={props.setBuilding}
+                onChange={handleBuildingChange}
                 value={props.building}
                 id="building"
                 name="building"
@@ -336,7 +309,7 @@ export default function AddressForm(props) {
             />
           </Grid>
           }
-          
+
         </Grid>
         <div className={classes.buttons}>
           <Button onClick={props.handleBack} className={classes.button}>
@@ -348,7 +321,7 @@ export default function AddressForm(props) {
             color="primary"
             className={classes.button}
           >{props.registrationMode !== "form" ? "POST" : "NEXT"}
-        </Button>
+          </Button>
         </div>
       </form>
     </React.Fragment>

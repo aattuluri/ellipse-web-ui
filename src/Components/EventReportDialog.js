@@ -1,4 +1,6 @@
 import React from 'react';
+
+
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -55,7 +57,7 @@ export default function EventReportDialog(props) {
                 description: desc
             };
             data = JSON.stringify(payload);
-            fetch('http://139.59.16.53:4000/api/event/report', {
+            fetch(process.env.REACT_APP_API_URL+'/api/event/report', {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
@@ -63,7 +65,6 @@ export default function EventReportDialog(props) {
                 method: 'POST',
                 body: data
             }).then(result => {
-                // console.log(result);
                 result.json().then((res) => {
                     if (res.message === "success") {
                         setLoading(false)

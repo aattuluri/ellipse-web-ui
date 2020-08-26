@@ -65,7 +65,7 @@ const Signup = ({ history }) => {
         };
         data = JSON.stringify(payload);
         console.log(data);
-        fetch('http://139.59.16.53:4000/api/users/signup', {
+        fetch(process.env.REACT_APP_API_URL+'/api/users/signup', {
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
@@ -83,7 +83,7 @@ const Signup = ({ history }) => {
               data2 = JSON.stringify(payload2)
               console.log(token);
               const tok = val.token;
-              fetch('http://139.59.16.53:4000/api/users/sendverificationemail', {
+              fetch(process.env.REACT_APP_API_URL+'/api/users/sendverificationemail', {
                 headers: {
                   'Authorization': `Bearer ${tok}`,
                   'Content-Type': 'application/json'

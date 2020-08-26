@@ -1,21 +1,20 @@
 import React from 'react';
-import Box from '@material-ui/core/Box';
 import ChatMessage from '../Components/ChatMessage';
-import { makeStyles } from '@material-ui/core/styles';
-import Avatar from '@material-ui/core/Avatar';
-
 import AuthContext from '../AuthContext';
 import ChatTextField from './ChatTextField';
-import { Typography, List} from '@material-ui/core';
+import { cleanup } from '@testing-library/react';
 
+import Box from '@material-ui/core/Box';
+import { makeStyles } from '@material-ui/core/styles';
+import Avatar from '@material-ui/core/Avatar';
+import { Typography, List} from '@material-ui/core';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemText from '@material-ui/core/ListItemText';
 import Dialog from '@material-ui/core/Dialog';
 import DeleteIcon from '@material-ui/icons/Delete';
 import ReplyIcon from '@material-ui/icons/Reply';
-import { cleanup } from '@testing-library/react';
-// import InfoIcon from '@material-ui/icons/Info';
+
 
 
 
@@ -23,10 +22,6 @@ const useStyles = makeStyles((theme) => ({
     root: {
         display: "flex",
         justifyContent: "flex-start",
-        // minWidth: "200px"
-        // bgcolor:"background.paper"
-        // backgroundColor: theme.palette.primary.dark,
-
     },
     root2: {
         backgroundColor: theme.palette.background.paper,
@@ -106,7 +101,7 @@ export default function JustifyContent(props) {
     const [webSocket, setWebSocket] = React.useState(null);
 
     const webConnect = () => {
-        const ws = new WebSocket("ws://139.59.16.53:4000/");
+        const ws = new WebSocket(process.env.REACT_APP_WESOCKET_URL);
         ws.onopen = () => {
             console.log("connected")
             setWebSocket(ws);
@@ -129,7 +124,7 @@ export default function JustifyContent(props) {
         }
     }
     React.useEffect(() => {
-        fetch(`http://139.59.16.53:4000/api/chat/load_messages?id=${event._id}`, {
+        fetch(process.env.REACT_APP_API_URL+`/api/chat/load_messages?id=${event._id}`, {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',

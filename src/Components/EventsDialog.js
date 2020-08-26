@@ -1,31 +1,27 @@
 import React from 'react';
+
+
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-// import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
-// import FavoriteIcon from '@material-ui/icons/Favorite';
 import IconButton from '@material-ui/core/IconButton';
-// import MailIcon from '@material-ui/icons/Mail';
 import ShareIcon from '@material-ui/icons/Share';
-// import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
-// import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
+import Box from '@material-ui/core/Box';
+import CloseIcon from '@material-ui/icons/Close';
+
+
+import EventShareDialog from './EventShareDialog';
 import AboutEventPanel from '../Components/AboutEventPanel';
 import EventsTimeLinePanel from '../Components/EventTimeLinePanel';
 import EvenstAnnouncementsPanel from '../Components/EventsAnnouncementsPanel';
 import ChatPanel from '../Components/EventsChatPanel';
-import Paper from '@material-ui/core/Paper';
-// import { TextField } from '@material-ui/core';
-// import SendIcon from '@material-ui/icons/Send';
-import Box from '@material-ui/core/Box';
-import CloseIcon from '@material-ui/icons/Close';
-import EventShareDialog from './EventShareDialog';
-// import AuthContext from '../AuthContext';
-// import { connect } from 'socket.io-client';
+
 
 
 function a11yProps(index) {
@@ -36,10 +32,7 @@ function a11yProps(index) {
 }
 
 const useStyles = makeStyles((theme) => ({
-    // backdrop: {
-    //     zIndex: theme.zIndex.drawer + 1,
-    //     color: '#fff',
-    // },
+
     icons: {
         position: 'absolute',
         right: theme.spacing(1),
@@ -48,9 +41,7 @@ const useStyles = makeStyles((theme) => ({
 
     },
     root: {
-        // flexGrow: 1,
-        // width: '100%',
-        // backgroundColor: theme.palette.background.paper,
+
     },
     bottomTags: {
         position: 'absolute',
@@ -94,7 +85,7 @@ function EventsDialog(props) {
     // const user = React.useContext(AuthContext);
     const classes = useStyles();
     // const token = localStorage.getItem('token');
-    const [shareDialogOpen,setShareDialogOpen] = React.useState(false);
+    const [shareDialogOpen, setShareDialogOpen] = React.useState(false);
 
 
 
@@ -112,13 +103,13 @@ function EventsDialog(props) {
 
     }
 
-    function handleShareClick(){
+    function handleShareClick() {
         setShareDialogOpen(true);
-      }
+    }
 
-      function handleShareClose(){
+    function handleShareClose() {
         setShareDialogOpen(false);
-      }
+    }
 
     return (
         <Dialog
@@ -173,10 +164,10 @@ function EventsDialog(props) {
                 </div>
             </DialogTitle>
             <DialogContent dividers={true} >
-            <EventShareDialog
-      event = {event} 
-      open={shareDialogOpen} 
-      handleClose={handleShareClose}></EventShareDialog>
+                <EventShareDialog
+                    event={event}
+                    open={shareDialogOpen}
+                    handleClose={handleShareClose}></EventShareDialog>
                 <AboutEventPanel
                     value={value}
                     index={0}

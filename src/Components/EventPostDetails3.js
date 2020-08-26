@@ -1,23 +1,18 @@
 import React from 'react';
-import Grid from '@material-ui/core/Grid';
 
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import { makeStyles } from '@material-ui/core/styles';
 
 //MaterialUI imports
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
-
 import Chip from '@material-ui/core/Chip';
-
 import FormLabel from '@material-ui/core/FormLabel';
-
 import FormControl from '@material-ui/core/FormControl';
 import FormGroup from '@material-ui/core/FormGroup';
 import AddFieldDialog from '../Components/AddFieldDialog';
-// import { keys } from '@material-ui/core/styles/createBreakpoints';
-
 import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import { makeStyles } from '@material-ui/core/styles';
 
 
 
@@ -99,17 +94,13 @@ export default function AddressForm(props) {
 
     }
     const [selectedFields, setSelectedFields] = React.useState([]);
-
-    // console.log(fields.name);
     const [state, setState] = React.useState({
         name: false,
         email: false,
         college: false,
     });
     const handleChange = (event) => {
-        // setSelectedFields(selectedFields=>[...selectedFields,event.target.name])
         setState({ ...state, [event.target.name]: event.target.checked });
-        // console.log(event.target.name);
         const sName = event.target.name;
         if (event.target.checked) {
             setSelectedFields(selectedFields => [...selectedFields, fields[sName]]);
@@ -134,16 +125,14 @@ export default function AddressForm(props) {
 
     async function handlePostButton(e) {
         e.preventDefault();
-        // console.log(selectedFields);
         await props.setFields(selectedFields);
         props.handlePost(selectedFields);
-        // console.log(selectedFields);
     }
 
     return (
         <React.Fragment>
 
-            <form className={classes.form} onSubmit={handlePostButton} encType="multipart/form-data">
+            <form className={classes.form} onSubmit={handlePostButton}>
                 <Grid container spacing={3}>
                     <AddFieldDialog
                         open={open}

@@ -1,32 +1,15 @@
 import React from 'react';
-// import Box from '@material-ui/core/Box';
+
 import Typography from '@material-ui/core/Typography';
-// import clsx from 'clsx';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
-// import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
-// import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
-// import { red } from '@material-ui/core/colors';
-// import FavoriteIcon from '@material-ui/icons/Favorite';
-// import ShareIcon from '@material-ui/icons/Share';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { makeStyles } from '@material-ui/core/styles';
-// import PlayCircleFilledWhiteIcon from '@material-ui/icons/PlayCircleFilledWhite';
 import Button from '@material-ui/core/Button';
-// import MailIcon from '@material-ui/icons/Mail';
-// import Timeline from '@material-ui/lab/Timeline';
-// import TimelineItem from '@material-ui/lab/TimelineItem';
-// import TimelineSeparator from '@material-ui/lab/TimelineSeparator';
-// import TimelineConnector from '@material-ui/lab/TimelineConnector';
-// import TimelineContent from '@material-ui/lab/TimelineContent';
-// import TimelineDot from '@material-ui/lab/TimelineDot';
 import Chip from '@material-ui/core/Chip';
-// import PublicIcon from '@material-ui/icons/Public';
-// import TimelineOppositeContent from '@material-ui/lab/TimelineOppositeContent';
-// import { Link } from 'react-router-dom';
 import CameraAltOutlinedIcon from '@material-ui/icons/CameraAltOutlined';
 import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
@@ -34,9 +17,11 @@ import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@material-ui/core/MenuList';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Grow from '@material-ui/core/Grow';
-// import RegEventsContext from '../RegEventsContext';
+
+
+
 import EventReportDialog from './EventReportDialog';
-import EventShareDialog from  './EventShareDialog';
+import EventShareDialog from './EventShareDialog';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -74,20 +59,13 @@ function Eventcard(props) {
   const startDate = new Date(event.start_time);
   const endDate = new Date(event.finish_time);
   const regEndDate = new Date(event.registration_end_time);
-  // const [image, setImage] = React.useState(null);
-  
-  // console.log(typeof (props.startTime));
-  // const token = localStorage.getItem('token');
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef(null);
   const [imageLoaded, setImageLoaded] = React.useState(false);
-  // const regEvents = React.useContext(RegEventsContext);
-  // const [regName, setRegName] = React.useState("Register")
-  // const [disableRegButton, setDisableRegButton] = React.useState(false);
-  const [reportDialogOpen,setReportDialogOpen] = React.useState(false);
-  const [shareDialogOpen,setShareDialogOpen] = React.useState(false);
+  const [reportDialogOpen, setReportDialogOpen] = React.useState(false);
+  const [shareDialogOpen, setShareDialogOpen] = React.useState(false);
 
- 
+
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -108,7 +86,6 @@ function Eventcard(props) {
     }
   }
 
-  // return focus to the button when we transitioned from !open -> open
   const prevOpen = React.useRef(open);
   React.useEffect(() => {
     if (prevOpen.current === true && open === false) {
@@ -117,27 +94,24 @@ function Eventcard(props) {
     prevOpen.current = open;
   }, [open]);
   function handleImageClick() {
-    console.log("hello")
-    // props.imageDialog(image);
   }
   function handleRegClick() {
     props.handleReg(props.eventId);
 
   }
   function handleMoreButtonClick() {
-    // console.log("button clicked");
     props.click(props.eventId);
   }
-  function handleReportClick(){
+  function handleReportClick() {
     setReportDialogOpen(true);
   }
-  function handleReportClose(){
+  function handleReportClose() {
     setReportDialogOpen(false);
   }
-  function handleShareClose(){
+  function handleShareClose() {
     setShareDialogOpen(false);
   }
-  function handleShareClick(){
+  function handleShareClick() {
     setShareDialogOpen(true);
   }
 
@@ -152,7 +126,7 @@ function Eventcard(props) {
               onClick={handleImageClick}
               onLoad={() => setImageLoaded(true)}
               alt="Event Poster" height="160" width="150"
-              src={`http://139.59.16.53:4000/api/image?id=${event.poster_url}`}>
+              src={process.env.REACT_APP_API_URL+`/api/image?id=${event.poster_url}`}>
 
             </img>
             {!imageLoaded && <div
@@ -206,16 +180,16 @@ function Eventcard(props) {
         }
       />
       <CardContent>
-      <EventReportDialog 
-      event = {event} 
-      open={reportDialogOpen} 
-      handleClose={handleReportClose}>
+        <EventReportDialog
+          event={event}
+          open={reportDialogOpen}
+          handleClose={handleReportClose}>
 
-      </EventReportDialog>
-      <EventShareDialog
-      event = {event} 
-      open={shareDialogOpen} 
-      handleClose={handleShareClose}></EventShareDialog>
+        </EventReportDialog>
+        <EventShareDialog
+          event={event}
+          open={shareDialogOpen}
+          handleClose={handleShareClose}></EventShareDialog>
         {/* <Typography variant="body2" color="textPrimary" component="p">
           Details
         </Typography> */}
@@ -290,7 +264,7 @@ function Eventcard(props) {
             event.reg_mode === "form" ? <Button disabled={event.registered ? true : false} size="small" color="primary" variant="contained" className={classes.button} onClick={handleRegClick}>
               {event.registered ? "Registered" : "Register"}
             </Button> : <Button disabled={event.registered ? true : false} size="small" color="primary" variant="contained" className={classes.button}>
-                <a href={event.reg_link} style={{textDecoration:'none',color:'#000000'}} target="blank">Register</a>
+                <a href={event.reg_link} style={{ textDecoration: 'none', color: '#000000' }} target="blank">Register</a>
               </Button>
           }
 

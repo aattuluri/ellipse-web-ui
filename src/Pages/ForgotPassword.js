@@ -53,7 +53,7 @@ const ForgotPassword = ({ history }) => {
         email: email
       };
       data2 = JSON.stringify(payload2)
-      fetch('http://139.59.16.53:4000/api/users/sendverificationemail', {
+      fetch(process.env.REACT_APP_API_URL+'/api/users/sendverificationemail', {
         headers: {
           // 'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -105,7 +105,7 @@ const ForgotPassword = ({ history }) => {
         nPassword: password
       };
       data2 = JSON.stringify(payload2)
-      fetch('http://139.59.16.53:4000/api/users/forgotpassword', {
+      fetch(process.env.REACT_APP_API_URL+'/api/users/forgotpassword', {
         headers: {
           // 'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
