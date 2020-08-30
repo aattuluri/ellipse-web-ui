@@ -11,6 +11,7 @@ import { Grid } from '@material-ui/core';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { useTheme } from '@material-ui/core/styles';
 
 //function for alert
 function Alert(props) {
@@ -20,6 +21,7 @@ function Alert(props) {
 
 export default function EventReportDialog(props) {
     // const classes = useStyles();
+    const theme = useTheme();
     const token = localStorage.getItem('token');
     const [state, setState] = React.useState({
         open: false,
@@ -107,7 +109,7 @@ export default function EventReportDialog(props) {
             </Snackbar>
             <Dialog open={props.open} fullWidth={true} PaperProps={{
                 style: {
-                    backgroundColor: "#1C1C1E",
+                    backgroundColor: theme.palette.secondary.main,
                     boxShadow: 'none',
                 },
             }} onClose={props.handleClose} aria-labelledby="form-dialog-title">

@@ -2,11 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import { ThemeProvider } from '@material-ui/core/styles';
-import theme from './Components/theme'
+import {lightTheme,darkTheme} from './Components/theme'
 import { CssBaseline } from '@material-ui/core';
+const t = localStorage.getItem('theme');
 ReactDOM.render(
   <React.StrictMode>
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={t === 'light' ? lightTheme: darkTheme}>
       <CssBaseline>
         <App />
       </CssBaseline>

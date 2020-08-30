@@ -144,7 +144,7 @@ function CalenderPanel(props) {
     return (
         <div>
             <div className={classes.root}>
-                <Grid container component="main" spacing={2}>
+                <Grid container component="main">
                     <Grid item xs={12} sm={12} md={4} lg={2} >
                         {/* <Typography index={0}>Filters</Typography> */}
                     </Grid>

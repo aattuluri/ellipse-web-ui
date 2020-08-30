@@ -16,6 +16,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { useTheme } from '@material-ui/core/styles';
 
 
 function Alert(props) {
@@ -24,7 +25,7 @@ function Alert(props) {
 
 
 export default function AnnouncementForm(props) {
-
+  const theme = useTheme()
   const token = localStorage.getItem('token');
   const [title, setTitle] = React.useState(null);
   const [desc, setDesc] = React.useState(null);
@@ -118,7 +119,7 @@ export default function AnnouncementForm(props) {
       </Snackbar>
       <Dialog open={props.open} fullWidth={true} PaperProps={{
         style: {
-          backgroundColor: "#1C1C1E",
+          backgroundColor: theme.palette.secondary.main,
         },
       }} onClose={props.handleClose} aria-labelledby="form-dialog-title">
         <DialogTitle id="form-dialog-title">Add Announcement</DialogTitle>

@@ -8,7 +8,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 // import Button from '@material-ui/core/Button';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles,useTheme } from '@material-ui/core/styles';
 // import Grid from '@material-ui/core/Grid';
 import UpdateInfoTabPanel from './UpdateInfoTabPanel';
 import UpdatePasswordTabPanel from './UpdatePasswordTabPanel';
@@ -53,6 +53,7 @@ const useStyles = makeStyles((theme) => ({
 function UpdateProfile(props) {
     const [value, setValue] = React.useState(0);
     const classes = useStyles();
+    const theme = useTheme();
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
@@ -72,7 +73,7 @@ function UpdateProfile(props) {
             style={{minHeight:"400px"}}
             PaperProps={{
                 style: {
-                    backgroundColor: "#1C1C1E",
+                    backgroundColor: theme.palette.secondary.main,
                     boxShadow: 'none',
                 },
             }}
