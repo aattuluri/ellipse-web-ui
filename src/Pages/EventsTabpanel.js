@@ -206,7 +206,6 @@ function EventsTabPanel({ history }) {
     // }
     // console.log(allEvents);
     function handleSortCollegeChange(event, value) {
-        console.log(value)
         setSortCollegeType(value);
     }
     async function handleSortApplyButton() {
@@ -431,7 +430,7 @@ function EventsTabPanel({ history }) {
                 <Grid item xs={12} sm={12} md={9} lg={8}>
                     <Typography variant="h5" style={{ paddingTop: '5px' }}>
                         Your College Events
-                </Typography>
+                    </Typography>
                     <GridListEvents click={handleClick} events={allEvents.filter((event) => event.college_name === user.college_name)} ></GridListEvents>
 
 
@@ -447,7 +446,6 @@ function EventsTabPanel({ history }) {
                         <Skeleton animation="wave" />
                         <Skeleton animation="wave" />
                     </div>}
-
                     {
                         isFiltered ? sortedEventsArray.map((event, index) => {
                             return (
@@ -503,7 +501,7 @@ function EventsTabPanel({ history }) {
                                 size="large"
                                 className={classes.postButton} >
                                 Post Event
-                        </Button>
+                            </Button>
                             <List className={classes.root2}>
                                 
                                 <Typography variant="body2">Registered Events</Typography>

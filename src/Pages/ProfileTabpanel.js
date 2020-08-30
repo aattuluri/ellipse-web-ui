@@ -108,7 +108,7 @@ function EventsTabPanel(props) {
     const handlePostButtonClick = () => {
         props.history.push('/post')
     }
-    
+
     const handleRegisterdEventClick = (event) => () => {
         setSelectedEvent(event);
         setEOpen(true);
@@ -117,10 +117,10 @@ function EventsTabPanel(props) {
     return (
         <div>
             <div>
-                <Grid container component="main" spacing={2}>
+                <Grid container component="main" >
                     <Grid item xs={12} sm={12} md={3} lg={2} >
                     </Grid>
-                    <Grid item xs={12} sm={12} md={3} lg={8}>
+                    <Grid item xs={12} sm={12} md={9} lg={8}>
                         <ProfileCard handleEditButton={handleEditButton}></ProfileCard>
                         <UpdateProfileDialog open={open} handleClose={handleClose}></UpdateProfileDialog>
                     </Grid>
@@ -148,7 +148,7 @@ function EventsTabPanel(props) {
                                                     <ListItemAvatar>
                                                         <Avatar variant="square"
                                                             alt={event.name}
-                                                            src={process.env.REACT_APP_API_URL+`/api/image?id=${event.poster_url}`}
+                                                            src={process.env.REACT_APP_API_URL + `/api/image?id=${event.poster_url}`}
                                                         />
                                                     </ListItemAvatar>
                                                     <ListItemText primary={event.name} />

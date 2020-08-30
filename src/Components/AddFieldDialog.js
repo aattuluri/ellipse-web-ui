@@ -13,13 +13,14 @@ import FormControl from '@material-ui/core/FormControl';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Chip from '@material-ui/core/Chip';
 import { Grid } from '@material-ui/core';
-
+import {useTheme } from '@material-ui/core/styles';
 
 
 
 
 
 export default function FormDialog(props) {
+  const theme = useTheme();
   const [name, setName] = React.useState(null);
   const [type, setType] = React.useState(null);
   const fieldOptions = [];
@@ -49,7 +50,7 @@ export default function FormDialog(props) {
     <div>
       <Dialog open={props.open} fullWidth={true} PaperProps={{
         style: {
-          backgroundColor: "#1C1C1E",
+          backgroundColor: theme.palette.secondary.main,
           boxShadow: 'none',
         },
       }} onClose={props.handleClose} aria-labelledby="form-dialog-title">

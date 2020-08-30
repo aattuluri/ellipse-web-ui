@@ -37,6 +37,10 @@ import EventsDialog from '../Components/EventsDialog';
 import EventsContext from '../EventsContext';
 // import AuthContext from '../AuthContext';
 import NotificationsDialog from '../Components/NotficationsDialog';
+import Switch from '@material-ui/core/Switch';
+import DarkLogo from '../Components/Images/dark_theme_logo.png';
+import LightLogo from '../Components/Images/light_theme_logo.png';
+// import CuboidLogo from '../Components/Images/Cuboid logo.png'
 
 
 
@@ -45,6 +49,8 @@ import NotificationsDialog from '../Components/NotficationsDialog';
 const NavigationBar = function ({ history }) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const t = localStorage.getItem('theme');
+  const [darkThemeSelected,setDarkThemeSelected] = React.useState(t === 'light'?false:true);
   // const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const [value, setValue] = React.useState(0);
   // const [allEvents, setAllEvents] = React.useState([]);
@@ -102,6 +108,19 @@ const NavigationBar = function ({ history }) {
     history.replace('/');
   }
 
+  function handleThemeChange(event){
+    console.log(event.target.checked);
+    setDarkThemeSelected(event.target.checked);
+    if(event.target.checked){
+      localStorage.setItem('theme','dark');
+      window.location.reload(false);
+    }
+    else{
+      localStorage.setItem('theme','light');
+      window.location.reload(false);
+    }
+  }
+
   
 
   function handleSignout(event) {
@@ -138,7 +157,15 @@ const NavigationBar = function ({ history }) {
     >
       {/* <MenuItem onClick={handleMenuClose}>Profile</MenuItem> */}
       {/* <MenuItem onClick={handleMenuClose}>My account</MenuItem> */}
+      <MenuItem> Dark Theme <Switch
+        checked={darkThemeSelected}
+        onChange={handleThemeChange}
+        color="primary"
+        name="checkedB"
+        inputProps={{ 'aria-label': 'primary checkbox' }}
+      /></MenuItem>
       <MenuItem onClick={handleSignout}>Log Out</MenuItem>
+      
     </Menu>
   );
 
@@ -180,6 +207,7 @@ function handleNotificationClick(){
       <React.Fragment>
         <AppBar position="sticky" color="secondary">
           <Toolbar>
+          <img src={t==='light'?LightLogo:DarkLogo} alt="logo" height="45" width="45"></img>
             <Typography className={classes.title} variant="h5" noWrap>
               Ellipse
           </Typography>

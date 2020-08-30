@@ -139,16 +139,15 @@ function CalenderPanel({history}) {
         <div>
             {/* {value === index && ( */}
             <div className={classes.root}>
-                <Grid container component="main" spacing={2}>
+                <Grid container component="main" >
 
-                    <Grid item xs={12} sm={12} md={4} lg={2} >
+                    <Grid item xs={12} sm={12} md={3} lg={2} >
                         {/* <Typography index={0}>Filters</Typography> */}
                         {/* <Calendar onChange={setCalenderValue} value={calenderValue} ></Calendar> */}
 
                     </Grid>
-                    <Grid item xs={12} sm={12} md={8} lg={8} >
+                    <Grid item xs={12} sm={12} md={9} lg={8} >
                         <FullCalendar
-                        
                             eventBackgroundColor="#1C1C1E"
                             events={events}
                             eventClick={handleEventClick}
@@ -156,7 +155,7 @@ function CalenderPanel({history}) {
                             buttonIcons={false}></FullCalendar>
 
                     </Grid>
-                    <Grid item xs={12} sm={12} md={4} lg={2} >
+                    <Grid item xs={12} sm={12} md={false} lg={2} >
                     <Fab color="primary" aria-label="add" className={classes.fab} onClick={handlePostButtonClick}>
                         <AddIcon />
                     </Fab>

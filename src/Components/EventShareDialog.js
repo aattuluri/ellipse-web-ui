@@ -9,6 +9,7 @@ import { Grid, IconButton } from '@material-ui/core';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
+import { useTheme } from '@material-ui/core/styles';
 
 
 function Alert(props) {
@@ -18,7 +19,7 @@ function Alert(props) {
 
 export default function EventShareDialog(props) {
     // const classes = useStyles();
-
+    const theme = useTheme();
     const [title, setTitle] = React.useState(null);
     const event = props.event;
     const [state, setState] = React.useState({
@@ -83,7 +84,7 @@ export default function EventShareDialog(props) {
             </Snackbar>
             <Dialog open={props.open} fullWidth={true} PaperProps={{
                 style: {
-                    backgroundColor: "#1C1C1E",
+                    backgroundColor: theme.palette.secondary.main,
                     boxShadow: 'none',
                 },
             }} onClose={props.handleClose} aria-labelledby="form-dialog-title">

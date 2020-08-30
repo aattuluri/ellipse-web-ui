@@ -10,7 +10,7 @@ import ShareIcon from '@material-ui/icons/Share';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Button from '@material-ui/core/Button';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles,useTheme  } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
 import CloseIcon from '@material-ui/icons/Close';
@@ -84,6 +84,7 @@ function EventsDialog(props) {
     const [value, setValue] = React.useState(0);
     // const user = React.useContext(AuthContext);
     const classes = useStyles();
+    const theme = useTheme();
     // const token = localStorage.getItem('token');
     const [shareDialogOpen, setShareDialogOpen] = React.useState(false);
 
@@ -122,7 +123,7 @@ function EventsDialog(props) {
             maxWidth="md"
             PaperProps={{
                 style: {
-                    backgroundColor: "#1C1C1E",
+                    backgroundColor: theme.palette.secondary.main,
                     boxShadow: 'none',
                 },
             }}

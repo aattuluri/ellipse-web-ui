@@ -4,28 +4,14 @@ import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-// import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-// import { makeStyles } from '@material-ui/core/styles';
-// import FormControlLabel from '@material-ui/core/FormControlLabel';
-// import FormLabel from '@material-ui/core/FormLabel';
-// import Select from '@material-ui/core/Select';
-// import InputLabel from '@material-ui/core/InputLabel';
-// import FormControl from '@material-ui/core/FormControl';
-// import Autocomplete from '@material-ui/lab/Autocomplete';
-// import Chip from '@material-ui/core/Chip';
 import { Grid } from '@material-ui/core';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import {  useTheme } from '@material-ui/core/styles';
 
 
-
-// const useStyles = makeStyles((theme) => ({
-//     dialog:{
-//         backgroundColor: theme.palette.secondary.main
-//     }
-// }));
 
 function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -33,7 +19,7 @@ function Alert(props) {
 
 
 export default function SendEmailForm(props) {
-
+    const theme = useTheme();
     const token = localStorage.getItem('token');
     const [title, setTitle] = React.useState(null);
     const [content, setContent] = React.useState(null);
@@ -122,7 +108,7 @@ export default function SendEmailForm(props) {
             </Snackbar>
             <Dialog open={props.open} fullWidth={true} PaperProps={{
                 style: {
-                    backgroundColor: "#1C1C1E",
+                    backgroundColor: theme.palette.secondary.main,
                     // boxShadow: 'none',
                 },
             }} onClose={props.handleClose} aria-labelledby="form-dialog-title">

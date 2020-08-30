@@ -11,6 +11,7 @@ import Typography from '@material-ui/core/Typography';
 // import CardContent from '@material-ui/core/CardContent';
 // import Card from '@material-ui/core/Card';
 import Box from '@material-ui/core/Box';
+import { useTheme } from '@material-ui/core/styles';
 
 
 
@@ -36,6 +37,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function FormDialog(props) {
     const classes = useStyles();
+    const theme = useTheme();
     const token = localStorage.getItem('token');
     const [notificationms,setNotifications] = React.useState([]);
     React.useEffect(() => {
@@ -62,7 +64,7 @@ export default function FormDialog(props) {
         <div>
             <Dialog scroll="paper" open={props.open} fullWidth={true} PaperProps={{
                 style: {
-                    backgroundColor: "#1C1C1E",
+                    backgroundColor: theme.palette.secondary.main,
                     boxShadow: 'none',
                 },
             }} onClose={props.handleClose} aria-labelledby="form-dialog-title" classes={{ paper: classes.dialog }}>
