@@ -624,9 +624,9 @@ const EventEdit = (props) => {
                 multiple
                 id="tags-filled"
                 options={requirements.map((option) => option)}
-                defaultValue={[requirements[1]]}
+                // defaultValue={[requirements[1]]}
                 freeSolo
-                value={selectedrequirements}
+                value={selectedrequirements.length !== 0 && selectedrequirements}
                 onChange={handleRequirementsChange}
                 renderTags={(value, getTagProps) =>
                   value.map((option, index) => (
