@@ -94,6 +94,7 @@ export default function JustifyContent(props) {
             justifyContent="center">
 
             <TextField
+            disabled={props.loading}
                 fullWidth
                 placeholder="Type your message"
                 multiline

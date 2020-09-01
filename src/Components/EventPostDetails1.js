@@ -133,7 +133,7 @@ export default function AddressForm(props) {
               minDate={Date.now()}
               fullWidth
               required
-              variant="inline"
+              variant="dialog"
               format="dd MMM yyyy hh:mm a zzz"
               margin="normal"
               id="startDate"
@@ -152,7 +152,7 @@ export default function AddressForm(props) {
               minDate={Date.now()}
               fullWidth
               required
-              variant="inline"
+              variant="dialog"
               format="dd MMM yyyy hh:mm a zzz"
               margin="normal"
               id="endDate"
@@ -169,7 +169,7 @@ export default function AddressForm(props) {
               minDate={Date.now()}
               fullWidth
               required
-              variant="inline"
+              variant="dialog"
               format="dd MMM yyyy hh:mm a zzz"
               margin="normal"
               id="regEndDate"

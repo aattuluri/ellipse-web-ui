@@ -116,7 +116,7 @@ function SortLeftPanel(props) {
                     <DatePicker
                         //   minDate={Date.now()}
                         fullWidth
-                        variant="inline"
+                        variant="dialog"
                         format="dd MMM yyyy"
                         margin="normal"
                         id="startDate"
@@ -132,7 +132,7 @@ function SortLeftPanel(props) {
                     <DatePicker
                         //   minDate={Date.now()}
                         fullWidth
-                        variant="inline"
+                        variant="dialog"
                         format="dd MMM yyyy"
                         margin="normal"
                         id="endDate"

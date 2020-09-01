@@ -19,6 +19,7 @@ const useStyles = makeStyles((theme) => ({
 export default function ImgMediaCard(props) {
   const classes = useStyles();
   const event = props.event;
+  const t = localStorage.getItem('theme');
   // const [image, setImage] = React.useState(null);
   // const token = localStorage.getItem('token');
   const [shareDialogOpen,setShareDialogOpen] = React.useState(false);
@@ -52,7 +53,8 @@ export default function ImgMediaCard(props) {
           Share
         </Button>
         <Button onClick={handleViewButtonClick} size="small" color="primary">
-        <Link to={{pathname:`/event/${event._id}`,state:{event: props.event}}}   style={{textDecoration:'none',color:'#ffffff'}}>View</Link>
+        {t==='dark' ?<Link to={{pathname:`/event/${event._id}`,state:{event: props.event}}}   style={{textDecoration:'none',color:'#ffffff'}}>View</Link> :
+        <Link to={{pathname:`/event/${event._id}`,state:{event: props.event}}}   style={{textDecoration:'none',color:'#000000'}}>View</Link>}
         </Button>
       </CardActions>
       <EventShareDialog

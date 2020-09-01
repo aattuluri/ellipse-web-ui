@@ -7,13 +7,15 @@ import { cleanup } from '@testing-library/react';
 import Box from '@material-ui/core/Box';
 import { makeStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
-import { Typography, List} from '@material-ui/core';
+import { Typography, List } from '@material-ui/core';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemText from '@material-ui/core/ListItemText';
 import Dialog from '@material-ui/core/Dialog';
 import DeleteIcon from '@material-ui/icons/Delete';
 import ReplyIcon from '@material-ui/icons/Reply';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Fade from '@material-ui/core/Fade';
 
 
 
@@ -77,6 +79,11 @@ const useStyles = makeStyles((theme) => ({
         padding: theme.spacing(0, 3),
         backgroundColor: theme.palette.background.paper,
         borderRadius: theme.spacing(5),
+    },
+    progress: {
+        display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
     }
 
 }));
@@ -88,9 +95,10 @@ export default function JustifyContent(props) {
     const event = props.event;
     const open = props.open;
     const [dialogOpen, setDialogOpen] = React.useState(false);
-
+    const [loading, setLoading] = React.useState(false);
 
     const [reference, setReferenece] = React.useState(null);
+    // const [currentReference,setCurrenmtReference] = React.useState(null);
     const [chatMessages, setChatMessages] = React.useState([]);
     const classes = useStyles();
     var counterDate = null;
@@ -112,11 +120,8 @@ export default function JustifyContent(props) {
                     console.log(cMes);
                     setChatMessages(chatMessages => [...chatMessages, cMes]);
                 }
-
             }
-            if (reference != null) {
-                reference.scrollIntoView({ behavior: "smooth" })
-            }
+            setLoading(false)
         }
         ws.onclose = () => {
             check();
@@ -124,7 +129,8 @@ export default function JustifyContent(props) {
         }
     }
     React.useEffect(() => {
-        fetch(process.env.REACT_APP_API_URL+`/api/chat/load_messages?id=${event._id}`, {
+        setLoading(true)
+        fetch(process.env.REACT_APP_API_URL + `/api/chat/load_messages?id=${event._id}`, {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
@@ -135,9 +141,6 @@ export default function JustifyContent(props) {
             response.json().then(value => {
                 setChatMessages(value);
                 webConnect();
-                if (reference != null) {
-                    reference.scrollIntoView({ behavior: "smooth" })
-                }
             })
         })
         if (reference != null) {
@@ -151,6 +154,13 @@ export default function JustifyContent(props) {
     }, [event._id, token])
 
 
+    React.useEffect(()=>{
+        if (reference != null) {
+            reference.scrollIntoView({ behavior: "smooth" })
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[loading])
+
 
     React.useEffect(() => {
         if (reference != null) {
@@ -160,10 +170,7 @@ export default function JustifyContent(props) {
         return () => {
             cleanup()
         }
-    }, [chatMessages,reference])
-
-
-
+    }, [chatMessages, reference])
 
 
     const check = () => {
@@ -203,7 +210,17 @@ export default function JustifyContent(props) {
             hidden={value !== index}
             {...other}>
             {value === index && (
-                <div >
+                <div>
+                <div  className={classes.progress}>
+                <Fade
+                   
+                        in={loading}
+                        unmountOnExit>
+                        <CircularProgress />
+                    
+                    </Fade>
+                </div>
+                    
                     <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={dialogOpen}>
                         <List>
                             <ListItem button>
@@ -228,10 +245,9 @@ export default function JustifyContent(props) {
                     <Box className={classes.topBar}>
                         {
                             chatMessages.map((value, index) => {
+                                
                                 const currentDate = new Date();
-                                console.log(value.date)
                                 const messageDate = new Date(value.date);
-                                console.log(messageDate);
                                 if (messageDate.toDateString() !== counterDate) {
                                     counterDate = messageDate.toDateString();
                                     if (value.user_id === user.user_id) {
@@ -241,13 +257,13 @@ export default function JustifyContent(props) {
                                                 <Typography variant="body2">{currentDate.toDateString() === messageDate.toDateString() ? "Today" : messageDate.toDateString()}</Typography>
                                             </Box>
 
-                                            <Box m={1} p={1} key={index+1} className={classes.root3}>
+                                            <Box  m={1} p={1} key={index + 1} className={classes.root3}>
 
-                                                <Box className={classes.root2} whiteSpace="normal" onClick={() => setDialogOpen(true)} >
+                                                <Box  className={classes.root2} whiteSpace="normal" onClick={() => setDialogOpen(false)} >
                                                     <ChatMessage message={value} ></ChatMessage>
                                                 </Box>
                                                 <Box className={classes.root5}>
-                                                    <Avatar alt={value.userName} src={`http:///139.59.16.53:4000/api/image?id=${value.user_pic}`} />
+                                                    <Avatar alt={value.userName} src={process.env.REACT_APP_API_URL+`/api/image?id=${value.user_pic}`} />
                                                 </Box>
                                             </Box></React.Fragment>);
 
@@ -263,7 +279,7 @@ export default function JustifyContent(props) {
 
                                             <Box m={1} key={index} className={classes.root}>
                                                 <Box className={classes.root4}>
-                                                    <Avatar alt={value.userName} src={`http:///139.59.16.53:4000/api/image?id=${value.user_pic}`} />
+                                                    <Avatar alt={value.userName} src={process.env.REACT_APP_API_URL`/api/image?id=${value.user_pic}`} />
                                                 </Box>
                                                 <Box className={classes.root2} whiteSpace="normal" >
                                                     <ChatMessage message={value}></ChatMessage>
@@ -277,11 +293,11 @@ export default function JustifyContent(props) {
                                 if (value.user_id === user.user_id) {
                                     return (<Box m={1} p={1} key={index} className={classes.root3}>
 
-                                        <Box className={classes.root2} onClick={() => setDialogOpen(true)} whiteSpace="normal">
+                                        <Box className={classes.root2} onClick={() => setDialogOpen(false)} whiteSpace="normal">
                                             <ChatMessage message={value}></ChatMessage>
                                         </Box>
                                         <Box className={classes.root5}>
-                                            <Avatar alt={value.userName} src={`http:///139.59.16.53:4000/api/image?id=${value.user_pic}`} />
+                                            <Avatar alt={value.userName} src={process.env.REACT_APP_API_URL + `/api/image?id=${value.user_pic}`} />
                                         </Box>
                                     </Box>);
 
@@ -289,7 +305,7 @@ export default function JustifyContent(props) {
                                 else {
                                     return (<Box m={1} key={index} className={classes.root}>
                                         <Box className={classes.root4}>
-                                            <Avatar alt={value.userName} src={`http:///139.59.16.53:4000/api/image?id=${value.user_pic}`} />
+                                            <Avatar alt={value.userName} src={process.env.REACT_APP_API_URL + `/api/image?id=${value.user_pic}`} />
                                         </Box>
                                         <Box className={classes.root2} whiteSpace="normal">
                                             <ChatMessage message={value}></ChatMessage>
@@ -303,7 +319,7 @@ export default function JustifyContent(props) {
                             ref={(el) => { setReferenece(el) }}>
                         </div>
                         <div>
-                            <ChatTextField open={open} handleSend={handleSendClick}  ></ChatTextField>
+                            <ChatTextField loading={loading} open={open} handleSend={handleSendClick}  ></ChatTextField>
                         </div>
                     </Box>
 
