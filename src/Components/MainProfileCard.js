@@ -7,7 +7,7 @@ import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 // import CardActions from '@material-ui/core/CardActions';
 import Avatar from '@material-ui/core/Avatar';
-import IconButton from '@material-ui/core/IconButton';
+// import IconButton from '@material-ui/core/IconButton';
 // import { red } from '@material-ui/core/colors';
 // import FavoriteIcon from '@material-ui/icons/Favorite';
 // import ShareIcon from '@material-ui/icons/Share';
@@ -26,6 +26,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import ProfileEventsTabPanel from './ProfileRegEventsTabPanel';
 import ProfilePostedEventsTabPanel from './ProfilePostedEventsTabPanel';
 import AuthContext from '../AuthContext';
+import Button from '@material-ui/core/Button';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -58,6 +59,7 @@ const useStyles = makeStyles((theme) => ({
     },
     button: {
         margin: theme.spacing(0.5),
+        borderRadius: theme.spacing(3)
     },
     large: {
         width: theme.spacing(17),
@@ -75,7 +77,7 @@ const useStyles = makeStyles((theme) => ({
 
 
 function Eventcard(props) {
-    localStorage.setItem('tabIndex',3)
+    localStorage.setItem('tabIndex', 3)
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
     // const user = JSON.parse(localStorage.getItem('user'));
@@ -95,33 +97,41 @@ function Eventcard(props) {
 
     return (
         <Card className={classes.root}>
-        <Grid container component="main">
-        <CssBaseline />
-        <Grid item xs={false} sm={false} md={2}>
-        {/* <Typography>Hello</Typography> */}
-        </Grid>
-            <Grid item xs={12} sm={12} md={8}>
-            <CardHeader
-                avatar={
-                    <Avatar className={classes.large} sizes="100" alt="" src={process.env.REACT_APP_API_URL+`/api/image?id=${user.profile_pic}`}></Avatar>
-                }
-                action={
-                    <IconButton onClick={props.handleEditButton} aria-label="settings">
-                        {/* <MoreVertIcon /> */}
-                        <Typography>Edit Profile</Typography>
-                    </IconButton>
-                }
-                title={
-                    <Typography variant="h4">{user.name}</Typography>
-                }
-                subheader={user.bio}
-            ></CardHeader>
+            <Grid container component="main">
+                <CssBaseline />
+                <Grid item xs={false} sm={false} md={2}>
+                    {/* <Typography>Hello</Typography> */}
+                </Grid>
+                <Grid item xs={12} sm={12} md={8}>
+                    <CardHeader
+                        avatar={
+                            <Avatar className={classes.large} sizes="100" alt="" src={process.env.REACT_APP_API_URL + `/api/image?id=${user.profile_pic}`}></Avatar>
+                        }
+                        action={
+                            <Button
+                                variant="outlined"
+                                color="default"
+                                className={classes.button}
+                                onClick={props.handleEditButton}
+                            >
+                                Edit Profile
+                            </Button>
+                            // <IconButton  onClick={props.handleEditButton} aria-label="settings">
+                            //     <MoreVertIcon />
+                            //     <Typography>Edit Profile</Typography>
+                            // </IconButton>
+                        }
+                        title={
+                            <Typography variant="h4">{user.name}</Typography>
+                        }
+                        subheader={user.bio}
+                    ></CardHeader>
+                </Grid>
+                <Grid item xs={false} sm={false} md={2}>
+                    {/* <Typography>Hello</Typography> */}
+                </Grid>
             </Grid>
-            <Grid item xs = {false} sm={false} md={2}>
-            {/* <Typography>Hello</Typography> */}
-            </Grid>
-        </Grid>
-            
+
             <CardContent>
                 <Paper className={classes.root2}>
                     <Tabs
@@ -131,21 +141,21 @@ function Eventcard(props) {
                         textColor="primary"
                         variant="scrollable"
                         scrollButtons="on"
-                        // centered
+                    // centered
                     >
-                        
+
                         {/* <Tab label="About" /> */}
                         <Tab label="Registered Events" />
                         <Tab label="Posted Events" />
-                        
+
                     </Tabs>
                 </Paper>
                 <div>
-                <ProfileEventsTabPanel url={user.imageUrl} value={value} index={0}></ProfileEventsTabPanel>
-                <ProfilePostedEventsTabPanel url={user.imageUrl} value={value} index={1}></ProfilePostedEventsTabPanel>
-                {/* <ProfileEventsTabPanel url={user.imageUrl} value={value} index={2}></ProfileEventsTabPanel> */}
-                {/* <ProfileEventCard></ProfileEventCard> */}
-                {/* <ProfileEventCard></ProfileEventCard> */}
+                    <ProfileEventsTabPanel url={user.imageUrl} value={value} index={0}></ProfileEventsTabPanel>
+                    <ProfilePostedEventsTabPanel url={user.imageUrl} value={value} index={1}></ProfilePostedEventsTabPanel>
+                    {/* <ProfileEventsTabPanel url={user.imageUrl} value={value} index={2}></ProfileEventsTabPanel> */}
+                    {/* <ProfileEventCard></ProfileEventCard> */}
+                    {/* <ProfileEventCard></ProfileEventCard> */}
                     {/* <TabPanel value={value} index={0}>
                         Item One
                     </TabPanel>

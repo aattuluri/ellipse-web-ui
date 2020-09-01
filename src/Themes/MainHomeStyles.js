@@ -40,6 +40,8 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up('sm')]: {
       display: 'block',
     },
+    fontFamily: 'Gugi',
+    marginLeft: theme.spacing(1)
   },
   search: {
     position: 'relative',

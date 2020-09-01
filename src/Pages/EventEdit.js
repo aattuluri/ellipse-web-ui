@@ -16,25 +16,20 @@ import FormControl from '@material-ui/core/FormControl';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import CircularProgress from '@material-ui/core/CircularProgress';
-// import IconButton from '@material-ui/core/IconButton';
-// import InputAdornment from '@material-ui/core/InputAdornment';
 import DateFnsUtils from '@date-io/date-fns';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Chip from '@material-ui/core/Chip';
-// import CameraAltIcon from '@material-ui/icons/CameraAlt';
 import { MuiPickersUtilsProvider, DateTimePicker, } from '@material-ui/pickers';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
-// import FormControlLabel from '@material-ui/core/FormControlLabel';
-// import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
-// import { Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-// import Icon from '@material-ui/core/Icon';
-// import { set } from 'date-fns';
 import Badge from '@material-ui/core/Badge';
 import EditIcon from '@material-ui/icons/Edit';
 import IconButton from '@material-ui/core/IconButton';
+
+
+
 //function for alert
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -97,21 +92,40 @@ const EventEdit = (props) => {
   const [organizer, setOrganizer] = React.useState(null);
   const [participantType, setParticipantsType] = React.useState("open");
   const [image, setImage] = React.useState(null);
-  const [imageUrl,setImageurl] = React.useState(null);
-  const [imageUpdated,setImageUpdated] = React.useState(false);
+  const [imageUrl, setImageurl] = React.useState(null);
+  const [imageUpdated, setImageUpdated] = React.useState(false);
+  const [venue, setVenue] = React.useState(null);
+  const [venueCollege, setVenueCollege] = React.useState(null);
   const { vertical, horizontal, open, message, type } = state;
-
-
+  const [colleges, setColleges] = React.useState([]);
+  const [collegesNames, setCollegesName] = React.useState([]);
 
   const token = localStorage.getItem('token');
 
 
   const eventTypes = ["Hackathon", "Coding Contest", "Webinar"];
   const requirements = ["Laptop", "Basic HTML", "C++", "Machine Learning"];
-  const colleges = ["VIT University", "GITAM University", "SRM University"];
+  // const colleges = ["VIT University", "GITAM University", "SRM University"];
+
+  React.useEffect(() => {
+    fetch(process.env.REACT_APP_API_URL + '/api/colleges', {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      method: 'GET',
+    }).then(response => {
+      response.json().then(value => {
+        setColleges(value);
+        value.forEach((v) => {
+          setCollegesName((collegesNames) => [...collegesNames, v.name])
+        })
+      })
+    })
+  }, [token])
 
   const handleStartDateChange = (date) => {
-    console.log(date)
     setStartDate(date);
   };
   const handleendDateChange = (date) => {
@@ -120,9 +134,7 @@ const EventEdit = (props) => {
   const handleRegEndDateChange = (date) => {
     setRegEndDate(date)
   };
-  console.log(regEndDate);
   React.useEffect(() => {
-    console.log(event);
     setEventThemes(event.tags);
     setEventType(event.event_type);
     setName(event.name);
@@ -139,6 +151,8 @@ const EventEdit = (props) => {
     setCollegeName(event.college_name);
     setRegMode(event.reg_mode);
     setOrganizer(event.organizer);
+    setVenue(event.venue);
+    setVenueCollege(event.venue_college);
     // setParticipantsType(event.o_allowed)
     if (event.o_allowed === true) {
       setParticipantsType("open")
@@ -189,11 +203,13 @@ const EventEdit = (props) => {
         organizer: organizer,
         requirements: selectedrequirements,
         o_allowed: oAllowed,
-        reg_mode: regMode
+        reg_mode: regMode,
+        venue: venue,
+        venue_college: venueCollege
       };
       data = JSON.stringify(payload);
       console.log(data);
-      fetch(process.env.REACT_APP_API_URL+'/api/updateevent', {
+      fetch(process.env.REACT_APP_API_URL + '/api/updateevent', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -209,38 +225,38 @@ const EventEdit = (props) => {
             if (imageUpdated) {
               var data2 = new FormData()
               data2.append("image", image);
-              fetch(process.env.REACT_APP_API_URL+`/api/event/uploadimage?id=${event._id}`, {
-                  headers: {
-                      'Authorization': `Bearer ${token}`,
-                  },
-                  method: 'POST',
-                  body: data2
+              fetch(process.env.REACT_APP_API_URL + `/api/event/uploadimage?id=${event._id}`, {
+                headers: {
+                  'Authorization': `Bearer ${token}`,
+                },
+                method: 'POST',
+                body: data2
               }).then(res => {
-                  if (res.status === 200) {
-                      setLoading(false);
-                      setState({
-                          open: true,
-                          vertical: 'top',
-                          horizontal: 'center',
-                          message: "successful",
-                          type: "success",
-                          autoHide: 300
-                      })
-                  }
+                if (res.status === 200) {
+                  setLoading(false);
+                  setState({
+                    open: true,
+                    vertical: 'top',
+                    horizontal: 'center',
+                    message: "successful",
+                    type: "success",
+                    autoHide: 300
+                  })
+                }
               })
-          }
-          else{
-            setLoading(false);
-            setState({
-              open: true,
-              vertical: 'top',
-              horizontal: 'center',
-              message: "Saved changes successfully",
-              type: "success"
-            })
-          }
+            }
+            else {
+              setLoading(false);
+              setState({
+                open: true,
+                vertical: 'top',
+                horizontal: 'center',
+                message: "Saved changes successfully",
+                type: "success"
+              })
+            }
             // history.replace("/home")
-            
+
           })
         }
         else {
@@ -323,20 +339,25 @@ const EventEdit = (props) => {
   function handleParticipantsTypeChange(event, value) {
     setParticipantsType(value)
   }
-
+  function handleVenue(event) {
+    setVenue(event.target.value);
+  }
+  function handleVenueCollegeChange(event, value) {
+    setVenueCollege(value);
+  }
 
   function handleChange(event) {
     if (event.target.files[0]) {
       setImage(event.target.files[0]);
-    //   setImageAsFile(imageFile => (image))
+      //   setImageAsFile(imageFile => (image))
       const url = URL.createObjectURL(event.target.files[0]);
-    //   const fileType = event.target.files[0].type;
+      //   const fileType = event.target.files[0].type;
       setImageurl(url)
       setImageUpdated(true);
-    //   setImageType(fileType.substr(fileType.indexOf('/') + 1));
+      //   setImageType(fileType.substr(fileType.indexOf('/') + 1));
     }
 
-}
+  }
 
 
 
@@ -368,7 +389,7 @@ const EventEdit = (props) => {
                     <EditIcon></EditIcon>
                   </IconButton>
                 </label>}>
-                <img height="160" width="150" alt="poster" src={imageUpdated ? imageUrl : process.env.REACT_APP_API_URL+`/api/image?id=${event.poster_url}`} ></img>
+                <img height="160" width="150" alt="poster" src={imageUpdated ? imageUrl : process.env.REACT_APP_API_URL + `/api/image?id=${event.poster_url}`} ></img>
               </Badge>
             </Grid>
             <Grid item xs={12} lg={6}>
@@ -401,7 +422,7 @@ const EventEdit = (props) => {
                   // minDate={Date.now()}
                   fullWidth
                   required
-                  variant="inline"
+                  variant="dialog"
                   format="dd MMM yyyy hh:mm a zzz"
                   margin="normal"
                   id="startDate"
@@ -422,7 +443,7 @@ const EventEdit = (props) => {
                   // minDate={Date.now()}
                   fullWidth
                   required
-                  variant="inline"
+                  variant="dialog"
                   format="dd MMM yyyy hh:mm a zzz"
                   margin="normal"
                   id="endDate"
@@ -442,7 +463,7 @@ const EventEdit = (props) => {
                   // minDate={Date.now()}
                   fullWidth
                   required
-                  variant="inline"
+                  variant="dialog"
                   format="dd MMM yyyy hh:mm a zzz"
                   margin="normal"
                   id="regEndDate"
@@ -624,9 +645,8 @@ const EventEdit = (props) => {
                 multiple
                 id="tags-filled"
                 options={requirements.map((option) => option)}
-                // defaultValue={[requirements[1]]}
                 freeSolo
-                value={selectedrequirements.length !== 0 && selectedrequirements}
+                value={selectedrequirements}
                 onChange={handleRequirementsChange}
                 renderTags={(value, getTagProps) =>
                   value.map((option, index) => (
@@ -647,9 +667,9 @@ const EventEdit = (props) => {
             </Grid>
             {eventMode === "Offline" && <Grid item xs={12}>
               <FormLabel component="legend">Address</FormLabel>
-              <RadioGroup aria-label="address" name="address" defaultValue="College/University" onChange={handleAddressTypeChange} style={{ display: "inline" }}>
-                <FormControlLabel value="College/University" control={<Radio color="default" />} label="College/University" />
-                <FormControlLabel value="Other" control={<Radio color="default" />} label="Others" />
+              <RadioGroup disabled aria-label="address" name="address" defaultValue="College/University" onChange={handleAddressTypeChange} style={{ display: "inline" }}>
+                <FormControlLabel disabled value="College/University" control={<Radio color="default" />} label="College/University" />
+                <FormControlLabel disabled value="Other" control={<Radio color="default" />} label="Others" />
               </RadioGroup>
             </Grid>}
             {eventMode === "Offline" &&
@@ -657,6 +677,8 @@ const EventEdit = (props) => {
                 <TextField
                   autoComplete='off'
                   // required
+                  value={venue || ""}
+                  onChange={handleVenue}
                   id="building"
                   name="building"
                   label="Room No & Building"
@@ -668,9 +690,10 @@ const EventEdit = (props) => {
               <Autocomplete
                 fullWidth
                 id="combo-box-demo"
-                options={colleges}
+                options={collegesNames}
+                value={venueCollege}
                 getOptionLabel={(option) => option}
-                // onChange={handleeventTypsChange}
+                onChange={handleVenueCollegeChange}
                 renderInput={(params) => <TextField fullWidth required {...params} label="Venue College" />}
               />
             </Grid>}
