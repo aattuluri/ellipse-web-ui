@@ -80,7 +80,7 @@ const NavigationBar = function ({ history }) {
   // }
   function handleSearchChange(event, value) {
     if(value){
-      console.log(value);
+      // console.log(value);
       setSearchedEvent(value);
       setOpen(true);
     }
@@ -236,7 +236,7 @@ function handleNotificationClick(){
                   textColor="primary"
                   aria-label="icon tabs example"
                 >
-                  <Tab onClick={handleHomeClick} icon={<HomeIcon />} aria-label="home" />
+                  <Tab onClick={handleHomeClick} icon={<HomeIcon/>} aria-label="home" />
                   <Tab onClick={handleeventClick} icon={<EventIcon />} aria-label="event" />
                   {/* <Tab onClick={handleChatClick} icon={<TelegramIcon />} aria-label="favorite" /> */}
                   <Tab onClick={handleExploreClick} icon={<ExploreIcon />} aria-label="person" />

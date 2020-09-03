@@ -41,7 +41,7 @@ const Signup = ({ history }) => {
   const [loading, setLoading] = React.useState(false);
   const { vertical, horizontal, open, message, type,autoHide } = state;
   const handleClose = async (event, reason) => {
-    console.log(token);
+    // console.log(token);
 
     if (message === "Signedup successfully") {
       localStorage.setItem('token', token);
@@ -64,7 +64,7 @@ const Signup = ({ history }) => {
           username: username.value
         };
         data = JSON.stringify(payload);
-        console.log(data);
+        // console.log(data);
         fetch(process.env.REACT_APP_API_URL+'/api/users/signup', {
           headers: {
             'Content-Type': 'application/json',
@@ -81,7 +81,7 @@ const Signup = ({ history }) => {
                 email: val.useremail
               };
               data2 = JSON.stringify(payload2)
-              console.log(token);
+              // console.log(token);
               const tok = val.token;
               fetch(process.env.REACT_APP_API_URL+'/api/users/sendverificationemail', {
                 headers: {
@@ -91,7 +91,7 @@ const Signup = ({ history }) => {
                 method: 'POST',
                 body: data2
               }).then((result) => {
-                console.log(result);
+                // console.log(result);
                 result.json().then((res) => {
                   if (res.message === "success") {
                     setState({

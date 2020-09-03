@@ -181,7 +181,7 @@ const EventEdit = (props) => {
     }
     // console
     try {
-      console.log("started");
+      // console.log("started");
       // getBase64(image, (result) => {
       var data = new FormData();
       const payload = {
@@ -208,7 +208,7 @@ const EventEdit = (props) => {
         venue_college: venueCollege
       };
       data = JSON.stringify(payload);
-      console.log(data);
+      // console.log(data);
       fetch(process.env.REACT_APP_API_URL + '/api/updateevent', {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -220,7 +220,7 @@ const EventEdit = (props) => {
       }).then(result => {
         if (result.status === 200) {
           result.json().then(value => {
-            console.log(value);
+            // console.log(value);
             event = value.event;
             if (imageUpdated) {
               var data2 = new FormData()
@@ -513,9 +513,9 @@ const EventEdit = (props) => {
                 multiple
                 id="tags-filled"
                 options={eventTypes.map((option) => option)}
-                defaultValue={[eventTypes[1]]}
+                // defaultValue={[eventTypes[1]]}
                 freeSolo
-                value={eventThemes || ""}
+                value={eventThemes || []}
                 onChange={handleeventTagsChange}
                 renderTags={(value, getTagProps) =>
                   value.map((option, index) => (

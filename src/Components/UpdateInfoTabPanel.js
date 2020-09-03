@@ -190,7 +190,7 @@ function UpdateInfoTabPanel(props) {
                 bio: bio,
             };
             data = JSON.stringify(payload);
-            console.log(data);
+            // console.log(data);
             // http://139.59.16.53:4000/api
             fetch(process.env.REACT_APP_API_URL+'/api/users/updateprofile', {
                 headers: {
@@ -203,7 +203,7 @@ function UpdateInfoTabPanel(props) {
             }).then(response => {
                 if (response.status === 200) {
                     response.json().then(val => {
-                        console.log(val.message)
+                        // console.log(val.message)
                         if (imageUpdated) {
                             var data2 = new FormData()
                             data2.append("image", image);

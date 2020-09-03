@@ -53,8 +53,8 @@ export default function ImgMediaCard(props) {
           Share
         </Button>
         <Button onClick={handleViewButtonClick} size="small" color="primary">
-        {t==='dark' ?<Link to={{pathname:`/event/${event._id}`,state:{event: props.event}}}   style={{textDecoration:'none',color:'#ffffff'}}>View</Link> :
-        <Link to={{pathname:`/event/${event._id}`,state:{event: props.event}}}   style={{textDecoration:'none',color:'#000000'}}>View</Link>}
+        {t==='light' ?<Link to={{pathname:`/event/${event._id}`,state:{event: props.event}}}   style={{textDecoration:'none',color:'#000000'}}>View</Link> :
+        <Link to={{pathname:`/event/${event._id}`,state:{event: props.event}}}   style={{textDecoration:'none',color:'#ffffff'}}>View</Link>}
         </Button>
       </CardActions>
       <EventShareDialog
