@@ -84,8 +84,8 @@ function UpdatePasswordTabPanel(props) {
         setLoading(true);
         event.preventDefault();
         // const { cPassword, nPassword } = event.target.elements;
-        console.log(cPassword);
-        console.log(nPassword);
+        // console.log(cPassword);
+        // console.log(nPassword);
         try{
             var data = new FormData()
         const payload = {
@@ -94,7 +94,7 @@ function UpdatePasswordTabPanel(props) {
           nPassword: nPassword
         };
         data = JSON.stringify(payload);
-        console.log(data);
+        // console.log(data);
         fetch(process.env.REACT_APP_API_URL+'/api/users/updatepassword', {
           headers: {
             'Authorization': `Bearer ${token}`,

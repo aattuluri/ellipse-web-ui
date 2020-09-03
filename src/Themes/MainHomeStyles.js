@@ -93,7 +93,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   tabs: {
-    marginLeft: theme.spacing(14),
+    marginLeft: theme.spacing(5),
     display: 'none',
     [theme.breakpoints.up('lg')]: {
       display: 'flex',

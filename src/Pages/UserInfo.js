@@ -150,7 +150,7 @@ const UserInfo = ({ history }) => {
             }).then(response => {
                 if (response.status === 200) {
                     response.json().then(val => {
-                        console.log(val.message)
+                        // console.log(val.message)
                         if (image != null) {
                             var data2 = new FormData()
                             data2.append("image", image);

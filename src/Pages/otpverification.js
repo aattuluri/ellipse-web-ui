@@ -38,7 +38,7 @@ const OTPver = ({ history }) => {
     const { vertical, horizontal, open, message, type,autoHide} = state;
 
     function handleClose() {
-        console.log("message")
+        // console.log("message")
         if (message === "verified") {
             history.replace("/userinfo")
         }
@@ -68,7 +68,7 @@ const OTPver = ({ history }) => {
             }
             ).then((result) => {
                 result.json().then(val => {
-                    console.log(val.message);
+                    // console.log(val.message);
                     if (val.message === "verified") {
                         setLoading(false);
                         setState({

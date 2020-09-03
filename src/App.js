@@ -16,11 +16,9 @@ import EventDetails from './Pages/EventDetails';
 import EventRegisterForm from './Pages/EventRegistrationform';
 import ExplorePanel from './Pages/ExplorePanel';
 import UnregisteredPage from './Pages/UnregisteredPage';
+import NetworkDetector from './NetworkDetector';
 
 function App() {
-
-  
-
 
 
   return (
@@ -56,4 +54,4 @@ function App() {
 
   );
 }
-export default App;
+export default NetworkDetector(App);

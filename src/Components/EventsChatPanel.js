@@ -82,8 +82,8 @@ const useStyles = makeStyles((theme) => ({
     },
     progress: {
         display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
+        flexDirection: 'column',
+        alignItems: 'center',
     }
 
 }));
@@ -117,7 +117,7 @@ export default function JustifyContent(props) {
                 const mes = JSON.parse(message.data);
                 const cMes = mes.msg;
                 if (mes.event_id === event._id) {
-                    console.log(cMes);
+                    // console.log(cMes);
                     setChatMessages(chatMessages => [...chatMessages, cMes]);
                 }
             }
@@ -154,12 +154,12 @@ export default function JustifyContent(props) {
     }, [event._id, token])
 
 
-    React.useEffect(()=>{
+    React.useEffect(() => {
         if (reference != null) {
             reference.scrollIntoView({ behavior: "smooth" })
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[loading])
+    }, [loading])
 
 
     React.useEffect(() => {
@@ -186,7 +186,7 @@ export default function JustifyContent(props) {
     const handleSendClick = (message) => {
 
         const d = new Date();
-        console.log(d.toISOString())
+        // console.log(d.toISOString())
         webSocket.send(JSON.stringify({
             action: "send_message",
             event_id: event._id,
@@ -211,16 +211,16 @@ export default function JustifyContent(props) {
             {...other}>
             {value === index && (
                 <div>
-                <div  className={classes.progress}>
-                <Fade
-                   
-                        in={loading}
-                        unmountOnExit>
-                        <CircularProgress />
-                    
-                    </Fade>
-                </div>
-                    
+                    <div className={classes.progress}>
+                        <Fade
+
+                            in={loading}
+                            unmountOnExit>
+                            <CircularProgress />
+
+                        </Fade>
+                    </div>
+
                     <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={dialogOpen}>
                         <List>
                             <ListItem button>
@@ -245,7 +245,7 @@ export default function JustifyContent(props) {
                     <Box className={classes.topBar}>
                         {
                             chatMessages.map((value, index) => {
-                                
+
                                 const currentDate = new Date();
                                 const messageDate = new Date(value.date);
                                 if (messageDate.toDateString() !== counterDate) {
@@ -257,13 +257,13 @@ export default function JustifyContent(props) {
                                                 <Typography variant="body2">{currentDate.toDateString() === messageDate.toDateString() ? "Today" : messageDate.toDateString()}</Typography>
                                             </Box>
 
-                                            <Box  m={1} p={1} key={index + 1} className={classes.root3}>
+                                            <Box m={1} p={1} key={index + 1} className={classes.root3}>
 
-                                                <Box  className={classes.root2} whiteSpace="normal" onClick={() => setDialogOpen(false)} >
+                                                <Box className={classes.root2} whiteSpace="normal" onClick={() => setDialogOpen(false)} >
                                                     <ChatMessage message={value} ></ChatMessage>
                                                 </Box>
                                                 <Box className={classes.root5}>
-                                                    <Avatar alt={value.userName} src={process.env.REACT_APP_API_URL+`/api/image?id=${value.user_pic}`} />
+                                                    <Avatar alt={value.userName} src={process.env.REACT_APP_API_URL + `/api/image?id=${value.user_pic}`} />
                                                 </Box>
                                             </Box></React.Fragment>);
 
@@ -279,7 +279,7 @@ export default function JustifyContent(props) {
 
                                             <Box m={1} key={index} className={classes.root}>
                                                 <Box className={classes.root4}>
-                                                    <Avatar alt={value.userName} src={process.env.REACT_APP_API_URL`/api/image?id=${value.user_pic}`} />
+                                                    <Avatar alt={value.userName} src={process.env.REACT_APP_API_URL + `/api/image?id=${value.user_pic}`} />
                                                 </Box>
                                                 <Box className={classes.root2} whiteSpace="normal" >
                                                     <ChatMessage message={value}></ChatMessage>

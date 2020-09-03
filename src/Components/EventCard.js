@@ -265,8 +265,8 @@ function Eventcard(props) {
             event.reg_mode === "form" ? <Button disabled={event.registered ? true : false} size="small" color="primary" variant="contained" className={classes.button} onClick={handleRegClick}>
               {event.registered ? "Registered" : "Register"}
             </Button> : <Button disabled={event.registered ? true : false} size="small" color="primary" variant="contained" className={classes.button}>
-                {t === 'dark' ? <a href={event.reg_link}  style={{ textDecoration: 'none', color: '#000000' }} target="blank">Register</a> : 
-                <a href={event.reg_link}  style={{ textDecoration: 'none', color: '#ffffff' }} target="blank">Register</a>}
+                {t === 'light' ? <a href={event.reg_link}  style={{ textDecoration: 'none', color: '#ffffff' }} target="blank">Register</a> : 
+                <a href={event.reg_link}  style={{ textDecoration: 'none', color: '#000000' }} target="blank">Register</a>}
               </Button>
           }
 

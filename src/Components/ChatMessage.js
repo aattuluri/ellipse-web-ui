@@ -8,6 +8,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import InfoIcon from '@material-ui/icons/Info';
 import { ListItemAvatar } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
+import Linkify from 'react-linkify';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -62,7 +63,14 @@ function ChatMessage(props) {
                 secondary={
                     <React.Fragment>
                         <Typography component="span" variant="body1" color="textPrimary" className={classes.inline}>
-                            {message.message}
+                            <Linkify
+                                componentDecorator={(decoratedHref, decoratedText, key) => (
+                                    <a target="blank" style={{color:'red',fontWeight: 'bold'}} href={decoratedHref} key={key}>
+                                        {decoratedText}
+                                    </a>
+                                )}
+                            >{message.message}</Linkify>
+                            {/* <Linkify properties={{ target: '_blank', style: { color: 'red', fontWeight: 'bold' } }}>{message.message}</Linkify> */}
                         </Typography>
                         <Box>
                             <Typography
