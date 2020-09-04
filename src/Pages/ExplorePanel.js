@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import EventsDialog from '../Components/EventsDialog';
 import EventsContext from '../EventsContext';
-import AuthContext from '../AuthContext';
+// import AuthContext from '../AuthContext';
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
@@ -93,26 +93,21 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function CalenderPanel(props) {
+function ExplorePanel(props) {
     localStorage.setItem('tabIndex', 2)
-    // const { children, value, url, index, ...other } = props;
-    const user = React.useContext(AuthContext);
-    // const token = localStorage.getItem('token');
+    // const user = React.useContext(AuthContext);
     const classes = useStyles();
-    // const [allEvents, setAllEvents] = React.useState([]);
-    // const [regEvents, setRegEvents] = React.useState([]);
     const [open, setOpen] = React.useState(false);
     const [selectedEvent, setSelectedEvent] = React.useState([]);
-    // const [image, setImage] = React.useState(null);
     const allEvents = React.useContext(EventsContext);
     const activeEvents = React.useContext(ActiveEvents);
     const regEvents = allEvents.filter((val) => {
         return val.registered === true;
     });
 
-    const postedEvents = allEvents.filter((val) => {
-        return val.user_id === user.user_id;
-    });
+    // const postedEvents = allEvents.filter((val) => {
+    //     return val.user_id === user.user_id;
+    // });
 
     const pastEvents = allEvents.filter((val) => {
         const cDate = new Date();
@@ -150,24 +145,7 @@ function CalenderPanel(props) {
                     </Grid>
                     <Grid item xs={12} sm={12} md={8} lg={8} >
                         <div className={classes.root2}>
-                        <Accordion  className={classes.accordion}>
-                                <AccordionSummary
-                                    expandIcon={<ExpandMoreIcon />}
-                                    aria-controls="panel1a-content"
-                                    id="panel1a-header">
-                                    <Typography className={classes.heading}>Past Events</Typography>
-                                </AccordionSummary>
-                                <AccordionDetails>
-                                    <Grid container component="main" spacing={2}>
-                                        {pastEvents.map((event, index) => {
-                                            return (<Grid item xs={12} sm={12} md={4} key={index}>
-                                                <ProfileEventCard event={event} handleViewClick={handleEventClick(event)} name={event.name} ></ProfileEventCard>
-                                            </Grid>)
-                                        })}
-                                    </Grid>
-                                </AccordionDetails>
-                            </Accordion>
-                            <Accordion className={classes.accordion}>
+                        <Accordion className={classes.accordion}>
                                 <AccordionSummary
                                     expandIcon={<ExpandMoreIcon />}
                                     aria-controls="panel1a-content"
@@ -184,7 +162,25 @@ function CalenderPanel(props) {
                                     </Grid>
                                 </AccordionDetails>
                             </Accordion>
-                            <Accordion defaultExpanded className={classes.accordion}>
+                        <Accordion defaultExpanded className={classes.accordion}>
+                                <AccordionSummary
+                                    expandIcon={<ExpandMoreIcon />}
+                                    aria-controls="panel1a-content"
+                                    id="panel1a-header">
+                                    <Typography className={classes.heading}>Past Events</Typography>
+                                </AccordionSummary>
+                                <AccordionDetails>
+                                    <Grid container component="main" spacing={2}>
+                                        {pastEvents.map((event, index) => {
+                                            return (<Grid item xs={12} sm={12} md={4} key={index}>
+                                                <ProfileEventCard event={event} handleViewClick={handleEventClick(event)} name={event.name} ></ProfileEventCard>
+                                            </Grid>)
+                                        })}
+                                    </Grid>
+                                </AccordionDetails>
+                            </Accordion>
+                            
+                            {/* <Accordion defaultExpanded className={classes.accordion}>
                                 <AccordionSummary
                                     expandIcon={<ExpandMoreIcon />}
                                     aria-controls="panel1a-content"
@@ -200,7 +196,7 @@ function CalenderPanel(props) {
                                         })}
                                     </Grid>
                                 </AccordionDetails>
-                            </Accordion>
+                            </Accordion> */}
                         </div>
                     </Grid>
                     <Grid item xs={12} sm={12} md={4} lg={2} >
@@ -264,4 +260,4 @@ function CalenderPanel(props) {
     );
 }
 
-export default CalenderPanel;
+export default ExplorePanel;

@@ -54,6 +54,9 @@ const useStyles = makeStyles((theme) => ({
 export default function AddressForm(props) {
 
   const classes = useStyles();
+  const [startDateError,setStartDateError] = React.useState(false);
+  const [endDateError,setEndDateError] = React.useState(false);
+  const [regEndDateError,setRegEndDateError] = React.useState(false);
   const eventTypes = ["Hackathon", "Coding Contest", "Webinar"];
 
   function handleEventNameChange(event) {
@@ -65,12 +68,15 @@ export default function AddressForm(props) {
   }
 
   const handleStartDateChange = (date) => {
+    setStartDateError(false);
     props.setStartDate(date);
   };
   const handleendDateChange = (date) => {
+    setEndDateError(false);
     props.setEndDate(date);
   };
   const handleRegEndDateChange = (date) => {
+    setRegEndDateError(false);
     props.setRegEndDate(date);
   };
 
@@ -84,7 +90,19 @@ export default function AddressForm(props) {
 
   function handleNext(event) {
     event.preventDefault();
-    props.handleNext();
+    if(props.startDate === null){
+      setStartDateError(true)
+    }
+    else if(props.endDate === null){
+      setEndDateError(true);
+    }
+    else if(props.regEndDate === null){
+      setRegEndDateError(true)
+    }
+    else{
+      props.handleNext();
+    }
+    
   }
   function handleFeeTypeChange(event, value) {
     props.setFeeType(value)
@@ -128,8 +146,9 @@ export default function AddressForm(props) {
           />
         </Grid>
         <Grid item xs={12} sm={6} lg={6}>
-          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+          <MuiPickersUtilsProvider utils={DateFnsUtils} required >
             <DateTimePicker
+            inputProps={{required: true}}            
               minDate={Date.now()}
               fullWidth
               required
@@ -141,7 +160,8 @@ export default function AddressForm(props) {
               name="startDate"
               value={props.startDate}
               onChange={handleStartDateChange}
-
+              error={startDateError}
+              helperText={startDateError && "Fill this field"}
             />
           </MuiPickersUtilsProvider>
 
@@ -160,6 +180,8 @@ export default function AddressForm(props) {
               name="endDate"
               value={props.endDate}
               onChange={handleendDateChange}
+              error={endDateError}
+              helperText={endDateError && "Fill this field"}
             />
           </MuiPickersUtilsProvider>
         </Grid>
@@ -177,6 +199,8 @@ export default function AddressForm(props) {
               name="regEndDate"
               value={props.regEndDate}
               onChange={handleRegEndDateChange}
+              error={regEndDateError}
+              helperText={regEndDateError && "Fill this field"}
             />
           </MuiPickersUtilsProvider>
         </Grid>

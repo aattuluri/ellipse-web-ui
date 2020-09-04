@@ -168,6 +168,7 @@ const EventEdit = (props) => {
     if (message === "Saved changes successfully") {
       // history.replace()
       // history.replace("/otpverification")
+      window.location.reload(false);
     }
     setState({ ...state, open: false });
   };

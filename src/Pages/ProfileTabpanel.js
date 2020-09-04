@@ -5,8 +5,6 @@ import UpdateProfileDialog from '../Components/UpdateProfileDialog';
 import { makeStyles } from '@material-ui/core/styles';
 import EventsDialog from '../Components/EventsDialog';
 import Typography from '@material-ui/core/Typography';
-// import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-// import ProfileEventCard from '../Components/ProfileEventCard';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import Paper from '@material-ui/core/Paper';
@@ -154,7 +152,8 @@ function EventsTabPanel(props) {
                                                     <ListItemText primary={event.name} />
 
                                                 </ListItem>
-                                                <Divider /></React.Fragment>
+                                                <Divider />
+                                            </React.Fragment>
                                         })
                                     }
                                 </List>

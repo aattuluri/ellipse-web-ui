@@ -124,6 +124,7 @@ const Signup = (props) => {
   function handleClose() {
     if (message === "Registered successfully") {
       props.history.push('/home')
+      window.location.reload(false);
     }
     setState({ ...state, open: false });
   }

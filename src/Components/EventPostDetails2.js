@@ -170,7 +170,7 @@ export default function AddressForm(props) {
                 ))
               }
               renderInput={(params) => (
-                <TextField {...params} label="Event Themes" placeholder="Event Themes" />
+                <TextField {...params} label="Event Tags" placeholder="Event Tags" />
               )}
             />
           </Grid>
