@@ -212,6 +212,7 @@ function EventsTabPanel({ history }) {
         // console.log(sortStartDate);
         // console.log(modeSortChecked);
         // console.log(sortCollegeType);
+        setFilterDialogOpen(false);
         if (sortStartDate != null && sortEndDate != null) {
             const dateRangeSortedEvents = sortByDateRange(sortStartDate, sortEndDate, allEvents);
             setSortedEventsArray(dateRangeSortedEvents);
@@ -373,8 +374,10 @@ function EventsTabPanel({ history }) {
         setModeSortChecked([0])
         setFeeSortChecked([0])
         setSortedEventsArray([]);
-        // setSortEventMode(null);
+        setSortStartDate(null);
+        setSortEndDate(null);
         setIsFiltered(false);
+        setFilterDialogOpen(false)
         // setChecked(null);
     }
     function handlefilterButtonClicked() {
@@ -432,8 +435,9 @@ function EventsTabPanel({ history }) {
                         Your College Events
                     </Typography>
                     <GridListEvents click={handleClick} events={allEvents.filter((event) => event.college_name === user.college_name)} ></GridListEvents>
-
-
+                    <Typography variant="h5" style={{ paddingTop: '5px',paddingBottom: '7px' }}>
+                        Active Events
+                    </Typography>
 
                     {allEvents.length === 0 && <div>
                         <Skeleton variant="rect" animation="wave" height={118} />

@@ -15,7 +15,6 @@ import AppleBadge from '../Components/Images/AppleBadge.png';
 import GoogleBadge from '../Components/Images/google-play-badge.png';
 import iPhone from '../Components/Images/iPhone 11 Pro Max@2x.png';
 import Copyright from "../Components/copyright";
-// import { AuthContext } from "../Auth";
 import { withRouter, Redirect } from "react-router";
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
@@ -46,7 +45,6 @@ const Signin = ({ history }) => {
   const [email, setEmail] = React.useState(null);
   const abortController = new AbortController();
   const handleClose = async (event, reason) => {
-    // console.log(isUserVerified);
     if (reason === 'clickaway') {
       return;
     }
@@ -54,17 +52,16 @@ const Signin = ({ history }) => {
       localStorage.setItem('token', token);
       if (isUserVerified) {
         localStorage.setItem('token', token);
-        // console.log(isUserVerified);
         const eventId = localStorage.getItem('eventid');
-        if(eventId){
+        if (eventId) {
           abortController.abort()
           history.push(`/event/${eventId}`)
         }
-        else{
+        else {
           abortController.abort()
           history.push('/home');
         }
-       
+
       }
       else {
         try {
@@ -73,7 +70,7 @@ const Signin = ({ history }) => {
             email: email
           };
           data2 = JSON.stringify(payload2)
-          fetch(process.env.REACT_APP_API_URL+'/api/users/sendverificationemail', {
+          fetch(process.env.REACT_APP_API_URL + '/api/users/sendverificationemail', {
             signal: abortController.signal,
             headers: {
               'Authorization': `Bearer ${token}`,
@@ -129,7 +126,7 @@ const Signin = ({ history }) => {
       };
       data = JSON.stringify(payload);
       // console.log(data);
-      fetch(process.env.REACT_APP_API_URL+'/api/users/login', {
+      fetch(process.env.REACT_APP_API_URL + '/api/users/login', {
         signal: abortController.signal,
         headers: {
           'Content-Type': 'application/json',

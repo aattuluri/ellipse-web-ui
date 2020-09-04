@@ -2,7 +2,6 @@ import React from 'react';
 import Copyright from '../Components/copyright';
 import useStyles from '../Themes/SignupPageStyles';
 import { withRouter } from 'react-router';
-// import axios from 'axios';
 
 //MaterialUI imports
 import Avatar from '@material-ui/core/Avatar';
@@ -39,9 +38,11 @@ const Signup = ({ history }) => {
     autoHide: 300
   });
   const [loading, setLoading] = React.useState(false);
-  const { vertical, horizontal, open, message, type,autoHide } = state;
+  const { vertical, horizontal, open, message, type, autoHide } = state;
+  const [nameError, setNameError] = React.useState(false);
+  const [usernameError, setUserNameError] = React.useState(false);
+  const [signupButtonDisabled, setSignupButtonDisabled] = React.useState(false);
   const handleClose = async (event, reason) => {
-    // console.log(token);
 
     if (message === "Signedup successfully") {
       localStorage.setItem('token', token);
@@ -64,8 +65,7 @@ const Signup = ({ history }) => {
           username: username.value
         };
         data = JSON.stringify(payload);
-        // console.log(data);
-        fetch(process.env.REACT_APP_API_URL+'/api/users/signup', {
+        fetch(process.env.REACT_APP_API_URL + '/api/users/signup', {
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
@@ -83,7 +83,7 @@ const Signup = ({ history }) => {
               data2 = JSON.stringify(payload2)
               // console.log(token);
               const tok = val.token;
-              fetch(process.env.REACT_APP_API_URL+'/api/users/sendverificationemail', {
+              fetch(process.env.REACT_APP_API_URL + '/api/users/sendverificationemail', {
                 headers: {
                   'Authorization': `Bearer ${tok}`,
                   'Content-Type': 'application/json'
@@ -146,6 +146,32 @@ const Signup = ({ history }) => {
     }
   }
 
+  function handleUsernameChange(event) {
+    const username = event.target.value;
+    var data = new FormData();
+    const payload = {
+      username: username
+    };
+    data = JSON.stringify(payload);
+    setUserNameError(false);
+    setSignupButtonDisabled(false)
+    fetch(process.env.REACT_APP_API_URL + '/api/check_username', {
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      method: 'POST',
+      body: data
+    }).then((result) => {
+      result.json().then(value => {
+        if (value.message === "user already exists") {
+          setUserNameError(true);
+          setSignupButtonDisabled(true);
+        }
+      })
+    })
+  }
+
   return (
     <Container component="main" maxWidth="sm">
       <CssBaseline />
@@ -177,6 +203,11 @@ const Signup = ({ history }) => {
                 id="fullName"
                 label="Full Name"
                 autoFocus
+                inputProps={{ pattern: "[a-zA-Z ]+" }}
+                onInvalid={() => { setNameError(true) }}
+                helperText={nameError && "Name should only contain alphabet and spaces"}
+                onInput={() => { setNameError(false) }}
+                error={nameError}
               />
             </Grid>
             <Grid item xs={12}>
@@ -187,6 +218,7 @@ const Signup = ({ history }) => {
                 id="email"
                 label="Email Address"
                 name="email"
+                type="email"
                 autoComplete="email"
               />
             </Grid>
@@ -197,67 +229,12 @@ const Signup = ({ history }) => {
                 fullWidth
                 id="username"
                 label="User Name"
+                onChange={handleUsernameChange}
                 name="username"
+                error={usernameError}
+                helperText={usernameError && "username already exists"}
               />
             </Grid>
-            {/* <Grid item xs={12}>
-              <FormControl variant="outlined" fullWidth required>
-                <InputLabel htmlFor="outlined-age-native-simple">Gender</InputLabel>
-                <Select
-                  fullWidth
-                  native
-                  label="Age"
-                  inputProps={{
-                    name: 'gender',
-                    id: 'outlined-age-native-simple',
-                  }}
-                >
-                  <option aria-label="None" value="" />
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
-                  <option value="Others">Others</option>
-                </Select>
-              </FormControl>
-            </Grid> */}
-            {/* <Grid item xs={12}>
-              <FormControl variant="outlined" fullWidth required>
-                <InputLabel htmlFor="outlined-age-native-simple">You are</InputLabel>
-                <Select
-                  fullWidth
-                  native
-                  label="You are"
-                  inputProps={{
-                    name: 'designation',
-                    id: 'outlined-age-native-simple',
-                  }}
-                >
-                  <option aria-label="None" value="" />
-                  <option value="Student">Student</option>
-                  <option value="WorkingProfessional">Working Professional</option>
-                  <option value="Club/Organisation">Club/Organisation</option>
-                </Select>
-              </FormControl>
-            </Grid> */}
-            {/* <Grid item xs={12}>
-              <FormControl variant="outlined" fullWidth required>
-                <InputLabel htmlFor="outlined-age-native-simple">Your College</InputLabel>
-                <Select
-                  fullWidth
-                  native
-                  label="College"
-                  inputProps={{
-                    name: 'college',
-                    id: 'outlined-age-native-simple',
-                  }}
-                >
-                  <option aria-label="None" value="" />
-                  <option value="VIT University">VIT University</option>
-                  <option value="GITAM University">GITAM University</option>
-                  <option value="SRM University">SRM University</option>
-                </Select>
-              </FormControl>
-            </Grid> */}
-
             <Grid item xs={12}>
               <TextField
                 variant="outlined"
@@ -283,7 +260,7 @@ const Signup = ({ history }) => {
             fullWidth
             variant="contained"
             color="primary"
-            disabled={loading}
+            disabled={loading || signupButtonDisabled}
             className={classes.submit}
           >
             {loading ? <CircularProgress color="primary" size={24} /> : "Sign Up"}
@@ -297,8 +274,6 @@ const Signup = ({ history }) => {
           </Grid>
         </form>
       </div>
-
-      {/* </Grid> */}
       <Box mt={2}>
         <Copyright />
       </Box>

@@ -1,17 +1,16 @@
 import React from 'react';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-// import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-// import Button from '@material-ui/core/Button';
-import { makeStyles,useTheme } from '@material-ui/core/styles';
-// import Grid from '@material-ui/core/Grid';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import UpdateInfoTabPanel from './UpdateInfoTabPanel';
 import UpdatePasswordTabPanel from './UpdatePasswordTabPanel';
+import CloseIcon from '@material-ui/icons/Close';
+import IconButton from '@material-ui/core/IconButton';
 
 
 function a11yProps(index) {
@@ -22,10 +21,7 @@ function a11yProps(index) {
 }
 
 const useStyles = makeStyles((theme) => ({
-    // backdrop: {
-    //     zIndex: theme.zIndex.drawer + 1,
-    //     color: '#fff',
-    // },
+    
     icons: {
         position: 'absolute',
         right: theme.spacing(1),
@@ -38,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
         // width: '100%',
         // backgroundColor: theme.palette.background.paper,
     },
-    bottomTags:{
+    bottomTags: {
         position: 'absolute',
         left: theme.spacing(1),
         bottom: theme.spacing(1),
@@ -57,8 +53,8 @@ function UpdateProfile(props) {
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
-    function handleClose(){
-        props.handleClose();    
+    function handleClose() {
+        props.handleClose();
     }
 
     return (
@@ -70,42 +66,30 @@ function UpdateProfile(props) {
             aria-describedby="scroll-dialog-description"
             fullWidth={true}
             maxWidth="md"
-            style={{minHeight:"400px"}}
+            style={{ minHeight: "400px" }}
             PaperProps={{
                 style: {
                     backgroundColor: theme.palette.secondary.main,
                     boxShadow: 'none',
                 },
             }}
-            classes={{ paper: classes.dialog }}
-
-        >
+            classes={{ paper: classes.dialog }}>
             <DialogTitle id="scroll-dialog-title">
-                {/* {props.name}
                 <div className={classes.icons}>
-                    <IconButton aria-label="add to favorites">
-                        <FavoriteIcon />
+                    <IconButton aria-label="close" className={classes.closeButton} onClick={handleClose}>
+                        <CloseIcon fontSize="large" />
                     </IconButton>
-                    <IconButton aria-label="share">
-                        <MailIcon></MailIcon>
-                    </IconButton>
-                    <IconButton aria-label="share">
-                        <ShareIcon />
-                    </IconButton>
-                </div> */}
+                </div>
                 <div className={classes.root}>
                     <AppBar style={{ alignItems: 'center' }} position="static" color="secondary">
                         <Tabs
-
                             value={value}
                             onChange={handleChange}
                             indicatorColor="primary"
                             textColor="primary"
                             variant="scrollable"
                             scrollButtons="auto"
-                            aria-label="scrollable auto tabs example"
-                        //   centered
-                        >
+                            aria-label="scrollable auto tabs example">
                             <Tab label="Update info" {...a11yProps(0)} />
                             <Tab label="Change Password" {...a11yProps(1)} />
                         </Tabs>
@@ -113,12 +97,10 @@ function UpdateProfile(props) {
                 </div>
             </DialogTitle>
             <DialogContent dividers={true}>
-            <UpdateInfoTabPanel value={value} index={0}></UpdateInfoTabPanel>
-            <UpdatePasswordTabPanel value={value} index={1}></UpdatePasswordTabPanel>
-                
+                <UpdateInfoTabPanel value={value} index={0}></UpdateInfoTabPanel>
+                <UpdatePasswordTabPanel value={value} index={1}></UpdatePasswordTabPanel>
             </DialogContent>
             <DialogActions alignItems="center">
-            {/* <Button>Update Profile</Button> */}
             </DialogActions>
         </Dialog>
     )
