@@ -4,30 +4,17 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import PersonPinIcon from '@material-ui/icons/PersonPin';
 import Paper from '@material-ui/core/Paper';
-// import { fade, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
-// import MenuIcon from '@material-ui/icons/Menu';
 import Typography from '@material-ui/core/Typography';
-// import Button from '@material-ui/core/Button';
-// import InputBase from '@material-ui/core/InputBase';
 import Badge from '@material-ui/core/Badge';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-// import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
-// import AccountCircle from '@material-ui/icons/AccountCircle';
-// import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
-// import MoreIcon from '@material-ui/icons/MoreVert';
-// import HomeIcon from '@material-ui/icons/Home';
-// import TelegramIcon from '@material-ui/icons/Telegram';
 import EventIcon from '@material-ui/icons/Event';
-// import Box from '@material-ui/core/Box';
-// import TabPanel from './EventsTabpanel';
 import useStyles from '../Themes/MainHomeStyles';
-// import { Grid, Button } from '@material-ui/core';
 import ExploreIcon from '@material-ui/icons/Explore';
 import SettingsIcon from '@material-ui/icons/Settings';
 import HomeIcon from '@material-ui/icons/Home';
@@ -35,22 +22,25 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
 import EventsDialog from '../Components/EventsDialog';
 import EventsContext from '../EventsContext';
-// import AuthContext from '../AuthContext';
 import NotificationsDialog from '../Components/NotficationsDialog';
 import Switch from '@material-ui/core/Switch';
-import DarkLogo from '../Components/Images/dark_theme_logo.png';
-import LightLogo from '../Components/Images/light_theme_logo.png';
+import { Button } from '@material-ui/core';
+import Logo from '../Components/Images/logo.svg';
+// import DarkLogo from '../Components/Images/dark_theme_logo.png';
+// import LightLogo from '../Components/Images/light_theme_logo.png';
 // import CuboidLogo from '../Components/Images/Cuboid logo.png'
 
 
 
 
 
+
 const NavigationBar = function ({ history }) {
+
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const t = localStorage.getItem('theme');
-  const [darkThemeSelected,setDarkThemeSelected] = React.useState(t === 'light'?false:true);
+  const [darkThemeSelected, setDarkThemeSelected] = React.useState(t === 'light' ? false : true);
   // const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const [value, setValue] = React.useState(0);
   // const [allEvents, setAllEvents] = React.useState([]);
@@ -62,7 +52,7 @@ const NavigationBar = function ({ history }) {
   // const [loading, setLoading] = React.useState(false);
   // const eventypes = ["Hackathon", "Coding Contest", "Webinar"];
   const [open, setOpen] = React.useState(false);
-  const [notificationsOpen,setNotificationsOpen] = React.useState(false);
+  const [notificationsOpen, setNotificationsOpen] = React.useState(false);
   const allEvents = React.useContext(EventsContext);
   useEffect(() => {
     if (localStorage.getItem('tabIndex') != null) {
@@ -79,7 +69,7 @@ const NavigationBar = function ({ history }) {
   //   // history.push("/event/1")
   // }
   function handleSearchChange(event, value) {
-    if(value){
+    if (value) {
       // console.log(value);
       setSearchedEvent(value);
       setOpen(true);
@@ -104,28 +94,28 @@ const NavigationBar = function ({ history }) {
   };
 
   const token = localStorage.getItem('token');
-  if(!token){
+  if (!token) {
     history.replace('/');
   }
 
-  function handleThemeChange(event){
+  function handleThemeChange(event) {
     console.log(event.target.checked);
     setDarkThemeSelected(event.target.checked);
-    if(event.target.checked){
-      localStorage.setItem('theme','dark');
+    if (event.target.checked) {
+      localStorage.setItem('theme', 'dark');
       window.location.reload(false);
     }
-    else{
-      localStorage.setItem('theme','light');
+    else {
+      localStorage.setItem('theme', 'light');
       window.location.reload(false);
     }
   }
 
-  
+
 
   function handleSignout(event) {
 
-    fetch(process.env.REACT_APP_API_URL+'/api/users/logout', {
+    fetch(process.env.REACT_APP_API_URL + '/api/users/logout', {
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
@@ -165,7 +155,7 @@ const NavigationBar = function ({ history }) {
         inputProps={{ 'aria-label': 'primary checkbox' }}
       /></MenuItem>
       <MenuItem onClick={handleSignout}>Log Out</MenuItem>
-      
+
     </Menu>
   );
 
@@ -181,7 +171,7 @@ const NavigationBar = function ({ history }) {
   function handleProfileClick() {
     history.push("/profile")
   }
-  function handleExploreClick(){
+  function handleExploreClick() {
     history.push("/yourevents")
   }
   // function handleChatClick() {
@@ -195,22 +185,29 @@ const NavigationBar = function ({ history }) {
   function handleRegistrationButton(event) {
     setOpen(false);
     // setSelectedEvent(event);
-    history.push('/event/register/' + event._id);
-}
+    // history.push('/event/register/' + event._id);
+  }
 
-function handleNotificationClick(){
-  setNotificationsOpen(true);
-}
+  function handleNotificationClick() {
+    setNotificationsOpen(true);
+  }
+  function handleTitleButtonClick() {
+    localStorage.setItem('tabIndex', 0)
+    setValue(0)
+    history.push('/home')
+  }
 
   return (
     <div className={classes.grow}>
       <React.Fragment>
         <AppBar position="sticky" color="secondary">
           <Toolbar>
-          <img src={t==='light'?LightLogo:DarkLogo} alt="logo" height="45" width="45"></img>
-            <Typography className={classes.title} variant="h5" noWrap>
-              Ellipse
-          </Typography>
+            <img src={Logo} alt="logo" onClick={handleTitleButtonClick} className={classes.mobileTitle}></img>
+            <Button className={classes.titleButton} onClick={handleTitleButtonClick}>
+              <Typography className={classes.title} variant="h5" noWrap>
+                Ellipse
+              </Typography>
+            </Button>
             <div className={classes.search}>
               <div className={classes.searchIcon}>
                 <SearchIcon />
@@ -234,9 +231,10 @@ function handleNotificationClick(){
                   variant="fullWidth"
                   indicatorColor="primary"
                   textColor="primary"
-                  aria-label="icon tabs example"
+                  aria-label="icon"
+
                 >
-                  <Tab onClick={handleHomeClick} icon={<HomeIcon/>} aria-label="home" />
+                  <Tab onClick={handleHomeClick} icon={<HomeIcon />} aria-label="home" />
                   <Tab onClick={handleeventClick} icon={<EventIcon />} aria-label="event" />
                   {/* <Tab onClick={handleChatClick} icon={<TelegramIcon />} aria-label="favorite" /> */}
                   <Tab onClick={handleExploreClick} icon={<ExploreIcon />} aria-label="person" />
@@ -258,8 +256,7 @@ function handleNotificationClick(){
                 aria-controls={menuId}
                 aria-haspopup="true"
                 onClick={handleProfileMenuOpen}
-                color="inherit"
-              >
+                color="inherit">
                 <SettingsIcon></SettingsIcon>
               </IconButton>
             </div>
@@ -278,7 +275,7 @@ function handleNotificationClick(){
                 textColor="primary"
               // aria-label="icon tabs example"
               >
-                <Tab onClick={handleHomeClick} icon={<HomeIcon />} aria-label="home" />
+                <Tab onClick={handleHomeClick} icon={< HomeIcon />} aria-label="home" />
                 <Tab onClick={handleeventClick} icon={<EventIcon />} aria-label="event" />
                 {/* <Tab onClick={handleChatClick} icon={<TelegramIcon />} aria-label="messages" /> */}
                 <Tab onClick={handleExploreClick} icon={<ExploreIcon />} aria-label="explore" />
@@ -288,7 +285,7 @@ function handleNotificationClick(){
           </div>
         </AppBar>
         <div>
-         { open && <EventsDialog
+          {open && <EventsDialog
             open={open}
             event={searchedEvent}
             handleReg={handleRegistrationButton}

@@ -21,6 +21,7 @@ import AboutEventPanel from '../Components/AboutEventPanel';
 import EventsTimeLinePanel from '../Components/EventTimeLinePanel';
 import EvenstAnnouncementsPanel from '../Components/EventsAnnouncementsPanel';
 import ChatPanel from '../Components/EventsChatPanel';
+import { Typography } from '@material-ui/core';
 
 
 
@@ -76,6 +77,12 @@ const useStyles = makeStyles((theme) => ({
         alignItems: 'center',
         justifyContent: 'center',
         // minHeight: '50px'
+    },
+    dialogContent: {
+        [theme.breakpoints.down('md')]: {
+            padding: theme.spacing(1)
+        },
+
     }
 }));
 
@@ -165,7 +172,7 @@ function EventsDialog(props) {
                     </Paper>
                 </div>
             </DialogTitle>
-            <DialogContent dividers={true} >
+            <DialogContent className={classes.dialogContent} dividers={true} >
                 <EventShareDialog
                     event={event}
                     open={shareDialogOpen}
@@ -176,7 +183,8 @@ function EventsDialog(props) {
                     event={props.event}></AboutEventPanel>
                 <EventsTimeLinePanel value={value} index={1} event={props.event}></EventsTimeLinePanel>
                 <EvenstAnnouncementsPanel value={value} index={2} event={props.event}></EvenstAnnouncementsPanel>
-                {value === 3 && <ChatPanel value={value} index={3} event={props.event}></ChatPanel>}
+                {value === 3 && (event.registered || event.regMode !== "form") && <ChatPanel value={value} index={3} event={props.event}></ChatPanel>}
+                {value === 3 && event.reg_mode === "form" && event.registered !== true && <Typography align="center" variant="h5" >Register for the event to continue</Typography>}
             </DialogContent>
             <DialogActions className={classes.action}>
                 <Box className={classes.bottomBar} display="flex"

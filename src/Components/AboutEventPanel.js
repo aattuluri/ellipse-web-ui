@@ -128,12 +128,12 @@ function AboutEventPanel(props) {
                             {/* <Typography>Starts at {event.start_time}</Typography>
                         <Typography>Ends at {event.finish_time}</Typography> */}
                             <div style={{ marginTop: '10px' }}>
-                                <Chip variant="outlined" color="primary" label={event.event_type}></Chip>
+                                <Chip variant="outlined" color="inherit" label={event.event_type}></Chip>
 
-                                <Chip style={{ marginLeft: '5px' }} variant="outlined" color="primary" label={event.fee_type}></Chip>
-                                <Chip style={{ marginLeft: '5px' }} variant="outlined" color="primary" label={event.event_mode}></Chip>
+                                <Chip style={{ marginLeft: '5px' }} variant="outlined" color="inherit" label={event.fee_type}></Chip>
+                                <Chip style={{ marginLeft: '5px' }} variant="outlined" color="inherit" label={event.event_mode}></Chip>
                                 {tags != null && tags.map(val => {
-                                    return <Chip key={val} style={{ marginLeft: '5px' }} variant="outlined" color="primary" label={val}></Chip>
+                                    return <Chip key={val} style={{ marginLeft: '5px' }} variant="outlined" color="inherit" label={val}></Chip>
                                 })}
                             </div>
 

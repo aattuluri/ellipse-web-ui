@@ -54,10 +54,10 @@ const useStyles = makeStyles((theme) => ({
         // display: 'fixed'
     },
     root4: {
-        marginRight: theme.spacing(0.5)
+        marginRight: theme.spacing(0)
     },
     root5: {
-        marginLeft: theme.spacing(0.5),
+        marginLeft: theme.spacing(0),
         maxWidth: '65%',
         overflow: 'auto',
         //    textOverflow: "ellipsis"

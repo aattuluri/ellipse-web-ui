@@ -9,9 +9,6 @@ import SendIcon from '@material-ui/icons/Send';
 import IconButton from '@material-ui/core/IconButton';
 
 
-
-
-
 const useStyles = makeStyles((theme) => ({
     bottomBar: {
         position: 'absolute',
@@ -23,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
         borderRadius: theme.spacing(5),
     },
     open: {
-        position: 'absolute',
+        position: 'fixed',
         right: theme.spacing(4),
         bottom: theme.spacing(4),
         left: theme.spacing(34),
@@ -32,7 +29,8 @@ const useStyles = makeStyles((theme) => ({
         borderRadius: theme.spacing(5),
     },
     close: {
-        position: 'absolute',
+        // width: '85%',
+        position: 'fixed',
         right: theme.spacing(4),
         bottom: theme.spacing(4),
         left: theme.spacing(13),

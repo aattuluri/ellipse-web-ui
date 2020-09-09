@@ -61,6 +61,8 @@ const useStyles = makeStyles((theme) => ({
         [theme.breakpoints.down('md')]: {
             display: 'none',
         },
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.primary.light,
     },
     fab: {
         position: 'fixed',
