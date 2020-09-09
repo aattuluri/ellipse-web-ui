@@ -19,6 +19,7 @@ const useStyles = makeStyles((theme) => ({
         padding: theme.spacing(0),
         paddingBottom: theme.spacing(4),
         borderRadius: 30,
+        height: '80vh',
         [theme.breakpoints.down('sm')]: {
             margin: theme.spacing(0, 1),
             paddingBottom: theme.spacing(2),
@@ -32,6 +33,10 @@ const useStyles = makeStyles((theme) => ({
         [theme.breakpoints.down('sm')]: {
             margin: theme.spacing(3, 1),
           },
+          [theme.breakpoints.up('md')]: {
+            height: '80vh',
+          },
+          
     },
     paperimage: {
         margin: theme.spacing(1),
@@ -41,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
     },
     avatar: {
         margin: theme.spacing(),
-        marginTop: theme.spacing(10),
+        marginTop: theme.spacing(8),
         backgroundColor: theme.palette.primary.main,
     },
     form: {
@@ -58,7 +63,19 @@ const useStyles = makeStyles((theme) => ({
         [theme.breakpoints.down('sm')]: {
             display: 'none'
           },
-    }
+    },
+    title: {
+        
+        fontFamily: 'Gugi',
+        // marginLeft: theme.spacing(1),
+        color: theme.palette.primary.dark,
+        fontWeight: 'bold'
+      },
+      hidden:{
+        [theme.breakpoints.down('sm')]: {
+            display: 'none'
+          },
+      }
 }));
 
 export default useStyles;

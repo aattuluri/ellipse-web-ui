@@ -4,11 +4,7 @@ import Grid from '@material-ui/core/Grid';
 import EventsDialog from '../Components/EventsDialog';
 import EventsContext from '../EventsContext';
 // import AuthContext from '../AuthContext';
-import Accordion from '@material-ui/core/Accordion';
-import AccordionSummary from '@material-ui/core/AccordionSummary';
-import AccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ProfileEventCard from '../Components/ProfileEventCard';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
@@ -21,6 +17,8 @@ import Avatar from '@material-ui/core/Avatar';
 import Divider from '@material-ui/core/Divider';
 import List from '@material-ui/core/List';
 import ActiveEvents from '../ActiveEventsContext';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -34,7 +32,13 @@ const useStyles = makeStyles((theme) => ({
 
     },
     root2: {
-        marginTop: theme.spacing(3)
+        marginTop: theme.spacing(3),
+        display: 'flex',
+        alignItems: "center",
+        justifyContent: 'center',
+        backgroundColor: theme.palette.primary.light,
+        marginBottom: theme.spacing(2),
+        padding: theme.spacing(1)
     },
     accordion: {
         backgroundColor: theme.palette.primary.light,
@@ -66,6 +70,8 @@ const useStyles = makeStyles((theme) => ({
         [theme.breakpoints.down('md')]: {
             display: 'none',
         },
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.primary.light,
     },
     fab: {
         position: 'fixed',
@@ -91,6 +97,9 @@ const useStyles = makeStyles((theme) => ({
             display: 'none',
         },
     },
+    content: {
+        marginTop: theme.spacing(3)
+    },
 }));
 
 function ExplorePanel(props) {
@@ -104,6 +113,13 @@ function ExplorePanel(props) {
     const regEvents = allEvents.filter((val) => {
         return val.registered === true;
     });
+
+    const [value, setValue] = React.useState(0);
+    // const user = React.useContext(AuthContext);
+
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
+    };
 
     // const postedEvents = allEvents.filter((val) => {
     //     return val.user_id === user.user_id;
@@ -129,11 +145,11 @@ function ExplorePanel(props) {
         props.history.push('/post')
     }
 
-    const handleRegisterdEventClick = (event) => ()=>{
+    const handleRegisterdEventClick = (event) => () => {
         setSelectedEvent(event);
         setOpen(true);
     }
-    
+
 
 
     return (
@@ -141,104 +157,77 @@ function ExplorePanel(props) {
             <div className={classes.root}>
                 <Grid container component="main">
                     <Grid item xs={12} sm={12} md={4} lg={2} >
-                        {/* <Typography index={0}>Filters</Typography> */}
                     </Grid>
                     <Grid item xs={12} sm={12} md={8} lg={8} >
-                        <div className={classes.root2}>
-                        <Accordion className={classes.accordion}>
-                                <AccordionSummary
-                                    expandIcon={<ExpandMoreIcon />}
-                                    aria-controls="panel1a-content"
-                                    id="panel1a-header">
-                                    <Typography className={classes.heading}>Registered Events</Typography>
-                                </AccordionSummary>
-                                <AccordionDetails>
-                                    <Grid container component="main" spacing={2}>
-                                        {regEvents.map((event, index) => {
-                                            return (<Grid item xs={12} sm={12} md={4} key={index}>
-                                                <ProfileEventCard event={event} handleViewClick={handleEventClick(event)} name={event.name} ></ProfileEventCard>
-                                            </Grid>)
-                                        })}
-                                    </Grid>
-                                </AccordionDetails>
-                            </Accordion>
-                        <Accordion defaultExpanded className={classes.accordion}>
-                                <AccordionSummary
-                                    expandIcon={<ExpandMoreIcon />}
-                                    aria-controls="panel1a-content"
-                                    id="panel1a-header">
-                                    <Typography className={classes.heading}>Past Events</Typography>
-                                </AccordionSummary>
-                                <AccordionDetails>
-                                    <Grid container component="main" spacing={2}>
-                                        {pastEvents.map((event, index) => {
-                                            return (<Grid item xs={12} sm={12} md={4} key={index}>
-                                                <ProfileEventCard event={event} handleViewClick={handleEventClick(event)} name={event.name} ></ProfileEventCard>
-                                            </Grid>)
-                                        })}
-                                    </Grid>
-                                </AccordionDetails>
-                            </Accordion>
-                            
-                            {/* <Accordion defaultExpanded className={classes.accordion}>
-                                <AccordionSummary
-                                    expandIcon={<ExpandMoreIcon />}
-                                    aria-controls="panel1a-content"
-                                    id="panel1a-header">
-                                    <Typography className={classes.heading}>Posted Events</Typography>
-                                </AccordionSummary>
-                                <AccordionDetails>
-                                    <Grid container component="main" spacing={2}>
-                                        {postedEvents.map((event, index) => {
-                                            return (<Grid item xs={12} sm={12} md={4} key={index}>
-                                                <ProfileEventCard event={event} handleViewClick={handleEventClick(event)} name={event.name} ></ProfileEventCard>
-                                            </Grid>)
-                                        })}
-                                    </Grid>
-                                </AccordionDetails>
-                            </Accordion> */}
+                        {/* <div className={classes.root2}> */}
+                        <Paper className={classes.root2}>
+                            <Tabs
+                                value={value}
+                                onChange={handleChange}
+                                indicatorColor="primary"
+                                textColor="primary"
+                                variant="scrollable"
+                                scrollButtons="on">
+                                <Tab label="Registered Events" />
+                                <Tab label="Past Events" />
+                            </Tabs>
+                        </Paper>
+                        <div className={classes.content}>
+                            {value === 0 && <Grid container component="main" alignItems="center" spacing={0}>
+                                {regEvents.map((event, index) => {
+                                    return (<Grid item xs={12} sm={12} md={4} key={index}>
+                                        <ProfileEventCard event={event} handleViewClick={handleEventClick(event)} name={event.name} ></ProfileEventCard>
+                                    </Grid>)
+                                })}
+
+                            </Grid>}
+                            {value === 1 && <Grid container component="main" alignItems="center" spacing={0}>
+                                {pastEvents.map((event, index) => {
+                                    return (<Grid item xs={12} sm={12} md={4} alignItems="center" key={index}>
+                                        <ProfileEventCard event={event} handleViewClick={handleEventClick(event)} name={event.name} ></ProfileEventCard>
+                                    </Grid>)
+                                })}
+                            </Grid>}
                         </div>
+
                     </Grid>
                     <Grid item xs={12} sm={12} md={4} lg={2} >
-                    <Fab color="primary" aria-label="add" className={classes.fab} onClick={handlePostButtonClick}>
-                        <AddIcon />
-                    </Fab>
-                    <Paper className={classes.rpaper}>
-                        <Paper className={classes.subRpaper}>
-                            <Button
-                                onClick={handlePostButtonClick}
-                                variant="contained"
-                                fullWidth
-                                size="large"
-                                className={classes.postButton} >
-                                Post Event
-                        </Button>
-                            <List className={classes.sideList}>
-                                
-                                <Typography variant="body2">Explore Events</Typography>
-                                {
-                                    activeEvents.map((event, index) => {
-                                        return <React.Fragment key={index} >
-                                        <ListItem onClick={handleRegisterdEventClick(event)} key={index} button>
-                                            <ListItemAvatar>
-                                                <Avatar  variant="square"
-                                                    alt={event.name}
-                                                    src={process.env.REACT_APP_API_URL+`/api/image?id=${event.poster_url}`}
-                                                />
-                                            </ListItemAvatar>
-                                            <ListItemText  primary={event.name} />
-                                            
-                                        </ListItem>
-                                        <Divider  /></React.Fragment>
-                                    })
-                                }
-                            </List>
-                           
+                        <Fab color="primary" aria-label="add" className={classes.fab} onClick={handlePostButtonClick}>
+                            <AddIcon />
+                        </Fab>
+                        <Paper className={classes.rpaper}>
+                            <Paper className={classes.subRpaper}>
+                                <Button
+                                    onClick={handlePostButtonClick}
+                                    variant="contained"
+                                    fullWidth
+                                    size="large"
+                                    className={classes.postButton} >
+                                    Post Event
+                                </Button>
+                                <List className={classes.sideList}>
 
+                                    <Typography variant="body2">Explore Events</Typography>
+                                    {
+                                        activeEvents.map((event, index) => {
+                                            return <React.Fragment key={index} >
+                                                <ListItem onClick={handleRegisterdEventClick(event)} key={index} button>
+                                                    <ListItemAvatar>
+                                                        <Avatar variant="square"
+                                                            alt={event.name}
+                                                            src={process.env.REACT_APP_API_URL + `/api/image?id=${event.poster_url}`}
+                                                        />
+                                                    </ListItemAvatar>
+                                                    <ListItemText primary={event.name} />
+                                                </ListItem>
+                                                <Divider /></React.Fragment>
+                                        })
+                                    }
+                                </List>
+                            </Paper>
                         </Paper>
-                    </Paper>
 
-                </Grid>
+                    </Grid>
                 </Grid>
                 <div>
                     <EventsDialog

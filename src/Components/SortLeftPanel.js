@@ -71,7 +71,8 @@ const useStyles = makeStyles((theme) => ({
     filterButton: {
         margin: theme.spacing(1),
         width: theme.spacing(10),
-        borderRadius: theme.spacing(50)
+        borderRadius: theme.spacing(50),
+        backgroundColor: theme.palette.primary.main
     },
 
 }));

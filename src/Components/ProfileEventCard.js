@@ -11,9 +11,9 @@ import { Link } from 'react-router-dom';
 import EventShareDialog from '../Components/EventShareDialog';
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-        backgroundColor: theme.palette.secondary.main,
-    }
+  root: {
+    backgroundColor: theme.palette.secondary.main,
+  }
 }));
 
 export default function ImgMediaCard(props) {
@@ -22,45 +22,45 @@ export default function ImgMediaCard(props) {
   const t = localStorage.getItem('theme');
   // const [image, setImage] = React.useState(null);
   // const token = localStorage.getItem('token');
-  const [shareDialogOpen,setShareDialogOpen] = React.useState(false);
-  function handleViewButtonClick(){
+  const [shareDialogOpen, setShareDialogOpen] = React.useState(false);
+  function handleViewButtonClick() {
     props.handleViewClick(props.event);
   }
 
-  function handleShareClose(){
+  function handleShareClose() {
     setShareDialogOpen(false);
   }
-  function handleShareClick(){
+  function handleShareClick() {
     setShareDialogOpen(true);
   }
 
   return (
     <Card className={classes.root}>
       {/* <CardActionArea> */}
-        <CardMedia
-          component="img"
-          height="180"
-          image={process.env.REACT_APP_API_URL+`/api/image?id=${event.poster_url}`}
-        />
-        <CardContent>
-          <Typography gutterBottom variant="h5" component="h2">
-            {props.name}
-          </Typography>
-        </CardContent>
+      <CardMedia
+        component="img"
+        height="180"
+        image={process.env.REACT_APP_API_URL + `/api/image?id=${event.poster_url}`}
+      />
+      <CardContent>
+        <Typography gutterBottom variant="h5" component="h2">
+          {props.name}
+        </Typography>
+      </CardContent>
 
       <CardActions>
-        <Button  size="small" color="primary" onClick={handleShareClick}>
+        <Button size="small" color="primary" onClick={handleShareClick}>
           Share
         </Button>
         <Button onClick={handleViewButtonClick} size="small" color="primary">
-        {t==='light' ?<Link to={{pathname:`/event/${event._id}`,state:{event: props.event}}}   style={{textDecoration:'none',color:'#000000'}}>View</Link> :
-        <Link to={{pathname:`/event/${event._id}`,state:{event: props.event}}}   style={{textDecoration:'none',color:'#ffffff'}}>View</Link>}
+          {t === 'light' ? <Link target="_blank" to={{ pathname: `/event/${event._id}`, state: { event: props.event } }} style={{ textDecoration: 'none', color: '#00bdaa' }}>View</Link> :
+            <Link target='_blank' to={{ pathname: `/event/${event._id}`, state: { event: props.event } }} style={{ textDecoration: 'none', color: '#00bdaa' }}>View</Link>}
         </Button>
       </CardActions>
       <EventShareDialog
-      event = {event} 
-      open={shareDialogOpen} 
-      handleClose={handleShareClose}></EventShareDialog>
+        event={event}
+        open={shareDialogOpen}
+        handleClose={handleShareClose}></EventShareDialog>
     </Card>
   );
 }

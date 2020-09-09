@@ -3,17 +3,17 @@ import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
+// import FormControlLabel from '@material-ui/core/FormControlLabel';
+// import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import useStyles from '../Themes/SigninPageStyles'
-import AppleBadge from '../Components/Images/AppleBadge.png';
-import GoogleBadge from '../Components/Images/google-play-badge.png';
-import iPhone from '../Components/Images/iPhone 11 Pro Max@2x.png';
+// import AppleBadge from '../Components/Images/AppleBadge.png';
+import GoogleBadge from '../Components/Images/google-play-badge.png'
+// import iPhone from '../Components/Images/iPhone 11 Pro Max@2x.png';
 import Copyright from "../Components/copyright";
 import { withRouter, Redirect } from "react-router";
 import Snackbar from '@material-ui/core/Snackbar';
@@ -196,21 +196,23 @@ const Signin = ({ history }) => {
         open={open}
         autoHideDuration={autoHide}
         onClose={handleClose}
-        key={vertical + horizontal}
-      >
+        key={vertical + horizontal}>
         <Alert onClose={handleClose} severity={type}>{message}</Alert>
       </Snackbar>
       <Grid item xs={12} sm={12} md={7} elevation={6} >
-        <div className={classes.paperLeft}>
-          <Typography component="h1" variant="h3">
+        <Box display="flex" flexDirection="column" justifyContent="flex-start" m={1} p={1} className={classes.paperLeft}>
+          <Typography className={classes.title} component="h1" variant="h2">
             Ellipse
           </Typography>
           <Typography component="h1" variant="h6">
             Kill time for what matters
           </Typography><br></br>
-          {/* <div className={classes.iphoneImage}> */}
-          <img src={iPhone} className={classes.iPhoneImage} alt="iphone" height="500px" width="300px" align="center"></img><br></br>
-          <div className={classes.paperimage}>
+          <img className={classes.hidden} src={GoogleBadge} alt="playstore"></img><br></br>
+        </Box>
+        {/* <div className={classes.paperLeft}> */}
+
+          {/* <img src={iPhone} className={classes.iPhoneImage} alt="iphone" height="500px" width="300px" align="center"></img><br></br> */}
+          {/* <div className={classes.paperimage}>
             <Grid item xs={12} sm={12} md={12} className={classes.iPhoneImage} elevation={12}>
 
               <img src={GoogleBadge} alt="playstore" height="100px" width="250px"></img><br></br>
@@ -218,15 +220,13 @@ const Signin = ({ history }) => {
             <Grid item xs={12} sm={12} className={classes.iPhoneImage} md={12} elevation={12} >
               <img src={AppleBadge} alt="appstore" height="70px" width="220px"></img>
             </Grid>
-          </div>
-          {/* </div> */}
+          </div> */}
 
-        </div>
+        {/* </div> */}
       </Grid>
 
       <Grid item xs={12} sm={12} md={5} elevation={6}>
-        <div className={classes.paperRight} >
-
+        <Box display="flex" flexDirection="column" justifyContent="center" m={1} p={1} className={classes.paperRight}>
           <Avatar className={classes.avatar}>
             <LockOutlinedIcon />
           </Avatar>
@@ -234,7 +234,6 @@ const Signin = ({ history }) => {
             Sign in
           </Typography>
           <form className={classes.form} onSubmit={handleSignin}>
-
             <TextField
               name="email"
               variant="outlined"
@@ -257,10 +256,10 @@ const Signin = ({ history }) => {
               id="password"
               autoComplete="current-password"
             />
-            <FormControlLabel
+            {/* <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
-            />
+            /> */}
             <div className={classes.wrapper}>
               <Button
                 type="submit"
@@ -268,8 +267,7 @@ const Signin = ({ history }) => {
                 variant="contained"
                 color="primary"
                 disabled={loading}
-                className={classes.submit}
-              >
+                className={classes.submit}>
                 {loading ? <CircularProgress color="primary" size={24} /> : "Sign In"}
 
               </Button>
@@ -287,12 +285,11 @@ const Signin = ({ history }) => {
                 </Link>
               </Grid>
             </Grid>
-            <Box mt={5}>
-              <Copyright />
-            </Box>
           </form>
-
-        </div>
+          <Box display="flex" flexDirection="column" justifyContent="flex-end">
+            <Copyright></Copyright>
+          </Box>
+        </Box>
       </Grid>
     </Grid>
   );

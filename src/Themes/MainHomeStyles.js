@@ -2,18 +2,19 @@ import { fade, makeStyles } from '@material-ui/core/styles';
 
 
 const useStyles = makeStyles((theme) => ({
-  // '@global': {
-  //   '*::-webkit-scrollbar': {
-  //     width: '0.8em'
-  //   },
-  //   '*::-webkit-scrollbar-track': {
-  //     '-webkit-box-shadow': 'inset 0 0 6px rgba(f,f,f,0.00)'
-  //   },
-  //   '*::-webkit-scrollbar-thumb': {
-  //     backgroundColor: theme.palette.background.paper,
-  //     outline: '20px solid grey'
-  //   }
-  // },
+  '@global': {
+    '*::-webkit-scrollbar': {
+      width: '0.5em',
+      height: '0.5em'
+    },
+    '*::-webkit-scrollbar-track': {
+      '-webkit-box-shadow': 'inset 0 0 1px rgba(0,0,0,0.00)'
+    },
+    '*::-webkit-scrollbar-thumb': {
+      backgroundColor: '#ad9d9d',
+      outline: '1px solid slategrey'
+    }
+  },
   paper: {
     marginTop: theme.spacing(0),
     display: 'flex',
@@ -41,7 +42,33 @@ const useStyles = makeStyles((theme) => ({
       display: 'block',
     },
     fontFamily: 'Gugi',
-    marginLeft: theme.spacing(1)
+    // marginLeft: theme.spacing(1),
+    color: theme.palette.primary.dark,
+    fontWeight: 'bold'
+  },
+  mobileTitle:{
+    [theme.breakpoints.up('sm')]: {
+      display: 'none',
+    },
+    
+  },
+  titleButton: {
+    display: 'none',
+    [theme.breakpoints.up('sm')]: {
+      display: 'inline-block',
+    },
+    margin: theme.spacing(0),
+    padding: theme.spacing(0),
+    textTransform: 'none'
+  },
+  mobileTitleButton: {
+    display: 'none',
+    [theme.breakpoints.down('xs')]: {
+      display: 'inline-block',
+      width: 'fit-content'
+    },
+    margin: theme.spacing(0),
+    padding: theme.spacing(0)
   },
   search: {
     position: 'relative',
@@ -50,8 +77,8 @@ const useStyles = makeStyles((theme) => ({
     '&:hover': {
       backgroundColor: fade(theme.palette.common.white, 0.25),
     },
-    marginRight: theme.spacing(2),
-    marginLeft: theme.spacing(3),
+    marginRight: theme.spacing(1),
+    marginLeft: theme.spacing(1),
     width: '230px',
     [theme.breakpoints.up('md')]: {
       marginLeft: theme.spacing(3),
@@ -93,11 +120,12 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   tabs: {
-    marginLeft: theme.spacing(5),
+    
     display: 'none',
     [theme.breakpoints.up('lg')]: {
       display: 'flex',
       flexDirection: 'row',
+      marginLeft: theme.spacing(15),
     },
   },
   mobiletab: {

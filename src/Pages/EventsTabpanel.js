@@ -77,6 +77,8 @@ const useStyles = makeStyles((theme) => ({
         [theme.breakpoints.down('md')]: {
             display: 'none',
         },
+        // color: theme.palette.primary.main
+        backgroundColor: theme.palette.primary.main
     },
     root: {
         background: theme.palette.primary.light,

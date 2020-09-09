@@ -4,7 +4,7 @@ import Grid from '@material-ui/core/Grid';
 // import { Typography } from '@material-ui/core';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid'
-import '../main.scss'
+import '../Themes/main.scss'
 import EventsDialog from '../Components/EventsDialog';
 // import EventsContext from '../EventsContext';
 // import AuthContext from '../AuthContext';
@@ -59,6 +59,8 @@ const useStyles = makeStyles((theme) => ({
         [theme.breakpoints.down('md')]: {
             display: 'none',
         },
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.primary.light,
     },
     fab: {
         position: 'fixed',
@@ -149,6 +151,7 @@ function CalenderPanel({history}) {
                     <Grid item xs={12} sm={12} md={9} lg={8} >
                         <FullCalendar
                             eventBackgroundColor="#1C1C1E"
+                            eventBorderColor="#00bdaa"
                             events={events}
                             eventClick={handleEventClick}
                             defaultView='dayGridMonth' plugins={[dayGridPlugin]} backgroundColor="black" 
@@ -170,7 +173,6 @@ function CalenderPanel({history}) {
                                 Post Event
                         </Button>
                             <List className={classes.sideList}>
-                                
                                 <Typography variant="body2">Registered Events</Typography>
                                 {
                                     registeredEvents.map((event, index) => {
@@ -189,8 +191,6 @@ function CalenderPanel({history}) {
                                     })
                                 }
                             </List>
-                           
-
                         </Paper>
                     </Paper>
 

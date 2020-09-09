@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
     // height: theme.spacing
   },
   title: {
-    color: theme.palette.primary.dark,
+    color: theme.palette.primary.main,
   },
   titleBar: {
     background:

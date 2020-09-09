@@ -19,8 +19,6 @@ import UnregisteredPage from './Pages/UnregisteredPage';
 import NetworkDetector from './NetworkDetector';
 
 function App() {
-
-
   return (
     <AuthProvider>
       <Router>
@@ -34,14 +32,14 @@ function App() {
             <Route exact path="/otpverification" component={OTPVer}></Route>
             <Route exact path="/un/event/:eventId" component={UnregisteredPage}></Route>
             {/* <Route exact path="/resetforgotpassword" component ={ForgotPassword2}></Route> */}
-            
+            <Route exact path="/event/:eventId" component={EventDetails} />
             <Layout>
             <Route path="/home" component={EventsTabPanel}></Route>
               <Route exact path="/events" component={CalenderPanel}></Route>
               <Route exact path="/post" component={EventPostForm}></Route>
               <Route exact path="/profile" component={ProfileTabPanel}></Route>
               {/* <Route exact path="/chat" component={ChatPage}></Route> */}
-              <Route exact path="/event/:eventId" component={EventDetails} />
+              
               <Route exact path="/event/register/:eventId" component={EventRegisterForm} />
               <Route exact path="/yourevents" component={ExplorePanel}></Route>
             </Layout>

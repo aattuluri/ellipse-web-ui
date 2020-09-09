@@ -1,37 +1,34 @@
-
 import React from 'react';
 import clsx from 'clsx';
-import { makeStyles} from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
 import CssBaseline from '@material-ui/core/CssBaseline';
-// import Typography from '@material-ui/core/Typography';
+
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-// import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
+import SettingsIcon from '@material-ui/icons/Settings';
+import EditIcon from '@material-ui/icons/Edit';
+import InfoIcon from '@material-ui/icons/Info';
+import TelegramIcon from '@material-ui/icons/Telegram';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import TimelineIcon from '@material-ui/icons/Timeline';
 import AnnouncementIcon from '@material-ui/icons/Announcement';
-// import BarChartIcon from '@material-ui/icons/BarChart'; 
-import SettingsIcon from '@material-ui/icons/Settings';
-import EventPost from './EventEdit';
-import EditIcon from '@material-ui/icons/Edit';
-import InfoIcon from '@material-ui/icons/Info';
+
+
+import EventDetailsNavigationBar from '../Components/EventDetailsNavigationBar';
+import AnnouncementPanel from '../Components/EventsAnnouncementsPanel';
 import AboutPanel from '../Components/AboutEventPanel';
 import TimeLinePanel from '../Components/EventTimeLinePanel';
 import DashboardPanel from '../Components/DashboardPanel';
-import TelegramIcon from '@material-ui/icons/Telegram';
-import ChatPanel from '../Components/EventsChatPanel';
-// import ChatTextField from '../Components/ChatTextField';
-import AuthContext from '../AuthContext';
-import { Typography } from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
-import AnnouncementPanel from '../Components/EventsAnnouncementsPanel';
+import ChatPanel from '../Components/EventDetailsChatPanel';
+import EventPost from './EventEdit';
+
 
 const drawerWidth = 240;
 
@@ -39,6 +36,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
   },
+  
   menuButton: {
     marginRight: 36,
   },
@@ -46,15 +44,12 @@ const useStyles = makeStyles((theme) => ({
     display: 'none',
   },
   drawer: {
-    position: 'relative',
     width: drawerWidth,
     flexShrink: 0,
     whiteSpace: 'nowrap',
-    zIndex: '1'
   },
   drawerOpen: {
     width: drawerWidth,
-    position: 'relative',
     transition: theme.transitions.create('width', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
@@ -62,7 +57,6 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.secondary.main,
   },
   drawerClose: {
-    position: 'relative',
     transition: theme.transitions.create('width', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
@@ -82,50 +76,27 @@ const useStyles = makeStyles((theme) => ({
     // necessary for content to be below app bar
     ...theme.mixins.toolbar,
   },
-  mobToolbar: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    padding: theme.spacing(0, 1),
-    // necessary for content to be below app bar
-    ...theme.mixins.toolbar,
-    [theme.breakpoints.up('lg')]: {
-      display: 'none'
-    },
-  },
   content: {
-    // position: 'relative',
-    // display: 'flex',
     flexGrow: 1,
-    padding: theme.spacing(2),
-    height: '84vh',
-    [theme.breakpoints.up('lg')]: {
-      height: '92vh',
+    [theme.breakpoints.up('md')]: {
+      padding: theme.spacing(3),
     },
-    overflow: 'auto',
   },
-  // chat: {
-  //   // position: 'relative',
-  //   // position: 'fixed',
-  //   // overflow: 'auto',
-  //   // height: '92vh',
-  //   // width: '70%'
-  // },
-  closeButton: {
-    position: 'absolute',
-    right: theme.spacing(1),
-    top: theme.spacing(7),
-    [theme.breakpoints.down('md')]: {
-      top: theme.spacing(12),
-    }
-  }
+
 }));
 
 export default function MiniDrawer(props) {
   const classes = useStyles();
-  localStorage.removeItem('eventid')
-  const [open, setOpen] = React.useState(true);
-  const [selected,setSelected] = React.useState({
+  const theme = useTheme();
+
+  const token = localStorage.getItem('token');
+  const id = props.match.params.eventId;
+
+  const [drawerOpen, setDrawerOpen] = React.useState(false);
+  const [event, setEvent] = React.useState({});
+  const [adminAccess, setAdminAccess] = React.useState(false);
+  const [currentUser, setCurrentUser] = React.useState({});
+  const [selected, setSelected] = React.useState({
     infoSelected: true,
     dashBoardSelected: false,
     timilineSelected: false,
@@ -134,115 +105,130 @@ export default function MiniDrawer(props) {
     editEventSelected: false,
     chatSelected: false
   })
-  const token = localStorage.getItem('token');
-  const user = React.useContext(AuthContext);
-  const id = props.match.params.eventId;
-  const [event,setEvent] = React.useState({});
-  const [adminAccess,setAdminAccess] = React.useState(false);
+
+
   React.useEffect(() => {
-    fetch(process.env.REACT_APP_API_URL+`/api/event?id=${id}`, {
-        headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        },
-        method: 'GET',
+    fetch(process.env.REACT_APP_API_URL + `/api/event?id=${id}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      method: 'GET',
     }).then(response => {
-        response.json().then(value => {
-          const ev = value.event;
-          if(ev.user_id === user.user_id){
-            setAdminAccess(true);
-          }
-            setEvent(value.event);
-        })
+      response.json().then(val => {
+        setEvent(val.event);
+        
+      })
     })
-}, [token,id,user.user_id])
+    
+  }, [token,id])
+
+  console.log(adminAccess)
+  React.useEffect(()=>{
+    if( event.user_id !== undefined && currentUser.user_id !== undefined){
+      if (event.user_id === currentUser.user_id) {
+        // console.log(event);
+        // console.log(currentUser)
+        setAdminAccess(true);
+      }
+    }
+    
+  },[currentUser,event])
 
 
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
+
+  // const handleDrawerOpen = () => {
+  //   setDrawerOpen(true);
+  // };
 
   const handleDrawerClose = () => {
-    setOpen(false);
+    setDrawerOpen(false);
   };
 
-  function infoClicked(){
+  function handleHomeClick() {
+    props.history.push("/home")
+    // localStorage.setItem('tabIndex',2);
+  }
+
+
+
+  function infoClicked() {
     setSelected({
       infoSelected: true,
       dashBoardSelected: false,
-    timilineSelected: false,
-    announcementSelected: false,
-    settingsSelected: false,
-    editEventSelected: false,
-    chatSelected: false
+      timilineSelected: false,
+      announcementSelected: false,
+      settingsSelected: false,
+      editEventSelected: false,
+      chatSelected: false
     })
   }
 
-  function dashBoardClicked(){
+  function dashBoardClicked() {
     setSelected({
       infoSelected: false,
       dashBoardSelected: true,
-    timilineSelected: false,
-    announcementSelected: false,
-    settingsSelected: false,
-    editEventSelected: false,
-    chatSelected: false
+      timilineSelected: false,
+      announcementSelected: false,
+      settingsSelected: false,
+      editEventSelected: false,
+      chatSelected: false
     })
   }
-  function timelineClicked(){
+  function timelineClicked() {
     setSelected({
       infoSelected: false,
       dashBoardSelected: false,
-    timilineSelected: true,
-    announcementSelected: false,
-    settingsSelected: false,
-    editEventSelected: false,
-    chatSelected: false
+      timilineSelected: true,
+      announcementSelected: false,
+      settingsSelected: false,
+      editEventSelected: false,
+      chatSelected: false
     })
   }
-  function announcementsClicked(){
+  function announcementsClicked() {
     setSelected({
       infoSelected: false,
       dashBoardSelected: false,
-    timilineSelected: false,
-    announcementSelected: true,
-    settingsSelected: false,
-    editEventSelected: false,
-    chatSelected: false
+      timilineSelected: false,
+      announcementSelected: true,
+      settingsSelected: false,
+      editEventSelected: false,
+      chatSelected: false
     })
   }
-  function settingsClicked(){
+  function settingsClicked() {
     setSelected({
       infoSelected: false,
       dashBoardSelected: false,
-    timilineSelected: false,
-    announcementSelected: false,
-    settingsSelected: true,
-    editEventSelected: false,
-    chatSelected: false
+      timilineSelected: false,
+      announcementSelected: false,
+      settingsSelected: true,
+      editEventSelected: false,
+      chatSelected: false
     })
   }
-  function editEventClicked(){
+  function editEventClicked() {
     setSelected({
       infoSelected: false,
       dashBoardSelected: false,
-    timilineSelected: false,
-    announcementSelected: false,
-    settingsSelected: false,
-    editEventSelected: true,
-    chatSelected: false
+      timilineSelected: false,
+      announcementSelected: false,
+      settingsSelected: false,
+      editEventSelected: true,
+      chatSelected: false
     })
   }
-  function chatClicked(){
+  function chatClicked() {
     setSelected({
       infoSelected: false,
       dashBoardSelected: false,
-    timilineSelected: false,
-    announcementSelected: false,
-    settingsSelected: false,
-    editEventSelected: false,
-    chatSelected: true
+      timilineSelected: false,
+      announcementSelected: false,
+      settingsSelected: false,
+      editEventSelected: false,
+      chatSelected: true
     })
   }
   const {
@@ -251,121 +237,112 @@ export default function MiniDrawer(props) {
     timilineSelected,
     announcementSelected,
     settingsSelected,
-    editEventSelected,chatSelected} = selected;
+    editEventSelected, chatSelected } = selected;
 
-
-    function handleCloseButton(){
-      props.history.goBack();
+    function handleSignout(){
+      props.history.replace('/');
     }
 
 
   return (
     <div className={classes.root}>
       <CssBaseline />
+      <EventDetailsNavigationBar event={event} handleSignout={handleSignout} handleHomeClick={handleHomeClick} setUser={setCurrentUser}  dOpen={drawerOpen} setDOpen={setDrawerOpen}></EventDetailsNavigationBar>
       <Drawer
         variant="permanent"
         className={clsx(classes.drawer, {
-          [classes.drawerOpen]: open,
-          [classes.drawerClose]: !open,
+          [classes.drawerOpen]: drawerOpen,
+          [classes.drawerClose]: !drawerOpen,
         })}
         classes={{
           paper: clsx({
-            [classes.drawerOpen]: open,
-            [classes.drawerClose]: !open,
+            [classes.drawerOpen]: drawerOpen,
+            [classes.drawerClose]: !drawerOpen,
           }),
-        }}
-      >
-        {/* <div className={classes.toolbar} /> */}
-        {/* <div className={classes.mobToolbar} /> */}
+        }}>
         <div className={classes.toolbar}>
-          {open ?
-            <IconButton onClick={handleDrawerClose}>
-              <ChevronLeftIcon />
-            </IconButton>
-            : <IconButton onClick={handleDrawerOpen}>
-              <MenuIcon></MenuIcon>
-            </IconButton>}
+          <IconButton onClick={handleDrawerClose}>
+            {theme.direction === 'rtl' ? <ChevronRightIcon color="primary"/> : <ChevronLeftIcon color="primary"/>}
+          </IconButton>
         </div>
         <Divider />
         <List>
           <ListItem button onClick={infoClicked} selected={infoSelected}>
             <ListItemIcon >
-              <InfoIcon />
+              <InfoIcon color="primary" />
             </ListItemIcon>
             <ListItemText primary="About" />
           </ListItem>
           <ListItem button onClick={timelineClicked} selected={timilineSelected}>
-            <ListItemIcon >
-              <TimelineIcon></TimelineIcon>
+            <ListItemIcon>
+              <TimelineIcon color="primary"></TimelineIcon>
             </ListItemIcon>
             <ListItemText primary="Schedule" />
           </ListItem>
           <ListItem button onClick={announcementsClicked} selected={announcementSelected}>
             <ListItemIcon>
-              <AnnouncementIcon></AnnouncementIcon>
+              <AnnouncementIcon color="primary"></AnnouncementIcon>
             </ListItemIcon>
             <ListItemText primary="Announcements" />
           </ListItem>
           <ListItem button onClick={chatClicked} selected={chatSelected}>
             <ListItemIcon>
-              <TelegramIcon></TelegramIcon>
+              <TelegramIcon color="primary"></TelegramIcon>
             </ListItemIcon>
             <ListItemText primary="Chat" />
           </ListItem>
         </List>
         <Divider />
         {
-
-        adminAccess && <List>
-          <ListItem button onClick={dashBoardClicked} selected={dashBoardSelected}>
-            <ListItemIcon >
-              <DashboardIcon />
-            </ListItemIcon>
-            <ListItemText primary="Dashboard" />
-          </ListItem>
-          <ListItem button onClick={editEventClicked} selected={editEventSelected}>
-            <ListItemIcon>
-              <EditIcon></EditIcon>
-            </ListItemIcon>
-            <ListItemText primary="Edit Event" />
-          </ListItem>
-          <ListItem button onClick={settingsClicked} selected={settingsSelected}>
-            <ListItemIcon>
-              <SettingsIcon></SettingsIcon>
-            </ListItemIcon>
-            <ListItemText primary="Settings" />
-          </ListItem>
-        </List>
+          adminAccess && <List>
+            <ListItem button onClick={dashBoardClicked} selected={dashBoardSelected}>
+              <ListItemIcon >
+                <DashboardIcon color="primary"/>
+              </ListItemIcon>
+              <ListItemText primary="Dashboard" />
+            </ListItem>
+            <ListItem button onClick={editEventClicked} selected={editEventSelected}>
+              <ListItemIcon>
+                <EditIcon color="primary"></EditIcon>
+              </ListItemIcon>
+              <ListItemText primary="Edit Event" />
+            </ListItem>
+            <ListItem button onClick={settingsClicked} selected={settingsSelected}>
+              <ListItemIcon>
+                <SettingsIcon color="primary"></SettingsIcon>
+              </ListItemIcon>
+              <ListItemText primary="Settings" />
+            </ListItem>
+          </List>
         }
       </Drawer>
       <main className={classes.content}>
-      <Typography align= 'center' variant="h4" style={{paddingBottom:"20px",paddingTop:"10px"}}>{event.name}</Typography>
-      <IconButton aria-label="close" className={classes.closeButton} onClick={handleCloseButton}>
-          <CloseIcon fontSize="large" />
-      </IconButton>
+        <div className={classes.toolbar} />
+        {/* <Typography align='center' variant="h4" style={{ paddingBottom: "20px", paddingTop: "10px" }}>{event.name}</Typography> */}
         {
-          infoSelected && event != null && <AboutPanel event = {event}></AboutPanel>
+          infoSelected && event != null && <AboutPanel event={event}></AboutPanel>
         }
         {
-          editEventSelected && event != null &&  <EventPost event = {event} ></EventPost>
+          editEventSelected && event != null && <EventPost event={event} ></EventPost>
         }
         {
-          timilineSelected && event != null && <TimeLinePanel event = {event}></TimeLinePanel>
+          timilineSelected && event != null && <TimeLinePanel event={event}></TimeLinePanel>
         }
         {
-          dashBoardSelected && event != null && <DashboardPanel event = {event}></DashboardPanel>
+          dashBoardSelected && event != null && <DashboardPanel event={event}></DashboardPanel>
         }
         {
-          chatSelected && event != null && <div className={classes.chat} ><ChatPanel open={open} event = {event}></ChatPanel></div>
+          chatSelected && event != null && <div className={classes.chat} ><ChatPanel user={currentUser} open={drawerOpen} event={event}></ChatPanel></div>
         }
         {
-          announcementSelected && event != null && <AnnouncementPanel event = {event}></AnnouncementPanel>
+          announcementSelected && event != null && <AnnouncementPanel event={event}></AnnouncementPanel>
         }
-
-        
-        
       </main>
     </div>
   );
 }
+
+
+
+
 

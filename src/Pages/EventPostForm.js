@@ -137,6 +137,7 @@ export default function Checkout({ history }) {
   const [venueCollege, setVenueCollege] = React.useState(null);
   const [participantsType, setParticipantsType] = React.useState("open");
   const [fields, setFields] = React.useState([]);
+  const [platformDetails,setPlatformDetails] = React.useState(null);
 
 
 
@@ -189,6 +190,8 @@ export default function Checkout({ history }) {
             registrationMode={registrationMode}
             venueCollege={venueCollege}
             participantsType={participantsType}
+            platformDetails={platformDetails}
+            setPlatformDetails={setPlatformDetails}
             setThemes={setEventThemes}
             setPoster={setImage}
             setRegLink={setRegLink}
@@ -247,7 +250,8 @@ export default function Checkout({ history }) {
         venue: building,
         reg_fields: allFields,
         reg_mode: registrationMode,
-        o_allowed: oAllowed
+        o_allowed: oAllowed,
+        platform_details: platformDetails
       };
       data = JSON.stringify(payload);
       fetch(process.env.REACT_APP_API_URL+'/api/events', {
