@@ -68,24 +68,7 @@ function ProfilePostsTabPanel(props) {
                     url={user.imageUrl}>
                     {/* imageDialog={handleImageDialogOpen} */}
                 </EventsDialog>
-                    {/* <Grid item xs={12} sm={12} md={4}>
-                    <ProfileEventCard image={url}></ProfileEventCard>
-                    </Grid>
-                    <Grid item xs={12} sm={12} md={4}>
-                    <ProfileEventCard image={url}></ProfileEventCard>
-                    </Grid>
-                    <Grid item xs={12} sm={12} md={4}>
-                    <ProfileEventCard image={url}></ProfileEventCard>
-                    </Grid>
-                    <Grid item xs={12} sm={12} md={4}>
-                    <ProfileEventCard image={url}></ProfileEventCard>
-                    </Grid>
-                    <Grid item xs={12} sm={12} md={4}>
-                    <ProfileEventCard image={url}></ProfileEventCard>
-                    </Grid>
-                    <Grid item xs={12} sm={12} md={4}>
-                    <ProfileEventCard image={url}></ProfileEventCard>
-                    </Grid> */}
+                    
                 </Grid>
                 
                 {/* <ProfileEventCard></ProfileEventCard> */}

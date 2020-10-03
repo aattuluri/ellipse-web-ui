@@ -38,6 +38,7 @@ import Logo from '../Components/Images/logo.svg';
 const NavigationBar = function ({ history }) {
 
   const classes = useStyles();
+  const token = localStorage.getItem('token');
   const [anchorEl, setAnchorEl] = React.useState(null);
   const t = localStorage.getItem('theme');
   const [darkThemeSelected, setDarkThemeSelected] = React.useState(t === 'light' ? false : true);
@@ -45,6 +46,7 @@ const NavigationBar = function ({ history }) {
   const [value, setValue] = React.useState(0);
   // const [allEvents, setAllEvents] = React.useState([]);
   const [searchedEvent, setSearchedEvent] = React.useState([]);
+  const [notificationsCount,setNotificationCount] = React.useState(0);
 
   const isMenuOpen = Boolean(anchorEl);
   // const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -61,7 +63,18 @@ const NavigationBar = function ({ history }) {
         setValue(tabIndex);
       }
     }
-  }, [])
+    fetch(process.env.REACT_APP_API_URL + '/api/get_unseen_notifications_count', {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      method: 'GET'
+    }).then((result) => {
+      result.json().then((data) => {
+        setNotificationCount(data);
+      })
+    })
+  }, [token])
 
 
   // function handleMorebuttonClick(event) {
@@ -93,7 +106,7 @@ const NavigationBar = function ({ history }) {
     handleMobileMenuClose();
   };
 
-  const token = localStorage.getItem('token');
+  
   if (!token) {
     history.replace('/');
   }
@@ -246,7 +259,7 @@ const NavigationBar = function ({ history }) {
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
               <IconButton aria-label="notifications" color="inherit" onClick={handleNotificationClick}>
-                <Badge badgeContent={0} color="secondary">
+                <Badge badgeContent={notificationsCount} color="secondary">
                   <NotificationsIcon />
                 </Badge>
               </IconButton>
