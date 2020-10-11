@@ -56,17 +56,6 @@ export default function FormDialog(props) {
                 })
             }
         })
-        fetch(process.env.REACT_APP_API_URL + '/api/update_notification_status', {
-            headers: {
-              'Authorization': `Bearer ${token}`,
-              'Content-Type': 'application/json'
-            },
-            method: 'GET'
-          }).then((result) => {
-            result.json().then((data) => {
-            //   do nothing
-            })
-          })
     }, [token])
 
 

@@ -216,7 +216,10 @@ const Signin = ({ history }) => {
           <Typography component="h1" variant="h6">
             Kill time for what matters
           </Typography><br></br>
+          <a rel="noopener noreferrer" href="https://play.google.com/store/apps/details?id=com.guna0027.ellipse" target="_blank">
           <img className={classes.hidden} src={GoogleBadge} alt="playstore"></img><br></br>
+          </a>
+          
         </Box>
       </Grid>
 

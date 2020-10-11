@@ -28,7 +28,7 @@ import Avatar from '@material-ui/core/Avatar';
 import Divider from '@material-ui/core/Divider';
 import ActiveEventsContext from '../ActiveEventsContext';
 
-
+import FeedBackDialog from '../Components/FeedBackDialog';
 // function a11yProps(index) {
 //     return {
 //         id: `scrollable-auto-tab-${index}`,
@@ -141,6 +141,14 @@ const useStyles = makeStyles((theme) => ({
     },
     skeleton: {
         textDecorationColor: theme.palette.primary.dark,
+    },
+    feedBackButton: {
+        borderRadius: theme.spacing(50),
+        marginTop: theme.spacing(1),
+        [theme.breakpoints.down('md')]: {
+            display: 'none',
+        },
+        paddingBottom: theme.spacing(1)
     }
 
 }));
@@ -170,6 +178,7 @@ function EventsTabPanel({ history }) {
     const [selectedImage, setSelectedImage] = React.useState(null);
     const allEvents = React.useContext(ActiveEventsContext);
     const [registerdEvents, setRegisteredEvents] = React.useState([]);
+    const [feedBackOpen,setFeedBackOpen] = React.useState(false);
 
     React.useEffect(() => {
         // console.log(allEvents);
@@ -200,6 +209,14 @@ function EventsTabPanel({ history }) {
     };
     const handleEndSortDateChange = (date) => {
         setSortEndDate(date);
+    }
+
+    const handleFeedBackButtonClick = () =>{
+        setFeedBackOpen(true);
+    }
+
+    const closeFeedBckDialog = () =>{
+        setFeedBackOpen(false);
     }
 
     // function handleSortEventModeChamge(event, value) {
@@ -528,6 +545,15 @@ function EventsTabPanel({ history }) {
                                     })
                                 }
                             </List>
+                            <Button
+                                onClick={handleFeedBackButtonClick}
+                                variant="outlined"
+                                fullWidth
+                                size="large"
+                                className={classes.feedBackButton}
+                                 >
+                                Report Bug/Feedback
+                            </Button>
                            
 
                         </Paper>
@@ -536,6 +562,7 @@ function EventsTabPanel({ history }) {
                 </Grid>
             </Grid>
             <div>
+            <FeedBackDialog open={feedBackOpen} handleClose={closeFeedBckDialog}></FeedBackDialog>
                 <EventsDialog
                     open={open}
                     event={selectedEvent}

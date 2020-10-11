@@ -71,6 +71,7 @@ const NavigationBar = function ({ history }) {
       method: 'GET'
     }).then((result) => {
       result.json().then((data) => {
+        // console.log(data);
         setNotificationCount(data);
       })
     })
@@ -112,7 +113,7 @@ const NavigationBar = function ({ history }) {
   }
 
   function handleThemeChange(event) {
-    console.log(event.target.checked);
+    // console.log(event.target.checked);
     setDarkThemeSelected(event.target.checked);
     if (event.target.checked) {
       localStorage.setItem('theme', 'dark');
@@ -202,6 +203,17 @@ const NavigationBar = function ({ history }) {
   }
 
   function handleNotificationClick() {
+    fetch(process.env.REACT_APP_API_URL + '/api/update_notification_status', {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      method: 'GET'
+    }).then((result) => {
+      result.json().then((data) => {
+        setNotificationCount(0);
+      })
+    })
     setNotificationsOpen(true);
   }
   function handleTitleButtonClick() {
