@@ -19,12 +19,17 @@ import { withRouter, Redirect } from "react-router";
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import PhoneImage from '../Components/Images/logo300.svg';
 
 
 //function for alert
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
+
+
+
+
 
 
 const Signin = ({ history }) => {
@@ -44,6 +49,9 @@ const Signin = ({ history }) => {
   const [isUserVerified, setIsUserVerified] = React.useState(null);
   const [email, setEmail] = React.useState(null);
   const abortController = new AbortController();
+  
+
+
   const handleClose = async (event, reason) => {
     if (reason === 'clickaway') {
       return;
@@ -89,7 +97,7 @@ const Signin = ({ history }) => {
                   open: true,
                   vertical: 'top',
                   horizontal: 'center',
-                  message: 'Signedup successfully',
+                  message: 'Signedin successfully',
                   type: "success",
                   autoHide: 300
                 });
@@ -201,28 +209,18 @@ const Signin = ({ history }) => {
       </Snackbar>
       <Grid item xs={12} sm={12} md={7} elevation={6} >
         <Box display="flex" flexDirection="column" justifyContent="flex-start" m={1} p={1} className={classes.paperLeft}>
+        <img  src={PhoneImage} alt="logo" height="500px" width="500px" className={classes.image}></img>
           <Typography className={classes.title} component="h1" variant="h2">
             Ellipse
           </Typography>
           <Typography component="h1" variant="h6">
             Kill time for what matters
           </Typography><br></br>
+          <a rel="noopener noreferrer" href="https://play.google.com/store/apps/details?id=com.guna0027.ellipse" target="_blank">
           <img className={classes.hidden} src={GoogleBadge} alt="playstore"></img><br></br>
+          </a>
+          
         </Box>
-        {/* <div className={classes.paperLeft}> */}
-
-          {/* <img src={iPhone} className={classes.iPhoneImage} alt="iphone" height="500px" width="300px" align="center"></img><br></br> */}
-          {/* <div className={classes.paperimage}>
-            <Grid item xs={12} sm={12} md={12} className={classes.iPhoneImage} elevation={12}>
-
-              <img src={GoogleBadge} alt="playstore" height="100px" width="250px"></img><br></br>
-            </Grid>
-            <Grid item xs={12} sm={12} className={classes.iPhoneImage} md={12} elevation={12} >
-              <img src={AppleBadge} alt="appstore" height="70px" width="220px"></img>
-            </Grid>
-          </div> */}
-
-        {/* </div> */}
       </Grid>
 
       <Grid item xs={12} sm={12} md={5} elevation={6}>
@@ -271,7 +269,6 @@ const Signin = ({ history }) => {
                 {loading ? <CircularProgress color="primary" size={24} /> : "Sign In"}
 
               </Button>
-
             </div>
             <Grid container>
               <Grid item xs>

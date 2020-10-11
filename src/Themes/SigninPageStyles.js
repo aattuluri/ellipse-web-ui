@@ -75,6 +75,13 @@ const useStyles = makeStyles((theme) => ({
         [theme.breakpoints.down('sm')]: {
             display: 'none'
           },
+      },
+      image: {
+        maxHeight: "600px",
+        maxWidth: '600px',
+        [theme.breakpoints.down('sm')]: {
+          display: 'none'
+        },
       }
 }));
 

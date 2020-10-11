@@ -233,7 +233,5 @@ export default function StickyHeadTable(props) {
         </Paper>
       </Grid>
     </Grid>
-
-
   );
 }
