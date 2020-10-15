@@ -95,8 +95,10 @@ function EventsDialog(props) {
     const theme = useTheme();
     // const token = localStorage.getItem('token');
     const [shareDialogOpen, setShareDialogOpen] = React.useState(false);
+   
 
 
+    
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -194,7 +196,7 @@ function EventsDialog(props) {
                 <div
                     role="tabpanel"
                     hidden={value === 3}>
-                    {value !== 3 && (
+                    {value !== 3  && (
                         <div className={classes.buttonDiv}>
 
                             {
@@ -208,6 +210,7 @@ function EventsDialog(props) {
 
                         </div>
                     )}
+                    
                 </div>
             </DialogActions>
         </Dialog>

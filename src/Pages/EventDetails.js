@@ -23,11 +23,13 @@ import AnnouncementIcon from '@material-ui/icons/Announcement';
 
 import EventDetailsNavigationBar from '../Components/EventDetailsNavigationBar';
 import AnnouncementPanel from '../Components/EventsAnnouncementsPanel';
+import AnnouncementEditPanel from '../Components/AnnouncementsEditPanel';
 import AboutPanel from '../Components/AboutEventPanel';
 import TimeLinePanel from '../Components/EventTimeLinePanel';
 import DashboardPanel from '../Components/DashboardPanel';
 import ChatPanel from '../Components/EventDetailsChatPanel';
 import EventPost from './EventEdit';
+import { Button } from '@material-ui/core';
 
 
 const drawerWidth = 240;
@@ -91,6 +93,7 @@ export default function MiniDrawer(props) {
 
   const token = localStorage.getItem('token');
   const id = props.match.params.eventId;
+  const t = localStorage.getItem('theme');
 
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const [event, setEvent] = React.useState({});
@@ -124,7 +127,7 @@ export default function MiniDrawer(props) {
     
   }, [token,id])
 
-  console.log(adminAccess)
+  // console.log(adminAccess)
   React.useEffect(()=>{
     if( event.user_id !== undefined && currentUser.user_id !== undefined){
       if (event.user_id === currentUser.user_id) {
@@ -243,6 +246,11 @@ export default function MiniDrawer(props) {
       props.history.replace('/');
     }
 
+    function handleRegClick() {
+      props.history.push('/event/register/' + event._id);
+      // props.handleReg(event._id);
+  
+    }
 
   return (
     <div className={classes.root}>
@@ -335,7 +343,22 @@ export default function MiniDrawer(props) {
           chatSelected && event != null && <div className={classes.chat} ><ChatPanel user={currentUser} open={drawerOpen} event={event}></ChatPanel></div>
         }
         {
-          announcementSelected && event != null && <AnnouncementPanel event={event}></AnnouncementPanel>
+          adminAccess && announcementSelected && event != null && <AnnouncementEditPanel event={event}></AnnouncementEditPanel>
+        }
+        {
+          !adminAccess && announcementSelected && event != null && <AnnouncementPanel event={event}></AnnouncementPanel>
+        }
+        {
+            infoSelected && event.reg_mode === "form" && <Button disabled={event.registered || adminAccess} size="small" color="primary" variant="contained" className={classes.button} onClick={handleRegClick}>
+              {event.registered ? "Registered" : "Register"}
+            </Button> 
+             
+          }
+        {
+          infoSelected && event.reg_mode !== "form" && <Button disabled={event.registered || adminAccess} size="small" color="primary" variant="contained" className={classes.button}>
+                {t === 'light' ? <a href={event.reg_link}  style={{ textDecoration: 'none', color: '#ffffff' }} target="blank">Register</a> : 
+                <a href={event.reg_link}  style={{ textDecoration: 'none', color: '#000000' }} target="blank">Register</a>}
+              </Button>
         }
       </main>
     </div>

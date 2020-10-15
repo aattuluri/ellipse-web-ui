@@ -20,7 +20,7 @@ import ImageDialog from '../Components/ImageDialog';
 import Skeleton from '@material-ui/lab/Skeleton';
 // import { Link } from 'react-router-dom';
 import AuthContext from '../AuthContext';
-import GridListEvents from '../Components/GridListEvents';
+// import GridListEvents from '../Components/GridListEvents';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
@@ -175,10 +175,12 @@ function EventsTabPanel({ history }) {
     const [feeSortChecked, setFeeSortChecked] = React.useState([0]);
     const [modeSortChecked, setModeSortChecked] = React.useState([0]);
     const [filterDialogOpen, setFilterDialogOpen] = React.useState(false);
-    const [selectedImage, setSelectedImage] = React.useState(null);
+    // const [selectedImage, setSelectedImage] = React.useState(null);
     const allEvents = React.useContext(ActiveEventsContext);
     const [registerdEvents, setRegisteredEvents] = React.useState([]);
     const [feedBackOpen,setFeedBackOpen] = React.useState(false);
+
+    
 
     React.useEffect(() => {
         // console.log(allEvents);
@@ -189,13 +191,14 @@ function EventsTabPanel({ history }) {
         // return <Redirect to="/" />;
         history.replace("/")
     }
+    
     const handleClose = () => {
         setOpen(false);
     };
     const handleClick = function (event, image) {
         // console.log(id);
         setSelectedEvent(event);
-        setSelectedImage(image);
+        // setSelectedImage(image);
         setOpen(true);
         // history.push('eventdetails')
     }
@@ -408,10 +411,10 @@ function EventsTabPanel({ history }) {
     function handleImageDialogClose() {
         setImageDialogOpen(false);
     }
-    function handleImageDialogOpen(image) {
+    function handleImageDialogOpen(event) {
         // console.log(image);
-        // setSelectedImage(image);
-        // setImageDialogOpen(true);
+        setSelectedEvent(event);
+        setImageDialogOpen(true);
     }
 
     function handleRegistrationButton(event) {
@@ -447,15 +450,14 @@ function EventsTabPanel({ history }) {
                         </Paper>
                     </Paper>
                     <Button className={classes.mobileFilterButton} variant="outlined" onClick={handlefilterButtonClicked} >Filters</Button>
-
                 </Grid>
                 <Grid item xs={12} sm={12} md={9} lg={8}>
-                    <Typography variant="h5" style={{ paddingTop: '5px' }}>
+                    {/* <Typography variant="h5" style={{ paddingTop: '5px' }}>
                         Your College Events
                     </Typography>
-                    <GridListEvents click={handleClick} events={allEvents.filter((event) => event.college_name === user.college_name)} ></GridListEvents>
+                    <GridListEvents click={handleClick} events={allEvents.filter((event) => event.college_name === user.college_name)} ></GridListEvents> */}
                     <Typography variant="h5" style={{ paddingTop: '5px',paddingBottom: '7px' }}>
-                        Active Events
+                        {/* Active Events */}
                     </Typography>
 
                     {allEvents.length === 0 && <div>
@@ -566,16 +568,17 @@ function EventsTabPanel({ history }) {
                 <EventsDialog
                     open={open}
                     event={selectedEvent}
-                    imageUrl={selectedImage}
+                    // imageUrl={selectedImage}
                     handleClose={handleClose}
                     handleReg={handleRegistrationButton}
-                >
                     imageDialog={handleImageDialogOpen}
+                >
                 </EventsDialog>
                 <ImageDialog
-                    image={selectedImage}
+                    // image={selectedImage}
+                    event={selectedEvent}
                     open={imageDialogOpen}
-                    handleClose={handleImageDialogClose} url={user.imageUrl}>
+                    handleClose={handleImageDialogClose}>
                 </ImageDialog>
                 <Dialog
                     open={filterDialogOpen}
@@ -606,9 +609,7 @@ function EventsTabPanel({ history }) {
                             handlesortDiscardButton={handlesortDiscardButton}>
                         </MobileSortPanel>
                     </DialogContent>
-
                 </Dialog>
-
             </div>
         </div>
 

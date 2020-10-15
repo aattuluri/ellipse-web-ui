@@ -55,10 +55,12 @@ export default function AddressForm(props) {
   const token = localStorage.getItem('token');
   const classes = useStyles();
   const [imageName, setImageName] = React.useState("");
-  const eventThemes = ["Hackathon", "Coding Contest", "Webinar"];
-  const requirements = ["Laptop", "Basic HTML", "C++", "Machine Learning"];
+  // const eventThemes = ["Hackathon", "Coding Contest", "Webinar"];
+  // const requirements = ["Laptop", "Basic HTML", "C++", "Machine Learning"];
   const [colleges, setColleges] = React.useState([]);
   const [collegesNames, setCollegesName] = React.useState([]);
+  const [eventTags,setEventTags] = React.useState([]);
+  const [requirements,setRequirements] = React.useState([]);
   // const colleges = ["VIT University,Vellore", "GITAM University", "SRM University"];
 
 
@@ -75,6 +77,26 @@ export default function AddressForm(props) {
         setColleges(value);
         value.forEach((v) => {
           setCollegesName((collegesNames) => [...collegesNames, v.name])
+        })
+      })
+    })
+    fetch(process.env.REACT_APP_API_URL+'/api/event/get_event_keywords', {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      method: 'GET',
+    }).then(response => {
+      response.json().then(value => {
+        // setColleges(value);
+        value.forEach((v) => {
+          if(v.type === "EventTags"){
+            setEventTags((eventTags)=> [...eventTags,v.title]);
+          }
+          else if(v.type === "EventRequirements"){
+            setRequirements((r)=>[...r,v.title]);
+          }
         })
       })
     })
@@ -112,7 +134,7 @@ export default function AddressForm(props) {
     props.setCollegeName(value);
     colleges.forEach(c => {
       if (c.name === value) {
-        props.collegeId(c._id)
+        props.setCollegeId(c._id)
       }
     })
   }
@@ -163,7 +185,7 @@ export default function AddressForm(props) {
             <Autocomplete
               multiple
               id="themes"
-              options={eventThemes.map((option) => option)}
+              options={eventTags.map((option) => option)}
               freeSolo
               value={props.eventThemes || []}
               onChange={handleeventTagsChange}

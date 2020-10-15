@@ -46,6 +46,7 @@ export default function ImgMediaCard(props) {
         <Typography gutterBottom variant="h5" component="h2">
           {props.name}
         </Typography>
+        
       </CardContent>
 
       <CardActions>
@@ -56,6 +57,9 @@ export default function ImgMediaCard(props) {
           {t === 'light' ? <Link target="_blank" to={{ pathname: `/event/${event._id}`, state: { event: props.event } }} style={{ textDecoration: 'none', color: '#00bdaa' }}>View</Link> :
             <Link target='_blank' to={{ pathname: `/event/${event._id}`, state: { event: props.event } }} style={{ textDecoration: 'none', color: '#00bdaa' }}>View</Link>}
         </Button>
+        <Typography align="right" variant="body2" color="textSecondary" component="p">
+          {event.status.toUpperCase()}
+        </Typography>
       </CardActions>
       <EventShareDialog
         event={event}

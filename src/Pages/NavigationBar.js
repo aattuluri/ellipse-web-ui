@@ -90,6 +90,17 @@ const NavigationBar = function ({ history }) {
     }
   }
 
+  const handleNotificationCardClick = (value)=>{
+    if(value){
+      allEvents.forEach(event => {
+        if(event._id === value){
+          setSearchedEvent(event);
+          setOpen(true);
+        }
+      });
+    }
+  }
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
     localStorage.setItem('tabIndex', newValue);
@@ -316,7 +327,7 @@ const NavigationBar = function ({ history }) {
             handleReg={handleRegistrationButton}
             handleClose={handleClose}>
           </EventsDialog>}
-          <NotificationsDialog open={notificationsOpen} handleClose={handleClose}></NotificationsDialog>
+          <NotificationsDialog open={notificationsOpen} handleClick={handleNotificationCardClick} handleClose={handleClose}></NotificationsDialog>
         </div>
       </React.Fragment>
     </div>

@@ -53,11 +53,30 @@ const useStyles = makeStyles((theme) => ({
 
 export default function AddressForm(props) {
 
+  const token = localStorage.getItem('token');
   const classes = useStyles();
   const [startDateError,setStartDateError] = React.useState(false);
   const [endDateError,setEndDateError] = React.useState(false);
   const [regEndDateError,setRegEndDateError] = React.useState(false);
-  const eventTypes = ["Hackathon", "Coding Contest", "Webinar"];
+  // const eventTypes = ["Hackathon", "Coding Contest", "Webinar"];
+  const [eventTypes,setEventTypes] = React.useState([]);
+  React.useEffect(()=>{
+    fetch(process.env.REACT_APP_API_URL+'/api/event/get_event_types', {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      method: 'GET',
+    }).then(response => {
+      response.json().then(value => {
+        value.forEach((v) => {
+          setEventTypes((eventTypes)=>[...eventTypes,v.title]);
+        })
+      })
+    })
+  },[token])
+
 
   function handleEventNameChange(event) {
     props.setName(event.target.value)

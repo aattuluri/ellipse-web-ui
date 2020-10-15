@@ -12,6 +12,7 @@ import Typography from '@material-ui/core/Typography';
 // import Card from '@material-ui/core/Card';
 import Box from '@material-ui/core/Box';
 import { useTheme } from '@material-ui/core/styles';
+// import { Redirect } from 'react-router';
 
 
 
@@ -58,6 +59,9 @@ export default function FormDialog(props) {
         })
     }, [token])
 
+    const handleNotificationClick = (n) => () =>{
+        props.handleClick(n.event_id)
+    }
 
 
     return (
@@ -74,7 +78,7 @@ export default function FormDialog(props) {
                 {
                     notificationms.map((n,index)=>{
                         const date = new Date(n.time)
-                       return <Box m={1} p={1} className={classes.root3}>
+                       return <Box onClick={handleNotificationClick(n)} m={1} p={1} className={classes.root3}>
                         <Box className={classes.root2} whiteSpace="normal">
                             <Typography className={classes.title}>
                                 {n.title}

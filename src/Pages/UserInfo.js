@@ -289,8 +289,10 @@ const UserInfo = ({ history }) => {
                                 >
                                     <option aria-label="None" value="" />
                                     <option value="Student">Student</option>
-                                    <option value="WorkingProfessional">Working Professional</option>
+                                    <option value="WorkingProfessional">Faculty</option>
                                     <option value="Club/Organisation">Club/Organisation</option>
+                                    <option value="Institution">Institution</option>
+                                    <option value="Others">Others</option>
                                 </Select>
                             </FormControl>
                         </Grid>

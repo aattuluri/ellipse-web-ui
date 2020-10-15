@@ -173,7 +173,10 @@ function ExplorePanel(props) {
                             </Tabs>
                         </Paper>
                         <div className={classes.content}>
-                            {value === 0 && <Grid container component="main" alignItems="center" spacing={0}>
+                            {value === 0 && <Grid container component="main" alignItems="center" spacing={1}>
+                            {
+                                regEvents.length === 0 && <Typography align="center">No Registered Events</Typography>
+                            }
                                 {regEvents.map((event, index) => {
                                     return (<Grid item xs={12} sm={12} md={4} key={index}>
                                         <ProfileEventCard event={event} handleViewClick={handleEventClick(event)} name={event.name} ></ProfileEventCard>
@@ -181,7 +184,10 @@ function ExplorePanel(props) {
                                 })}
 
                             </Grid>}
-                            {value === 1 && <Grid container component="main" alignItems="center" spacing={0}>
+                            {value === 1 && <Grid container component="main" alignItems="center" spacing={1}>
+                            {
+                                pastEvents.length === 0 && <Typography align="center">No Past Events at this time</Typography>
+                            }
                                 {pastEvents.map((event, index) => {
                                     return (<Grid item xs={12} sm={12} md={4} alignItems="center" key={index}>
                                         <ProfileEventCard event={event} handleViewClick={handleEventClick(event)} name={event.name} ></ProfileEventCard>

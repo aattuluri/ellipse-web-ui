@@ -86,7 +86,7 @@ function Layout(props) {
                     setActiveEvents(value.filter(e =>{
                         const cDate = new Date();
                         const eDate = new Date(e.finish_time);
-                        return cDate < eDate
+                        return cDate < eDate && e.status !== "pending"
                     }))
                 })
             }

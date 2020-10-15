@@ -19,7 +19,6 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Grow from '@material-ui/core/Grow';
 
 
-
 import EventReportDialog from './EventReportDialog';
 import EventShareDialog from './EventShareDialog';
 
@@ -65,7 +64,7 @@ function Eventcard(props) {
   const [imageLoaded, setImageLoaded] = React.useState(false);
   const [reportDialogOpen, setReportDialogOpen] = React.useState(false);
   const [shareDialogOpen, setShareDialogOpen] = React.useState(false);
-
+  
 
 
   const handleToggle = () => {
@@ -95,6 +94,7 @@ function Eventcard(props) {
     prevOpen.current = open;
   }, [open]);
   function handleImageClick() {
+    props.imageDialog(event)
   }
   function handleRegClick() {
     props.handleReg(props.eventId);
@@ -127,7 +127,7 @@ function Eventcard(props) {
               onClick={handleImageClick}
               onLoad={() => setImageLoaded(true)}
               alt="Event Poster" height="160" width="150"
-              src={process.env.REACT_APP_API_URL+`/api/image?id=${event.poster_url}`}>
+              src={process.env.REACT_APP_API_URL + `/api/image?id=${event.poster_url}`}>
 
             </img>
             {!imageLoaded && <div
@@ -175,8 +175,7 @@ function Eventcard(props) {
         }
         subheader={
           <Typography variant="body1" color="textSecondary" component="p">
-            This impressive paella is a perfect party dish and a fun meal to cook together with your
-            guests. Add 1 cup of frozen peas along with the mussels, if you like.
+            {event.description}
         </Typography>
         }
       />
@@ -197,9 +196,9 @@ function Eventcard(props) {
         <Chip variant="outlined" color="inherit" size="small" label={event.event_mode}></Chip>
         <Chip style={{ marginLeft: "4px" }} variant="outlined" color="inherit" size="small" label={event.fee_type}></Chip>
         <Chip style={{ marginLeft: "4px" }} variant="outlined" color="inherit" size="small" label={event.event_type}></Chip>
-        <Chip style={{ marginLeft: "4px" }} variant="outlined" color="inherit" size="small" label={"Reg ends at " + regEndDate.toDateString()}></Chip>
-        <Chip style={{ marginLeft: "4px" }} variant="outlined" color="inherit" size="small" label={"Starts at " + startDate.toDateString()}></Chip>
-        <Chip style={{ marginLeft: "4px" }} variant="outlined" color="inherit" size="small" label={"Ends at  " + endDate.toDateString()}></Chip>
+        <Chip style={{ marginLeft: "4px" }} variant="outlined" color="inherit" size="small" label={"Reg ends on " + regEndDate.toDateString()}></Chip>
+        <Chip style={{ marginLeft: "4px" }} variant="outlined" color="inherit" size="small" label={"Starts on " + startDate.toDateString()}></Chip>
+        <Chip style={{ marginLeft: "4px" }} variant="outlined" color="inherit" size="small" label={"Ends on " + endDate.toDateString()}></Chip>
         {/* <Grid container component="main">
           <Grid item xs={6} sm={6} md={6}>
             <Typography variant="h6" component="p">
@@ -265,12 +264,13 @@ function Eventcard(props) {
             event.reg_mode === "form" ? <Button disabled={event.registered ? true : false} size="small" color="primary" variant="contained" className={classes.button} onClick={handleRegClick}>
               {event.registered ? "Registered" : "Register"}
             </Button> : <Button disabled={event.registered ? true : false} size="small" color="primary" variant="contained" className={classes.button}>
-                {t === 'light' ? <a href={event.reg_link}  style={{ textDecoration: 'none', color: '#ffffff' }} target="blank">Register</a> : 
-                <a href={event.reg_link}  style={{ textDecoration: 'none', color: '#000000' }} target="blank">Register</a>}
+                {t === 'light' ? <a href={event.reg_link} style={{ textDecoration: 'none', color: '#ffffff' }} target="blank">Register</a> :
+                  <a href={event.reg_link} style={{ textDecoration: 'none', color: '#000000' }} target="blank">Register</a>}
               </Button>
           }
 
         </div>
+        
 
       </CardActions>
     </Card>);

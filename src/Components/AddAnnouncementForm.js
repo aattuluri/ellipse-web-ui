@@ -53,7 +53,7 @@ export default function AnnouncementForm(props) {
     setVisibility(value);
   }
   function handleAddButton() {
-    console.log(visibility);
+    // console.log(visibility);
     var visible_all = true;
     if (visibility !== "All") {
       visible_all = false;
@@ -62,7 +62,7 @@ export default function AnnouncementForm(props) {
       var data = new FormData();
       const d = { event_id: props.id, title: title, description: desc, visible_all: visible_all }
       data = JSON.stringify(d);
-      console.log(data);
+      // console.log(data);
       fetch(process.env.REACT_APP_API_URL+`/api/event/add_announcement`, {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -72,9 +72,9 @@ export default function AnnouncementForm(props) {
         method: 'POST',
         body: data
       }).then(response => {
-        console.log(response);
+        // console.log(response);
         response.json().then(value => {
-          console.log(value);
+          // console.log(value);
           setLoading(false);
           setState({
             open: true,

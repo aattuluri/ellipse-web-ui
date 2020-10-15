@@ -5,6 +5,7 @@ import ProfileEventCard from '../Components/ProfileEventCard';
 import EventsDialog from '../Components/EventsDialog';
 import AuthContext from '../AuthContext';
 import EventsContext from '../EventsContext';
+import { Typography } from '@material-ui/core';
 
 // const useStyles = makeStyles((theme) => ({
 //     // backdrop: {
@@ -48,6 +49,9 @@ function ProfilePostsTabPanel(props) {
             {value === index && (
                 <div >
                 <Grid container component="main" alignItems="center" spacing={1}>
+                {
+                    postedEvents.length === 0 && <Typography>No Posted Events</Typography>
+                }
                 {postedEvents.map((event,index) => {
                     return(<Grid item xs={12} sm={12} md={4} key={index}>
                     <ProfileEventCard event={event} handleViewClick={handleViewClick} name={event.name} image={url}></ProfileEventCard>

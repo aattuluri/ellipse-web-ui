@@ -5,7 +5,10 @@ import { cleanup } from '@testing-library/react';
 import { Grid, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Chip from '@material-ui/core/Chip';
+import Avatar from '@material-ui/core/Avatar';
+import Box from '@material-ui/core/Box';
 // import AuthContext from '../AuthContext';
+import ImageDialog from '../Components/ImageDialog';
 
 
 
@@ -23,6 +26,9 @@ const useStyles = makeStyles((theme) => ({
 
     avatar: {
         backgroundColor: theme.palette.primary.main,
+        width: theme.spacing(7),
+        height: theme.spacing(7),
+        marginRight: theme.spacing(1)
     },
     buttonDiv: {
         marginLeft: 'auto',
@@ -39,15 +45,41 @@ const useStyles = makeStyles((theme) => ({
         // maxWidth: 800,
         background: theme.palette.secondary.main,
         alignItems: 'center',
+    },
+    adminDetails: {
+        display: "flex",
+        justifyContent: "flex-start",
+        marginTop: theme.spacing(2)
     }
 }));
 
 function AboutEventPanel(props) {
     const classes = useStyles();
+    const token = localStorage.getItem('token');
     const { children, value, url, index, ...other } = props;
     const event = props.event;
     const tags = event.tags;
-    const [timeLabel, setTimeLabel] = React.useState("Registration Ends in")
+    const requirements = event.requirements;
+    const [timeLabel, setTimeLabel] = React.useState("Registration Ends in");
+    const [adminDetails, setAdminDetails] = React.useState({});
+    const [imageDialogOpen, setImageDialogOpen] = React.useState(false);
+
+    React.useEffect(() => {
+        fetch(process.env.REACT_APP_API_URL + `/api/event/get_organizer_details?eventId=${event._id}&userId=${event.user_id}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            method: 'GET',
+        }).then(response => {
+            response.json().then(value => {
+                setAdminDetails(value);
+            })
+        })
+    }, [event,token])
+
+
     const calculateTimeLeft = () => {
 
         var difference = +new Date(event.registration_end_time) - +new Date();
@@ -110,6 +142,15 @@ function AboutEventPanel(props) {
             </span>
         );
     });
+
+    function handleImageDialogClose() {
+        setImageDialogOpen(false);
+    }
+    function handleImageDialogOpen(event) {
+        // console.log(image);
+        // setSelectedEvent(event);
+        setImageDialogOpen(true);
+    }
     return (
         <div
             role="tabpanel"
@@ -119,10 +160,10 @@ function AboutEventPanel(props) {
                 <div className={classes.root}>
                     <Grid container component="main">
                         <Grid item xs={12} sm={12} md={4} lg={4} >
-                            <img style={{ maxWidth: '250px' }} alt="event poster" src={process.env.REACT_APP_API_URL+`/api/image?id=${event.poster_url}`}  ></img>
+                            <img onClick={handleImageDialogOpen} style={{ maxWidth: '250px' }} alt="event poster" src={process.env.REACT_APP_API_URL + `/api/image?id=${event.poster_url}`}  ></img>
                         </Grid>
                         <Grid item xs={12} sm={12} md={8} lg={8}>
-                            <Typography>{event.description} This impressive paella is a perfect party dish and a fun meal to cook together with your guests. Add 1 cup of frozen peas along with the mussels, if you like.</Typography>
+                            <Typography>{event.description} </Typography>
                             <Typography style={{ marginTop: "20px", marginBottom: '20' }}>{timeLabel}</Typography>
                             <Typography variant="h5">{timerComponents.length ? timerComponents : <span>Time's up!</span>}</Typography>
                             {/* <Typography>Starts at {event.start_time}</Typography>
@@ -139,23 +180,61 @@ function AboutEventPanel(props) {
 
                         </Grid>
                         <Grid item xs={12}>
+
                             <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h4">About</Typography>
                             <Typography color="textSecondary" variant="body2">
-                                {[...new Array(5)]
+                                {
+                                    event.about
+                                }
+                                {/* {[...new Array(5)]
                                     .map(
                                         () => `Cras mattis consectetur purus sit amet fermentum. 
                                     Cras justo odio, dapibus ac facilisis in, egestas eget quam.
                                     Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
                                     Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`,
                                     )
-                                    .join('\n')}
+                                    .join('\n')} */}
                             </Typography>
+                            <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Requirements</Typography>
+                            {
+                                requirements != null && requirements.map(val => {
+                                    return <Chip key={val} style={{ marginRight: '5px' }} variant="outlined" color="inherit" label={val}></Chip>
+                                })
+                            }
+                            {event.event_mode === "Offline" && <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Venue Details</Typography>}
+                            {event.event_mode === "Offline" && <Typography color="textSecondary" variant="body2">{event.venue}</Typography>}
+                            {event.event_mode === "Offline" && <Typography color="textSecondary" variant="body2">{event.venue_college}</Typography>}
+                            {/* {event.event_mode === "Online" && <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Platform Details</Typography>}
+                            {event.event_mode === "Online" && <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">{}</Typography>} */}
+                            {event.fee_type === "Paid" && <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Fee Details</Typography>}
+                            {event.fee_type === "Paid" && <Typography color="textSecondary" variant="body2">{"Rs " + event.fee}</Typography>}
+                            <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Organised By</Typography>
+                            <Box className={classes.adminDetails}>
+                                <Box>
+                                    <Avatar className={classes.avatar} alt={adminDetails.name} src={process.env.REACT_APP_API_URL + `/api/image?id=${adminDetails.profile_pic}`} />
+                                </Box>
+                                <Box>
+                                    <Box>
+                                        <Typography variant="h5">{adminDetails.name}</Typography>
+                                    </Box>
+                                    <Box>
+                                        <Typography color="textSecondary" variant="body2">{adminDetails.college_name}</Typography>
+                                    </Box>
+
+                                </Box>
+                            </Box>
                         </Grid>
                         <Grid item xs={12}>
                         </Grid>
                         <Grid>
                         </Grid>
                     </Grid>
+                    <ImageDialog
+                    // image={selectedImage}
+                    event={event}
+                    open={imageDialogOpen}
+                    handleClose={handleImageDialogClose}>
+                </ImageDialog>
                 </div>
             )}
         </div>
@@ -163,3 +242,5 @@ function AboutEventPanel(props) {
 }
 
 export default AboutEventPanel;
+
+// This impressive paella is a perfect party dish and a fun meal to cook together with your guests. Add 1 cup of frozen peas along with the mussels, if you like.

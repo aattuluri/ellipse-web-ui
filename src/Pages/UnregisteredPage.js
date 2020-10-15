@@ -36,7 +36,6 @@ export default function UnregisteredPage(props) {
     const [event, setEvent] = React.useState({});
     const [open, setOpen] = React.useState(false);
     if(token){
-        
         props.history.replace(`/event/${id}`)
     }
 
@@ -48,7 +47,7 @@ export default function UnregisteredPage(props) {
         setOpen(false);
     };
     React.useEffect(() => {
-        fetch(process.env.REACT_APP_API_URL+`/api/event?id=${id}`, {
+        fetch(process.env.REACT_APP_API_URL+`/api/unregistered/event?id=${id}`, {
             headers: {
                 // 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
