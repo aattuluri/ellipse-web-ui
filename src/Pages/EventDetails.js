@@ -19,7 +19,8 @@ import TelegramIcon from '@material-ui/icons/Telegram';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import TimelineIcon from '@material-ui/icons/Timeline';
 import AnnouncementIcon from '@material-ui/icons/Announcement';
-
+import CardMembershipIcon from '@material-ui/icons/CardMembership';
+import { Button, Typography } from '@material-ui/core';
 
 import EventDetailsNavigationBar from '../Components/EventDetailsNavigationBar';
 import AnnouncementPanel from '../Components/EventsAnnouncementsPanel';
@@ -29,7 +30,8 @@ import TimeLinePanel from '../Components/EventTimeLinePanel';
 import DashboardPanel from '../Components/DashboardPanel';
 import ChatPanel from '../Components/EventDetailsChatPanel';
 import EventPost from './EventEdit';
-import { Button } from '@material-ui/core';
+import CertificateDashboard from '../Components/AdminCertificateDashboard';
+
 
 
 const drawerWidth = 240;
@@ -90,7 +92,7 @@ const useStyles = makeStyles((theme) => ({
 export default function MiniDrawer(props) {
   const classes = useStyles();
   const theme = useTheme();
-
+  localStorage.removeItem('eventid')
   const token = localStorage.getItem('token');
   const id = props.match.params.eventId;
   const t = localStorage.getItem('theme');
@@ -106,7 +108,8 @@ export default function MiniDrawer(props) {
     announcementSelected: false,
     settingsSelected: false,
     editEventSelected: false,
-    chatSelected: false
+    chatSelected: false,
+    certificateSelected: false
   })
 
 
@@ -176,7 +179,8 @@ export default function MiniDrawer(props) {
       announcementSelected: false,
       settingsSelected: false,
       editEventSelected: false,
-      chatSelected: false
+      chatSelected: false,
+      certificateSelected: false
     })
   }
   function timelineClicked() {
@@ -187,7 +191,8 @@ export default function MiniDrawer(props) {
       announcementSelected: false,
       settingsSelected: false,
       editEventSelected: false,
-      chatSelected: false
+      chatSelected: false,
+      certificateSelected: false
     })
   }
   function announcementsClicked() {
@@ -198,7 +203,8 @@ export default function MiniDrawer(props) {
       announcementSelected: true,
       settingsSelected: false,
       editEventSelected: false,
-      chatSelected: false
+      chatSelected: false,
+      certificateSelected: false
     })
   }
   function settingsClicked() {
@@ -209,7 +215,8 @@ export default function MiniDrawer(props) {
       announcementSelected: false,
       settingsSelected: true,
       editEventSelected: false,
-      chatSelected: false
+      chatSelected: false,
+      certificateSelected: false
     })
   }
   function editEventClicked() {
@@ -220,7 +227,8 @@ export default function MiniDrawer(props) {
       announcementSelected: false,
       settingsSelected: false,
       editEventSelected: true,
-      chatSelected: false
+      chatSelected: false,
+      certificateSelected: false
     })
   }
   function chatClicked() {
@@ -231,7 +239,20 @@ export default function MiniDrawer(props) {
       announcementSelected: false,
       settingsSelected: false,
       editEventSelected: false,
-      chatSelected: true
+      chatSelected: true,
+      certificateSelected: false
+    })
+  }
+  function certificateClicked() {
+    setSelected({
+      infoSelected: false,
+      dashBoardSelected: false,
+      timilineSelected: false,
+      announcementSelected: false,
+      settingsSelected: false,
+      editEventSelected: false,
+      chatSelected: false,
+      certificateSelected: true
     })
   }
   const {
@@ -240,7 +261,7 @@ export default function MiniDrawer(props) {
     timilineSelected,
     announcementSelected,
     settingsSelected,
-    editEventSelected, chatSelected } = selected;
+    editEventSelected, chatSelected, certificateSelected } = selected;
 
     function handleSignout(){
       props.history.replace('/');
@@ -315,6 +336,12 @@ export default function MiniDrawer(props) {
               </ListItemIcon>
               <ListItemText primary="Edit Event" />
             </ListItem>
+            <ListItem button onClick={certificateClicked} selected={certificateSelected}>
+              <ListItemIcon>
+                <CardMembershipIcon color="primary"></CardMembershipIcon>
+              </ListItemIcon>
+              <ListItemText primary="Certificates" />
+            </ListItem>
             <ListItem button onClick={settingsClicked} selected={settingsSelected}>
               <ListItemIcon>
                 <SettingsIcon color="primary"></SettingsIcon>
@@ -349,6 +376,9 @@ export default function MiniDrawer(props) {
           !adminAccess && announcementSelected && event != null && <AnnouncementPanel event={event}></AnnouncementPanel>
         }
         {
+          adminAccess && certificateSelected && event != null && <CertificateDashboard event={event}></CertificateDashboard>
+        }
+        {
             infoSelected && event.reg_mode === "form" && <Button disabled={event.registered || adminAccess} size="small" color="primary" variant="contained" className={classes.button} onClick={handleRegClick}>
               {event.registered ? "Registered" : "Register"}
             </Button> 
@@ -359,6 +389,9 @@ export default function MiniDrawer(props) {
                 {t === 'light' ? <a href={event.reg_link}  style={{ textDecoration: 'none', color: '#ffffff' }} target="blank">Register</a> : 
                 <a href={event.reg_link}  style={{ textDecoration: 'none', color: '#000000' }} target="blank">Register</a>}
               </Button>
+        }
+        {
+          adminAccess && settingsSelected && <Typography>Any queries contact us at support@ellipseapp.com</Typography>
         }
       </main>
     </div>

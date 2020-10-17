@@ -40,10 +40,10 @@ function ChatMessage(props) {
     const [userType, setUserType] = React.useState('')
     const date = new Date(message.date);
     useEffect(() => {
-        if (props.adminId === message.id) {
-            setUserType('Admin')
+        if (props.adminId === message.user_id) {
+            setUserType(' (Admin)')
         }
-    }, [props.adminId, message.id])
+    }, [props.adminId, message])
 
     return (
         <ListItem alignItems="flex-start">
@@ -52,12 +52,12 @@ function ChatMessage(props) {
                 primary={
                     <React.Fragment>
                         <Typography component="h6" variant="body2">
-                            {message.user_name}
+                            {message.user_name+userType}
                         </Typography>
 
-                        <Typography component="span" variant="body2" color="textSecondary">
+                        {/* <Typography component="span" variant="body2" color="textSecondary">
                             {userType}
-                        </Typography>
+                        </Typography> */}
                     </React.Fragment>
                 }
                 secondary={

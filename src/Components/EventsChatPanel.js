@@ -260,7 +260,7 @@ export default function JustifyContent(props) {
                                             <Box m={1} p={1} key={index + 1} className={classes.root3}>
 
                                                 <Box className={classes.root2} whiteSpace="normal" onClick={() => setDialogOpen(false)} >
-                                                    <ChatMessage message={value} ></ChatMessage>
+                                                    <ChatMessage adminId={event.user_id} message={value} ></ChatMessage>
                                                 </Box>
                                                 <Box className={classes.root5}>
                                                     <Avatar alt={value.userName} src={process.env.REACT_APP_API_URL + `/api/image?id=${value.user_pic}`} />
@@ -282,7 +282,7 @@ export default function JustifyContent(props) {
                                                     <Avatar alt={value.userName} src={process.env.REACT_APP_API_URL + `/api/image?id=${value.user_pic}`} />
                                                 </Box>
                                                 <Box className={classes.root2} whiteSpace="normal" >
-                                                    <ChatMessage message={value}></ChatMessage>
+                                                    <ChatMessage adminId={event.user_id} message={value}></ChatMessage>
                                                 </Box>
                                             </Box></React.Fragment>);
                                     }
@@ -294,7 +294,7 @@ export default function JustifyContent(props) {
                                     return (<Box m={1} p={1} key={index} className={classes.root3}>
 
                                         <Box className={classes.root2} onClick={() => setDialogOpen(false)} whiteSpace="normal">
-                                            <ChatMessage message={value}></ChatMessage>
+                                            <ChatMessage adminId={event.user_id} message={value}></ChatMessage>
                                         </Box>
                                         <Box className={classes.root5}>
                                             <Avatar alt={value.userName} src={process.env.REACT_APP_API_URL + `/api/image?id=${value.user_pic}`} />
@@ -308,7 +308,7 @@ export default function JustifyContent(props) {
                                             <Avatar alt={value.userName} src={process.env.REACT_APP_API_URL + `/api/image?id=${value.user_pic}`} />
                                         </Box>
                                         <Box className={classes.root2} whiteSpace="normal">
-                                            <ChatMessage message={value}></ChatMessage>
+                                            <ChatMessage adminId={event.user_id} message={value}></ChatMessage>
                                         </Box>
                                     </Box>);
                                 }

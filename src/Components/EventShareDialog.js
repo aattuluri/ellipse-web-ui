@@ -97,7 +97,7 @@ export default function EventShareDialog(props) {
                                 autoFocus
                                 margin="dense"
                                 id="title"
-                                label="Issue Title"
+                                label="Share Link"
                                 name="title"
                                 fullWidth
                                 value={title}

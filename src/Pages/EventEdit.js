@@ -489,7 +489,7 @@ const EventEdit = (props) => {
                   onChange={handleEventMode}
                   inputProps={{
                     name: 'eventMode',
-                    id: 'outlined-age-native-simple',
+                    id: 'event mode',
                   }}
                 >
                   <option aria-label="None" value="" />
@@ -501,7 +501,7 @@ const EventEdit = (props) => {
             <Grid item xs={12} sm={6}>
               <Autocomplete
                 fullWidth
-                id="combo-box-demo"
+                id="event type"
                 options={eventTypes}
                 getOptionLabel={(option) => option}
                 value={eventType || ""}
@@ -512,7 +512,7 @@ const EventEdit = (props) => {
             <Grid item xs={12} lg={6}>
               <Autocomplete
                 multiple
-                id="tags-filled"
+                id="event themes"
                 options={eventTypes.map((option) => option)}
                 // defaultValue={[eventTypes[1]]}
                 freeSolo
@@ -600,7 +600,7 @@ const EventEdit = (props) => {
               <Autocomplete
                 fullWidth
                 disabled
-                id="combo-box-demo"
+                id="collegename"
                 options={colleges}
                 getOptionLabel={(option) => option}
                 value={collegeName || ""}
@@ -618,7 +618,7 @@ const EventEdit = (props) => {
                   label="Registration"
                   inputProps={{
                     name: 'registrationMode',
-                    id: 'outlined-age-native-simple',
+                    id: 'registration mode',
                   }}
                   value={regMode || ""}
                 // onChange={handleRegistrationModeChange}
@@ -644,7 +644,7 @@ const EventEdit = (props) => {
             <Grid item xs={12} lg={6}>
               <Autocomplete
                 multiple
-                id="tags-filled"
+                id="requirements"
                 options={requirements.map((option) => option)}
                 freeSolo
                 value={selectedrequirements}

@@ -65,18 +65,20 @@ function AboutEventPanel(props) {
     const [imageDialogOpen, setImageDialogOpen] = React.useState(false);
 
     React.useEffect(() => {
-        fetch(process.env.REACT_APP_API_URL + `/api/event/get_organizer_details?eventId=${event._id}&userId=${event.user_id}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            method: 'GET',
-        }).then(response => {
-            response.json().then(value => {
-                setAdminDetails(value);
+        if(event._id !== undefined && event.user_id !== undefined){
+            fetch(process.env.REACT_APP_API_URL + `/api/event/get_organizer_details?eventId=${event._id}&userId=${event.user_id}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                method: 'GET',
+            }).then(response => {
+                response.json().then(value => {
+                    setAdminDetails(value);
+                })
             })
-        })
+        }
     }, [event,token])
 
 

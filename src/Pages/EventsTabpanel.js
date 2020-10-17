@@ -565,7 +565,7 @@ function EventsTabPanel({ history }) {
             </Grid>
             <div>
             <FeedBackDialog open={feedBackOpen} handleClose={closeFeedBckDialog}></FeedBackDialog>
-                <EventsDialog
+                {open && <EventsDialog
                     open={open}
                     event={selectedEvent}
                     // imageUrl={selectedImage}
@@ -573,7 +573,7 @@ function EventsTabPanel({ history }) {
                     handleReg={handleRegistrationButton}
                     imageDialog={handleImageDialogOpen}
                 >
-                </EventsDialog>
+                </EventsDialog>}
                 <ImageDialog
                     // image={selectedImage}
                     event={selectedEvent}

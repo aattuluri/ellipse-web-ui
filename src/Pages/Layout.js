@@ -1,5 +1,5 @@
 import React from 'react';
-import { Redirect } from 'react-router';
+import { Redirect, withRouter } from 'react-router';
 
 //Material Imports
 import Backdrop from '@material-ui/core/Backdrop';
@@ -56,11 +56,46 @@ function Layout(props) {
         }).then(response => {
             if (response.status === 200) {
                 response.json().then(value => {
-                    setCurrentUser(value[0]);
-                    if (value[0].college_name === null) {
-                        setUserDetailsDone(false);
+                    // console.log(value);
+                    if (value[0].verified === false) {
+                        // setUserDetailsDone(false);
+                        try {
+                            var data2 = new FormData();
+                            const payload2 = {
+                              email: value[0].email
+                            };
+                            data2 = JSON.stringify(payload2)
+                            fetch(process.env.REACT_APP_API_URL + '/api/users/sendverificationemail', {
+                              headers: {
+                                'Authorization': `Bearer ${token}`,
+                                'Content-Type': 'application/json'
+                              },
+                              method: 'POST',
+                              body: data2
+                            }).then((result) => {
+                              // console.log(result);
+                              result.json().then((res) => {
+                                if (res.message === "success") {
+                                    setOpen(false);
+                                    props.history.push("/otpverification")
+                                }
+                              })
+                  
+                            })
+                          } catch (error) {
+                            
+                          }
+                        
                     }
-                    setOpen(false);
+                    else if(value[0].college_name === null){
+                        setOpen(false);
+                        props.history.push("/userinfo")
+                    }
+                    else{
+                        setUserDetailsDone(true);
+                        setCurrentUser(value[0]);
+                    }
+                   
 
                 })
             }
@@ -96,8 +131,11 @@ function Layout(props) {
             }
 
         })
-
+// eslint-disable-next-line
     }, [token])
+    // if(!currentUser.verified){
+
+    // }
     if (!token) {
         return <Redirect to="/"></Redirect>
     }
@@ -105,7 +143,38 @@ function Layout(props) {
         return <Redirect to="/"></Redirect>
     }
     if (!userDetailsDone) {
-        return <Redirect to="/userinfo"></Redirect>
+        if(currentUser.verified){
+            return <Redirect to="/userinfo"></Redirect>
+        }else{
+            console.log("xyz")
+            try {
+                var data2 = new FormData();
+                const payload2 = {
+                  email: currentUser.email
+                };
+                data2 = JSON.stringify(payload2)
+                fetch(process.env.REACT_APP_API_URL + '/api/users/sendverificationemail', {
+                  headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                  },
+                  method: 'POST',
+                  body: data2
+                }).then((result) => {
+                  // console.log(result);
+                  result.json().then((res) => {
+                    if (res.message === "success") {
+                        return <Redirect to="/otpverification"></Redirect>
+                    }
+                  })
+      
+                })
+              } catch (error) {
+                
+              }
+            
+        }
+        
     }
 
     return (
@@ -135,4 +204,4 @@ function Layout(props) {
 
     );
 }
-export default Layout;
+export default withRouter(Layout) ;

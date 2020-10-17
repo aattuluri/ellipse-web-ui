@@ -17,6 +17,7 @@ import EventRegisterForm from './Pages/EventRegistrationform';
 import ExplorePanel from './Pages/ExplorePanel';
 import UnregisteredPage from './Pages/UnregisteredPage';
 import NetworkDetector from './NetworkDetector';
+import VerifyCertificate from './Pages/VerifyCertificate';
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
             <Route exact path="/un/event/:eventId" component={UnregisteredPage}></Route>
             {/* <Route exact path="/resetforgotpassword" component ={ForgotPassword2}></Route> */}
             <Route exact path="/event/:eventId" component={EventDetails} />
+            <Route exact path="/verify_certificate/:id" component={VerifyCertificate}></Route>
             <Layout>
               <Route path="/home" component={EventsTabPanel}></Route>
               <Route exact path="/events" component={CalenderPanel}></Route>
