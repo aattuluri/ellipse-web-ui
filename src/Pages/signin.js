@@ -20,6 +20,8 @@ import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import PhoneImage from '../Components/Images/logo300.svg';
+import HomePageCarousel from '../Components/HomePageCarousel';
+import FavoriteIcon from '@material-ui/icons/Favorite';
 
 
 //function for alert
@@ -49,7 +51,7 @@ const Signin = ({ history }) => {
   const [isUserVerified, setIsUserVerified] = React.useState(null);
   const [email, setEmail] = React.useState(null);
   const abortController = new AbortController();
-  
+
 
 
   const handleClose = async (event, reason) => {
@@ -196,99 +198,126 @@ const Signin = ({ history }) => {
 
 
   return (
-    <Grid container component="main" className={classes.root}>
-      <CssBaseline />
-
-      <Snackbar
-        anchorOrigin={{ vertical, horizontal }}
-        open={open}
-        autoHideDuration={autoHide}
-        onClose={handleClose}
-        key={vertical + horizontal}>
-        <Alert onClose={handleClose} severity={type}>{message}</Alert>
-      </Snackbar>
-      <Grid item xs={12} sm={12} md={7} elevation={6} >
-        <Box display="flex" flexDirection="column" justifyContent="flex-start" m={1} p={1} className={classes.paperLeft}>
-        <img  src={PhoneImage} alt="logo" height="500px" width="500px" className={classes.image}></img>
-          <Typography className={classes.title} component="h1" variant="h2">
-            Ellipse
+    <React.Fragment>
+      <Grid container component="main" className={classes.root}>
+        <CssBaseline />
+        <Snackbar
+          anchorOrigin={{ vertical, horizontal }}
+          open={open}
+          autoHideDuration={autoHide}
+          onClose={handleClose}
+          key={vertical + horizontal}>
+          <Alert onClose={handleClose} severity={type}>{message}</Alert>
+        </Snackbar>
+        <Grid item xs={12} sm={12} md={7} elevation={6} >
+          <Box display="flex" flexDirection="column" justifyContent="flex-start" m={1} p={1} className={classes.paperLeft}>
+            <img src={PhoneImage} alt="logo" height="500px" width="500px" className={classes.image}></img>
+            <Typography className={classes.title} component="h1" variant="h2">
+              Ellipse
           </Typography>
-          <Typography component="h1" variant="h6">
-            Kill time for what matters
+            <Typography component="h1" variant="h6">
+              Kill time for what matters
           </Typography><br></br>
-          <a rel="noopener noreferrer" href="https://play.google.com/store/apps/details?id=com.guna0027.ellipse" target="_blank">
-          <img className={classes.hidden} src={GoogleBadge} alt="playstore"></img><br></br>
-          </a>
-          
-        </Box>
-      </Grid>
+            <a rel="noopener noreferrer" href="https://play.google.com/store/apps/details?id=com.guna0027.ellipse" target="_blank">
+              <img className={classes.hidden} src={GoogleBadge} alt="playstore"></img><br></br>
+            </a>
 
-      <Grid item xs={12} sm={12} md={5} elevation={6}>
-        <Box display="flex" flexDirection="column" justifyContent="center" m={1} p={1} className={classes.paperRight}>
-          <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign in
+          </Box>
+        </Grid>
+
+        <Grid item xs={12} sm={12} md={5} elevation={6}>
+          <Box display="flex" flexDirection="column" justifyContent="center" m={1} p={1} className={classes.paperRight}>
+            <Avatar className={classes.avatar}>
+              <LockOutlinedIcon />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+              Sign in
           </Typography>
-          <form className={classes.form} onSubmit={handleSignin}>
-            <TextField
-              name="email"
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              autoComplete="email"
-              autoFocus
-            />
-            <TextField
-              name="password"
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-            />
-            {/* <FormControlLabel
+            <form className={classes.form} onSubmit={handleSignin}>
+              <TextField
+                name="email"
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
+                autoComplete="email"
+                autoFocus
+              />
+              <TextField
+                name="password"
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+              />
+              {/* <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             /> */}
-            <div className={classes.wrapper}>
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                color="primary"
-                disabled={loading}
-                className={classes.submit}>
-                {loading ? <CircularProgress color="primary" size={24} /> : "Sign In"}
+              <div className={classes.wrapper}>
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  disabled={loading}
+                  className={classes.submit}>
+                  {loading ? <CircularProgress color="primary" size={24} /> : "Sign In"}
 
-              </Button>
-            </div>
-            <Grid container>
-              <Grid item xs>
-                <Link href="/forgotpassword" variant="body2">
-                  Forgot password?
+                </Button>
+              </div>
+              <Grid container>
+                <Grid item xs>
+                  <Link href="/forgotpassword" variant="body2">
+                    Forgot password?
                 </Link>
+                </Grid>
+                <Grid item>
+                  <Link href="/signup" variant="body2">
+                    {"Don't have an account? Sign Up"}
+                  </Link>
+                </Grid>
               </Grid>
-              <Grid item>
-                <Link href="/signup" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </Grid>
-            </Grid>
-          </form>
-          <Box display="flex" flexDirection="column" justifyContent="flex-end">
-            <Copyright></Copyright>
+            </form>
+            <Box display="flex" flexDirection="column" justifyContent="flex-end">
+              <Copyright></Copyright>
+            </Box>
           </Box>
-        </Box>
+        </Grid>
+        <Grid item xs={12}>
+          <Box display="flex" flexDirection="column" justifyContent="center">
+            <Box display="flex" justifyContent="center">
+              <HomePageCarousel></HomePageCarousel>
+            </Box>
+          </Box>
+          <Box className={classes.footer} height="200px" display="flex" flexDirection="column" justifyContent="center">
+            <Box display="flex" justifyContent="center">
+              <Typography>Made with <FavoriteIcon fontSize="inherit" color="primary"></FavoriteIcon> for Students and Organizations</Typography><br></br>
+            </Box>
+            <Box display="flex" justifyContent="center">
+              <Typography>Contact us at <Link href="mailto:support@ellipseapp.com" variant="body2">
+                {"support@ellipseapp.com"}
+              </Link></Typography>
+            </Box>
+            <Box display="flex" justifyContent="center">
+              <Copyright></Copyright>
+            </Box>
+            <Box display="flex" justifyContent="center">
+              <Link href="/Privacy_Policy.pdf" variant="body2">
+                {"Privacy Policy"}
+              </Link>
+            </Box>
+          </Box>
+        </Grid>
       </Grid>
-    </Grid>
+
+    </React.Fragment>
   );
 }
 export default withRouter(Signin);
