@@ -111,7 +111,7 @@ export default function JustifyContent(props) {
     const webConnect = () => {
         const ws = new WebSocket(process.env.REACT_APP_WESOCKET_URL);
         ws.onopen = () => {
-            console.log("connected")
+            // console.log("connected")
             setWebSocket(ws);
             ws.onmessage = (message) => {
                 const mes = JSON.parse(message.data);
@@ -125,7 +125,7 @@ export default function JustifyContent(props) {
         }
         ws.onclose = () => {
             check();
-            console.log("closed");
+            // console.log("closed");
         }
     }
     React.useEffect(() => {
@@ -175,7 +175,7 @@ export default function JustifyContent(props) {
 
     const check = () => {
         if (!webSocket || webSocket.readyState === WebSocket.readyState) {
-            console.log("checking");
+            // console.log("checking");
             webConnect();
         }
     }

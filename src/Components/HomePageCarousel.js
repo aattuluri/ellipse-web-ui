@@ -38,7 +38,8 @@ const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: 1000,
     flexGrow: 1,
-    padding: theme.spacing(3),
+    padding: theme.spacing(2),
+    margin: theme.spacing(1),
     backgroundColor: theme.palette.primary.dark,
     borderRadius: theme.spacing(3)
     // alignContent: 'center'
@@ -46,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
   header: {
     display: 'flex',
     alignItems: 'center',
-    height: 200,
+    minHeight: 200,
     paddingLeft: theme.spacing(4),
     backgroundColor: theme.palette.primary.dark,
   },

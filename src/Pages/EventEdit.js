@@ -101,10 +101,13 @@ const EventEdit = (props) => {
   const [collegesNames, setCollegesName] = React.useState([]);
 
   const token = localStorage.getItem('token');
+  const [eventTags,setEventTags] = React.useState([]);
+  const [requirements,setRequirements] = React.useState([]);
+  const [eventTypes,setEventTypes] = React.useState([]);
 
 
-  const eventTypes = ["Hackathon", "Coding Contest", "Webinar"];
-  const requirements = ["Laptop", "Basic HTML", "C++", "Machine Learning"];
+  // const eventTypes = ["Hackathon", "Coding Contest", "Webinar"];
+  // const requirements = ["Laptop", "Basic HTML", "C++", "Machine Learning"];
   // const colleges = ["VIT University", "GITAM University", "SRM University"];
 
   React.useEffect(() => {
@@ -160,6 +163,29 @@ const EventEdit = (props) => {
     else {
       setParticipantsType("onlycollege")
     }
+    fetch(process.env.REACT_APP_API_URL+'/api/event/get_event_keywords', {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      method: 'GET',
+    }).then(response => {
+      response.json().then(value => {
+        // setColleges(value);
+        value.forEach((v) => {
+          if(v.type === "EventTags"){
+            setEventTags((eventTags)=> [...eventTags,v.title]);
+          }
+          else if(v.type === "EventRequirements"){
+            setRequirements((r)=>[...r,v.title]);
+          }
+          else{
+            setEventTypes((r)=>[...r,v.title]);
+          }
+        })
+      })
+    })
 
   }, [token, event])
 
@@ -480,7 +506,7 @@ const EventEdit = (props) => {
             </Grid>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
-                <InputLabel htmlFor="outlined-age-native-simple">Event Mode</InputLabel>
+                <InputLabel htmlFor="event mode">Event Mode</InputLabel>
                 <Select
                   fullWidth
                   native
@@ -513,7 +539,7 @@ const EventEdit = (props) => {
               <Autocomplete
                 multiple
                 id="event themes"
-                options={eventTypes.map((option) => option)}
+                options={eventTags.map((option) => option)}
                 // defaultValue={[eventTypes[1]]}
                 freeSolo
                 value={eventThemes || []}

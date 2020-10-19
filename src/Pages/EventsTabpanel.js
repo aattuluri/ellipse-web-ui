@@ -169,7 +169,7 @@ function EventsTabPanel({ history }) {
     const [sortEndDate, setSortEndDate] = React.useState(null);
     // const [sortType, setSortType] = React.useState(null);
     // const [sortEventMode, setSortEventMode] = React.useState(null);
-    const [sortCollegeType, setSortCollegeType] = React.useState("");
+    const [sortCollegeType, setSortCollegeType] = React.useState("All");
     const [sortedEventsArray, setSortedEventsArray] = React.useState([]);
     const [isFiltered, setIsFiltered] = React.useState(false);
     const [feeSortChecked, setFeeSortChecked] = React.useState([0]);
@@ -324,7 +324,7 @@ function EventsTabPanel({ history }) {
             setSortedEventsArray(feeSortedEvents);
             setIsFiltered(true);
         }
-        else if (sortCollegeType === user.collegeName) {
+        else if (sortCollegeType === user.college_name) {
             const collegeSortedEvents = sortByCollege(allEvents);
             setSortedEventsArray(collegeSortedEvents);
             setIsFiltered(true);
@@ -385,7 +385,9 @@ function EventsTabPanel({ history }) {
     function sortByCollege(sEvents) {
         var sortedEvents = [];
         sEvents.forEach(sevent => {
-            if (user.collegeName === sevent.college) {
+            console.log(user.college_name);
+            console.log(sevent.college_name);
+            if (user.college_name === sevent.college_name) {
                 sortedEvents.push(sevent);
             }
         })
@@ -399,7 +401,8 @@ function EventsTabPanel({ history }) {
         setSortStartDate(null);
         setSortEndDate(null);
         setIsFiltered(false);
-        setFilterDialogOpen(false)
+        setFilterDialogOpen(false);
+        setSortCollegeType("All")
         // setChecked(null);
     }
     function handlefilterButtonClicked() {
@@ -442,6 +445,7 @@ function EventsTabPanel({ history }) {
                                 handleSortCollegeChange={handleSortCollegeChange}
                                 feeChecked={feeSortChecked}
                                 modeChecked={modeSortChecked}
+                                sortCollgeType={sortCollegeType}
                                 setFeeChecked={setFeeSortChecked}
                                 setModeChecked={setModeSortChecked}
                                 handleSortApplyButton={handleSortApplyButton}

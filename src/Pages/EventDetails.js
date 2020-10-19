@@ -393,7 +393,7 @@ export default function MiniDrawer(props) {
         {
           adminAccess && settingsSelected && <Typography>Any queries contact us at support@ellipseapp.com</Typography>
         }
-      </main>
+      </main> 
     </div>
   );
 }

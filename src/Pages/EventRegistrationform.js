@@ -108,12 +108,12 @@ const Signup = (props) => {
       },
       method: 'GET',
     }).then(response => {
-      console.log(response);
+      // console.log(response);
       response.json().then(value => {
         setEvent(value.event);
         // setFields(value.event.regFields);
         const allFields = value.event.reg_fields;
-        console.log(allFields);
+        // console.log(allFields);
         if (allFields != null) {
           allFields.forEach(f => {
             if (f.title === "Name") {
@@ -199,7 +199,7 @@ const Signup = (props) => {
     e.preventDefault();
     // setLoading(true);
     // console.log(checkedValues);
-    console.log(formValues);
+    // console.log(formValues);
     const formkeys = Object.keys(formValues);
     formkeys.forEach(v => {
       if (formValues[v] === null) {
@@ -226,9 +226,9 @@ const Signup = (props) => {
         method: 'POST',
         body: data
       }).then(response => {
-        console.log(response);
+        // console.log(response);
         response.json().then(value => {
-          console.log(value);
+          // console.log(value);
 
           setLoading(false);
           setState({

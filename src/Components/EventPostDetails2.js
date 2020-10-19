@@ -130,7 +130,7 @@ export default function AddressForm(props) {
   }
 
   function handleCollegeChange(event, value) {
-    console.log(value);
+    // console.log(value);
     props.setCollegeName(value);
     colleges.forEach(c => {
       if (c.name === value) {
