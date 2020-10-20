@@ -126,8 +126,8 @@ export default function Checkout({ history }) {
 
   const [regLink, setRegLink] = React.useState(null);
   const [fees, setFees] = React.useState(null);
-  const [eventThemes, setEventThemes] = React.useState(null);
-  const [selectedrequirements, setSelectedRequirements] = React.useState(null);
+  const [eventThemes, setEventThemes] = React.useState([]);
+  const [selectedrequirements, setSelectedRequirements] = React.useState([]);
   const [image, setImage] = React.useState(null);
   const [addressType, setAddressType] = React.useState(null);
   const [collegeName, setCollegeName] = React.useState(user.college_name);
@@ -137,7 +137,7 @@ export default function Checkout({ history }) {
   const [venueCollege, setVenueCollege] = React.useState(null);
   const [participantsType, setParticipantsType] = React.useState("open");
   const [fields, setFields] = React.useState([]);
-  const [platformDetails,setPlatformDetails] = React.useState(null);
+  const [platformDetails,setPlatformDetails] = React.useState('');
 
 
 
