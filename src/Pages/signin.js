@@ -20,8 +20,8 @@ import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import PhoneImage from '../Components/Images/logo300.svg';
-import HomePageCarousel from '../Components/HomePageCarousel';
-import FavoriteIcon from '@material-ui/icons/Favorite';
+// import HomePageCarousel from '../Components/HomePageCarousel';
+// import FavoriteIcon from '@material-ui/icons/Favorite';
 
 
 //function for alert
@@ -290,7 +290,7 @@ const Signin = ({ history }) => {
             </Box>
           </Box>
         </Grid>
-        <Grid item xs={12}>
+        {/* <Grid item xs={12}>
           <Box display="flex" flexDirection="column" justifyContent="center">
             <Box display="flex" justifyContent="center">
               <HomePageCarousel></HomePageCarousel>
@@ -314,7 +314,7 @@ const Signin = ({ history }) => {
               </Link>
             </Box>
           </Box>
-        </Grid>
+        </Grid> */}
       </Grid>
 
     </React.Fragment>

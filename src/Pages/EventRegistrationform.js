@@ -227,19 +227,22 @@ const Signup = (props) => {
         body: data
       }).then(response => {
         // console.log(response);
-        response.json().then(value => {
-          // console.log(value);
-
-          setLoading(false);
-          setState({
-            open: true,
-            vertical: 'top',
-            horizontal: 'center',
-            message: 'Registered successfully',
-            type: "success",
-            autoHide: 200
-          });
-        })
+        if(response.status === 200){
+          response.json().then(value => {
+            // console.log(value);
+  
+            setLoading(false);
+            setState({
+              open: true,
+              vertical: 'top',
+              horizontal: 'center',
+              message: 'Registered successfully',
+              type: "success",
+              autoHide: 200
+            });
+          })
+        }
+        
       })
     }
     catch (error) {

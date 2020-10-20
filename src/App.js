@@ -18,6 +18,7 @@ import ExplorePanel from './Pages/ExplorePanel';
 import UnregisteredPage from './Pages/UnregisteredPage';
 import NetworkDetector from './NetworkDetector';
 import VerifyCertificate from './Pages/VerifyCertificate';
+import NewHomePage from './Pages/NewHomePage';
 
 function App() {
   return (
@@ -25,7 +26,7 @@ function App() {
       <Router>
         <div>
           <Switch>
-            <Route exact path="/" component={Login} />
+            <Route exact path="/" component={NewHomePage} />
             <Route exact path="/signin" component={Login} />
             <Route exact path="/signup" component={SignUp} />
             <Route exact path="/forgotpassword" component={ForgotPassword} />
