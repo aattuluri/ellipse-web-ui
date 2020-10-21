@@ -94,9 +94,21 @@ const Signup = (props) => {
     if (cDate > eDate) {
       setCanRegister(false)
       setUserMessage("Registration closed")
-
     }
-  }, [event, user.designation, user.user_id])
+    // console.log(event.o_allowed)
+    if (event.o_allowed !== undefined) {
+      if (!event.o_allowed) {
+        console.log(event.o_allowed)
+        if (event.college_name === user.college_name) {
+
+        } else {
+          setCanRegister(false)
+          setUserMessage("only " + event.college_name + " can participate")
+        }
+      }
+    }
+
+  }, [event, user])
 
 
   React.useEffect(() => {
@@ -227,10 +239,10 @@ const Signup = (props) => {
         body: data
       }).then(response => {
         // console.log(response);
-        if(response.status === 200){
+        if (response.status === 200) {
           response.json().then(value => {
             // console.log(value);
-  
+
             setLoading(false);
             setState({
               open: true,
@@ -242,7 +254,7 @@ const Signup = (props) => {
             });
           })
         }
-        
+
       })
     }
     catch (error) {

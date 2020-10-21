@@ -8,27 +8,29 @@ import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import SwipeableViews from 'react-swipeable-views';
 import { autoPlay } from 'react-swipeable-views-utils';
-import Dashboard from '../Components/Images/dashboard.png';
-import Profile from '../Components/Images/profile.png';
-import AdminDashboard from '../Components/Images/AdminDashboard.png';
+// import Dashboard from '../Components/Images/dashboard.png';
+// import Profile from '../Components/Images/profile.png';
+// import AdminDashboard from '../Components/Images/AdminDashboard.png';
 import Certificate from '../Components/Images/certificate.png';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
+import DeviceDesign from '../Components/Images/un.svg';
+import GoogleBadge from '../Components/Images/google-play-badge.png'
 
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
 const tutorialSteps = [
     {
-        label: 'All your College events at single place',
-        imgPath: Dashboard,
+        label: 'All your College events at single Application',
+        imgPath: DeviceDesign,
     },
     {
         label: 'Post your events and manage them easily',
-        imgPath: Profile,
+        imgPath: DeviceDesign,
     },
     {
         label: 'Feature Rich dashboard for Admins',
-        imgPath: AdminDashboard,
+        imgPath: DeviceDesign,
     },
     {
         label: 'Generate and send certificates easily to participants',
@@ -49,21 +51,38 @@ const useStyles = makeStyles((theme) => ({
     header: {
         display: 'flex',
         alignItems: 'center',
-        minHeight: 200,
+        minHeight: 300,
+        [theme.breakpoints.down('md')]: {
+            minHeight: 200,
+        },
         paddingLeft: theme.spacing(0),
         backgroundColor: theme.palette.primary.dark,
     },
     img: {
-        padding: theme.spacing(5),
-        height: 450,
+        padding: theme.spacing(0),
+        maxHeight: 550,
         display: 'block',
         maxWidth: '100%',
         overflow: 'hidden',
         width: '100%',
+        [theme.breakpoints.down('md')]: {
+            padding: theme.spacing(0),
+        },
+    },
+    paperLeft: {
+        margin: theme.spacing(0),
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        [theme.breakpoints.down('sm')]: {
+            //   margin: theme.spacing(3, 1),
+        },
+
     },
 }));
 
-function SwipeableTextMobileStepper() {
+function SwipeableTextMobileStepper(props) {
     const classes = useStyles();
     const theme = useTheme();
     const [activeStep, setActiveStep] = React.useState(0);
@@ -101,11 +120,14 @@ function SwipeableTextMobileStepper() {
                     </AutoPlaySwipeableViews>
                 </Grid>
                 <Grid item xs={12} md={6}>
-                    <Paper square elevation={0} className={classes.header}>
+                    <Paper elevation={0} className={classes.header}>
                         <Typography variant="h3" color="secondary" align="center">{tutorialSteps[activeStep].label}</Typography>
                     </Paper>
-                    <Box style={{margin: '30px'}} display="flex" flexDirection="column" justifyContent="center">
-                        <Button variant="contained" color="secondary">Get started</Button>
+                    <Box className={classes.paperLeft} >
+                        <Button onClick={props.handleSignin} variant="contained" color="secondary">Get started</Button>
+                        <a rel="noopener noreferrer" href="https://play.google.com/store/apps/details?id=com.guna0027.ellipse" target="_blank">
+                        <img className={classes.hidden} src={GoogleBadge} alt="playstore"></img><br></br>
+                        </a>
                     </Box>
 
                 </Grid>

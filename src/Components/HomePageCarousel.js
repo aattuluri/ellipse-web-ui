@@ -12,21 +12,22 @@ import Dashboard from '../Components/Images/dashboard.png';
 import Profile from '../Components/Images/profile.png';
 import AdminDashboard from '../Components/Images/AdminDashboard.png';
 import Certificate from '../Components/Images/certificate.png';
+import DeviceDesign from '../Components/Images/un.svg';
 
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
 const tutorialSteps = [
   {
     label: 'All your College events at single place',
-    imgPath: Dashboard,
+    imgPath: DeviceDesign,
   },
   {
     label: 'Post your events and manage them easily',
-    imgPath: Profile,
+    imgPath: DeviceDesign,
   },
   {
     label: 'Feature Rich dashboard for Admins',
-    imgPath: AdminDashboard,
+    imgPath: DeviceDesign,
   },
   {
     label: 'Generate and send certificates easily to participants',
