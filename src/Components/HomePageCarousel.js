@@ -12,7 +12,7 @@ import Dashboard from '../Components/Images/dashboard.png';
 import Profile from '../Components/Images/profile.png';
 import AdminDashboard from '../Components/Images/AdminDashboard.png';
 import Certificate from '../Components/Images/certificate.png';
-import DeviceDesign from '../Components/Images/un.svg';
+import DeviceDesign from '../Components/Images/un.png';
 
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 

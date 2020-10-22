@@ -104,6 +104,7 @@ const EventEdit = (props) => {
   const [eventTags,setEventTags] = React.useState([]);
   const [requirements,setRequirements] = React.useState([]);
   const [eventTypes,setEventTypes] = React.useState([]);
+  const [platformDetails,setPlatformDetails] = React.useState('');
 
 
   // const eventTypes = ["Hackathon", "Coding Contest", "Webinar"];
@@ -156,6 +157,7 @@ const EventEdit = (props) => {
     setOrganizer(event.organizer);
     setVenue(event.venue);
     setVenueCollege(event.venue_college);
+    setPlatformDetails(event.platform_details)
     // setParticipantsType(event.o_allowed)
     if (event.o_allowed === true) {
       setParticipantsType("open")
@@ -232,7 +234,8 @@ const EventEdit = (props) => {
         o_allowed: oAllowed,
         reg_mode: regMode,
         venue: venue,
-        venue_college: venueCollege
+        venue_college: venueCollege,
+        platform_details: platformDetails
       };
       data = JSON.stringify(payload);
       // console.log(data);
@@ -371,6 +374,10 @@ const EventEdit = (props) => {
   }
   function handleVenueCollegeChange(event, value) {
     setVenueCollege(value);
+  }
+
+  function handlePlatformChange(event){
+    setPlatformDetails(event.target.value);
   }
 
   function handleChange(event) {
@@ -739,6 +746,23 @@ const EventEdit = (props) => {
                 fullWidth
               />
             </Grid>
+            {eventMode === "Online" && <Grid item xs={12}>
+            <TextField
+              multiline={true}
+              helperText="Enter links of your and you can also add or edit later in event edit"
+              rows="5"
+              variant='outlined'
+              placeholder="Enter details about your online platform"
+              autoComplete='off'
+              // required
+              id="platform"
+              name="platform"
+              label="Platform"
+              fullWidth
+              onChange={handlePlatformChange}
+              value={platformDetails || ""}
+            />
+          </Grid>}
           </Grid>
           <Button
             type="submit"

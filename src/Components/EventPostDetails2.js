@@ -151,9 +151,9 @@ export default function AddressForm(props) {
   function handleBuildingChange(event) {
     props.setBuilding(event.target.value);
   }
-  // function handlePlatformChange(event){
-  //   props.setPlatformDetails(event.target.value)
-  // }
+  function handlePlatformChange(event){
+    props.setPlatformDetails(event.target.value)
+  }
   function handleNext(event) {
     event.preventDefault();
     props.handleNext();
@@ -295,14 +295,15 @@ export default function AddressForm(props) {
               <FormControlLabel value="onlycollege" control={<Radio color="default" />} label={`Only ${props.college}`} />
             </RadioGroup>
           </Grid>
-          {/* {props.eventMode === "Online" && <Grid item xs={12}>
+          {props.eventMode === "Online" && <Grid item xs={12}>
             <TextField
               multiline={true}
+              helperText="Enter links of your and you can also add or edit later in event edit"
               rows="5"
               variant='outlined'
               placeholder="Enter details about your online platform"
               autoComplete='off'
-              required
+              // required
               id="platform"
               name="platform"
               label="Platform"
@@ -310,7 +311,7 @@ export default function AddressForm(props) {
               onChange={handlePlatformChange}
               value={props.platformDetails || ""}
             />
-          </Grid>} */}
+          </Grid>}
           {props.eventMode === "Offline" && <React.Fragment>
             <Grid item xs={12}>
               <FormLabel component="legend">Address</FormLabel>
@@ -350,7 +351,6 @@ export default function AddressForm(props) {
             />
           </Grid>
           }
-
         </Grid>
         <div className={classes.buttons}>
           <Button onClick={props.handleBack} className={classes.button}>

@@ -93,10 +93,10 @@ export default function AddressForm(props) {
         },
 
     }
-    const [selectedFields, setSelectedFields] = React.useState([]);
+    const [selectedFields, setSelectedFields] = React.useState([fields['name'], fields['email']]);
     const [state, setState] = React.useState({
-        name: false,
-        email: false,
+        name: true,
+        email: true,
         college: false,
     });
     const handleChange = (event) => {
@@ -119,8 +119,16 @@ export default function AddressForm(props) {
         setSelectedFields(selectedFields => [...selectedFields, addingField[fName]]);
     }
     const handleDelete = (chipToDelete) => () => {
-        setState({ ...state, [chipToDelete.name]: false })
-        setSelectedFields(selectedFields => selectedFields.filter((chip) => chip.title !== chipToDelete.title));
+        // console.log(chipToDelete.title)
+        if (chipToDelete.title === 'College') {
+            setState({ ...state, college: false })
+            setSelectedFields(selectedFields => selectedFields.filter((chip) => chip.title !== chipToDelete.title));
+        }
+        else if (chipToDelete.title !== 'Name' && chipToDelete.title !== 'Email') {
+            setState({ ...state, [chipToDelete.title.toLowercase]: false })
+            setSelectedFields(selectedFields => selectedFields.filter((chip) => chip.title !== chipToDelete.title));
+        }
+
     };
 
     async function handlePostButton(e) {
@@ -143,11 +151,11 @@ export default function AddressForm(props) {
                             <FormLabel component="legend">Fields for your Registration Form</FormLabel>
                             <FormGroup className={classes.formgroup}>
                                 <FormControlLabel
-                                    control={<Checkbox color="primary" checked={name} onChange={handleChange} name="name" />}
+                                    control={<Checkbox disabled color="primary" checked={name} onChange={handleChange} name="name" />}
                                     label="Name"
                                 />
                                 <FormControlLabel
-                                    control={<Checkbox color="primary" checked={email} onChange={handleChange} name="email" />}
+                                    control={<Checkbox disabled color="primary" checked={email} onChange={handleChange} name="email" />}
                                     label="Email"
                                 />
                                 <FormControlLabel
@@ -182,7 +190,7 @@ export default function AddressForm(props) {
                                         <Chip
 
                                             label={data.title}
-                                            onDelete={data.label === 'React' ? undefined : handleDelete(data)}
+                                            onDelete={handleDelete(data)}
                                             className={classes.chip}
                                         />
                                     </li>

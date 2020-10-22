@@ -14,7 +14,7 @@ import { autoPlay } from 'react-swipeable-views-utils';
 import Certificate from '../Components/Images/certificate.png';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
-import DeviceDesign from '../Components/Images/un.svg';
+import DeviceDesign from '../Components/Images/surface1.svg';
 import GoogleBadge from '../Components/Images/google-play-badge.png'
 
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
@@ -126,7 +126,7 @@ function SwipeableTextMobileStepper(props) {
                     <Box className={classes.paperLeft} >
                         <Button onClick={props.handleSignin} variant="contained" color="secondary">Get started</Button>
                         <a rel="noopener noreferrer" href="https://play.google.com/store/apps/details?id=com.guna0027.ellipse" target="_blank">
-                        <img className={classes.hidden} src={GoogleBadge} alt="playstore"></img><br></br>
+                            <img className={classes.hidden} src={GoogleBadge} alt="playstore"></img><br></br>
                         </a>
                     </Box>
 
