@@ -14,7 +14,7 @@ import { autoPlay } from 'react-swipeable-views-utils';
 import Certificate from '../Components/Images/certificate.png';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
-import DeviceDesign from '../Components/Images/surface1.svg';
+import DeviceDesign from '../Components/Images/un.svg';
 import GoogleBadge from '../Components/Images/google-play-badge.png'
 
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
