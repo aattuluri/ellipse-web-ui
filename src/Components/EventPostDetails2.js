@@ -138,9 +138,9 @@ export default function AddressForm(props) {
       }
     })
   }
-  function handleVenueCollegeChange(event, value) {
-    props.setVenueCollege(value);
-  }
+  // function handleVenueCollegeChange(event, value) {
+  //   props.setVenueCollege(value);
+  // }
 
   function handleAboutChange(event) {
     props.setAbout(event.target.value);
@@ -314,13 +314,29 @@ export default function AddressForm(props) {
           </Grid>}
           {props.eventMode === "Offline" && <React.Fragment>
             <Grid item xs={12}>
-              <FormLabel component="legend">Address</FormLabel>
+              <FormLabel component="legend">Venue</FormLabel>
               <RadioGroup aria-label="address" aria-disabled name="address" defaultValue="college" onChange={handleAddressTypeChange} style={{ display: "inline" }}>
-                <FormControlLabel value="college" control={<Radio color="default" />} label="College/University" />
-                <FormControlLabel disabled value="other" control={<Radio color="default" />} label="Others" />
+                <FormControlLabel value="College" control={<Radio color="default" />} label="College/University" />
+                <FormControlLabel  value="Other" control={<Radio color="default" />} label="Others" />
               </RadioGroup>
             </Grid>
-            <Grid item xs={12} lg={6}>
+            <Grid item xs={12}>
+            <TextField
+                multiline={true}
+                helperText="Enter links of your and you can also add or edit later in event edit"
+                rows="5"
+                variant='outlined'
+                placeholder="Room No,Building,College,State,Pincode"
+                autoComplete='off'
+                onChange={handleBuildingChange}
+                value={props.building}
+                id="building"
+                name="building"
+                label="Venue"
+                fullWidth
+              />
+          </Grid>
+            {/* <Grid item xs={12} lg={6}>
               <TextField
                 autoComplete='off'
                 onChange={handleBuildingChange}
@@ -341,7 +357,7 @@ export default function AddressForm(props) {
                 onChange={handleVenueCollegeChange}
                 renderInput={(params) => <TextField fullWidth required {...params} label="Venue College" />}
               />
-            </Grid>
+            </Grid> */}
 
           </React.Fragment>}
           {props.registrationMode !== "form" && <Grid item xs={12}>

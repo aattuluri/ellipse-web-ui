@@ -98,7 +98,7 @@ const EventEdit = (props) => {
   const [venueCollege, setVenueCollege] = React.useState(null);
   const { vertical, horizontal, open, message, type } = state;
   const [colleges, setColleges] = React.useState([]);
-  const [collegesNames, setCollegesName] = React.useState([]);
+  // const [collegesNames, setCollegesName] = React.useState([]);
 
   const token = localStorage.getItem('token');
   const [eventTags,setEventTags] = React.useState([]);
@@ -122,9 +122,9 @@ const EventEdit = (props) => {
     }).then(response => {
       response.json().then(value => {
         setColleges(value);
-        value.forEach((v) => {
-          setCollegesName((collegesNames) => [...collegesNames, v.name])
-        })
+        // value.forEach((v) => {
+        //   setCollegesName((collegesNames) => [...collegesNames, v.name])
+        // })
       })
     })
   }, [token])
@@ -372,9 +372,9 @@ const EventEdit = (props) => {
   function handleVenue(event) {
     setVenue(event.target.value);
   }
-  function handleVenueCollegeChange(event, value) {
-    setVenueCollege(value);
-  }
+  // function handleVenueCollegeChange(event, value) {
+  //   setVenueCollege(value);
+  // }
 
   function handlePlatformChange(event){
     setPlatformDetails(event.target.value);
@@ -710,6 +710,10 @@ const EventEdit = (props) => {
               <Grid item xs={12} lg={6}>
                 <TextField
                   autoComplete='off'
+                  multiline={true}
+                  helperText="Enter venue details"
+                  rows="5"
+                  variant='outlined'
                   // required
                   value={venue || ""}
                   onChange={handleVenue}
@@ -720,7 +724,7 @@ const EventEdit = (props) => {
                 />
               </Grid>
             }
-            {eventMode === "Offline" && <Grid item xs={12} sm={6}>
+            {/* {eventMode === "Offline" && <Grid item xs={12} sm={6}>
               <Autocomplete
                 fullWidth
                 id="combo-box-demo"
@@ -730,7 +734,7 @@ const EventEdit = (props) => {
                 onChange={handleVenueCollegeChange}
                 renderInput={(params) => <TextField fullWidth required {...params} label="Venue College" />}
               />
-            </Grid>}
+            </Grid>} */}
             <Grid item xs={12}>
               <TextField
                 multiline={true}

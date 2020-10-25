@@ -50,6 +50,10 @@ const useStyles = makeStyles((theme) => ({
         display: "flex",
         justifyContent: "flex-start",
         marginTop: theme.spacing(2)
+    },
+    root0: {
+        display: "flex",
+        justifyContent: "center",
     }
 }));
 
@@ -65,7 +69,7 @@ function AboutEventPanel(props) {
     const [imageDialogOpen, setImageDialogOpen] = React.useState(false);
 
     React.useEffect(() => {
-        if(event._id !== undefined && event.user_id !== undefined){
+        if (event._id !== undefined && event.user_id !== undefined) {
             fetch(process.env.REACT_APP_API_URL + `/api/event/get_organizer_details?eventId=${event._id}&userId=${event.user_id}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -79,7 +83,7 @@ function AboutEventPanel(props) {
                 })
             })
         }
-    }, [event,token])
+    }, [event, token])
 
 
     const calculateTimeLeft = () => {
@@ -162,7 +166,7 @@ function AboutEventPanel(props) {
                 <div className={classes.root}>
                     <Grid container component="main">
                         <Grid item xs={12} sm={12} md={4} lg={4} >
-                            <img onClick={handleImageDialogOpen} style={{ maxWidth: '250px' }} alt="event poster" src={event.poster_url !== undefined && process.env.REACT_APP_API_URL + `/api/image?id=${event.poster_url}`}  ></img>
+                            <img onClick={handleImageDialogOpen} style={{ maxWidth: '250px' }} alt="event poster" src={process.env.REACT_APP_API_URL + `/api/image?id=${event.poster_url}`}  ></img>
                         </Grid>
                         <Grid item xs={12} sm={12} md={8} lg={8}>
                             <Typography>{event.description} </Typography>
@@ -181,62 +185,85 @@ function AboutEventPanel(props) {
                             </div>
 
                         </Grid>
-                        <Grid item xs={12}>
+                        {/* <Grid item xs={12}> */}
 
-                            <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h4">About</Typography>
-                            <Typography color="textSecondary" variant="body2">
-                                {
-                                    event.about
-                                }
-                                {/* {[...new Array(5)]
-                                    .map(
-                                        () => `Cras mattis consectetur purus sit amet fermentum. 
+                        <Box >
+                            <Box className={classes.root0}>
+                                <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h4">About</Typography>
+                            </Box>
+                            <Box className={classes.root0}>
+                                <Typography color="textSecondary" variant="body2">
+                                    {
+                                        event.about
+                                    }
+                                    {[...new Array(5)]
+                                        .map(
+                                            () => `Cras mattis consectetur purus sit amet fermentum. 
                                     Cras justo odio, dapibus ac facilisis in, egestas eget quam.
                                     Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
                                     Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`,
-                                    )
-                                    .join('\n')} */}
-                            </Typography>
-                            <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Requirements</Typography>
-                            {
-                                requirements != null && requirements.map(val => {
-                                    return <Chip key={val} style={{ marginRight: '5px' }} variant="outlined" color="inherit" label={val}></Chip>
-                                })
-                            }
-                            {event.event_mode === "Offline" && <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Venue Details</Typography>}
-                            {event.event_mode === "Offline" && <Typography color="textSecondary" variant="body2">{event.venue}</Typography>}
-                            {event.event_mode === "Offline" && <Typography color="textSecondary" variant="body2">{event.venue_college}</Typography>}
-                            {/* {event.event_mode === "Online" && <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Platform Details</Typography>}
-                            {event.event_mode === "Online" && <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">{}</Typography>} */}
-                            {event.fee_type === "Paid" && <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Fee Details</Typography>}
-                            {event.fee_type === "Paid" && <Typography color="textSecondary" variant="body2">{"Rs " + event.fee}</Typography>}
-                            <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Organised By</Typography>
-                            <Box className={classes.adminDetails}>
-                                <Box>
-                                    <Avatar className={classes.avatar} alt={adminDetails.name} src={process.env.REACT_APP_API_URL + `/api/image?id=${adminDetails.profile_pic}`} />
-                                </Box>
-                                <Box>
+                                        )
+                                        .join('\n')}
+                                </Typography>
+                            </Box>
+                            <Box className={classes.root0}>
+                                {requirements.length !== 0 && <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Requirements</Typography>}
+                            </Box>
+                            <Box className={classes.root0}>
+                                {
+                                    requirements.length !== 0 && requirements.map(val => {
+                                        return <Chip key={val} variant="outlined" color="inherit" label={val}></Chip>
+                                    })
+                                }
+                            </Box>
+                            <Box className={classes.root0}>
+                                {event.event_mode === "Offline" && <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Venue Details</Typography>}
+                            </Box>
+                            <Box className={classes.root0}>
+                                {event.event_mode === "Offline" && <Typography color="textSecondary" variant="body2">{event.venue}</Typography>}
+                            </Box>
+                            <Box className={classes.root0}> 
+                                {event.event_mode === "Offline" && <Typography color="textSecondary" variant="body2">{event.venue_college}</Typography>}
+                            </Box>
+                            <Box className={classes.root0}>
+                                {event.fee_type === "Paid" && <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Fee Details</Typography>}
+                            </Box>
+                            <Box className={classes.root0}>
+                                {event.fee_type === "Paid" && <Typography color="textSecondary" variant="body2">{"Rs " + event.fee}</Typography>}
+                            </Box>
+                            <Box className={classes.root0}>
+                                <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Organised By</Typography>
+                            </Box>
+                            <Box className={classes.root0}>
+                                <Box className={classes.adminDetails}>
                                     <Box>
-                                        <Typography variant="h5">{adminDetails.name}</Typography>
+                                        <Avatar className={classes.avatar} alt={adminDetails.name} src={process.env.REACT_APP_API_URL + `/api/image?id=${adminDetails.profile_pic}`} />
                                     </Box>
                                     <Box>
-                                        <Typography color="textSecondary" variant="body2">{adminDetails.college_name}</Typography>
+                                        <Box>
+                                            <Typography variant="h5">{adminDetails.name}</Typography>
+                                        </Box>
+                                        <Box>
+                                            <Typography color="textSecondary" variant="body2">{adminDetails.college_name}</Typography>
+                                        </Box>
                                     </Box>
-
                                 </Box>
                             </Box>
-                        </Grid>
+                        </Box>
+                        {/* {event.event_mode === "Online" && <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Platform Details</Typography>}
+                            {event.event_mode === "Online" && <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">{}</Typography>} */}
+                        {/* </Grid> */}
                         <Grid item xs={12}>
                         </Grid>
                         <Grid>
                         </Grid>
                     </Grid>
                     <ImageDialog
-                    // image={selectedImage}
-                    event={event}
-                    open={imageDialogOpen}
-                    handleClose={handleImageDialogClose}>
-                </ImageDialog>
+                        // image={selectedImage}
+                        event={event}
+                        open={imageDialogOpen}
+                        handleClose={handleImageDialogClose}>
+                    </ImageDialog>
                 </div>
             )}
         </div>
@@ -245,4 +272,6 @@ function AboutEventPanel(props) {
 
 export default AboutEventPanel;
 
-// This impressive paella is a perfect party dish and a fun meal to cook together with your guests. Add 1 cup of frozen peas along with the mussels, if you like.
+// This impressive paella is a perfect party dish and a fun meal
+//  to cook together with your guests. Add 1 cup of frozen peas along with 
+// the mussels, if you like.
