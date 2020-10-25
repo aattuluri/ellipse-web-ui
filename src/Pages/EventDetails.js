@@ -86,6 +86,11 @@ const useStyles = makeStyles((theme) => ({
       padding: theme.spacing(3),
     },
   },
+  eventName: {
+    [theme.breakpoints.up('md')]: {
+      display: 'none',
+  },
+  }
 
 }));
 
@@ -353,7 +358,7 @@ export default function MiniDrawer(props) {
       </Drawer>
       <main className={classes.content}>
         <div className={classes.toolbar} />
-        {/* <Typography align='center' variant="h4" style={{ paddingBottom: "20px", paddingTop: "10px" }}>{event.name}</Typography> */}
+        <Typography className={classes.eventName} align='center' variant="h4" style={{ paddingBottom: "20px", paddingTop: "10px" }}>{event.name}</Typography>
         {
           infoSelected && event != null && <AboutPanel event={event}></AboutPanel>
         }

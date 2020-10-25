@@ -63,12 +63,16 @@ function AboutEventPanel(props) {
     const { children, value, url, index, ...other } = props;
     const event = props.event;
     const tags = event.tags;
-    const requirements = event.requirements;
+    // const requirements = event.requirements;
+    const [requirements, setRequirements] = React.useState([])
     const [timeLabel, setTimeLabel] = React.useState("Registration Ends in");
     const [adminDetails, setAdminDetails] = React.useState({});
     const [imageDialogOpen, setImageDialogOpen] = React.useState(false);
 
     React.useEffect(() => {
+        if (event.requirements !== undefined) {
+            setRequirements(event.requirements);
+        }
         if (event._id !== undefined && event.user_id !== undefined) {
             fetch(process.env.REACT_APP_API_URL + `/api/event/get_organizer_details?eventId=${event._id}&userId=${event.user_id}`, {
                 headers: {
@@ -84,7 +88,8 @@ function AboutEventPanel(props) {
             })
         }
     }, [event, token])
-
+    // console.log(event)
+    // console.log(requirements);
 
     const calculateTimeLeft = () => {
 
@@ -207,7 +212,7 @@ function AboutEventPanel(props) {
                                 </Typography>
                             </Box>
                             <Box className={classes.root0}>
-                                {requirements.length !== 0 && <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Requirements</Typography>}
+                                {requirements !== null && requirements.length !== 0 && <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Requirements</Typography>}
                             </Box>
                             <Box className={classes.root0}>
                                 {
@@ -222,7 +227,7 @@ function AboutEventPanel(props) {
                             <Box className={classes.root0}>
                                 {event.event_mode === "Offline" && <Typography color="textSecondary" variant="body2">{event.venue}</Typography>}
                             </Box>
-                            <Box className={classes.root0}> 
+                            <Box className={classes.root0}>
                                 {event.event_mode === "Offline" && <Typography color="textSecondary" variant="body2">{event.venue_college}</Typography>}
                             </Box>
                             <Box className={classes.root0}>
@@ -230,6 +235,12 @@ function AboutEventPanel(props) {
                             </Box>
                             <Box className={classes.root0}>
                                 {event.fee_type === "Paid" && <Typography color="textSecondary" variant="body2">{"Rs " + event.fee}</Typography>}
+                            </Box>
+                            <Box className={classes.root0}>
+                                {event.event_mode === "Online" && <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Platform Details</Typography>}
+                            </Box>
+                            <Box className={classes.root0}>
+                                {event.event_mode === "Online" && <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="body2">{event.platform_details}</Typography>}
                             </Box>
                             <Box className={classes.root0}>
                                 <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Organised By</Typography>
@@ -249,9 +260,10 @@ function AboutEventPanel(props) {
                                     </Box>
                                 </Box>
                             </Box>
+                            
                         </Box>
-                        {/* {event.event_mode === "Online" && <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Platform Details</Typography>}
-                            {event.event_mode === "Online" && <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">{}</Typography>} */}
+
+
                         {/* </Grid> */}
                         <Grid item xs={12}>
                         </Grid>
