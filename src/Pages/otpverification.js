@@ -94,7 +94,7 @@ const OTPver = ({ history }) => {
                             horizontal: 'center',
                             message: "Success! redirecting to Ellipse Home",
                             type: 'success',
-                            autoHide: 5000
+                            autoHide: 1000
                         })
 
                     }

@@ -129,7 +129,7 @@ const Signup = ({ history }) => {
           open: true,
           vertical: 'top',
           horizontal: 'center',
-          message: 'Please agree to the terms and condiitons',
+          message: 'Please agree to the terms and conditions',
           type: "error"
         });
       }
