@@ -4,43 +4,18 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-// import AboutEventsPanel from '../Components/AboutEventPanel';
-// import { Dialog } from '@material-ui/core';
-// import DialogActions from '@material-ui/core/DialogActions';
-// import DialogContent from '@material-ui/core/DialogContent';
-// import DialogContentText from '@material-ui/core/DialogContentText';
 import NewHomePageCarousel from '../Pages/NewHomePageCarousel';
 import Box from '@material-ui/core/Box';
-import FavoriteIcon from '@material-ui/icons/Favorite';
+// import FavoriteIcon from '@material-ui/icons/Favorite';
 import Link from '@material-ui/core/Link';
 import Copyright from "../Components/copyright";
-// import Dashboard from '../Components/Images/dashboard.png';
-// import Profile from '../Components/Images/profile.png';
-// import AdminDashboard from '../Components/Images/AdminDashboard.png';
-// import Certificate from '../Components/Images/certificate.png';
 import Grid from '@material-ui/core/Grid';
 // import Paper from '@material-ui/core/Paper';
 // import DeviceDesign from '../Components/Images/un.svg';
 import HomePageEventCard from '../Components/HomePageEventCard';
+import GoogleBadge from '../Components/Images/google-play-badge.png'
 
-// const tutorialSteps = [
-//     {
-//         label: 'All your College events at single place',
-//         imgPath: DeviceDesign,
-//     },
-//     {
-//         label: 'Post your events and manage them easily',
-//         imgPath: DeviceDesign,
-//     },
-//     {
-//         label: 'Feature Rich dashboard for Admins',
-//         imgPath: DeviceDesign,
-//     },
-//     {
-//         label: 'Generate and send certificates easily to participants',
-//         imgPath: DeviceDesign,
-//     },
-// ];
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -49,10 +24,7 @@ const useStyles = makeStyles((theme) => ({
     menuButton: {
         marginRight: theme.spacing(2),
     },
-    title: {
-        flexGrow: 1,
-        color: theme.palette.primary.dark
-    },
+
     body: {
         margin: theme.spacing(0)
     },
@@ -89,16 +61,22 @@ const useStyles = makeStyles((theme) => ({
     button: {
         margin: theme.spacing(1),
         borderRadius: theme.spacing(3)
-    }
+    },
+    title: {
+        fontFamily: 'Gugi',
+        color: theme.palette.primary.dark,
+        fontWeight: 'bold',
+        flexGrow: 1,
+    },
 }));
 
 export default function UnregisteredPage(props) {
     // const token = localStorage.getItem('token');
     const classes = useStyles();
-    const [activeEvents,setActiveEvents] = React.useState([])
+    const [activeEvents, setActiveEvents] = React.useState([])
 
-    React.useEffect(()=>{
-        fetch(process.env.REACT_APP_API_URL+'/api/get_events', {
+    React.useEffect(() => {
+        fetch(process.env.REACT_APP_API_URL + '/api/get_events', {
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
@@ -112,7 +90,7 @@ export default function UnregisteredPage(props) {
                     value.sort((a, b) => {
                         return new Date(a.start_time) - new Date(b.start_time);
                     })
-                    setActiveEvents(value.filter(e =>{
+                    setActiveEvents(value.filter(e => {
                         const cDate = new Date();
                         const eDate = new Date(e.finish_time);
                         return cDate < eDate && e.status !== "pending"
@@ -121,15 +99,13 @@ export default function UnregisteredPage(props) {
             }
 
         })
-    },[])
+    }, [])
 
 
     function handleSigninClick() {
-        // localStorage.setItem('eventid',id);
         props.history.push("/signin")
     }
     function handleSignupClick() {
-        // localStorage.setItem('eventid',id);
         props.history.push('/signup');
     }
 
@@ -137,7 +113,7 @@ export default function UnregisteredPage(props) {
         <div className={classes.root}>
             <AppBar position="sticky" className={classes.appbar}>
                 <Toolbar>
-                    <Typography variant="h5" className={classes.title}>
+                    <Typography className={classes.title} variant="h5">
                         Ellipse
                     </Typography>
                     <Button className={classes.button} variant="contained" size="large" color="primary" onClick={handleSigninClick}>Login</Button>
@@ -148,43 +124,20 @@ export default function UnregisteredPage(props) {
                 <NewHomePageCarousel handleSignin={handleSigninClick}></NewHomePageCarousel>
             </div>
             <Grid style={{ minHeight: '100px' }} container component="main">
-            <Grid item xs={false} md={3} lg={2} style={{ padding: "10px" }} ></Grid>
+                <Grid item xs={false} md={3} lg={2} style={{ padding: "10px" }} ></Grid>
                 <Grid item xs={12} sm={12} md={9} lg={8}>
-                {
-                    activeEvents.map((e,index)=>{
-                        return <HomePageEventCard onClick={handleSigninClick} event={e}></HomePageEventCard>
-                    })
-                }
+                    {
+                        activeEvents.map((e, index) => {
+                            return <HomePageEventCard onClick={handleSigninClick} event={e}></HomePageEventCard>
+                        })
+                    }
                 </Grid>
 
             </Grid>
-            {/* <Grid container component="main">
-                {tutorialSteps.map((step, index) => (
-                    <React.Fragment>
-                        {index %2 === 0 && <Grid item xs={12} md={6}>
-                            <img className={classes.img} src={step.imgPath} alt={step.label} />
-                        </Grid>}
-                        {index%2 === 0 && <Grid item xs={12} md={6}>
-                            <Paper elevation={20} variant="outlined" square elevation={23} className={classes.header}>
-                                <Typography style={{ margin: "10px" }} variant="h5" color="primary" align="center">{step.label}</Typography>
-                            </Paper>
-                        </Grid>}
-                        {index%2 !== 0 && <Grid item xs={12} md={6}>
-                            <Paper variant="outlined" square elevation={23} className={classes.header}>
-                                <Typography style={{ margin: "10px" }} variant="h5" color="primary" align="center">{step.label}</Typography>
-                            </Paper>
-                        </Grid>}
-                        {index %2 !== 0 && <Grid item xs={12} md={6}>
-                            <img className={classes.img} src={step.imgPath} alt={step.label} />
-                        </Grid>}
-                        
-                    </React.Fragment>
-                ))}
-            </Grid> */}
             <Box className={classes.footer} height="200px" display="flex" flexDirection="column" justifyContent="center">
-                <Box display="flex" justifyContent="center">
+                {/* <Box display="flex" justifyContent="center">
                     <Typography>Made with <FavoriteIcon fontSize="inherit" color="primary"></FavoriteIcon> for Students and Organizations</Typography><br></br>
-                </Box>
+                </Box> */}
                 <Box display="flex" justifyContent="center">
                     <Typography>Contact us at <Link href="mailto:support@ellipseapp.com" variant="body2">
                         {"support@ellipseapp.com"}
@@ -197,6 +150,11 @@ export default function UnregisteredPage(props) {
                     <Link href="/Privacy_Policy.pdf" variant="body2">
                         {"Privacy Policy"}
                     </Link>
+                </Box>
+                <Box display="flex" justifyContent="center">
+                    <a rel="noopener noreferrer" href="https://play.google.com/store/apps/details?id=com.guna0027.ellipse" target="_blank">
+                        <img className={classes.hidden} src={GoogleBadge} alt="playstore"></img><br></br>
+                    </a>
                 </Box>
             </Box>
 

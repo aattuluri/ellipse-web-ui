@@ -11,10 +11,12 @@ import { autoPlay } from 'react-swipeable-views-utils';
 // import Dashboard from '../Components/Images/dashboard.png';
 // import Profile from '../Components/Images/profile.png';
 // import AdminDashboard from '../Components/Images/AdminDashboard.png';
-import Certificate from '../Components/Images/certificate.png';
+// import Certificate from '../Components/Images/certificate.png';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
-import DeviceDesign from '../Components/Images/un.svg';
+import DeviceDesign from '../Components/Images/un5.svg';
+import DeviceDesign2 from '../Components/Images/un6.svg';
+import DeviceDesign3 from '../Components/Images/un7.svg';
 import GoogleBadge from '../Components/Images/google-play-badge.png'
 
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
@@ -26,15 +28,15 @@ const tutorialSteps = [
     },
     {
         label: 'Post events and manage them with ease',
-        imgPath: DeviceDesign,
+        imgPath: DeviceDesign2,
     },
     {
         label: 'Feature Rich dashboard for Event Administrators',
-        imgPath: DeviceDesign,
+        imgPath: DeviceDesign3,
     },
     {
         label: 'Create announcements, Live chat with participants and generate event certificates',
-        imgPath: Certificate,
+        imgPath: DeviceDesign2,
     },
 ];
 
@@ -80,6 +82,12 @@ const useStyles = makeStyles((theme) => ({
         },
 
     },
+    carouselCaption: {
+        fontSize: '2.5em',
+        [theme.breakpoints.down('sm')]: {
+            fontSize: '2.3em',
+        },
+    }
 }));
 
 function SwipeableTextMobileStepper(props) {
@@ -105,6 +113,7 @@ function SwipeableTextMobileStepper(props) {
             <Grid container component="main" justify="center" alignItems="center">
                 <Grid item xs={12} md={6}>
                     <AutoPlaySwipeableViews
+                    interval="5000"
                         axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
                         index={activeStep}
                         onChangeIndex={handleStepChange}
@@ -121,7 +130,7 @@ function SwipeableTextMobileStepper(props) {
                 </Grid>
                 <Grid item xs={12} md={6}>
                     <Paper elevation={0} className={classes.header}>
-                        <Typography variant="h3" color="secondary" align="center">{tutorialSteps[activeStep].label}</Typography>
+                        <Typography className={classes.carouselCaption} color="secondary" align="center">{tutorialSteps[activeStep].label}</Typography>
                     </Paper>
                     <Box className={classes.paperLeft} >
                         <Button onClick={props.handleSignin} variant="contained" color="secondary">Get started</Button>

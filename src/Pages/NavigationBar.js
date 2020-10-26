@@ -210,7 +210,7 @@ const NavigationBar = function ({ history }) {
   function handleRegistrationButton(event) {
     setOpen(false);
     // setSelectedEvent(event);
-    // history.push('/event/register/' + event._id);
+    history.push('/event/register/' + event._id);
   }
 
   function handleNotificationClick() {
