@@ -83,17 +83,17 @@ const Signup = (props) => {
     }
     else {
       setCanRegister(false);
-      setUserMessage("You are " + user.designation + " so you cannot register")
+      setUserMessage(user.designation + " cannot register")
     }
     if (user.user_id === event.user_id) {
       setCanRegister(false)
-      setUserMessage("You are event organizer so you cannot register")
+      setUserMessage("An event organizer cannot register")
     }
     const cDate = new Date();
     const eDate = new Date(event.registration_end_time);
     if (cDate > eDate) {
       setCanRegister(false)
-      setUserMessage("Registration closed")
+      setUserMessage("Registration is closed for this event")
     }
     // console.log(event.o_allowed)
     if (event.o_allowed !== undefined) {
@@ -103,7 +103,7 @@ const Signup = (props) => {
 
         } else {
           setCanRegister(false)
-          setUserMessage("only " + event.college_name + " can participate")
+          setUserMessage("Only " + event.college_name + " can participate")
         }
       }
     }
@@ -162,7 +162,7 @@ const Signup = (props) => {
   }, [token, id, user])
 
   function handleClose() {
-    if (message === "Registered successfully") {
+    if (message === "Registration successful") {
       props.history.push('/home')
       window.location.reload(false);
     }
@@ -248,7 +248,7 @@ const Signup = (props) => {
               open: true,
               vertical: 'top',
               horizontal: 'center',
-              message: 'Registered successfully',
+              message: 'Registration successful',
               type: "success",
               autoHide: 200
             });
@@ -528,5 +528,3 @@ const Signup = (props) => {
 }
 
 export default withRouter(Signup);
-
-

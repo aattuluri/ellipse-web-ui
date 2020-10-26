@@ -64,7 +64,7 @@ function AboutEventPanel(props) {
   const startDate = new Date(event.start_time);
   const endDate = new Date(event.finish_time);
   const regEndDate = new Date(event.registration_end_time);
-  
+
 
   return (
     <div
@@ -86,13 +86,13 @@ function AboutEventPanel(props) {
                 </TimelineDot>
                 <TimelineConnector />
               </TimelineSeparator>
-              
+
               <TimelineContent>
                 <Paper elevation={3} className={classes.paper}>
                   <Typography variant="h6" component="h1">
                     Registration Ends
                   </Typography>
-                  <Typography>Your oppurtunity to participate came to an end</Typography>
+                  <Typography>Your opportunity to participate comes to an end</Typography>
                 </Paper>
               </TimelineContent>
             </TimelineItem>
@@ -103,7 +103,7 @@ function AboutEventPanel(props) {
                 </Typography>
               </TimelineOppositeContent>
               <TimelineSeparator>
-                <TimelineDot color="primary" variant="outlined"> 
+                <TimelineDot color="primary" variant="outlined">
                 <TimerIcon></TimerIcon>
                 </TimelineDot>
                 <TimelineConnector />
@@ -134,7 +134,7 @@ function AboutEventPanel(props) {
                   <Typography variant="h6" component="h1">
                     Ends
                   </Typography>
-                  <Typography>Chill,event came to an end</Typography>
+                  <Typography>Chill time, event complete</Typography>
                 </Paper>
               </TimelineContent>
             </TimelineItem>

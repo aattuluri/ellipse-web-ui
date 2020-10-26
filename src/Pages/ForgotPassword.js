@@ -70,7 +70,7 @@ const ForgotPassword = ({ history }) => {
               open: true,
               vertical: 'top',
               horizontal: 'center',
-              message: 'Check your email for OTP and enter below',
+              message: 'Enter the OTP sent to your registered email address',
               type: "success",
               autoHide: 2000
             });
@@ -123,7 +123,7 @@ const ForgotPassword = ({ history }) => {
               open: true,
               vertical: 'top',
               horizontal: 'center',
-              message: 'Succesfull Login to continue',
+              message: 'Succesful! Login to continue',
               type: "success",
               autoHide: 300
             });
@@ -147,7 +147,7 @@ const ForgotPassword = ({ history }) => {
 
 
   function handleClose() {
-    if (message === "Succesfull Login to continue") {
+    if (message === "Succesful! Login to continue") {
       history.replace("/");
     }
   }
@@ -262,5 +262,3 @@ const ForgotPassword = ({ history }) => {
 }
 
 export default withRouter(ForgotPassword);
-
-

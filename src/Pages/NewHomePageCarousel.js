@@ -21,19 +21,19 @@ const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
 const tutorialSteps = [
     {
-        label: 'All your College events at single Application',
+        label: 'Find and register for all your College events from one App',
         imgPath: DeviceDesign,
     },
     {
-        label: 'Post your events and manage them easily',
+        label: 'Post events and manage them with ease',
         imgPath: DeviceDesign,
     },
     {
-        label: 'Feature Rich dashboard for Admins',
+        label: 'Feature Rich dashboard for Event Administrators',
         imgPath: DeviceDesign,
     },
     {
-        label: 'Generate and send certificates easily to participants',
+        label: 'Create announcements, Live chat with participants and generate event certificates',
         imgPath: Certificate,
     },
 ];

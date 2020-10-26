@@ -711,7 +711,7 @@ const EventEdit = (props) => {
                 <TextField
                   autoComplete='off'
                   multiline={true}
-                  helperText="Enter venue details"
+                  helperText="Enter venue details (Ex: VIT, Vellore)"
                   rows="5"
                   variant='outlined'
                   // required
@@ -740,7 +740,7 @@ const EventEdit = (props) => {
                 multiline={true}
                 rows="5"
                 variant='outlined'
-                placeholder="Enter everything about your event in detail"
+                placeholder="Enter short description of your event"
                 autoComplete='off'
                 // required
                 value={about || ""}
@@ -753,7 +753,7 @@ const EventEdit = (props) => {
             {eventMode === "Online" && <Grid item xs={12}>
             <TextField
               multiline={true}
-              helperText="Enter links of your and you can also add or edit later in event edit"
+              helperText="Enter link for the platform, you can also add it later"
               rows="5"
               variant='outlined'
               placeholder="Enter details about your online platform"
@@ -790,6 +790,3 @@ const EventEdit = (props) => {
 }
 
 export default withRouter(EventEdit);
-
-
-

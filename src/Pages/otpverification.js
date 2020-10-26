@@ -72,7 +72,7 @@ const OTPver = ({ history }) => {
             };
             // data.append(JSON.stringify(payload));
             data = JSON.stringify(payload);
-            
+
             fetch(process.env.REACT_APP_API_URL+'/api/users/verifyotp', {
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -92,9 +92,9 @@ const OTPver = ({ history }) => {
                             open: true,
                             vertical: 'top',
                             horizontal: 'center',
-                            message: "verified",
+                            message: "Success! redirecting to Ellipse Home",
                             type: 'success',
-                            autoHide: 300
+                            autoHide: 5000
                         })
 
                     }
@@ -104,9 +104,9 @@ const OTPver = ({ history }) => {
                             open: true,
                             vertical: 'top',
                             horizontal: 'center',
-                            message: "incorrect otp",
+                            message: "Invalid OTP, please check and try again",
                             type: 'error',
-                            autoHide: 3000
+                            autoHide: 5000
                         })
                     }
                     else {
@@ -117,7 +117,7 @@ const OTPver = ({ history }) => {
                             horizontal: 'center',
                             message: "Something went wrong try again",
                             type: 'error',
-                            autoHide: 3000
+                            autoHide: 5000
                         })
                     }
                 })
@@ -167,7 +167,7 @@ const OTPver = ({ history }) => {
                     })
                 }
               })
-  
+
             })
           } catch (error) {
             setLoading(false);
@@ -222,7 +222,7 @@ const OTPver = ({ history }) => {
                         {loading ? <CircularProgress color="primary" size={24} /> : "Continue"}
                     </Button>
                     <Grid container>
-             
+
               <Grid item>
               <Button disabled={!resendEnabled} onClick={handleResendOTP}>Resend OTP in {seconds}</Button>
               </Grid>
@@ -239,5 +239,3 @@ const OTPver = ({ history }) => {
 }
 
 export default withRouter(OTPver);
-
-

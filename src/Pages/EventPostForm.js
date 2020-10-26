@@ -281,7 +281,7 @@ export default function Checkout({ history }) {
                     open: true,
                     vertical: 'top',
                     horizontal: 'center',
-                    message: "Event Added Successfully",
+                    message: "Event added successfully",
                     type: "success",
                     autoHide: "4000"
                   })
@@ -337,7 +337,7 @@ export default function Checkout({ history }) {
     if (reason === 'clickaway') {
       return;
     }
-    if (message === "Event Added Successfully") {
+    if (message === "Event added successfully") {
       history.replace("/home");
     }
     setState({ ...state, open: false });

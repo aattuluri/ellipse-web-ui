@@ -129,7 +129,7 @@ const Signup = ({ history }) => {
           open: true,
           vertical: 'top',
           horizontal: 'center',
-          message: 'Please agress the terms and condiitons',
+          message: 'Please agree to the terms and condiitons',
           type: "error"
         });
       }
@@ -282,5 +282,3 @@ const Signup = ({ history }) => {
 }
 
 export default withRouter(Signup);
-
-
