@@ -208,7 +208,7 @@ function SortLeftPanel(props) {
                     })}
                 </List>
                 <Typography>College</Typography>
-                <RadioGroup aria-label="address" name="address" defaultValue="All" onChange={props.handleSortCollegeChange} style={{ display: "inline" }}>
+                <RadioGroup aria-label="address" name="address" value={props.sortCollgeType} onChange={props.handleSortCollegeChange} style={{ display: "inline" }}>
                     <List className={classes.root}>
                         {["All", `${user.college_name}`].map((value) => {
 

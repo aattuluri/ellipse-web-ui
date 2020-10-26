@@ -19,15 +19,19 @@ import TelegramIcon from '@material-ui/icons/Telegram';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import TimelineIcon from '@material-ui/icons/Timeline';
 import AnnouncementIcon from '@material-ui/icons/Announcement';
-
+import CardMembershipIcon from '@material-ui/icons/CardMembership';
+import { Button, Typography } from '@material-ui/core';
 
 import EventDetailsNavigationBar from '../Components/EventDetailsNavigationBar';
 import AnnouncementPanel from '../Components/EventsAnnouncementsPanel';
+import AnnouncementEditPanel from '../Components/AnnouncementsEditPanel';
 import AboutPanel from '../Components/AboutEventPanel';
 import TimeLinePanel from '../Components/EventTimeLinePanel';
 import DashboardPanel from '../Components/DashboardPanel';
 import ChatPanel from '../Components/EventDetailsChatPanel';
 import EventPost from './EventEdit';
+import CertificateDashboard from '../Components/AdminCertificateDashboard';
+
 
 
 const drawerWidth = 240;
@@ -82,15 +86,21 @@ const useStyles = makeStyles((theme) => ({
       padding: theme.spacing(3),
     },
   },
+  eventName: {
+    [theme.breakpoints.up('md')]: {
+      display: 'none',
+  },
+  }
 
 }));
 
 export default function MiniDrawer(props) {
   const classes = useStyles();
   const theme = useTheme();
-
+  localStorage.removeItem('eventid')
   const token = localStorage.getItem('token');
   const id = props.match.params.eventId;
+  const t = localStorage.getItem('theme');
 
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const [event, setEvent] = React.useState({});
@@ -103,7 +113,8 @@ export default function MiniDrawer(props) {
     announcementSelected: false,
     settingsSelected: false,
     editEventSelected: false,
-    chatSelected: false
+    chatSelected: false,
+    certificateSelected: false
   })
 
 
@@ -124,7 +135,7 @@ export default function MiniDrawer(props) {
     
   }, [token,id])
 
-  console.log(adminAccess)
+  // console.log(adminAccess)
   React.useEffect(()=>{
     if( event.user_id !== undefined && currentUser.user_id !== undefined){
       if (event.user_id === currentUser.user_id) {
@@ -173,7 +184,8 @@ export default function MiniDrawer(props) {
       announcementSelected: false,
       settingsSelected: false,
       editEventSelected: false,
-      chatSelected: false
+      chatSelected: false,
+      certificateSelected: false
     })
   }
   function timelineClicked() {
@@ -184,7 +196,8 @@ export default function MiniDrawer(props) {
       announcementSelected: false,
       settingsSelected: false,
       editEventSelected: false,
-      chatSelected: false
+      chatSelected: false,
+      certificateSelected: false
     })
   }
   function announcementsClicked() {
@@ -195,7 +208,8 @@ export default function MiniDrawer(props) {
       announcementSelected: true,
       settingsSelected: false,
       editEventSelected: false,
-      chatSelected: false
+      chatSelected: false,
+      certificateSelected: false
     })
   }
   function settingsClicked() {
@@ -206,7 +220,8 @@ export default function MiniDrawer(props) {
       announcementSelected: false,
       settingsSelected: true,
       editEventSelected: false,
-      chatSelected: false
+      chatSelected: false,
+      certificateSelected: false
     })
   }
   function editEventClicked() {
@@ -217,7 +232,8 @@ export default function MiniDrawer(props) {
       announcementSelected: false,
       settingsSelected: false,
       editEventSelected: true,
-      chatSelected: false
+      chatSelected: false,
+      certificateSelected: false
     })
   }
   function chatClicked() {
@@ -228,7 +244,20 @@ export default function MiniDrawer(props) {
       announcementSelected: false,
       settingsSelected: false,
       editEventSelected: false,
-      chatSelected: true
+      chatSelected: true,
+      certificateSelected: false
+    })
+  }
+  function certificateClicked() {
+    setSelected({
+      infoSelected: false,
+      dashBoardSelected: false,
+      timilineSelected: false,
+      announcementSelected: false,
+      settingsSelected: false,
+      editEventSelected: false,
+      chatSelected: false,
+      certificateSelected: true
     })
   }
   const {
@@ -237,12 +266,17 @@ export default function MiniDrawer(props) {
     timilineSelected,
     announcementSelected,
     settingsSelected,
-    editEventSelected, chatSelected } = selected;
+    editEventSelected, chatSelected, certificateSelected } = selected;
 
     function handleSignout(){
       props.history.replace('/');
     }
 
+    function handleRegClick() {
+      props.history.push('/event/register/' + event._id);
+      // props.handleReg(event._id);
+  
+    }
 
   return (
     <div className={classes.root}>
@@ -307,6 +341,12 @@ export default function MiniDrawer(props) {
               </ListItemIcon>
               <ListItemText primary="Edit Event" />
             </ListItem>
+            <ListItem button onClick={certificateClicked} selected={certificateSelected}>
+              <ListItemIcon>
+                <CardMembershipIcon color="primary"></CardMembershipIcon>
+              </ListItemIcon>
+              <ListItemText primary="Certificates" />
+            </ListItem>
             <ListItem button onClick={settingsClicked} selected={settingsSelected}>
               <ListItemIcon>
                 <SettingsIcon color="primary"></SettingsIcon>
@@ -318,7 +358,7 @@ export default function MiniDrawer(props) {
       </Drawer>
       <main className={classes.content}>
         <div className={classes.toolbar} />
-        {/* <Typography align='center' variant="h4" style={{ paddingBottom: "20px", paddingTop: "10px" }}>{event.name}</Typography> */}
+        <Typography className={classes.eventName} align='center' variant="h4" style={{ paddingBottom: "20px", paddingTop: "10px" }}>{event.name}</Typography>
         {
           infoSelected && event != null && <AboutPanel event={event}></AboutPanel>
         }
@@ -335,9 +375,30 @@ export default function MiniDrawer(props) {
           chatSelected && event != null && <div className={classes.chat} ><ChatPanel user={currentUser} open={drawerOpen} event={event}></ChatPanel></div>
         }
         {
-          announcementSelected && event != null && <AnnouncementPanel event={event}></AnnouncementPanel>
+          adminAccess && announcementSelected && event != null && <AnnouncementEditPanel event={event}></AnnouncementEditPanel>
         }
-      </main>
+        {
+          !adminAccess && announcementSelected && event != null && <AnnouncementPanel event={event}></AnnouncementPanel>
+        }
+        {
+          adminAccess && certificateSelected && event != null && <CertificateDashboard event={event}></CertificateDashboard>
+        }
+        {
+            infoSelected && event.reg_mode === "form" && <Button disabled={event.registered || adminAccess} size="small" color="primary" variant="contained" className={classes.button} onClick={handleRegClick}>
+              {event.registered ? "Registered" : "Register"}
+            </Button> 
+             
+          }
+        {
+          infoSelected && event.reg_mode !== "form" && <Button disabled={event.registered || adminAccess} size="small" color="primary" variant="contained" className={classes.button}>
+                {t === 'light' ? <a href={event.reg_link}  style={{ textDecoration: 'none', color: '#ffffff' }} target="blank">Register</a> : 
+                <a href={event.reg_link}  style={{ textDecoration: 'none', color: '#000000' }} target="blank">Register</a>}
+              </Button>
+        }
+        {
+          adminAccess && settingsSelected && <Typography>Any queries contact us at support@ellipseapp.com</Typography>
+        }
+      </main> 
     </div>
   );
 }

@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
         // necessary for content to be below app bar
         ...theme.mixins.toolbar,
     },
-    
+
     grow: {
         flexGrow: 1,
         alignItems: 'center',
@@ -108,41 +108,46 @@ const useStyles = makeStyles((theme) => ({
     title: {
         display: 'none',
         [theme.breakpoints.up('sm')]: {
-          display: 'block',
+            display: 'block',
         },
         fontFamily: 'Gugi',
         marginLeft: theme.spacing(1),
         color: theme.palette.primary.dark,
         fontWeight: 'bold'
-      },
+    },
     '@global': {
         '*::-webkit-scrollbar': {
-          width: '0.5em',
-          height: '0.5em'
+            width: '0.5em',
+            height: '0.5em'
         },
         '*::-webkit-scrollbar-track': {
-          '-webkit-box-shadow': 'inset 0 0 6px rgba(0,0,0,0.00)'
+            '-webkit-box-shadow': 'inset 0 0 6px rgba(0,0,0,0.00)'
         },
         '*::-webkit-scrollbar-thumb': {
-          backgroundColor: '#ad9d9d',
-          outline: '1px solid slategrey'
+            backgroundColor: '#ad9d9d',
+            outline: '1px solid slategrey'
         }
-      },
-      mobileTitle:{
+    },
+    mobileTitle: {
         [theme.breakpoints.up('sm')]: {
-          display: 'none',
+            display: 'none',
         },
-        
-      },
-      titleButton: {
+
+    },
+    titleButton: {
         display: 'none',
         [theme.breakpoints.up('sm')]: {
-          display: 'inline-block',
+            display: 'inline-block',
         },
         margin: theme.spacing(0),
         padding: theme.spacing(0),
         textTransform: 'none'
-      },
+    },
+    eventName: {
+        [theme.breakpoints.down('sm')]: {
+            display: 'none',
+        },
+    }
 }));
 
 export default function MiniDrawer(props) {
@@ -163,7 +168,7 @@ export default function MiniDrawer(props) {
     // const [currentUser, setCurrentUser] = React.useState({});
     const [authorized, setAuthorized] = React.useState(true);
     const [userDetailsDone, setUserDetailsDone] = React.useState(true);
-    
+
 
 
     React.useEffect(() => {
@@ -191,7 +196,7 @@ export default function MiniDrawer(props) {
             }
         })
 
-// eslint-disable-next-line
+        // eslint-disable-next-line
     }, [token])
 
 
@@ -258,7 +263,7 @@ export default function MiniDrawer(props) {
         props.handleHomeClick()
         // props.history.push("/home")
         // localStorage.setItem('tabIndex',2);
-      }
+    }
 
     const menuId = 'primary-search-account-menu';
     const renderMenu = (
@@ -282,14 +287,9 @@ export default function MiniDrawer(props) {
         </Menu>
     );
 
-
-
-
     const handleClose = () => {
         setNotificationsOpen(false);
     };
-
-    
 
     function handleNotificationClick() {
         setNotificationsOpen(true);
@@ -303,7 +303,7 @@ export default function MiniDrawer(props) {
     function handleTitleButtonClick() {
         localStorage.setItem('tabIndex', 0)
         props.handleHomeClick()
-      }
+    }
 
     return (
         <div className={classes.root}>
@@ -327,12 +327,12 @@ export default function MiniDrawer(props) {
                     </IconButton>
                     <img src={Logo} alt="logo" onClick={handleTitleButtonClick} className={classes.mobileTitle}></img>
                     <Button className={classes.titleButton} onClick={handleTitleButtonClick}>
-              <Typography className={classes.title} variant="h5" noWrap>
-                Ellipse
-              </Typography>
-            </Button>
+                        <Typography className={classes.title} variant="h5" noWrap>
+                            Ellipse
+                        </Typography>
+                    </Button>
                     <div className={classes.grow} />
-                    <Typography variant="h5" noWrap>{props.event.name}</Typography>
+                    <Typography className={classes.eventName} variant="h5" noWrap>{props.event.name}</Typography>
                     <div className={classes.grow} />
                     <div className={classes.sectionDesktop}>
                         <IconButton onClick={handleHomeClick}><HomeIcon></HomeIcon></IconButton>
@@ -358,8 +358,4 @@ export default function MiniDrawer(props) {
         </div>
     );
 }
-
-
-
-
 

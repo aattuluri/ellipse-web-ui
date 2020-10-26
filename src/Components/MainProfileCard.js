@@ -16,6 +16,7 @@ import AboutProfileTabPanel from './ProfileAboutTabPanel';
 import AuthContext from '../AuthContext';
 import Button from '@material-ui/core/Button';
 import PersonIcon from '@material-ui/icons/Person';
+import ProfileCertificatePanel from './ProfileCertificateTabPanel';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -122,12 +123,14 @@ function Eventcard(props) {
                         <Tab label="About" />
                         {/* <Tab label="Registered Events" /> */}
                         <Tab label="Posted Events" />
+                        <Tab label="Certificates"></Tab>
                     </Tabs>
                 </Paper>
                 <div>
                     <AboutProfileTabPanel handleEditButton={props.handleEditButton} value={value} index={0}></AboutProfileTabPanel>
                     {/* <ProfileEventsTabPanel url={user.imageUrl} value={value} index={1}></ProfileEventsTabPanel> */}
                     <ProfilePostedEventsTabPanel url={user.imageUrl} value={value} index={1}></ProfilePostedEventsTabPanel>
+                    <ProfileCertificatePanel url={user.imageUrl} value={value} index={2}></ProfileCertificatePanel>
                 </div>
             </CardContent>
         </Card>);

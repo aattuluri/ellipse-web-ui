@@ -118,7 +118,7 @@ export default function JustifyContent(props) {
     const webConnect = () => {
         const ws = new WebSocket(process.env.REACT_APP_WESOCKET_URL);
         ws.onopen = () => {
-            console.log("connected")
+            // console.log("connected")
             setWebSocket(ws);
             ws.onmessage = (message) => {
                 const mes = JSON.parse(message.data);
@@ -146,7 +146,7 @@ export default function JustifyContent(props) {
             method: 'GET',
         }).then(response => {
             response.json().then(value => {
-                console.log(value);
+                // console.log(value);
                 setChatMessages(value);
                 webConnect();
             })

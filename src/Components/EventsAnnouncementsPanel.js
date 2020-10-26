@@ -48,10 +48,20 @@ export default function CustomizedTimeline(props) {
       method: 'GET',
     }).then(response => {
       response.json().then(value => {
-        setAnnouncements(value);
+        if(event.registered){
+          setAnnouncements(value);
+        }
+        else{
+          value.forEach(ann => {
+            if(ann.visible_all){
+              setAnnouncements((announcements)=>[...announcements,ann])
+            }
+          });
+        }
+        
       })
     })
-  }, [token, event._id])
+  }, [token, event])
 
   return (
     <div

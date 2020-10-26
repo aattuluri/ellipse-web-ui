@@ -22,6 +22,7 @@ import EventsTimeLinePanel from '../Components/EventTimeLinePanel';
 import EvenstAnnouncementsPanel from '../Components/EventsAnnouncementsPanel';
 import ChatPanel from '../Components/EventsChatPanel';
 import { Typography } from '@material-ui/core';
+import AuthContext from '../AuthContext';
 
 
 
@@ -90,11 +91,23 @@ function EventsDialog(props) {
     const event = props.event;
     const t = localStorage.getItem('theme');
     const [value, setValue] = React.useState(0);
-    // const user = React.useContext(AuthContext);
+    const user = React.useContext(AuthContext);
     const classes = useStyles();
     const theme = useTheme();
     // const token = localStorage.getItem('token');
     const [shareDialogOpen, setShareDialogOpen] = React.useState(false);
+    const [chatAcess, setChatAcess] = React.useState(false);
+
+    React.useEffect(() => {
+        if (event.registered || event.reg_mode !== "form") {
+            setChatAcess(true)
+        }else if(event.user_id === user.user_id){
+            setChatAcess(true)
+        }
+        else {
+            setChatAcess(false)
+        }
+    }, [event,user])
 
 
 
@@ -183,8 +196,8 @@ function EventsDialog(props) {
                     event={props.event}></AboutEventPanel>
                 <EventsTimeLinePanel value={value} index={1} event={props.event}></EventsTimeLinePanel>
                 <EvenstAnnouncementsPanel value={value} index={2} event={props.event}></EvenstAnnouncementsPanel>
-                {value === 3 && (event.registered || event.regMode !== "form") && <ChatPanel value={value} index={3} event={props.event}></ChatPanel>}
-                {value === 3 && event.reg_mode === "form" && event.registered !== true && <Typography align="center" variant="h5" >Register for the event to continue</Typography>}
+                {value === 3 && chatAcess && <ChatPanel value={value} index={3} event={props.event}></ChatPanel>}
+                {value === 3 && !chatAcess && <Typography align="center" variant="h5" >Register for the event to continue</Typography>}
             </DialogContent>
             <DialogActions className={classes.action}>
                 <Box className={classes.bottomBar} display="flex"
@@ -208,6 +221,7 @@ function EventsDialog(props) {
 
                         </div>
                     )}
+
                 </div>
             </DialogActions>
         </Dialog>

@@ -1,7 +1,7 @@
 import React from 'react';
 import Copyright from '../Components/copyright';
 import useStyles from '../Themes/SignupPageStyles';
-import { withRouter } from 'react-router';
+import { withRouter, Redirect } from "react-router";
 
 //MaterialUI imports
 import Avatar from '@material-ui/core/Avatar';
@@ -25,6 +25,7 @@ function Alert(props) {
 
 const OTPver = ({ history }) => {
     const classes = useStyles();
+    const token = localStorage.getItem("token");
     // const [token, setToken] = React.useState("");
     const [state, setState] = React.useState({
         open: false,
@@ -36,12 +37,28 @@ const OTPver = ({ history }) => {
     });
     const [loading, setLoading] = React.useState(false);
     const { vertical, horizontal, open, message, type,autoHide} = state;
+    const [seconds,setSeconds] = React.useState(30);
+    const [resendEnabled,setresetEnabled] = React.useState(false)
+
+    React.useEffect(() => {
+        if (seconds > 0) {
+          setTimeout(() => setSeconds(seconds - 1), 1000);
+        } else {
+          setresetEnabled(true)
+        }
+        // eslint-disable-next-line
+      },[seconds]);
 
     function handleClose() {
         // console.log("message")
         if (message === "verified") {
             history.replace("/userinfo")
         }
+        setState({ ...state, open: false });
+    }
+
+    if(!token){
+        return <Redirect to="/"></Redirect>
     }
 
     function handleVerification(event) {
@@ -55,7 +72,7 @@ const OTPver = ({ history }) => {
             };
             // data.append(JSON.stringify(payload));
             data = JSON.stringify(payload);
-            const token = localStorage.getItem("token");
+            
             fetch(process.env.REACT_APP_API_URL+'/api/users/verifyotp', {
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -121,6 +138,49 @@ const OTPver = ({ history }) => {
 
     }
 
+
+    function handleResendOTP(){
+        try {
+            var data2 = new FormData();
+            const payload2 = {
+            //   email: value[0].email
+            };
+            data2 = JSON.stringify(payload2)
+            fetch(process.env.REACT_APP_API_URL + '/api/users/sendverificationemailwithauth', {
+              headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+              },
+              method: 'POST',
+              body: data2
+            }).then((result) => {
+              // console.log(result);
+              result.json().then((res) => {
+                if (res.message === "success") {
+                    setState({
+                        open: true,
+                        vertical: 'top',
+                        horizontal: 'center',
+                        message: "Password sent succcessfully",
+                        type: 'success',
+                        autoHide: 300
+                    })
+                }
+              })
+  
+            })
+          } catch (error) {
+            setLoading(false);
+            setState({
+                open: true,
+                vertical: 'top',
+                horizontal: 'center',
+                message: error.message,
+                type: 'error'
+            })
+          }
+    }
+
     return (
         <Container component="main" maxWidth="sm">
             <CssBaseline />
@@ -161,6 +221,12 @@ const OTPver = ({ history }) => {
                     >
                         {loading ? <CircularProgress color="primary" size={24} /> : "Continue"}
                     </Button>
+                    <Grid container>
+             
+              <Grid item>
+              <Button disabled={!resendEnabled} onClick={handleResendOTP}>Resend OTP in {seconds}</Button>
+              </Grid>
+            </Grid>
                 </form>
             </div>
 

@@ -55,10 +55,12 @@ export default function AddressForm(props) {
   const token = localStorage.getItem('token');
   const classes = useStyles();
   const [imageName, setImageName] = React.useState("");
-  const eventThemes = ["Hackathon", "Coding Contest", "Webinar"];
-  const requirements = ["Laptop", "Basic HTML", "C++", "Machine Learning"];
+  // const eventThemes = ["Hackathon", "Coding Contest", "Webinar"];
+  // const requirements = ["Laptop", "Basic HTML", "C++", "Machine Learning"];
   const [colleges, setColleges] = React.useState([]);
   const [collegesNames, setCollegesName] = React.useState([]);
+  const [eventTags,setEventTags] = React.useState([]);
+  const [requirements,setRequirements] = React.useState([]);
   // const colleges = ["VIT University,Vellore", "GITAM University", "SRM University"];
 
 
@@ -75,6 +77,26 @@ export default function AddressForm(props) {
         setColleges(value);
         value.forEach((v) => {
           setCollegesName((collegesNames) => [...collegesNames, v.name])
+        })
+      })
+    })
+    fetch(process.env.REACT_APP_API_URL+'/api/event/get_event_keywords', {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      method: 'GET',
+    }).then(response => {
+      response.json().then(value => {
+        // setColleges(value);
+        value.forEach((v) => {
+          if(v.type === "EventTags"){
+            setEventTags((eventTags)=> [...eventTags,v.title]);
+          }
+          else if(v.type === "EventRequirements"){
+            setRequirements((r)=>[...r,v.title]);
+          }
         })
       })
     })
@@ -108,17 +130,17 @@ export default function AddressForm(props) {
   }
 
   function handleCollegeChange(event, value) {
-    console.log(value);
+    // console.log(value);
     props.setCollegeName(value);
     colleges.forEach(c => {
       if (c.name === value) {
-        props.collegeId(c._id)
+        props.setCollegeId(c._id)
       }
     })
   }
-  function handleVenueCollegeChange(event, value) {
-    props.setVenueCollege(value);
-  }
+  // function handleVenueCollegeChange(event, value) {
+  //   props.setVenueCollege(value);
+  // }
 
   function handleAboutChange(event) {
     props.setAbout(event.target.value);
@@ -129,9 +151,9 @@ export default function AddressForm(props) {
   function handleBuildingChange(event) {
     props.setBuilding(event.target.value);
   }
-  // function handlePlatformChange(event){
-  //   props.setPlatformDetails(event.target.value)
-  // }
+  function handlePlatformChange(event){
+    props.setPlatformDetails(event.target.value)
+  }
   function handleNext(event) {
     event.preventDefault();
     props.handleNext();
@@ -163,7 +185,7 @@ export default function AddressForm(props) {
             <Autocomplete
               multiple
               id="themes"
-              options={eventThemes.map((option) => option)}
+              options={eventTags.map((option) => option)}
               freeSolo
               value={props.eventThemes || []}
               onChange={handleeventTagsChange}
@@ -273,14 +295,15 @@ export default function AddressForm(props) {
               <FormControlLabel value="onlycollege" control={<Radio color="default" />} label={`Only ${props.college}`} />
             </RadioGroup>
           </Grid>
-          {/* {props.eventMode === "Online" && <Grid item xs={12}>
+          {props.eventMode === "Online" && <Grid item xs={12}>
             <TextField
               multiline={true}
+              helperText="Enter links of your and you can also add or edit later in event edit"
               rows="5"
               variant='outlined'
               placeholder="Enter details about your online platform"
               autoComplete='off'
-              required
+              // required
               id="platform"
               name="platform"
               label="Platform"
@@ -288,16 +311,32 @@ export default function AddressForm(props) {
               onChange={handlePlatformChange}
               value={props.platformDetails || ""}
             />
-          </Grid>} */}
+          </Grid>}
           {props.eventMode === "Offline" && <React.Fragment>
             <Grid item xs={12}>
-              <FormLabel component="legend">Address</FormLabel>
+              <FormLabel component="legend">Venue</FormLabel>
               <RadioGroup aria-label="address" aria-disabled name="address" defaultValue="college" onChange={handleAddressTypeChange} style={{ display: "inline" }}>
-                <FormControlLabel value="college" control={<Radio color="default" />} label="College/University" />
-                <FormControlLabel disabled value="other" control={<Radio color="default" />} label="Others" />
+                <FormControlLabel value="College" control={<Radio color="default" />} label="College/University" />
+                <FormControlLabel  value="Other" control={<Radio color="default" />} label="Others" />
               </RadioGroup>
             </Grid>
-            <Grid item xs={12} lg={6}>
+            <Grid item xs={12}>
+            <TextField
+                multiline={true}
+                helperText="Enter links of your and you can also add or edit later in event edit"
+                rows="5"
+                variant='outlined'
+                placeholder="Room No,Building,College,State,Pincode"
+                autoComplete='off'
+                onChange={handleBuildingChange}
+                value={props.building}
+                id="building"
+                name="building"
+                label="Venue"
+                fullWidth
+              />
+          </Grid>
+            {/* <Grid item xs={12} lg={6}>
               <TextField
                 autoComplete='off'
                 onChange={handleBuildingChange}
@@ -318,7 +357,7 @@ export default function AddressForm(props) {
                 onChange={handleVenueCollegeChange}
                 renderInput={(params) => <TextField fullWidth required {...params} label="Venue College" />}
               />
-            </Grid>
+            </Grid> */}
 
           </React.Fragment>}
           {props.registrationMode !== "form" && <Grid item xs={12}>
@@ -328,7 +367,6 @@ export default function AddressForm(props) {
             />
           </Grid>
           }
-
         </Grid>
         <div className={classes.buttons}>
           <Button onClick={props.handleBack} className={classes.button}>

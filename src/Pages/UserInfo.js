@@ -1,7 +1,7 @@
 import React from 'react';
 import Copyright from '../Components/copyright';
 // import useStyles from '../Themes/SignupPageStyles';
-import { withRouter } from 'react-router';
+import { withRouter, Redirect } from "react-router";
 
 //MaterialUI imports
 import { makeStyles } from '@material-ui/core/styles';
@@ -111,6 +111,10 @@ const UserInfo = ({ history }) => {
                   })
                 })
       },[token])
+
+      if (!token) {
+        return <Redirect to="/"></Redirect>
+    }
   
     function handleChange(event) {
         if (event.target.files[0]) {
@@ -289,8 +293,10 @@ const UserInfo = ({ history }) => {
                                 >
                                     <option aria-label="None" value="" />
                                     <option value="Student">Student</option>
-                                    <option value="WorkingProfessional">Working Professional</option>
+                                    <option value="Faculty">Faculty</option>
                                     <option value="Club/Organisation">Club/Organisation</option>
+                                    <option value="Institution">Institution</option>
+                                    <option value="Others">Others</option>
                                 </Select>
                             </FormControl>
                         </Grid>

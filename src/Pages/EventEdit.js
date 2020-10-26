@@ -98,13 +98,17 @@ const EventEdit = (props) => {
   const [venueCollege, setVenueCollege] = React.useState(null);
   const { vertical, horizontal, open, message, type } = state;
   const [colleges, setColleges] = React.useState([]);
-  const [collegesNames, setCollegesName] = React.useState([]);
+  // const [collegesNames, setCollegesName] = React.useState([]);
 
   const token = localStorage.getItem('token');
+  const [eventTags,setEventTags] = React.useState([]);
+  const [requirements,setRequirements] = React.useState([]);
+  const [eventTypes,setEventTypes] = React.useState([]);
+  const [platformDetails,setPlatformDetails] = React.useState('');
 
 
-  const eventTypes = ["Hackathon", "Coding Contest", "Webinar"];
-  const requirements = ["Laptop", "Basic HTML", "C++", "Machine Learning"];
+  // const eventTypes = ["Hackathon", "Coding Contest", "Webinar"];
+  // const requirements = ["Laptop", "Basic HTML", "C++", "Machine Learning"];
   // const colleges = ["VIT University", "GITAM University", "SRM University"];
 
   React.useEffect(() => {
@@ -118,9 +122,9 @@ const EventEdit = (props) => {
     }).then(response => {
       response.json().then(value => {
         setColleges(value);
-        value.forEach((v) => {
-          setCollegesName((collegesNames) => [...collegesNames, v.name])
-        })
+        // value.forEach((v) => {
+        //   setCollegesName((collegesNames) => [...collegesNames, v.name])
+        // })
       })
     })
   }, [token])
@@ -153,6 +157,7 @@ const EventEdit = (props) => {
     setOrganizer(event.organizer);
     setVenue(event.venue);
     setVenueCollege(event.venue_college);
+    setPlatformDetails(event.platform_details)
     // setParticipantsType(event.o_allowed)
     if (event.o_allowed === true) {
       setParticipantsType("open")
@@ -160,6 +165,29 @@ const EventEdit = (props) => {
     else {
       setParticipantsType("onlycollege")
     }
+    fetch(process.env.REACT_APP_API_URL+'/api/event/get_event_keywords', {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      method: 'GET',
+    }).then(response => {
+      response.json().then(value => {
+        // setColleges(value);
+        value.forEach((v) => {
+          if(v.type === "EventTags"){
+            setEventTags((eventTags)=> [...eventTags,v.title]);
+          }
+          else if(v.type === "EventRequirements"){
+            setRequirements((r)=>[...r,v.title]);
+          }
+          else{
+            setEventTypes((r)=>[...r,v.title]);
+          }
+        })
+      })
+    })
 
   }, [token, event])
 
@@ -206,7 +234,8 @@ const EventEdit = (props) => {
         o_allowed: oAllowed,
         reg_mode: regMode,
         venue: venue,
-        venue_college: venueCollege
+        venue_college: venueCollege,
+        platform_details: platformDetails
       };
       data = JSON.stringify(payload);
       // console.log(data);
@@ -343,8 +372,12 @@ const EventEdit = (props) => {
   function handleVenue(event) {
     setVenue(event.target.value);
   }
-  function handleVenueCollegeChange(event, value) {
-    setVenueCollege(value);
+  // function handleVenueCollegeChange(event, value) {
+  //   setVenueCollege(value);
+  // }
+
+  function handlePlatformChange(event){
+    setPlatformDetails(event.target.value);
   }
 
   function handleChange(event) {
@@ -480,7 +513,7 @@ const EventEdit = (props) => {
             </Grid>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
-                <InputLabel htmlFor="outlined-age-native-simple">Event Mode</InputLabel>
+                <InputLabel htmlFor="event mode">Event Mode</InputLabel>
                 <Select
                   fullWidth
                   native
@@ -489,7 +522,7 @@ const EventEdit = (props) => {
                   onChange={handleEventMode}
                   inputProps={{
                     name: 'eventMode',
-                    id: 'outlined-age-native-simple',
+                    id: 'event mode',
                   }}
                 >
                   <option aria-label="None" value="" />
@@ -501,7 +534,7 @@ const EventEdit = (props) => {
             <Grid item xs={12} sm={6}>
               <Autocomplete
                 fullWidth
-                id="combo-box-demo"
+                id="event type"
                 options={eventTypes}
                 getOptionLabel={(option) => option}
                 value={eventType || ""}
@@ -512,8 +545,8 @@ const EventEdit = (props) => {
             <Grid item xs={12} lg={6}>
               <Autocomplete
                 multiple
-                id="tags-filled"
-                options={eventTypes.map((option) => option)}
+                id="event themes"
+                options={eventTags.map((option) => option)}
                 // defaultValue={[eventTypes[1]]}
                 freeSolo
                 value={eventThemes || []}
@@ -600,7 +633,7 @@ const EventEdit = (props) => {
               <Autocomplete
                 fullWidth
                 disabled
-                id="combo-box-demo"
+                id="collegename"
                 options={colleges}
                 getOptionLabel={(option) => option}
                 value={collegeName || ""}
@@ -618,7 +651,7 @@ const EventEdit = (props) => {
                   label="Registration"
                   inputProps={{
                     name: 'registrationMode',
-                    id: 'outlined-age-native-simple',
+                    id: 'registration mode',
                   }}
                   value={regMode || ""}
                 // onChange={handleRegistrationModeChange}
@@ -644,7 +677,7 @@ const EventEdit = (props) => {
             <Grid item xs={12} lg={6}>
               <Autocomplete
                 multiple
-                id="tags-filled"
+                id="requirements"
                 options={requirements.map((option) => option)}
                 freeSolo
                 value={selectedrequirements}
@@ -677,6 +710,10 @@ const EventEdit = (props) => {
               <Grid item xs={12} lg={6}>
                 <TextField
                   autoComplete='off'
+                  multiline={true}
+                  helperText="Enter venue details"
+                  rows="5"
+                  variant='outlined'
                   // required
                   value={venue || ""}
                   onChange={handleVenue}
@@ -687,7 +724,7 @@ const EventEdit = (props) => {
                 />
               </Grid>
             }
-            {eventMode === "Offline" && <Grid item xs={12} sm={6}>
+            {/* {eventMode === "Offline" && <Grid item xs={12} sm={6}>
               <Autocomplete
                 fullWidth
                 id="combo-box-demo"
@@ -697,7 +734,7 @@ const EventEdit = (props) => {
                 onChange={handleVenueCollegeChange}
                 renderInput={(params) => <TextField fullWidth required {...params} label="Venue College" />}
               />
-            </Grid>}
+            </Grid>} */}
             <Grid item xs={12}>
               <TextField
                 multiline={true}
@@ -713,6 +750,23 @@ const EventEdit = (props) => {
                 fullWidth
               />
             </Grid>
+            {eventMode === "Online" && <Grid item xs={12}>
+            <TextField
+              multiline={true}
+              helperText="Enter links of your and you can also add or edit later in event edit"
+              rows="5"
+              variant='outlined'
+              placeholder="Enter details about your online platform"
+              autoComplete='off'
+              // required
+              id="platform"
+              name="platform"
+              label="Platform"
+              fullWidth
+              onChange={handlePlatformChange}
+              value={platformDetails || ""}
+            />
+          </Grid>}
           </Grid>
           <Button
             type="submit"

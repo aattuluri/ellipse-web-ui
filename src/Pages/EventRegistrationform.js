@@ -34,6 +34,7 @@ import FormGroup from '@material-ui/core/FormGroup';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 // import { set } from 'date-fns';
+// import AuthContext from '../AuthContext';
 
 
 //function for alert
@@ -44,7 +45,6 @@ function Alert(props) {
 const Signup = (props) => {
   const classes = useStyles();
   const token = localStorage.getItem('token');
-  const user = React.useContext(AuthContext);
   const [state, setState] = React.useState({
     open: false,
     vertical: 'top',
@@ -53,6 +53,10 @@ const Signup = (props) => {
     type: 'error',
     autoHide: 6000,
   });
+
+  const [canRegister, setCanRegister] = React.useState(true);
+  const [userMessage, setUserMessage] = React.useState(false);
+
   const [formValues, setFormValues] = React.useState(null);
   const [loading, setLoading] = React.useState(false);
   // const [fields, setFields] = React.useState([]);
@@ -62,17 +66,53 @@ const Signup = (props) => {
   const [radioFields, setRadioFields] = React.useState([]);
   const [dateFields, setDateFields] = React.useState([]);
   const [longDescFields, setLongDescFields] = React.useState([]);
-  // const [dateFields,setDateFields] = React.useState([]);
   const [linkFields, setLinkFields] = React.useState([]);
 
   const { vertical, horizontal, open, message, type, autoHide } = state;
   const id = props.match.params.eventId;
   const [backDropOpen, setBackDropOpen] = React.useState(true);
-  const [event, setEvent] = React.useState(null);
+  const [event, setEvent] = React.useState({});
   const [checkedValues, setCheckedValues] = React.useState([]);
   const colleges = ["VIT University,Vellore", "GITAM University", "SRM University"];
+
+  const user = React.useContext(AuthContext);
+
   React.useEffect(() => {
-    fetch(process.env.REACT_APP_API_URL+`/api/event?id=${id}`, {
+    if (user.designation === "Student" || user.designation === "Faculty") {
+      // setUserType(true);
+    }
+    else {
+      setCanRegister(false);
+      setUserMessage("You are " + user.designation + " so you cannot register")
+    }
+    if (user.user_id === event.user_id) {
+      setCanRegister(false)
+      setUserMessage("You are event organizer so you cannot register")
+    }
+    const cDate = new Date();
+    const eDate = new Date(event.registration_end_time);
+    if (cDate > eDate) {
+      setCanRegister(false)
+      setUserMessage("Registration closed")
+    }
+    // console.log(event.o_allowed)
+    if (event.o_allowed !== undefined) {
+      if (!event.o_allowed) {
+        console.log(event.o_allowed)
+        if (event.college_name === user.college_name) {
+
+        } else {
+          setCanRegister(false)
+          setUserMessage("only " + event.college_name + " can participate")
+        }
+      }
+    }
+
+  }, [event, user])
+
+
+  React.useEffect(() => {
+    fetch(process.env.REACT_APP_API_URL + `/api/event?id=${id}`, {
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json',
@@ -80,12 +120,12 @@ const Signup = (props) => {
       },
       method: 'GET',
     }).then(response => {
-      console.log(response);
+      // console.log(response);
       response.json().then(value => {
         setEvent(value.event);
         // setFields(value.event.regFields);
         const allFields = value.event.reg_fields;
-        console.log(allFields);
+        // console.log(allFields);
         if (allFields != null) {
           allFields.forEach(f => {
             if (f.title === "Name") {
@@ -114,12 +154,12 @@ const Signup = (props) => {
           // setLongDescFields(allFields.filter((f) => f.field === "long_desc"));
           setDropDownFields(allFields.filter(f => f.field === "dropdown"));
           setLinkFields(allFields.filter(f => f.field === "link"));
-        
+
         }
         setBackDropOpen(false);
       })
     })
-  }, [token, id,user])
+  }, [token, id, user])
 
   function handleClose() {
     if (message === "Registered successfully") {
@@ -171,10 +211,10 @@ const Signup = (props) => {
     e.preventDefault();
     // setLoading(true);
     // console.log(checkedValues);
-    console.log(formValues);
+    // console.log(formValues);
     const formkeys = Object.keys(formValues);
-    formkeys.forEach(v =>{
-      if(formValues[v] === null){
+    formkeys.forEach(v => {
+      if (formValues[v] === null) {
         setState({
           open: true,
           vertical: 'top',
@@ -189,7 +229,7 @@ const Signup = (props) => {
       var data = new FormData();
       const d = { data: formValues }
       data = JSON.stringify(d);
-      fetch(process.env.REACT_APP_API_URL+`/api/event/register?id=${id}`, {
+      fetch(process.env.REACT_APP_API_URL + `/api/event/register?id=${id}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -198,20 +238,23 @@ const Signup = (props) => {
         method: 'POST',
         body: data
       }).then(response => {
-        console.log(response);
-        response.json().then(value => {
-          console.log(value);
-          
-          setLoading(false);
-          setState({
-            open: true,
-            vertical: 'top',
-            horizontal: 'center',
-            message: 'Registered successfully',
-            type: "success",
-            autoHide: 200
-          });
-        })
+        // console.log(response);
+        if (response.status === 200) {
+          response.json().then(value => {
+            // console.log(value);
+
+            setLoading(false);
+            setState({
+              open: true,
+              vertical: 'top',
+              horizontal: 'center',
+              message: 'Registered successfully',
+              type: "success",
+              autoHide: 200
+            });
+          })
+        }
+
       })
     }
     catch (error) {
@@ -374,10 +417,10 @@ const Signup = (props) => {
                   <Grid item xs={12}>
                     <FormLabel required component="legend">{field.title}</FormLabel>
                     <RadioGroup required aria-label="address" name={field.title} value={formValues[field.title]} onChange={handleradioChange} style={{ display: "inline" }}>
-                    {field.options.map((option)=>{
-                      return <FormControlLabel value={option} control={<Radio color="default" />} label={option} />
-                    })}
-                      
+                      {field.options.map((option) => {
+                        return <FormControlLabel value={option} control={<Radio color="default" />} label={option} />
+                      })}
+
                       {/* <FormControlLabel value="Paid" control={<Radio color="default" />} label="Paid" /> */}
                     </RadioGroup>
                   </Grid>
@@ -433,7 +476,7 @@ const Signup = (props) => {
                 })
               }
               {
-                linkFields.map((field,index)=>{
+                linkFields.map((field, index) => {
                   return (
                     <Grid item xs={12}>
                       <TextField
@@ -459,7 +502,7 @@ const Signup = (props) => {
                 />
               </Grid>
             </Grid>
-            <Button
+            {canRegister && <Button
               type="submit"
               fullWidth
               variant="contained"
@@ -468,7 +511,10 @@ const Signup = (props) => {
               className={classes.submit}
             >
               {loading ? <CircularProgress color="primary" size={24} /> : "Register"}
-            </Button>
+            </Button>}
+            {
+              !canRegister && <Typography>{userMessage}</Typography>
+            }
           </form>
         </div>
       }

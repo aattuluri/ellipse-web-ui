@@ -362,7 +362,7 @@ function UpdateInfoTabPanel(props) {
                         </Grid>
                         <Grid item xs={12} md={6}>
                             <FormControl fullWidth required>
-                                <InputLabel htmlFor="outlined-age-native-simple">Gender</InputLabel>
+                                <InputLabel htmlFor="gender">Gender</InputLabel>
                                 <Select
                                     value={gender}
                                     onChange={handleGender}
@@ -371,7 +371,7 @@ function UpdateInfoTabPanel(props) {
                                     label="Age"
                                     inputProps={{
                                         name: 'gender',
-                                        id: 'outlined-age-native-simple',
+                                        id: 'gender',
                                     }}
                                 >
                                     <option aria-label="None" value="" />
@@ -383,7 +383,7 @@ function UpdateInfoTabPanel(props) {
                         </Grid>
                         <Grid item xs={12} md={6}>
                             <FormControl fullWidth required>
-                                <InputLabel htmlFor="outlined-age-native-simple">You are</InputLabel>
+                                <InputLabel htmlFor="designation">You are</InputLabel>
                                 <Select
                                     value={designation}
                                     onChange={handleDesig}
@@ -392,13 +392,15 @@ function UpdateInfoTabPanel(props) {
                                     label="You are"
                                     inputProps={{
                                         name: 'designation',
-                                        id: 'outlined-age-native-simple',
+                                        id: 'designation',
                                     }}
                                 >
                                     <option aria-label="None" value="" />
                                     <option value="Student">Student</option>
-                                    <option value="WorkingProfessional">Working Professional</option>
+                                    <option value="Faculty">Faculty</option>
                                     <option value="Club/Organisation">Club/Organisation</option>
+                                    <option value="Institution">Institution</option>
+                                    <option value="Others">Others</option>
                                 </Select>
                             </FormControl>
                         </Grid>
