@@ -70,6 +70,9 @@ export default function CustomizedTimeline(props) {
       {...other}>
       {value === index && (
         <div>
+        {
+                    announcements.length === 0 && <Typography>No Announcements</Typography>
+                }
           {
             announcements.map((a, index) => {
               const date = new Date(a.time)

@@ -49,7 +49,7 @@ function ProfilePostsTabPanel(props) {
                 <div >
                 <Grid container component="main" alignItems="center" spacing={1}>
                 {
-                    registerdEvents.length === 0 && <Typography>No Posted Events</Typography>
+                    registerdEvents.length === 0 && <Typography>No Certificates Register for the event to get one</Typography>
                 }
                 {registerdEvents.map((event,index) => {
                     return(<Grid item xs={12} sm={12} md={6} key={index}>

@@ -137,7 +137,7 @@ export default function Checkout({ history }) {
   const [venueCollege, setVenueCollege] = React.useState(null);
   const [participantsType, setParticipantsType] = React.useState("open");
   const [fields, setFields] = React.useState([]);
-  const [platformDetails,setPlatformDetails] = React.useState('');
+  const [platformDetails, setPlatformDetails] = React.useState('');
 
 
 
@@ -254,7 +254,7 @@ export default function Checkout({ history }) {
         platform_details: platformDetails
       };
       data = JSON.stringify(payload);
-      fetch(process.env.REACT_APP_API_URL+'/api/events', {
+      fetch(process.env.REACT_APP_API_URL + '/api/events', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -267,7 +267,7 @@ export default function Checkout({ history }) {
           result.json().then(value => {
             var data2 = new FormData();
             data2.append("image", image);
-            fetch(process.env.REACT_APP_API_URL+`/api/event/uploadimage?id=${value.eventId}`, {
+            fetch(process.env.REACT_APP_API_URL + `/api/event/uploadimage?id=${value.eventId}`, {
               headers: {
                 'Authorization': `Bearer ${token}`,
               },

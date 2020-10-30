@@ -250,8 +250,8 @@ const Signup = ({ history }) => {
 
             <Grid item xs={12}>
               <FormControlLabel
-                control={<Checkbox color="primary" name="terms" />}
-                label="I accept the terms and conditions"
+                control={<Checkbox  color="primary" name="terms" />}
+                label={<Typography>By signing up I accept the <Link href='/Privacy_Policy.pdf'>Pivacy Policy and Terms of Service</Link></Typography>}
               />
             </Grid>
           </Grid>

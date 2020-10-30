@@ -3,7 +3,7 @@ import React from 'react';
 import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
-import CardContent from '@material-ui/core/CardContent';
+// import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import IconButton from '@material-ui/core/IconButton';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
@@ -64,7 +64,7 @@ function Eventcard(props) {
   const [imageLoaded, setImageLoaded] = React.useState(false);
   const [reportDialogOpen, setReportDialogOpen] = React.useState(false);
   const [shareDialogOpen, setShareDialogOpen] = React.useState(false);
-  
+
 
 
   const handleToggle = () => {
@@ -169,93 +169,34 @@ function Eventcard(props) {
           </div>
         }
         title={
-          <Typography variant="h5" color="textPrimary" component="p">
+          <Typography noWrap variant="h5" color="textPrimary" component="p">
             {props.name}
           </Typography>
         }
         subheader={
-          <Typography variant="body1" color="textSecondary" component="p">
-            {event.description}
-        </Typography>
+          <React.Fragment>
+            <Typography variant="body1" color="textSecondary" component="p">
+              {event.description}
+            </Typography>
+            <Chip style={{ marginRight: "4px", marginTop: "4px" }} variant="outlined" color="inherit" size="small" label={event.event_mode}></Chip>
+            <Chip style={{ marginRight: "4px", marginTop: "4px" }} variant="outlined" color="inherit" size="small" label={event.fee_type}></Chip>
+            <Chip style={{ marginRight: "4px", marginTop: "4px" }} variant="outlined" color="inherit" size="small" label={event.event_type}></Chip>
+            <Chip style={{ marginRight: "4px", marginTop: "4px" }} variant="outlined" color="inherit" size="small" label={"Reg ends on " + regEndDate.toDateString()}></Chip>
+            <Chip style={{ marginRight: "4px", marginTop: "4px" }} variant="outlined" color="inherit" size="small" label={"Starts on " + startDate.toDateString()}></Chip>
+            <Chip style={{ marginRight: "4px", marginTop: "4px" }} variant="outlined" color="inherit" size="small" label={"Ends on " + endDate.toDateString()}></Chip>
+          </React.Fragment>
         }
       />
-      <CardContent>
-        <EventReportDialog
-          event={event}
-          open={reportDialogOpen}
-          handleClose={handleReportClose}>
-
-        </EventReportDialog>
-        <EventShareDialog
-          event={event}
-          open={shareDialogOpen}
-          handleClose={handleShareClose}></EventShareDialog>
-        {/* <Typography variant="body2" color="textPrimary" component="p">
-          Details
-        </Typography> */}
-        <Chip variant="outlined" color="inherit" size="small" label={event.event_mode}></Chip>
-        <Chip style={{ marginLeft: "4px" }} variant="outlined" color="inherit" size="small" label={event.fee_type}></Chip>
-        <Chip style={{ marginLeft: "4px" }} variant="outlined" color="inherit" size="small" label={event.event_type}></Chip>
-        <Chip style={{ marginLeft: "4px" }} variant="outlined" color="inherit" size="small" label={"Reg ends on " + regEndDate.toDateString()}></Chip>
-        <Chip style={{ marginLeft: "4px" }} variant="outlined" color="inherit" size="small" label={"Starts on " + startDate.toDateString()}></Chip>
-        <Chip style={{ marginLeft: "4px" }} variant="outlined" color="inherit" size="small" label={"Ends on " + endDate.toDateString()}></Chip>
-        {/* <Grid container component="main">
-          <Grid item xs={6} sm={6} md={6}>
-            <Typography variant="h6" component="p">
-            <PublicIcon></PublicIcon> {props.eventMode} 
-            </Typography>
-            <Typography variant="h6" component="p">
-            <PublicIcon></PublicIcon> {props.eventType} 
-            </Typography>
-            <Typography variant="body2" color="textSecondary" component="p">
-              Last Date for Registration:
-            </Typography>
-            <Typography variant="h5" color="textPrimary" component="p">
-              {startDate.toDateString()}
-            </Typography>
-
-          </Grid>
-          <Grid item xs={6} sm={6} md={6}>
-            <Timeline align='alternate'>
-            <TimelineItem>
-          <TimelineOppositeContent>
-            <Typography color="textSecondary">{startDate.toDateString()}</Typography>
-          </TimelineOppositeContent>
-          <TimelineSeparator>
-            <TimelineDot />
-            <TimelineConnector />
-          </TimelineSeparator>
-          <TimelineContent>
-            <Typography>Starts</Typography>
-          </TimelineContent>
-        </TimelineItem>
-        <TimelineItem>
-          <TimelineOppositeContent>
-            <Typography color="textSecondary">{startDate.toDateString()}</Typography>
-          </TimelineOppositeContent>
-          <TimelineSeparator>
-            <TimelineDot />
-            <TimelineConnector />
-          </TimelineSeparator>
-          <TimelineContent>
-            <Typography>Ends</Typography>
-          </TimelineContent>
-        </TimelineItem>
-            </Timeline>
-          </Grid>
-        </Grid> */}
-
-      </CardContent>
+      <EventReportDialog
+        event={event}
+        open={reportDialogOpen}
+        handleClose={handleReportClose}>
+      </EventReportDialog>
+      <EventShareDialog
+        event={event}
+        open={shareDialogOpen}
+        handleClose={handleShareClose}></EventShareDialog>
       <CardActions disableSpacing>
-        {/* <IconButton aria-label="add to favorites">
-          <FavoriteIcon />
-        </IconButton> */}
-        {/* <IconButton aria-label="share">
-          <MailIcon></MailIcon>
-        </IconButton> */}
-        {/* <IconButton aria-label="share">
-          <ShareIcon />
-        </IconButton> */}
         <div className={classes.buttonDiv}>
           <Button size="small" color="primary" variant="outlined" className={classes.button} onClick={handleMoreButtonClick}>
             See More
@@ -268,10 +209,7 @@ function Eventcard(props) {
                   <a href={event.reg_link} style={{ textDecoration: 'none', color: '#000000' }} target="blank">Register</a>}
               </Button>
           }
-
         </div>
-        
-
       </CardActions>
     </Card>);
 }

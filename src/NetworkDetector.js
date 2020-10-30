@@ -1,3 +1,6 @@
+//to detect if connected to network or not(this is in class based react rather than hooks as 
+// i directly copied from other source)
+
 import React, { Component } from 'react';
 
 export default function (ComposedComponent) {

@@ -83,10 +83,10 @@ export default function UnregisteredPage(props) {
             },
             method: 'GET'
         }).then(response => {
-            console.log(response)
+            // console.log(response)
             if (response.status === 200) {
                 response.json().then(value => {
-                    console.log(value);
+                    // console.log(value);
                     value.sort((a, b) => {
                         return new Date(a.start_time) - new Date(b.start_time);
                     })

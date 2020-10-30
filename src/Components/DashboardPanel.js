@@ -139,10 +139,10 @@ export default function StickyHeadTable(props) {
     setAnnouncementDialog(false);
   }
 
-  function handleSendEmail() {
-    console.log(selected);
-    setSendEmailDialog(true);
-  }
+  // function handleSendEmail() {
+  //   console.log(selected);
+  //   setSendEmailDialog(true);
+  // }
   function handleSendEmailClose() {
     setSendEmailDialog(false);
   }
@@ -156,7 +156,7 @@ export default function StickyHeadTable(props) {
       <Grid item xs={12} md={4} lg={9}>
         <Paper className={classes.buttonsPaper}>
           <Button variant="outlined" onClick={handleAddAnnouncement} className={classes.button}>Add Announcement</Button>
-          <Button variant="contained" onClick={handleSendEmail} className={classes.button}>Send Emails to Selected</Button>
+          {/* <Button variant="contained" onClick={handleSendEmail} className={classes.button}>Send Emails to Selected</Button> */}
         </Paper>
       </Grid>
       <Grid item xs={12} md={4} lg={3} >
