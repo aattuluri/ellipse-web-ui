@@ -13,6 +13,9 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { makeStyles } from '@material-ui/core/styles';
+import { Typography } from '@material-ui/core';
+
+import TermsandConditions from '../Components/EventPostTermsandConditions';
 
 
 
@@ -71,6 +74,7 @@ export default function AddressForm(props) {
     const classes = useStyles();
     // const [loading, setLoading] = React.useState(false);
     const [open, setOpen] = React.useState(false);
+    const [tandcOpen, setTandcOpen] = React.useState(false);
     const handleClose = () => {
         setOpen(false);
     };
@@ -137,6 +141,10 @@ export default function AddressForm(props) {
         props.handlePost(selectedFields);
     }
 
+    function handleTermsClick() {
+        setTandcOpen(true);
+    }
+
     return (
         <React.Fragment>
 
@@ -177,8 +185,7 @@ export default function AddressForm(props) {
                         <Button
                             variant="outlined"
                             color="default"
-                            onClick={handleAddMoreButton}
-                        >
+                            onClick={handleAddMoreButton}>
                             Add More
                         </Button>
                     </Grid>
@@ -188,7 +195,6 @@ export default function AddressForm(props) {
                                 return (
                                     <li key={data.key}>
                                         <Chip
-
                                             label={data.title}
                                             onDelete={handleDelete(data)}
                                             className={classes.chip}
@@ -199,10 +205,9 @@ export default function AddressForm(props) {
                         </Paper>
                     </Grid>
                     <Grid item xs={12}>
-                        <FormControlLabel
-                            control={<Checkbox color="primary" name="terms" />}
-                            label="I accept the terms and conditions"
-                        />
+                        <Typography>By posting the event.I accept the
+                        <Button color="primary" onClick={handleTermsClick}>
+                                Terms and Conditions</Button></Typography>
                     </Grid>
                 </Grid>
                 <div className={classes.buttons}>
@@ -213,11 +218,12 @@ export default function AddressForm(props) {
                         type="submit"
                         variant="contained"
                         color="primary"
-                        className={classes.button}
-                    >Post
+                        className={classes.button}>
+                    Post
                     </Button>
                 </div>
             </form>
+            <TermsandConditions open={tandcOpen} setOpen={setTandcOpen}></TermsandConditions>
         </React.Fragment>
     );
 }

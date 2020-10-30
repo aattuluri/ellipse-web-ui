@@ -51,7 +51,7 @@ const OTPver = ({ history }) => {
 
     function handleClose() {
         // console.log("message")
-        if (message === "verified") {
+        if (message === "Success! redirecting to Ellipse Home") {
             history.replace("/userinfo")
         }
         setState({ ...state, open: false });

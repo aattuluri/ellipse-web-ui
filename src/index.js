@@ -5,6 +5,8 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import {lightTheme,darkTheme} from './Components/theme'
 import { CssBaseline } from '@material-ui/core';
 const t = localStorage.getItem('theme');
+
+
 ReactDOM.render(
   <React.StrictMode>
     <ThemeProvider theme={t === 'light' ? lightTheme: darkTheme}>

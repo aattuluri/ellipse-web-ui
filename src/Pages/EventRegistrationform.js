@@ -27,7 +27,7 @@ import AuthContext from '../AuthContext';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import FormLabel from '@material-ui/core/FormLabel';
-import { MuiPickersUtilsProvider, DateTimePicker, } from '@material-ui/pickers';
+import { MuiPickersUtilsProvider, DateTimePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import FormControl from '@material-ui/core/FormControl';
 import FormGroup from '@material-ui/core/FormGroup';
@@ -35,6 +35,7 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 // import { set } from 'date-fns';
 // import AuthContext from '../AuthContext';
+import TermsandConditions from '../Components/EventRegisterTermsandConditions';
 
 
 //function for alert
@@ -74,8 +75,13 @@ const Signup = (props) => {
   const [event, setEvent] = React.useState({});
   const [checkedValues, setCheckedValues] = React.useState([]);
   const colleges = ["VIT University,Vellore", "GITAM University", "SRM University"];
+  const [tandcOpen, setTandcOpen] = React.useState(false);
 
   const user = React.useContext(AuthContext);
+
+  function handleTermsClick() {
+    setTandcOpen(true);
+  }
 
   React.useEffect(() => {
     if (user.designation === "Student" || user.designation === "Faculty") {
@@ -496,10 +502,7 @@ const Signup = (props) => {
               }
 
               <Grid item xs={12}>
-                <FormControlLabel
-                  control={<Checkbox color="primary" name="terms" />}
-                  label="I accept the terms and conditions"
-                />
+                <Typography>By posting the event.I accept the <Button onClick={handleTermsClick} color="primary">Terms and Conditions</Button></Typography>
               </Grid>
             </Grid>
             {canRegister && <Button
@@ -523,6 +526,7 @@ const Signup = (props) => {
       <Box mt={2}>
         <Copyright />
       </Box>
+      <TermsandConditions open={tandcOpen} setOpen={setTandcOpen}></TermsandConditions>
     </Container>
   );
 }

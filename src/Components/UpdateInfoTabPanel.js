@@ -89,6 +89,8 @@ function UpdateInfoTabPanel(props) {
     });
     const [loading, setLoading] = React.useState(false);
     const { vertical, horizontal, open, message, type } = state;
+    const [usernameError, setUserNameError] = React.useState(false);
+    const [updateButtonDisabled,setUpdateButtonDisabled] = React.useState(false);
 
     React.useEffect(() => {
         setEmail(user.email);
@@ -163,9 +165,9 @@ function UpdateInfoTabPanel(props) {
           })
         
     }
-    function handleUserName(event,value){
-        setUserName(event.target.value);
-    }
+    // function handleUserName(event,value){
+    //     setUserName(event.target.value);
+    // }
     function handleBio(event,value){
         setBio(value);
     }
@@ -260,6 +262,35 @@ function UpdateInfoTabPanel(props) {
     }
 
 
+    function handleUsernameChange(event) {
+        setUserName(event.target.value);
+        const username = event.target.value;
+        var data = new FormData();
+        const payload = {
+          username: username
+        };
+        data = JSON.stringify(payload);
+        setUserNameError(false);
+        setUpdateButtonDisabled(false)
+        // setSignupButtonDisabled(false)
+        fetch(process.env.REACT_APP_API_URL + '/api/check_username', {
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          method: 'POST',
+          body: data
+        }).then((result) => {
+          result.json().then(value => {
+            if (value.message === "user already exists") {
+              setUserNameError(true);
+              setUpdateButtonDisabled(true)
+            //   setSignupButtonDisabled(true);
+            }
+          })
+        })
+      }
+
     return (
         <div
             role="tabpanel"
@@ -321,7 +352,19 @@ function UpdateInfoTabPanel(props) {
                             />
                         </Grid>
                         <Grid item xs={12} md={6}>
-                            <TextField
+                        <TextField
+                // variant="outlined"
+                required
+                fullWidth
+                id="username"
+                label="User Name"
+                value={userName}
+                onChange={handleUsernameChange}
+                name="username"
+                error={usernameError}
+                helperText={usernameError && "username already exists"}
+              />
+                            {/* <TextField
                                 // variant="outlined"
                                 fullWidth
                                 required
@@ -330,7 +373,7 @@ function UpdateInfoTabPanel(props) {
                                 name="username"
                                 value={userName}
                                 onChange={handleUserName}
-                            />
+                            /> */}
                         </Grid>
                         <Grid item xs={12} md={6}>
                             <Autocomplete
@@ -413,7 +456,7 @@ function UpdateInfoTabPanel(props) {
                         variant="contained"
                         color="primary"
                         onClick={handleUpdateButton}
-                        disabled={loading}
+                        disabled={loading || updateButtonDisabled}
                     // className={classes.submit}
                     >{loading ? <CircularProgress color="primary" size={24} /> : "Update Profile"}
                     </Button>

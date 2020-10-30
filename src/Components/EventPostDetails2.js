@@ -3,7 +3,7 @@ import React from 'react';
 
 //MaterialUI imports
 import Button from '@material-ui/core/Button';
-import Checkbox from '@material-ui/core/Checkbox';
+// import Checkbox from '@material-ui/core/Checkbox';
 import IconButton from '@material-ui/core/IconButton';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -16,6 +16,9 @@ import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { makeStyles } from '@material-ui/core/styles';
+import { Typography } from '@material-ui/core';
+
+import TermsandConditions from '../Components/EventPostTermsandConditions';
 
 
 
@@ -62,6 +65,7 @@ export default function AddressForm(props) {
   const [eventTags,setEventTags] = React.useState([]);
   const [requirements,setRequirements] = React.useState([]);
   // const colleges = ["VIT University,Vellore", "GITAM University", "SRM University"];
+  const [tandcOpen,setTandcOpen] = React.useState(false);
 
 
   React.useEffect(() => {
@@ -159,6 +163,9 @@ export default function AddressForm(props) {
     props.handleNext();
   }
 
+  function handleTermsClick(){
+    setTandcOpen(true);
+  }
 
 
   return (
@@ -361,10 +368,7 @@ export default function AddressForm(props) {
 
           </React.Fragment>}
           {props.registrationMode !== "form" && <Grid item xs={12}>
-            <FormControlLabel
-              control={<Checkbox color="primary" name="terms" />}
-              label="I accept the terms and conditions"
-            />
+          <Typography>By posting the event.I accept the <Button onClick={handleTermsClick} color="primary">Terms and Conditions</Button></Typography>
           </Grid>
           }
         </Grid>
@@ -381,6 +385,7 @@ export default function AddressForm(props) {
           </Button>
         </div>
       </form>
+      <TermsandConditions open={tandcOpen} setOpen={setTandcOpen}></TermsandConditions>
     </React.Fragment>
   );
 }

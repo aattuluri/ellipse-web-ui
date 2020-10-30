@@ -190,9 +190,9 @@ function AboutEventPanel(props) {
                             </div>
 
                         </Grid>
-                        {/* <Grid item xs={12}> */}
+                        <Grid item xs={12}>
 
-                        <Box >
+                        <Box>
                             <Box className={classes.root0}>
                                 <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h4">About</Typography>
                             </Box>
@@ -201,14 +201,6 @@ function AboutEventPanel(props) {
                                     {
                                         event.about
                                     }
-                                    {[...new Array(5)]
-                                        .map(
-                                            () => `Cras mattis consectetur purus sit amet fermentum. 
-                                    Cras justo odio, dapibus ac facilisis in, egestas eget quam.
-                                    Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
-                                    Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`,
-                                        )
-                                        .join('\n')}
                                 </Typography>
                             </Box>
                             <Box className={classes.root0}>
@@ -264,7 +256,7 @@ function AboutEventPanel(props) {
                         </Box>
 
 
-                        {/* </Grid> */}
+                        </Grid>
                         <Grid item xs={12}>
                         </Grid>
                         <Grid>
