@@ -11,6 +11,7 @@ import UpdateInfoTabPanel from './UpdateInfoTabPanel';
 import UpdatePasswordTabPanel from './UpdatePasswordTabPanel';
 import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
+import MoreSettingsTabPanel from './MoreSettingsTabPanel';
 
 
 function a11yProps(index) {
@@ -92,6 +93,7 @@ function UpdateProfile(props) {
                             aria-label="scrollable auto tabs example">
                             <Tab label="Update info" {...a11yProps(0)} />
                             <Tab label="Change Password" {...a11yProps(1)} />
+                            <Tab label="More Settings" {...a11yProps(1)} />
                         </Tabs>
                     </AppBar>
                 </div>
@@ -99,6 +101,7 @@ function UpdateProfile(props) {
             <DialogContent dividers={true}>
                 <UpdateInfoTabPanel value={value} index={0}></UpdateInfoTabPanel>
                 <UpdatePasswordTabPanel value={value} index={1}></UpdatePasswordTabPanel>
+                <MoreSettingsTabPanel value={value} index={2}></MoreSettingsTabPanel>
             </DialogContent>
             <DialogActions alignItems="center">
             </DialogActions>

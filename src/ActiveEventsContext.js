@@ -1,5 +1,8 @@
 import React from 'react';
  
-const ActiveEventsContext = React.createContext(null);
+const ActiveEventsContext = React.createContext({
+    activeEvents: null,
+    setActiveEvents: ()=>{}
+});
  
 export default ActiveEventsContext;

@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
 function ProfilePostsTabPanel(props) {
     const classes = useStyles()
     const { children, value, url, index, ...other } = props;
-    const user = React.useContext(AuthContext);
+    const {currentUser} = React.useContext(AuthContext);
 
     return (
         <div
@@ -33,13 +33,13 @@ function ProfilePostsTabPanel(props) {
                         <Box className={classes.editIcon}>
                             <IconButton onClick={props.handleEditButton}><EditIcon></EditIcon></IconButton>
                         </Box>
-                        <ProfileAboutDataBox name="Name" value={user.name}></ProfileAboutDataBox>
-                        <ProfileAboutDataBox name="Email" value={user.email}></ProfileAboutDataBox>
-                        <ProfileAboutDataBox name="Username" value={user.username}></ProfileAboutDataBox>
-                        <ProfileAboutDataBox name="College" value={user.college_name}></ProfileAboutDataBox>
-                        <ProfileAboutDataBox name="Designation" value={user.designation}></ProfileAboutDataBox>
-                        <ProfileAboutDataBox name="Gender" value={user.gender}></ProfileAboutDataBox>
-                        <ProfileAboutDataBox name="Bio" value={user.bio}></ProfileAboutDataBox>
+                        <ProfileAboutDataBox name="Name" value={currentUser.name}></ProfileAboutDataBox>
+                        <ProfileAboutDataBox name="Email" value={currentUser.email}></ProfileAboutDataBox>
+                        <ProfileAboutDataBox name="Username" value={currentUser.username}></ProfileAboutDataBox>
+                        <ProfileAboutDataBox name="College" value={currentUser.college_name}></ProfileAboutDataBox>
+                        <ProfileAboutDataBox name="Designation" value={currentUser.designation}></ProfileAboutDataBox>
+                        <ProfileAboutDataBox name="Gender" value={currentUser.gender}></ProfileAboutDataBox>
+                        <ProfileAboutDataBox name="Bio" value={currentUser.bio}></ProfileAboutDataBox>
                     </Box>
                 </div>
             )}

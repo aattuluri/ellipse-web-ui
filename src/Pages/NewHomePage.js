@@ -152,7 +152,7 @@ export default function UnregisteredPage(props) {
                     </Link>
                 </Box>
                 <Box display="flex" justifyContent="center">
-                    <a rel="noopener noreferrer" href="https://play.google.com/store/apps/details?id=com.guna0027.ellipse" target="_blank">
+                    <a rel="noopener noreferrer" href="https://play.google.com/store/apps/details?id=com.ellipse.ellipseapp" target="_blank">
                         <img className={classes.hidden} src={GoogleBadge} alt="playstore"></img><br></br>
                     </a>
                 </Box>

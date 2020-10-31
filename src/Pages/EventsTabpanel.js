@@ -176,7 +176,7 @@ function EventsTabPanel({ history }) {
     const [modeSortChecked, setModeSortChecked] = React.useState([0]);
     const [filterDialogOpen, setFilterDialogOpen] = React.useState(false);
     // const [selectedImage, setSelectedImage] = React.useState(null);
-    const allEvents = React.useContext(ActiveEventsContext);
+    const {activeEvents} = React.useContext(ActiveEventsContext);
     const [registerdEvents, setRegisteredEvents] = React.useState([]);
     const [feedBackOpen,setFeedBackOpen] = React.useState(false);
 
@@ -184,8 +184,8 @@ function EventsTabPanel({ history }) {
 
     React.useEffect(() => {
         // console.log(allEvents);
-        setRegisteredEvents(allEvents.filter((value) => value.registered === true))
-    }, [allEvents])
+        setRegisteredEvents(activeEvents.filter((value) => value.registered === true))
+    }, [activeEvents])
     // console.log(registerdEvents);
     if (!token) {
         // return <Redirect to="/" />;
@@ -236,7 +236,7 @@ function EventsTabPanel({ history }) {
         // console.log(sortCollegeType);
         setFilterDialogOpen(false);
         if (sortStartDate != null && sortEndDate != null) {
-            const dateRangeSortedEvents = sortByDateRange(sortStartDate, sortEndDate, allEvents);
+            const dateRangeSortedEvents = sortByDateRange(sortStartDate, sortEndDate, activeEvents);
             setSortedEventsArray(dateRangeSortedEvents);
             setIsFiltered(true);
             if (modeSortChecked.length > 1) {
@@ -272,7 +272,7 @@ function EventsTabPanel({ history }) {
             }
         }
         else if (sortStartDate != null) {
-            const dateSortedEvents = await sortByDate(sortStartDate, allEvents)
+            const dateSortedEvents = await sortByDate(sortStartDate, activeEvents)
             setSortedEventsArray(dateSortedEvents);
             setIsFiltered(true);
             if (modeSortChecked.length > 1) {
@@ -308,8 +308,8 @@ function EventsTabPanel({ history }) {
             }
         }
         else if (modeSortChecked.length > 1) {
-            const typeSortedEvents = sortByMode(allEvents);
-            console.log(sortByMode(allEvents));
+            const typeSortedEvents = sortByMode(activeEvents);
+            console.log(sortByMode(activeEvents));
 
             setSortedEventsArray(typeSortedEvents);
             setIsFiltered(true);
@@ -320,12 +320,12 @@ function EventsTabPanel({ history }) {
             }
         }
         else if (feeSortChecked.length > 1) {
-            const feeSortedEvents = sortByCost(allEvents);
+            const feeSortedEvents = sortByCost(activeEvents);
             setSortedEventsArray(feeSortedEvents);
             setIsFiltered(true);
         }
         else if (sortCollegeType === user.college_name) {
-            const collegeSortedEvents = sortByCollege(allEvents);
+            const collegeSortedEvents = sortByCollege(activeEvents);
             setSortedEventsArray(collegeSortedEvents);
             setIsFiltered(true);
         }
@@ -464,7 +464,7 @@ function EventsTabPanel({ history }) {
                         {/* Active Events */}
                     </Typography>
 
-                    {allEvents.length === 0 && <div>
+                    {activeEvents.length === 0 && <div>
                         <Skeleton variant="rect" animation="wave" height={118} />
                         <Skeleton animation="wave" />
                         <Skeleton animation="wave" />
@@ -494,9 +494,8 @@ function EventsTabPanel({ history }) {
                                     handleReg={handleRegistrationButton}
                                     eventId={event}
                                 >
-
                                 </EventCard>)
-                        }) : allEvents.map((event, index) => {
+                        }) : activeEvents.map((event, index) => {
                             return (
                                 <EventCard
                                     key={index}

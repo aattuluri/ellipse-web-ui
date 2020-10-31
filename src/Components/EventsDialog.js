@@ -91,7 +91,7 @@ function EventsDialog(props) {
     const event = props.event;
     const t = localStorage.getItem('theme');
     const [value, setValue] = React.useState(0);
-    const user = React.useContext(AuthContext);
+    const {currentUser} = React.useContext(AuthContext);
     const classes = useStyles();
     const theme = useTheme();
     // const token = localStorage.getItem('token');
@@ -101,13 +101,13 @@ function EventsDialog(props) {
     React.useEffect(() => {
         if (event.registered || event.reg_mode !== "form") {
             setChatAcess(true)
-        }else if(event.user_id === user.user_id){
+        }else if(event.user_id === currentUser.user_id){
             setChatAcess(true)
         }
         else {
             setChatAcess(false)
         }
-    }, [event,user])
+    }, [event,currentUser])
 
 
 

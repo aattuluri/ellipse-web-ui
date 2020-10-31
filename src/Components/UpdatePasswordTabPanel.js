@@ -51,7 +51,7 @@ function UpdatePasswordTabPanel(props) {
     const classes = useStyles();
     const { children, value, url, index, ...other } = props;
     // const [open, setOpen] = React.useState(false);
-    const user = React.useContext(AuthContext);
+    const {currentUser} = React.useContext(AuthContext);
     const token = localStorage.getItem('token');
     const [state, setState] = React.useState({
         open: false,
@@ -89,7 +89,7 @@ function UpdatePasswordTabPanel(props) {
         try{
             var data = new FormData()
         const payload = {
-          email: user.email,
+          email: currentUser.email,
           cPassword: cPassword,
           nPassword: nPassword
         };

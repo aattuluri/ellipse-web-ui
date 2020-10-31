@@ -37,16 +37,19 @@ function Layout(props) {
     const token = localStorage.getItem('token');
     const classes = useStyles();
     const [allEvents, setAllEvents] = React.useState([]);
-    const [activeEvents,setActiveEvents] = React.useState([]);
+    const [activeEvents, setActiveEvents] = React.useState([]);
     const [currentUser, setCurrentUser] = React.useState(null);
     const [open, setOpen] = React.useState(true);
     const [authorized, setAuthorized] = React.useState(true);
     const [userDetailsDone, setUserDetailsDone] = React.useState(true);
-    
+
+    const value = {currentUser,setCurrentUser};
+    const allEventsValue = {allEvents,setAllEvents};
+    const activeEventsValue = {activeEvents,setActiveEvents};
 
 
     React.useEffect(() => {
-        fetch(process.env.REACT_APP_API_URL+'/api/users/me', {
+        fetch(process.env.REACT_APP_API_URL + '/api/users/me', {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
@@ -62,40 +65,40 @@ function Layout(props) {
                         try {
                             var data2 = new FormData();
                             const payload2 = {
-                              email: value[0].email
+                                email: value[0].email
                             };
                             data2 = JSON.stringify(payload2)
                             fetch(process.env.REACT_APP_API_URL + '/api/users/sendverificationemail', {
-                              headers: {
-                                'Authorization': `Bearer ${token}`,
-                                'Content-Type': 'application/json'
-                              },
-                              method: 'POST',
-                              body: data2
+                                headers: {
+                                    'Authorization': `Bearer ${token}`,
+                                    'Content-Type': 'application/json'
+                                },
+                                method: 'POST',
+                                body: data2
                             }).then((result) => {
-                              // console.log(result);
-                              result.json().then((res) => {
-                                if (res.message === "success") {
-                                    setOpen(false);
-                                    props.history.push("/otpverification")
-                                }
-                              })
-                  
+                                // console.log(result);
+                                result.json().then((res) => {
+                                    if (res.message === "success") {
+                                        setOpen(false);
+                                        props.history.push("/otpverification")
+                                    }
+                                })
+
                             })
-                          } catch (error) {
-                            
-                          }
-                        
+                        } catch (error) {
+
+                        }
+
                     }
-                    else if(value[0].college_name === null){
+                    else if (value[0].college_name === null) {
                         setOpen(false);
                         props.history.push("/userinfo")
                     }
-                    else{
+                    else {
                         setUserDetailsDone(true);
                         setCurrentUser(value[0]);
                     }
-                   
+
 
                 })
             }
@@ -104,7 +107,7 @@ function Layout(props) {
                 setAuthorized(false);
             }
         })
-        fetch(process.env.REACT_APP_API_URL+'/api/events', {
+        fetch(process.env.REACT_APP_API_URL + '/api/events', {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
@@ -119,7 +122,7 @@ function Layout(props) {
                         return new Date(a.start_time) - new Date(b.start_time);
                     })
                     setAllEvents(value);
-                    setActiveEvents(value.filter(e =>{
+                    setActiveEvents(value.filter(e => {
                         const cDate = new Date();
                         const eDate = new Date(e.finish_time);
                         return cDate < eDate && e.status !== "pending"
@@ -132,7 +135,7 @@ function Layout(props) {
             }
 
         })
-// eslint-disable-next-line
+        // eslint-disable-next-line
     }, [token])
     // if(!currentUser.verified){
 
@@ -144,60 +147,59 @@ function Layout(props) {
         return <Redirect to="/"></Redirect>
     }
     if (!userDetailsDone) {
-        if(currentUser.verified){
+        if (currentUser.verified) {
             return <Redirect to="/userinfo"></Redirect>
-        }else{
+        } else {
             console.log("xyz")
             try {
                 var data2 = new FormData();
                 const payload2 = {
-                  email: currentUser.email
+                    email: currentUser.email
                 };
                 data2 = JSON.stringify(payload2)
                 fetch(process.env.REACT_APP_API_URL + '/api/users/sendverificationemail', {
-                  headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                  },
-                  method: 'POST',
-                  body: data2
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    method: 'POST',
+                    body: data2
                 }).then((result) => {
-                  // console.log(result);
-                  result.json().then((res) => {
-                    if (res.message === "success") {
-                        return <Redirect to="/otpverification"></Redirect>
-                    }
-                  })
-      
+                    // console.log(result);
+                    result.json().then((res) => {
+                        if (res.message === "success") {
+                            return <Redirect to="/otpverification"></Redirect>
+                        }
+                    })
+
                 })
-              } catch (error) {
-                
-              }
-            
+            } catch (error) {
+
+            }
+
         }
-        
     }
 
     return (
-        <AuthContext.Provider value={currentUser}>
-            <EventsContext.Provider value={allEvents}>
-            <ActiveEventsContext.Provider value={activeEvents}>
-                {
-                    currentUser != null  && <div>
-                        <Paper className={classes.root}>
-                            <NavigationBar></NavigationBar>
-                        </Paper>
-                        <div>
-                            {props.children}
+        <AuthContext.Provider value={value}>
+            <EventsContext.Provider value={allEventsValue}>
+                <ActiveEventsContext.Provider value={activeEventsValue}>
+                    {
+                        currentUser != null && <div>
+                            <Paper className={classes.root}>
+                                <NavigationBar></NavigationBar>
+                            </Paper>
+                            <div>
+                                {props.children}
+                            </div>
                         </div>
-                    </div>
-                }
-                {
-                    currentUser == null && <Backdrop className={classes.backdrop} open={open}>
-                        <CircularProgress color="inherit" />
-                    </Backdrop>
+                    }
+                    {
+                        currentUser == null && <Backdrop className={classes.backdrop} open={open}>
+                            <CircularProgress color="inherit" />
+                        </Backdrop>
 
-                }
+                    }
                 </ActiveEventsContext.Provider>
             </EventsContext.Provider>
         </AuthContext.Provider>
@@ -205,4 +207,4 @@ function Layout(props) {
 
     );
 }
-export default withRouter(Layout) ;
+export default withRouter(Layout);

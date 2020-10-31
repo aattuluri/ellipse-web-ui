@@ -40,7 +40,8 @@ export default function UnregisteredPage(props) {
     }
 
     const handleClickOpen = () => {
-        setOpen(true);
+        localStorage.setItem('eventid',id);
+        props.history.push("/signin")
     };
 
     const handleClose = () => {
@@ -63,7 +64,7 @@ export default function UnregisteredPage(props) {
 
     function handleSigninClick() {
         localStorage.setItem('eventid',id);
-        props.history.push("/")
+        props.history.push("/signin")
     }
     function handleSignupClick() {
         localStorage.setItem('eventid',id);
@@ -72,7 +73,7 @@ export default function UnregisteredPage(props) {
 
     return (
         <div className={classes.root}>
-            <AppBar position="static" className={classes.appbar}>
+            <AppBar position="sticky" className={classes.appbar}>
                 <Toolbar>
                     <Typography variant="h5" className={classes.title}>
                         Ellipse
@@ -88,7 +89,7 @@ export default function UnregisteredPage(props) {
                     style={{ paddingBottom: "20px", paddingTop: "10px" }}>
                     {event.name + "(Login to Register and Know More Info)"}
                 </Typography>
-                <AboutEventsPanel event={event}></AboutEventsPanel>
+                <AboutEventsPanel notRegistered={true} event={event}></AboutEventsPanel>
                 <Button variant="contained" color="primary" onClick={handleClickOpen}>Register</Button>
             </div>
             <Dialog
