@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
     buttonDiv: {
         marginLeft: 'auto',
     },
-   
+
     large: {
         width: theme.spacing(17),
         height: theme.spacing(17),
@@ -63,7 +63,7 @@ function UpdateInfoTabPanel(props) {
     const classes = useStyles();
     const { children, value, url, index, ...other } = props;
     // const [open, setOpen] = React.useState(false);
-    const user = React.useContext(AuthContext);
+    const { currentUser, setCurrentUser } = React.useContext(AuthContext);
     // const url = user.imageUrl;
     const token = localStorage.getItem('token');
     const [colleges, setColleges] = React.useState([]);
@@ -75,10 +75,10 @@ function UpdateInfoTabPanel(props) {
     const [gender, setGender] = React.useState(null);
     const [designation, setDesignation] = React.useState(null);
     const [collegeName, setCollegeName] = React.useState(null);
-    const [collegeId,setCollegeId] = React.useState(null);
-    const [collegesName,setCollegesName] = React.useState([]);
-    const [imageUrl,setImageurl] = React.useState(null);
-    const [imageUpdated,setImageUpdated] = React.useState(false);
+    const [collegeId, setCollegeId] = React.useState(null);
+    const [collegesName, setCollegesName] = React.useState([]);
+    const [imageUrl, setImageurl] = React.useState(null);
+    const [imageUpdated, setImageUpdated] = React.useState(false);
     const [state, setState] = React.useState({
         open: false,
         vertical: 'top',
@@ -90,18 +90,18 @@ function UpdateInfoTabPanel(props) {
     const [loading, setLoading] = React.useState(false);
     const { vertical, horizontal, open, message, type } = state;
     const [usernameError, setUserNameError] = React.useState(false);
-    const [updateButtonDisabled,setUpdateButtonDisabled] = React.useState(false);
+    const [updateButtonDisabled, setUpdateButtonDisabled] = React.useState(false);
 
     React.useEffect(() => {
-        setEmail(user.email);
-        setName(user.name);
-        setUserName(user.username);
-        setDesignation(user.designation);
-        setCollegeName(user.college_name);
-        setCollegeId(user.college_id);
-        setBio(user.bio);
-        setGender(user.gender);
-        fetch(process.env.REACT_APP_API_URL+'/api/colleges', {
+        setEmail(currentUser.email);
+        setName(currentUser.name);
+        setUserName(currentUser.username);
+        setDesignation(currentUser.designation);
+        setCollegeName(currentUser.college_name);
+        setCollegeId(currentUser.college_id);
+        setBio(currentUser.bio);
+        setGender(currentUser.gender);
+        fetch(process.env.REACT_APP_API_URL + '/api/colleges', {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
@@ -111,9 +111,9 @@ function UpdateInfoTabPanel(props) {
         }).then(response => {
             response.json().then(value => {
                 setColleges(value);
-                value.forEach((v)=>{
-                    setCollegesName((collegesNames)=>[...collegesNames,v.name])
-                  })
+                value.forEach((v) => {
+                    setCollegesName((collegesNames) => [...collegesNames, v.name])
+                })
                 // setCollegeNames()
             })
         })
@@ -123,8 +123,22 @@ function UpdateInfoTabPanel(props) {
 
     const handleClose = async (event, reason) => {
 
-        if (message === "successful") {
+        if (message === "Updated Successfully") {
             // history.replace("/home")
+            fetch(process.env.REACT_APP_API_URL + '/api/users/me', {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                method: 'GET'
+            }).then(response => {
+                if (response.status === 200) {
+                    response.json().then(value => {
+                        setCurrentUser(value[0]);
+                    })
+                }
+            })
         }
 
         setState({ ...state, open: false });
@@ -132,50 +146,51 @@ function UpdateInfoTabPanel(props) {
 
     function handleChange(event) {
         if (event.target.files[0]) {
-          setImage(event.target.files[0]);
-        //   setImageAsFile(imageFile => (image))
-          const url = URL.createObjectURL(event.target.files[0]);
-        //   const fileType = event.target.files[0].type;
-          setImageurl(url)
-          setImageUpdated(true);
-        //   setImageType(fileType.substr(fileType.indexOf('/') + 1));
+            setImage(event.target.files[0]);
+            //   setImageAsFile(imageFile => (image))
+            const url = URL.createObjectURL(event.target.files[0]);
+            //   const fileType = event.target.files[0].type;
+            setImageurl(url)
+            setImageUpdated(true);
+            //   setImageType(fileType.substr(fileType.indexOf('/') + 1));
         }
 
     }
-    function handleName(event,value){
+    function handleName(event, value) {
         setName(event.target.value);
     }
-    function handleEmail(event,value){
+    function handleEmail(event, value) {
         setEmail(value);
     }
-    function handleGender(event,value){
+    function handleGender(event, value) {
         console.log(event.target.value);
         setGender(event.target.value);
     }
-    function handleDesig(event,value){
+    function handleDesig(event, value) {
         setDesignation(event.target.value);
     }
-    function handleCollege(event,value){
+    function handleCollege(event, value) {
         setCollegeName(value);
-        colleges.forEach(c=>{
-            if(c.name === value){
-            //   props.collegeId(c._id)
-            setCollegeId(c._id);
+        colleges.forEach(c => {
+            if (c.name === value) {
+                //   props.collegeId(c._id)
+                setCollegeId(c._id);
             }
-          })
-        
+        })
+
     }
     // function handleUserName(event,value){
     //     setUserName(event.target.value);
     // }
-    function handleBio(event,value){
-        setBio(value);
+    function handleBio(event, value) {
+        // console.log(event.target.value)
+        setBio(event.target.value);
     }
 
-    function handleUpdateButton(event){
+    function handleUpdateButton(event) {
         event.preventDefault();
         setLoading(true);
-        // console.log(name);
+        console.log(bio);
         // console.log(userName)
 
         try {
@@ -186,7 +201,7 @@ function UpdateInfoTabPanel(props) {
                 username: userName,
                 // college_name: collegeName,
                 college_id: collegeId,
-                designation : designation,
+                designation: designation,
                 gender: gender,
                 // college_id: collegeId.value,
                 bio: bio,
@@ -194,7 +209,7 @@ function UpdateInfoTabPanel(props) {
             data = JSON.stringify(payload);
             // console.log(data);
             // http://139.59.16.53:4000/api
-            fetch(process.env.REACT_APP_API_URL+'/api/users/updateprofile', {
+            fetch(process.env.REACT_APP_API_URL + '/api/users/updateprofile', {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
@@ -209,7 +224,7 @@ function UpdateInfoTabPanel(props) {
                         if (imageUpdated) {
                             var data2 = new FormData()
                             data2.append("image", image);
-                            fetch(process.env.REACT_APP_API_URL+'/api/users/uploadImage', {
+                            fetch(process.env.REACT_APP_API_URL + '/api/users/uploadImage', {
                                 headers: {
                                     'Authorization': `Bearer ${token}`,
                                 },
@@ -222,10 +237,23 @@ function UpdateInfoTabPanel(props) {
                                         open: true,
                                         vertical: 'top',
                                         horizontal: 'center',
-                                        message: "successful",
+                                        message: "Updated Successfully",
                                         type: "success",
-                                        autoHide: 300
+                                        autoHide: 1000
                                     })
+                                }
+                                else {
+
+                                    setLoading(false);
+                                    setState({
+                                        open: true,
+                                        vertical: 'top',
+                                        horizontal: 'center',
+                                        message: "Something went wrong try again",
+                                        type: "error",
+                                        autoHide: 3000
+                                    })
+
                                 }
                             })
                         }
@@ -236,7 +264,7 @@ function UpdateInfoTabPanel(props) {
                                 open: true,
                                 vertical: 'top',
                                 horizontal: 'center',
-                                message: "successful",
+                                message: "Updated Successfully",
                                 type: "success",
                                 autoHide: 300
                             })
@@ -244,6 +272,17 @@ function UpdateInfoTabPanel(props) {
                         }
                     })
 
+                }
+                else {
+                    setLoading(false);
+                    setState({
+                        open: true,
+                        vertical: 'top',
+                        horizontal: 'center',
+                        message: "Something went wrong try again",
+                        type: "error",
+                        autoHide: 3000
+                    })
                 }
             })
 
@@ -267,29 +306,29 @@ function UpdateInfoTabPanel(props) {
         const username = event.target.value;
         var data = new FormData();
         const payload = {
-          username: username
+            username: username
         };
         data = JSON.stringify(payload);
         setUserNameError(false);
         setUpdateButtonDisabled(false)
         // setSignupButtonDisabled(false)
         fetch(process.env.REACT_APP_API_URL + '/api/check_username', {
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          method: 'POST',
-          body: data
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            method: 'POST',
+            body: data
         }).then((result) => {
-          result.json().then(value => {
-            if (value.message === "user already exists") {
-              setUserNameError(true);
-              setUpdateButtonDisabled(true)
-            //   setSignupButtonDisabled(true);
-            }
-          })
+            result.json().then(value => {
+                if (value.message === "user already exists") {
+                    setUserNameError(true);
+                    setUpdateButtonDisabled(true)
+                    //   setSignupButtonDisabled(true);
+                }
+            })
         })
-      }
+    }
 
     return (
         <div
@@ -298,15 +337,15 @@ function UpdateInfoTabPanel(props) {
             {...other}>
             {value === index && (
                 <div className={classes.root}>
-                <Snackbar
-                anchorOrigin={{ vertical, horizontal }}
-                open={open}
-                autoHideDuration={6000}
-                onClose={handleClose}
-                key={vertical + horizontal}
-            >
-                <Alert onClose={handleClose} severity={type}>{message}</Alert>
-            </Snackbar>
+                    <Snackbar
+                        anchorOrigin={{ vertical, horizontal }}
+                        open={open}
+                        autoHideDuration={6000}
+                        onClose={handleClose}
+                        key={vertical + horizontal}
+                    >
+                        <Alert onClose={handleClose} severity={type}>{message}</Alert>
+                    </Snackbar>
                     <Grid container component="main" justify="center" spacing={2}>
                         <Grid item xs={12} md={12} alignContent="center" alignItems="center">
                             <Grid container component="main" justify="center" spacing={2}>
@@ -322,7 +361,7 @@ function UpdateInfoTabPanel(props) {
                                             <EditIcon></EditIcon>
                                         </IconButton>
                                     </label>}>
-                                    <Avatar className={classes.large} sizes="100" alt="" src={imageUpdated ? imageUrl : process.env.REACT_APP_API_URL+`/api/image?id=${user.profile_pic}`}></Avatar>
+                                    <Avatar className={classes.large} sizes="100" alt="" src={imageUpdated ? imageUrl : process.env.REACT_APP_API_URL + `/api/image?id=${currentUser.profile_pic}`}></Avatar>
                                 </Badge>
                             </Grid>
                         </Grid>
@@ -341,7 +380,7 @@ function UpdateInfoTabPanel(props) {
                         </Grid>
                         <Grid item xs={12} md={6}>
                             <TextField
-                            disabled
+                                disabled
                                 id="email"
                                 value={email}
                                 onChange={handleEmail}
@@ -352,18 +391,18 @@ function UpdateInfoTabPanel(props) {
                             />
                         </Grid>
                         <Grid item xs={12} md={6}>
-                        <TextField
-                // variant="outlined"
-                required
-                fullWidth
-                id="username"
-                label="User Name"
-                value={userName}
-                onChange={handleUsernameChange}
-                name="username"
-                error={usernameError}
-                helperText={usernameError && "username already exists"}
-              />
+                            <TextField
+                                // variant="outlined"
+                                required
+                                fullWidth
+                                id="username"
+                                label="User Name"
+                                value={userName}
+                                onChange={handleUsernameChange}
+                                name="username"
+                                error={usernameError}
+                                helperText={usernameError && "username already exists"}
+                            />
                             {/* <TextField
                                 // variant="outlined"
                                 fullWidth

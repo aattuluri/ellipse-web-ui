@@ -96,7 +96,7 @@ function EventsTabPanel(props) {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
     const [eOpen, setEOpen] = React.useState(false);
-    const activeEvents = React.useContext(ActiveEvents);
+    const {activeEvents} = React.useContext(ActiveEvents);
     const [selectedEvent, setSelectedEvent] = React.useState([]);
     function handleEditButton() {
         setOpen(true);

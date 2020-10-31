@@ -90,7 +90,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function JustifyContent(props) {
     const { children, value, url, index, ...other } = props;
-    const user = React.useContext(AuthContext);
+    const {currentUser} = React.useContext(AuthContext);
     const token = localStorage.getItem('token');
     const event = props.event;
     const open = props.open;
@@ -191,10 +191,10 @@ export default function JustifyContent(props) {
             action: "send_message",
             event_id: event._id,
             msg: {
-                'id': user.user_id + Date.now(),
-                'user_id': user.user_id,
-                'user_name': user.name,
-                'user_pic': user.profile_pic,
+                'id': currentUser.user_id + Date.now(),
+                'user_id': currentUser.user_id,
+                'user_name': currentUser.name,
+                'user_pic': currentUser.profile_pic,
                 'message': message,
                 'date': d.toISOString()
             }
@@ -250,7 +250,7 @@ export default function JustifyContent(props) {
                                 const messageDate = new Date(value.date);
                                 if (messageDate.toDateString() !== counterDate) {
                                     counterDate = messageDate.toDateString();
-                                    if (value.user_id === user.user_id) {
+                                    if (value.user_id === currentUser.user_id) {
                                         return (<React.Fragment key={index}>
 
                                             <Box m={1} p={1} key={index} position="sticky" className={classes.root6}>
@@ -290,7 +290,7 @@ export default function JustifyContent(props) {
 
                                 }
 
-                                if (value.user_id === user.user_id) {
+                                if (value.user_id === currentUser.user_id) {
                                     return (<Box m={1} p={1} key={index} className={classes.root3}>
 
                                         <Box className={classes.root2} onClick={() => setDialogOpen(false)} whiteSpace="normal">

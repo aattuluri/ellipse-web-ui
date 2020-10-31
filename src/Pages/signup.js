@@ -1,7 +1,7 @@
 import React from 'react';
 import Copyright from '../Components/copyright';
 import useStyles from '../Themes/SignupPageStyles';
-import { withRouter } from 'react-router';
+import { withRouter, Redirect } from "react-router";
 
 //MaterialUI imports
 import Avatar from '@material-ui/core/Avatar';
@@ -170,6 +170,11 @@ const Signup = ({ history }) => {
         }
       })
     })
+  }
+
+  const lToken = localStorage.getItem('token');
+  if (lToken) {
+    return <Redirect to="/home" />;
   }
 
   return (

@@ -36,6 +36,8 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 // import { set } from 'date-fns';
 // import AuthContext from '../AuthContext';
 import TermsandConditions from '../Components/EventRegisterTermsandConditions';
+import EventsContext from '../EventsContext';
+import ActiveEventsContext from '../ActiveEventsContext';
 
 
 //function for alert
@@ -77,21 +79,23 @@ const Signup = (props) => {
   const colleges = ["VIT University,Vellore", "GITAM University", "SRM University"];
   const [tandcOpen, setTandcOpen] = React.useState(false);
 
-  const user = React.useContext(AuthContext);
+  const {currentUser} = React.useContext(AuthContext);
+  const {setAllEvents} = React.useContext(EventsContext);
+  const {setActiveEvents} = React.useContext(ActiveEventsContext);
 
   function handleTermsClick() {
     setTandcOpen(true);
   }
 
   React.useEffect(() => {
-    if (user.designation === "Student" || user.designation === "Faculty") {
+    if (currentUser.designation === "Student" || currentUser.designation === "Faculty") {
       // setUserType(true);
     }
     else {
       setCanRegister(false);
-      setUserMessage(user.designation + " cannot register")
+      setUserMessage(currentUser.designation + " cannot register")
     }
-    if (user.user_id === event.user_id) {
+    if (currentUser.user_id === event.user_id) {
       setCanRegister(false)
       setUserMessage("An event organizer cannot register")
     }
@@ -105,7 +109,7 @@ const Signup = (props) => {
     if (event.o_allowed !== undefined) {
       if (!event.o_allowed) {
         console.log(event.o_allowed)
-        if (event.college_name === user.college_name) {
+        if (event.college_name === currentUser.college_name) {
 
         } else {
           setCanRegister(false)
@@ -114,7 +118,7 @@ const Signup = (props) => {
       }
     }
 
-  }, [event, user])
+  }, [event, currentUser])
 
 
   React.useEffect(() => {
@@ -135,13 +139,13 @@ const Signup = (props) => {
         if (allFields != null) {
           allFields.forEach(f => {
             if (f.title === "Name") {
-              setFormValues(formValues => ({ ...formValues, [f.title]: user.name }))
+              setFormValues(formValues => ({ ...formValues, [f.title]: currentUser.name }))
             }
             else if (f.title === "Email") {
-              setFormValues(formValues => ({ ...formValues, [f.title]: user.email }));
+              setFormValues(formValues => ({ ...formValues, [f.title]: currentUser.email }));
             }
             else if (f.title === "College") {
-              setFormValues(formValues => ({ ...formValues, [f.title]: user.college_name }));
+              setFormValues(formValues => ({ ...formValues, [f.title]: currentUser.college_name }));
             }
             else {
               setFormValues(formValues => ({ ...formValues, [f.title]: null }));
@@ -165,12 +169,38 @@ const Signup = (props) => {
         setBackDropOpen(false);
       })
     })
-  }, [token, id, user])
+  }, [token, id, currentUser])
 
   function handleClose() {
-    if (message === "Registration successful") {
+    if (message === "Registration successful.Stay tunned with notifications and announcements") {
       props.history.push('/home')
-      window.location.reload(false);
+      fetch(process.env.REACT_APP_API_URL + '/api/events', {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+        method: 'GET'
+    }).then(response => {
+        if (response.status === 200) {
+            response.json().then(value => {
+                // console.log(value)
+                value.sort((a, b) => {
+                    return new Date(a.start_time) - new Date(b.start_time);
+                })
+                setAllEvents(value);
+                setActiveEvents(value.filter(e => {
+                    const cDate = new Date();
+                    const eDate = new Date(e.finish_time);
+                    return cDate < eDate && e.status !== "pending"
+                }))
+            })
+        }
+        else if (response.status === 401) {
+            localStorage.removeItem('token');
+        }
+
+    })
     }
     setState({ ...state, open: false });
   }
@@ -197,8 +227,6 @@ const Signup = (props) => {
   }
 
   const handleDateChange = (name) => (date) => {
-    // console.log(name);
-    // console.log(date);
     setFormValues({ ...formValues, [name]: date })
   };
 
@@ -207,10 +235,7 @@ const Signup = (props) => {
   }
 
   function handleradioChange(event, value) {
-    // console.log(event.target.name);
-    // console.log(value);
     setFormValues({ ...formValues, [event.target.name]: value });
-    // props.setFeeType(value)
   }
 
   function handleEventRegistration(e) {
@@ -254,9 +279,9 @@ const Signup = (props) => {
               open: true,
               vertical: 'top',
               horizontal: 'center',
-              message: 'Registration successful',
+              message: 'Registration successful.Stay tunned with notifications and announcements',
               type: "success",
-              autoHide: 200
+              autoHide: 4000
             });
           })
         }

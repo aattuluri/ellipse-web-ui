@@ -68,6 +68,15 @@ function AboutEventPanel(props) {
     const [timeLabel, setTimeLabel] = React.useState("Registration Ends in");
     const [adminDetails, setAdminDetails] = React.useState({});
     const [imageDialogOpen, setImageDialogOpen] = React.useState(false);
+    const [notRegistered,setNotRegistered] = React.useState(false);
+    React.useEffect(()=>{
+        if(props.notRegistered){
+            setNotRegistered(true)
+        }
+        else {
+            setNotRegistered(false)
+        }
+    },[props])
 
     React.useEffect(() => {
         if (event.requirements !== undefined) {
@@ -192,70 +201,67 @@ function AboutEventPanel(props) {
                         </Grid>
                         <Grid item xs={12}>
 
-                        <Box>
-                            <Box className={classes.root0}>
-                                <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h4">About</Typography>
-                            </Box>
-                            <Box className={classes.root0}>
-                                <Typography color="textSecondary" variant="body2">
-                                    {
-                                        event.about
-                                    }
-                                </Typography>
-                            </Box>
-                            <Box className={classes.root0}>
-                                {requirements !== null && requirements.length !== 0 && <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Requirements</Typography>}
-                            </Box>
-                            <Box className={classes.root0}>
-                                {
-                                    requirements.length !== 0 && requirements.map(val => {
-                                        return <Chip key={val} variant="outlined" color="inherit" label={val}></Chip>
-                                    })
-                                }
-                            </Box>
-                            <Box className={classes.root0}>
-                                {event.event_mode === "Offline" && <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Venue Details</Typography>}
-                            </Box>
-                            <Box className={classes.root0}>
-                                {event.event_mode === "Offline" && <Typography color="textSecondary" variant="body2">{event.venue}</Typography>}
-                            </Box>
-                            <Box className={classes.root0}>
-                                {event.event_mode === "Offline" && <Typography color="textSecondary" variant="body2">{event.venue_college}</Typography>}
-                            </Box>
-                            <Box className={classes.root0}>
-                                {event.fee_type === "Paid" && <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Fee Details</Typography>}
-                            </Box>
-                            <Box className={classes.root0}>
-                                {event.fee_type === "Paid" && <Typography color="textSecondary" variant="body2">{"Rs " + event.fee}</Typography>}
-                            </Box>
-                            <Box className={classes.root0}>
-                                {event.event_mode === "Online" && <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Platform Details</Typography>}
-                            </Box>
-                            <Box className={classes.root0}>
-                                {event.event_mode === "Online" && <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="body2">{event.platform_details}</Typography>}
-                            </Box>
-                            <Box className={classes.root0}>
-                                <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Organised By</Typography>
-                            </Box>
-                            <Box className={classes.root0}>
-                                <Box className={classes.adminDetails}>
-                                    <Box>
-                                        <Avatar className={classes.avatar} alt={adminDetails.name} src={process.env.REACT_APP_API_URL + `/api/image?id=${adminDetails.profile_pic}`} />
-                                    </Box>
-                                    <Box>
-                                        <Box>
-                                            <Typography variant="h5">{adminDetails.name}</Typography>
-                                        </Box>
-                                        <Box>
-                                            <Typography color="textSecondary" variant="body2">{adminDetails.college_name}</Typography>
-                                        </Box>
-                                    </Box>
+                            <Box>
+                                <Box className={classes.root0}>
+                                    <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h4">About</Typography>
                                 </Box>
+                                <Box className={classes.root0}>
+                                    <Typography color="textSecondary" variant="body2">
+                                        {
+                                            event.about
+                                        }
+                                    </Typography>
+                                </Box>
+                                <Box className={classes.root0}>
+                                    {requirements !== null && requirements.length !== 0 && <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Requirements</Typography>}
+                                </Box>
+                                <Box className={classes.root0}>
+                                    {
+                                        requirements.length !== 0 && requirements.map(val => {
+                                            return <Chip key={val} variant="outlined" color="inherit" label={val}></Chip>
+                                        })
+                                    }
+                                </Box>
+                                <Box className={classes.root0}>
+                                    {event.event_mode === "Offline" && <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Venue Details</Typography>}
+                                </Box>
+                                <Box className={classes.root0}>
+                                    {event.event_mode === "Offline" && <Typography color="textSecondary" variant="body2">{event.venue}</Typography>}
+                                </Box>
+                                <Box className={classes.root0}>
+                                    {event.event_mode === "Offline" && <Typography color="textSecondary" variant="body2">{event.venue_college}</Typography>}
+                                </Box>
+                                <Box className={classes.root0}>
+                                    {event.fee_type === "Paid" && <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Fee Details</Typography>}
+                                </Box>
+                                <Box className={classes.root0}>
+                                    {event.fee_type === "Paid" && <Typography color="textSecondary" variant="body2">{"Rs " + event.fee}</Typography>}
+                                </Box>
+                                <Box className={classes.root0}>
+                                    {event.event_mode === "Online" && <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Platform Details</Typography>}
+                                </Box>
+                                <Box className={classes.root0}>
+                                    {event.event_mode === "Online" && <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="body2">{event.platform_details}</Typography>}
+                                </Box>
+                                {!notRegistered && <Box className={classes.root0}>
+                                    <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Organised By</Typography>
+                                </Box>}
+                                {!notRegistered && <Box className={classes.root0}>
+                                    <Box className={classes.adminDetails}>
+                                        <Box>
+                                            <Avatar className={classes.avatar} alt={adminDetails.name} src={process.env.REACT_APP_API_URL + `/api/image?id=${adminDetails.profile_pic}`} />
+                                        </Box>
+                                        <Box>
+                                            <Box>
+                                                <Typography variant="h5">{adminDetails.name}</Typography>
+                                            </Box>
+                                            <Box>
+                                                <Typography color="textSecondary" variant="body2">{adminDetails.college_name}</Typography>
+                                            </Box>
+                                        </Box>
+                                    </Box>
+                                </Box>}
                             </Box>
-                            
-                        </Box>
-
-
                         </Grid>
                         <Grid item xs={12}>
                         </Grid>

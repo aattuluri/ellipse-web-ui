@@ -80,7 +80,7 @@ const useStyles = makeStyles((theme) => ({
 function SortLeftPanel(props) {
     const classes = useStyles();
     // const user = JSON.parse(localStorage.getItem('user'));
-    const user = React.useContext(AuthContext);
+    const {currentUser} = React.useContext(AuthContext);
     // const token = localStorage.getItem('token');
     // const [feeChecked, setFeeChecked] = React.useState([0]);
     // const [modeChecked, setFeeChecked] = React.useState([0]);
@@ -210,7 +210,7 @@ function SortLeftPanel(props) {
                 <Typography>College</Typography>
                 <RadioGroup aria-label="address" name="address" value={props.sortCollgeType} onChange={props.handleSortCollegeChange} style={{ display: "inline" }}>
                     <List className={classes.root}>
-                        {["All", `${user.college_name}`].map((value) => {
+                        {["All", `${currentUser.college_name}`].map((value) => {
 
                             return (
                                 <ListItem key={value} role={undefined} dense button >

@@ -108,8 +108,8 @@ function ExplorePanel(props) {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
     const [selectedEvent, setSelectedEvent] = React.useState([]);
-    const allEvents = React.useContext(EventsContext);
-    const activeEvents = React.useContext(ActiveEvents);
+    const {allEvents} = React.useContext(EventsContext);
+    const {activeEvents} = React.useContext(ActiveEvents);
     const regEvents = allEvents.filter((val) => {
         return val.registered === true;
     });

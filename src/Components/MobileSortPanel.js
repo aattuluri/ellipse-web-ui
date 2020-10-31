@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
 
 function MobileSortPanel(props) {
     const classes = useStyles();
-    const user = React.useContext(AuthContext);
+    const {currentUser} = React.useContext(AuthContext);
     // const token = localStorage.getItem('token');
     // const [feeChecked, setFeeChecked] = React.useState([0]);
     // const [modeChecked, setFeeChecked] = React.useState([0]);
@@ -175,7 +175,7 @@ function MobileSortPanel(props) {
                 <Typography>College</Typography>
                 <RadioGroup aria-label="address" name="address" defaultValue="All" onChange={props.handleSortCollegeChange} style={{ display: "inline" }}>
                     <List className={classes.root}>
-                        {["All", `${user.collegeName}`].map((value) => {
+                        {["All", `${currentUser.collegeName}`].map((value) => {
                            
 
                             return (

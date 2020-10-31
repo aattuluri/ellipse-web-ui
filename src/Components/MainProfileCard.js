@@ -70,7 +70,7 @@ function Eventcard(props) {
     localStorage.setItem('tabIndex', 3)
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
-    const user = React.useContext(AuthContext);
+    const {currentUser} = React.useContext(AuthContext);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -88,7 +88,7 @@ function Eventcard(props) {
                             <Avatar
                                 className={classes.large}
                                 sizes="100" alt=""
-                                src={process.env.REACT_APP_API_URL + `/api/image?id=${user.profile_pic}`}>
+                                src={process.env.REACT_APP_API_URL + `/api/image?id=${currentUser.profile_pic}`}>
                                 <PersonIcon></PersonIcon>
                             </Avatar>
                         }
@@ -102,9 +102,9 @@ function Eventcard(props) {
                             </Button>
                         }
                         title={
-                            <Typography variant="h4">{user.name}</Typography>
+                            <Typography variant="h4">{currentUser.name}</Typography>
                         }
-                        subheader={user.bio}
+                        subheader={currentUser.bio}
                     ></CardHeader>
                 </Grid>
                 <Grid item xs={false} sm={false} md={2}>
@@ -129,8 +129,8 @@ function Eventcard(props) {
                 <div>
                     <AboutProfileTabPanel handleEditButton={props.handleEditButton} value={value} index={0}></AboutProfileTabPanel>
                     {/* <ProfileEventsTabPanel url={user.imageUrl} value={value} index={1}></ProfileEventsTabPanel> */}
-                    <ProfilePostedEventsTabPanel url={user.imageUrl} value={value} index={1}></ProfilePostedEventsTabPanel>
-                    <ProfileCertificatePanel url={user.imageUrl} value={value} index={2}></ProfileCertificatePanel>
+                    <ProfilePostedEventsTabPanel  value={value} index={1}></ProfilePostedEventsTabPanel>
+                    <ProfileCertificatePanel value={value} index={2}></ProfileCertificatePanel>
                 </div>
             </CardContent>
         </Card>);

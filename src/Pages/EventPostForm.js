@@ -97,7 +97,7 @@ const useStyles = makeStyles((theme) => ({
 export default function Checkout({ history }) {
   const classes = useStyles();
   const token = localStorage.getItem('token');
-  const user = React.useContext(AuthContext);
+  const {currentUser} = React.useContext(AuthContext);
   const [activeStep, setActiveStep] = React.useState(0);
   const [steps, setSteps] = React.useState(['About', 'More Details']);
   const [state, setState] = React.useState({
@@ -130,10 +130,10 @@ export default function Checkout({ history }) {
   const [selectedrequirements, setSelectedRequirements] = React.useState([]);
   const [image, setImage] = React.useState(null);
   const [addressType, setAddressType] = React.useState(null);
-  const [collegeName, setCollegeName] = React.useState(user.college_name);
-  const [collegeId, setCollegeId] = React.useState(user.college_id)
+  const [collegeName, setCollegeName] = React.useState(currentUser.college_name);
+  const [collegeId, setCollegeId] = React.useState(currentUser.college_id)
   const [building, setBuildingAdress] = React.useState(null);
-  const [organizer, setOrganizer] = React.useState(user.name + "," + user.college_name);
+  const [organizer, setOrganizer] = React.useState(currentUser.name + "," + currentUser.college_name);
   const [venueCollege, setVenueCollege] = React.useState(null);
   const [participantsType, setParticipantsType] = React.useState("open");
   const [fields, setFields] = React.useState([]);
@@ -229,7 +229,7 @@ export default function Checkout({ history }) {
     try {
       var data = new FormData();
       const payload = {
-        user_id: user.user_id,
+        user_id: currentUser.user_id,
         name: eventName,
         description: shortDesc,
         start_time: startDate,
@@ -281,7 +281,7 @@ export default function Checkout({ history }) {
                     open: true,
                     vertical: 'top',
                     horizontal: 'center',
-                    message: "Event added successfully",
+                    message: "Event added successfully.Manage your posted events from your profile page",
                     type: "success",
                     autoHide: "4000"
                   })
@@ -334,10 +334,7 @@ export default function Checkout({ history }) {
   }
 
   const handleClose = async (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    if (message === "Event added successfully") {
+    if (message === "Event added successfully.Manage your posted events from your profile page") {
       history.replace("/home");
     }
     setState({ ...state, open: false });

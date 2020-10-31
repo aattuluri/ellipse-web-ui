@@ -23,10 +23,9 @@ export default function ImgMediaCard(props) {
   // const [image, setImage] = React.useState(null);
   // const token = localStorage.getItem('token');
   const [shareDialogOpen, setShareDialogOpen] = React.useState(false);
-  function handleViewButtonClick() {
-    props.handleViewClick(props.event);
-  }
-
+  // function handleViewButtonClick() {
+  //   props.handleViewClick(props.event);
+  // }
   function handleShareClose() {
     setShareDialogOpen(false);
   }
@@ -53,7 +52,7 @@ export default function ImgMediaCard(props) {
         <Button size="small" color="primary" onClick={handleShareClick}>
           Share
         </Button>
-        <Button onClick={handleViewButtonClick} size="small" color="primary">
+        <Button  size="small" color="primary">
           {t === 'light' ? <Link target="_blank" to={{ pathname: `/event/${event._id}` }} style={{ textDecoration: 'none', color: '#00bdaa' }}>View</Link> :
             <Link target='_blank' to={{ pathname: `/event/${event._id}`}} style={{ textDecoration: 'none', color: '#00bdaa' }}>View</Link>}
         </Button>

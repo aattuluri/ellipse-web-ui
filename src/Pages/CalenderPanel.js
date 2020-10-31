@@ -100,18 +100,18 @@ function CalenderPanel({history}) {
     const [selectedEvent, setSelectedEvent] = React.useState([]);
     const [registeredEvents,setRegisteredEvents] = React.useState([]);
     // const [image, setImage] = React.useState(null);
-    const allEvents = React.useContext(ActiveEventsContext);
+    const {activeEvents} = React.useContext(ActiveEventsContext);
 
     useEffect(() => {
-        allEvents.forEach(y => {
+        activeEvents.forEach(y => {
             // console.log(y.start_time);
             setEvents(events =>
                 [...events, { id: JSON.stringify(y), title: y.name, start: y.start_time, end: y.finish_time }]
             )
         })
-        setRegisteredEvents(allEvents.filter((value) => value.registered === true))
+        setRegisteredEvents(activeEvents.filter((value) => value.registered === true))
 
-    }, [allEvents])
+    }, [activeEvents])
 
     const handleClose = () => {
         setOpen(false);

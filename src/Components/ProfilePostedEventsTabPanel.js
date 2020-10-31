@@ -22,13 +22,10 @@ import { Typography } from '@material-ui/core';
 function ProfilePostsTabPanel(props) {
     const { children, value, url, index, ...other } = props;
     const [open, setOpen] = React.useState(false);
-    // const [allEvents, setAllEvents] = React.useState([]);
-    const user = React.useContext(AuthContext);
-    // const token = localStorage.getItem('token');
-    const allEvents = React.useContext(EventsContext);
-    
+    const {currentUser} = React.useContext(AuthContext);
+    const {allEvents} = React.useContext(EventsContext);
     const postedEvents = allEvents.filter((val)=>{
-        return val.user_id === user.user_id;
+        return val.user_id === currentUser.user_id;
     });
 
     const [selectedEvent,setSellectedEvent] = React.useState("");
@@ -69,7 +66,7 @@ function ProfilePostsTabPanel(props) {
                     tags={selectedEvent.tags}
                     mode={selectedEvent.eventMode}
                     feeType={selectedEvent.feesType}
-                    url={user.imageUrl}>
+                    url={currentUser.imageUrl}>
                     {/* imageDialog={handleImageDialogOpen} */}
                 </EventsDialog>
                     
