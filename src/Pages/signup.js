@@ -19,6 +19,8 @@ import Container from '@material-ui/core/Container';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import {detect}  from 'detect-browser';
+
 
 //function for alert
 function Alert(props) {
@@ -41,7 +43,9 @@ const Signup = ({ history }) => {
   const { vertical, horizontal, open, message, type, autoHide } = state;
   const [nameError, setNameError] = React.useState(false);
   const [usernameError, setUserNameError] = React.useState(false);
+  const [passwordError,setPasswordError] = React.useState(false);
   const [signupButtonDisabled, setSignupButtonDisabled] = React.useState(false);
+  const browser = detect();
   const handleClose = async (event, reason) => {
 
     if (message === "Signedup successfully") {
@@ -62,7 +66,10 @@ const Signup = ({ history }) => {
           name: fullName.value,
           email: email.value,
           password: password.value,
-          username: username.value
+          username: username.value,
+          type: 'browser',
+        browser_name: browser.name,
+        device_os: browser.os,
         };
         data = JSON.stringify(payload);
         fetch(process.env.REACT_APP_API_URL + '/api/users/signup', {
@@ -249,7 +256,12 @@ const Signup = ({ history }) => {
                 label="Password"
                 type="password"
                 id="password"
-                autoComplete="current-password"
+                autoComplete="off"
+                inputProps={{ pattern: "^.{6,}$" }}
+                onInvalid={() => { setPasswordError(true) }}
+                helperText={passwordError && "Password should atleast be 6 characters"}
+                onInput={() => { setPasswordError(false) }}
+                error={passwordError}
               />
             </Grid>
 
