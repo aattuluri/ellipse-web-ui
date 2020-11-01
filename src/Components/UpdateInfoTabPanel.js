@@ -190,7 +190,7 @@ function UpdateInfoTabPanel(props) {
     function handleUpdateButton(event) {
         event.preventDefault();
         setLoading(true);
-        console.log(bio);
+        // console.log(bio);
         // console.log(userName)
 
         try {
