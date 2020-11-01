@@ -95,6 +95,10 @@ const Signup = (props) => {
       setCanRegister(false);
       setUserMessage(currentUser.designation + " cannot register")
     }
+    if(event.status === 'pending'){
+      setCanRegister(false)
+      setUserMessage("Event is not accepted yet check back later");
+    }
     if (currentUser.user_id === event.user_id) {
       setCanRegister(false)
       setUserMessage("An event organizer cannot register")
@@ -527,7 +531,7 @@ const Signup = (props) => {
               }
 
               <Grid item xs={12}>
-                <Typography>By posting the event.I accept the <Button onClick={handleTermsClick} color="primary">Terms and Conditions</Button></Typography>
+                <Typography>By registering for the event.I accept the <Button onClick={handleTermsClick} color="primary">Terms and Conditions</Button></Typography>
               </Grid>
             </Grid>
             {canRegister && <Button

@@ -181,6 +181,11 @@ const OTPver = ({ history }) => {
           }
     }
 
+    function handlesigninButton(){
+        history.push('/signin')
+        localStorage.removeItem('token');
+    }
+
     return (
         <Container component="main" maxWidth="sm">
             <CssBaseline />
@@ -225,6 +230,9 @@ const OTPver = ({ history }) => {
 
               <Grid item>
               <Button disabled={!resendEnabled} onClick={handleResendOTP}>Resend OTP in {seconds}</Button>
+              </Grid>
+              <Grid item>
+              <Button  onClick={handlesigninButton}>Signin to Different account</Button>
               </Grid>
             </Grid>
                 </form>

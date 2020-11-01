@@ -22,7 +22,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import PhoneImage from '../Components/Images/logo300.svg';
 // import HomePageCarousel from '../Components/HomePageCarousel';
 // import FavoriteIcon from '@material-ui/icons/Favorite';
-
+import {detect}  from 'detect-browser';
 
 //function for alert
 function Alert(props) {
@@ -51,6 +51,7 @@ const Signin = ({ history }) => {
   const [isUserVerified, setIsUserVerified] = React.useState(null);
   const [email, setEmail] = React.useState(null);
   const abortController = new AbortController();
+  const browser = detect();
 
 
 
@@ -132,7 +133,10 @@ const Signin = ({ history }) => {
       var data = new FormData()
       const payload = {
         email: email.value,
-        password: password.value
+        password: password.value,
+        type: 'browser',
+        browser_name: browser.name,
+        device_os: browser.os,
       };
       data = JSON.stringify(payload);
       // console.log(data);
