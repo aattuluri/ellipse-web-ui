@@ -46,10 +46,12 @@ const useStyles = makeStyles((theme) => ({
 export default function UnregisteredPage(props) {
     const classes = useStyles();
     const id = props.match.params.id;
-    const [details,setDetails] = React.useState({});
-    const [userFound,setUserFound] = React.useState(true);
+    const [details, setDetails] = React.useState({});
+    const [userFound, setUserFound] = React.useState(true);
+    const [date, setDate] = React.useState(null);
 
     React.useEffect(() => {
+        // const pdf = 
         fetch(process.env.REACT_APP_API_URL + `/api/event/verify_certificate?id=${id}`, {
             headers: {
                 // 'Authorization': `Bearer ${token}`,
@@ -58,16 +60,18 @@ export default function UnregisteredPage(props) {
             },
             method: 'GET',
         }).then(response => {
-            if(response.status === 200){
+            if (response.status === 200) {
                 response.json().then(value => {
                     setUserFound(true)
                     setDetails(value);
+                    const d = new Date(value.date);
+                    setDate(d.toDateString());
                 })
             }
-            else{
+            else {
                 setUserFound(false);
             }
-            
+
         })
     }, [id])
 
@@ -80,7 +84,8 @@ export default function UnregisteredPage(props) {
 
     return (
         <div className={classes.root}>
-            <AppBar position="static" className={classes.appbar}>
+            {/* <iframe src={"https://ellipseapp.com/api/user/certificate?id=FfSlio810858d83fb929979dd2e53c4be3a7e1"}></iframe> */}
+            <AppBar position="sticky" className={classes.appbar}>
                 <Toolbar>
                     <Typography variant="h5" className={classes.title}>
                         Ellipse
@@ -91,22 +96,30 @@ export default function UnregisteredPage(props) {
             </AppBar>
             {userFound && <Box m={1} p={1} className={classes.root3}>
                 <Box m={1} p={3} className={classes.root4}>
-                <VerifiedUserIcon fontSize="large"></VerifiedUserIcon>
+                    <VerifiedUserIcon fontSize="large"></VerifiedUserIcon>
                     <Typography variant="h4">{details.participantname}</Typography>
                     <Typography>{details.participant_college}</Typography>
-                    <Typography style={{marginTop:"20px"}}>Event Name: {details.event_name}</Typography>
+                    <Typography style={{ marginTop: "20px" }}>Event Name: {details.event_name}</Typography>
                     <Typography>Organizer: {details.organizer}</Typography>
-                    <Typography>Held on {details.date}</Typography>
-                    <Typography style={{marginTop:"20px"}}>participation by {details.participantname} has been confirmed</Typography>
+                    <Typography>Held on {date}</Typography>
+                    <Typography style={{ marginTop: "20px" }}>participation by {details.participantname} has been confirmed</Typography>
                 </Box>
+
+
             </Box>}
             {!userFound && <Box m={1} p={1} className={classes.root3}>
                 <Box m={1} p={3} className={classes.root4}>
-                <CancelIcon fontSize="large"></CancelIcon>
+                    <CancelIcon fontSize="large"></CancelIcon>
                     <Typography variant="h4">Certificate NOT FOUND</Typography>
-                    
                 </Box>
             </Box>}
+            <object width="100%" height="900px" data={process.env.REACT_APP_API_URL + `/api/verify/get_certificate?id=${id}`} type="application/pdf">
+                <iframe
+                    title="pdf document"
+                    src={process.env.REACT_APP_API_URL + `/api/verify/get_certificate?id=${id}`}
+                />
+                {/* <embed src="https://ellipseapp.com/api/user/certificate?id=FfSlio810858d83fb929979dd2e53c4be3a7e1" type="application/pdf" /> */}
+            </object>
         </div>
     );
 }

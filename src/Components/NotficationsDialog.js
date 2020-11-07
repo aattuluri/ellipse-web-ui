@@ -52,7 +52,6 @@ export default function FormDialog(props) {
         }).then(response => {
             if (response.status === 200) {
                 response.json().then(value => {
-                    // console.log(value)
                     setNotifications(value);
                 })
             }
@@ -94,8 +93,10 @@ export default function FormDialog(props) {
                         </Box>
                     </Box>
                     })
-                }
-                    
+                }  
+                {
+                    notificationms.length === 0 && <Typography>No Notifications</Typography>
+                }  
                 </DialogContent>
             </Dialog>
         </div>
