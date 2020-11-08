@@ -284,7 +284,7 @@ export default function StickyHeadTable(props) {
                           inputProps={{ 'aria-label': 'select all fields' }}
                         /></TableCell>
                       {headers.map((column) => {
-                        const value = row[column.id];
+                        const value = column.id === "Email" ? row[column.id].substr(0,3)+'*****@'+row[column.id].split('@')[1] : row[column.id];
                         return (
                           <TableCell key={column.id} align={column.align}>
                             {column.format && typeof value === 'number' ? column.format(value) : value}

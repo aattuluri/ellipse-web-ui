@@ -155,7 +155,7 @@ export default function StickyHeadTable(props) {
       <AddAnnouncementForm open={announcementDialog} id={event._id} handleClose={handleAnnoucementClose}></AddAnnouncementForm>
       <Grid item xs={12} md={4} lg={9}>
         <Paper className={classes.buttonsPaper}>
-          <Button variant="outlined" onClick={handleAddAnnouncement} className={classes.button}>Add Announcement</Button>
+          <Button variant="contained" onClick={handleAddAnnouncement} className={classes.button}>Add Announcement</Button>
           {/* <Button variant="contained" onClick={handleSendEmail} className={classes.button}>Send Emails to Selected</Button> */}
         </Paper>
       </Grid>
@@ -208,7 +208,8 @@ export default function StickyHeadTable(props) {
                           inputProps={{ 'aria-label': 'select all fields' }}
                         /></TableCell>
                       {headers.map((column) => {
-                        const value = row[column.id];
+                        
+                        const value = column.id === "Email" ? row[column.id].substr(0,3)+'*****@'+row[column.id].split('@')[1] : row[column.id];
                         return (
                           <TableCell key={column.id} align={column.align}>
                             {column.format && typeof value === 'number' ? column.format(value) : value}
