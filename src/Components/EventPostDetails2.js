@@ -57,7 +57,7 @@ export default function AddressForm(props) {
 
   const token = localStorage.getItem('token');
   const classes = useStyles();
-  const [imageName, setImageName] = React.useState("");
+  // const [imageName, setImageName] = React.useState("");
   // const eventThemes = ["Hackathon", "Coding Contest", "Webinar"];
   // const requirements = ["Laptop", "Basic HTML", "C++", "Machine Learning"];
   const [colleges, setColleges] = React.useState([]);
@@ -118,7 +118,7 @@ export default function AddressForm(props) {
     if (event.target.files[0]) {
       props.setPoster(event.target.files[0]);
       const fileName = event.target.files[0].name;
-      setImageName(fileName);
+      props.setImageName(fileName);
     }
   }
   function handleAddressTypeChange(evemt, value) {
@@ -209,12 +209,12 @@ export default function AddressForm(props) {
           <Grid item xs={12} lg={6}>
             <input
               id="contained-button-file"
-              required
+              // required
               type="file"
+              // value={props.poster}
               accept="image/*"
               onChange={handleChange}
               style={{ display: "none" }}>
-
             </input>
 
             <TextField
@@ -224,7 +224,7 @@ export default function AddressForm(props) {
               name="eventposter"
               label="Event Poster"
               component="span"
-              value={imageName}
+              value={props.imageName || ''}
               fullWidth
               InputProps={{
                 endAdornment: (

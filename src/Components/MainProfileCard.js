@@ -49,18 +49,33 @@ const useStyles = makeStyles((theme) => ({
     },
     button: {
         margin: theme.spacing(0.5),
-        borderRadius: theme.spacing(3)
+        borderRadius: theme.spacing(3),
+        [theme.breakpoints.down('sm')]: {
+            display: 'none'
+          }
     },
     large: {
         width: theme.spacing(17),
         height: theme.spacing(17),
+        [theme.breakpoints.down('md')]: {
+            width: theme.spacing(11),
+        height: theme.spacing(11),
+          }
     },
     tab: {
         flexGrow: 1,
         // maxWidth: 800,
         background: theme.palette.secondary.main,
         alignItems: 'center',
-    }
+    },
+    iconlarge: {
+        width: theme.spacing(15),
+        height: theme.spacing(15),
+        [theme.breakpoints.down('md')]: {
+            width: theme.spacing(10),
+        height: theme.spacing(10),
+          }
+    },
 }));
 
 
@@ -87,9 +102,10 @@ function Eventcard(props) {
                         avatar={
                             <Avatar
                                 className={classes.large}
-                                sizes="100" alt=""
-                                src={process.env.REACT_APP_API_URL + `/api/image?id=${currentUser.profile_pic}`}>
-                                <PersonIcon></PersonIcon>
+                                sizes="100" alt="profile image"
+                                src={currentUser.profile_pic !== null && process.env.REACT_APP_API_URL + `/api/image?id=${currentUser.profile_pic}`}
+                                >
+                                <PersonIcon className={classes.iconlarge} ></PersonIcon>
                             </Avatar>
                         }
                         action={

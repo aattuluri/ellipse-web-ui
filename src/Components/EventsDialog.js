@@ -39,6 +39,9 @@ const useStyles = makeStyles((theme) => ({
         position: 'absolute',
         right: theme.spacing(1),
         top: theme.spacing(1),
+        [theme.breakpoints.down('sm')]: {
+            display: 'none'
+        },
         // color: theme.palette.grey[500],
 
     },
@@ -84,6 +87,16 @@ const useStyles = makeStyles((theme) => ({
             padding: theme.spacing(1)
         },
 
+    },
+    mobileHead: {
+        [theme.breakpoints.up('md')]: {
+            display: 'none'
+        },
+    },
+    desktopHead: {
+        [theme.breakpoints.up('md')]: {
+            display: 'none'
+        },
     }
 }));
 
@@ -91,7 +104,7 @@ function EventsDialog(props) {
     const event = props.event;
     const t = localStorage.getItem('theme');
     const [value, setValue] = React.useState(0);
-    const {currentUser} = React.useContext(AuthContext);
+    const { currentUser } = React.useContext(AuthContext);
     const classes = useStyles();
     const theme = useTheme();
     // const token = localStorage.getItem('token');
@@ -101,13 +114,13 @@ function EventsDialog(props) {
     React.useEffect(() => {
         if (event.registered || event.reg_mode !== "form") {
             setChatAcess(true)
-        }else if(event.user_id === currentUser.user_id){
+        } else if (event.user_id === currentUser.user_id) {
             setChatAcess(true)
         }
         else {
             setChatAcess(false)
         }
-    }, [event,currentUser])
+    }, [event, currentUser])
 
 
 
@@ -151,7 +164,22 @@ function EventsDialog(props) {
             classes={{ paper: classes.dialog }}
         >
             <DialogTitle id="scroll-dialog-title">
-                {event.name}
+            <Box className={classes.mobileHead} display="flex" flexDirection="column" justifyContent="center">
+                    {/* <Box display="flex" justifyContent="flex-start">
+                        {event.name}
+                    </Box> */}
+                    <Box display="flex" justifyContent="flex-end">
+                        <IconButton aria-label="share" onClick={handleShareClick}>
+                            <ShareIcon />
+                        </IconButton>
+                        <IconButton aria-label="close" className={classes.closeButton} onClick={handleClose}>
+                            <CloseIcon fontSize="large" />
+                        </IconButton>
+                    </Box>
+                </Box>
+            {event.name}
+            {/* <Typography className={classes.mobileHead} style={{}} variant="h6">{event.name}</Typography> */}
+            
                 <div className={classes.icons}>
                     {/* <IconButton aria-label="add to favorites">
                         <FavoriteIcon />
@@ -166,6 +194,7 @@ function EventsDialog(props) {
                         <CloseIcon fontSize="large" />
                     </IconButton>
                 </div>
+                
                 <div className={classes.root}>
                     <Paper className={classes.root2}>
                         <Tabs

@@ -13,10 +13,10 @@ import EventsContext from '../EventsContext';
 import AuthContext from '../AuthContext';
 import ActiveEventsContext from '../ActiveEventsContext';
 // import dot from 'dote'
-import {detect}  from 'detect-browser';
+// import {detect}  from 'detect-browser';
 
 
-import OS from 'os';
+// import OS from 'os';
 
 const useStyles = makeStyles((theme) => ({
     backdrop: {
@@ -48,9 +48,9 @@ function Layout(props) {
     const allEventsValue = {allEvents,setAllEvents};
     const activeEventsValue = {activeEvents,setActiveEvents};
 
-    console.log(OS.hostname());
-    const browser = detect();
-console.log(browser)
+    // console.log(OS.hostname());
+    // const browser = detect();
+// console.log(browser)
 
 
     React.useEffect(() => {

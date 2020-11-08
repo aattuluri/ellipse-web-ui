@@ -85,7 +85,7 @@ const EventEdit = (props) => {
   const [selectedrequirements, setSelectedRequirements] = React.useState([]);
   // const [image, setImage] = React.useState(null);
   // const [imageName, setImageName] = React.useState("");
-  // const [addressType,setAddressType] = React.useState("");
+  const [addressType,setAddressType] = React.useState("");
   const [feeType, setFeeType] = React.useState("Free");
   const [collegeName, setCollegeName] = React.useState(null);
   const [regMode, setRegMode] = React.useState(null);
@@ -157,7 +157,8 @@ const EventEdit = (props) => {
     setOrganizer(event.organizer);
     setVenue(event.venue);
     setVenueCollege(event.venue_college);
-    setPlatformDetails(event.platform_details)
+    setPlatformDetails(event.platform_details);
+    setAddressType(event.venue_type);
     // setParticipantsType(event.o_allowed)
     if (event.o_allowed === true) {
       setParticipantsType("open")
@@ -233,6 +234,7 @@ const EventEdit = (props) => {
         requirements: selectedrequirements,
         o_allowed: oAllowed,
         reg_mode: regMode,
+        venue_type: addressType,
         venue: venue,
         venue_college: venueCollege,
         platform_details: platformDetails
@@ -339,7 +341,7 @@ const EventEdit = (props) => {
   // }
 
   function handleAddressTypeChange(evemt, value) {
-    // setAddressType(value);
+    setAddressType(value);
   }
   function handleName(event) {
     setName(event.target.value)
@@ -701,9 +703,9 @@ const EventEdit = (props) => {
             </Grid>
             {eventMode === "Offline" && <Grid item xs={12}>
               <FormLabel component="legend">Address</FormLabel>
-              <RadioGroup disabled aria-label="address" name="address" defaultValue="College/University" onChange={handleAddressTypeChange} style={{ display: "inline" }}>
-                <FormControlLabel disabled value="College/University" control={<Radio color="default" />} label="College/University" />
-                <FormControlLabel disabled value="Other" control={<Radio color="default" />} label="Others" />
+              <RadioGroup aria-label="address" name="address" value={addressType} onChange={handleAddressTypeChange} style={{ display: "inline" }}>
+                <FormControlLabel value="College/University" control={<Radio color="default" />} label="College/University" />
+                <FormControlLabel  value="Other" control={<Radio color="default" />} label="Others" />
               </RadioGroup>
             </Grid>}
             {eventMode === "Offline" &&

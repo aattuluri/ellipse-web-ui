@@ -17,7 +17,7 @@ import SortLeftPanel from '../Components/SortLeftPanel';
 import MobileSortPanel from '../Components/MobileSortPanel';
 import ImageDialog from '../Components/ImageDialog';
 // import EventsContext from '../EventsContext';
-import Skeleton from '@material-ui/lab/Skeleton';
+// import Skeleton from '@material-ui/lab/Skeleton';
 // import { Link } from 'react-router-dom';
 import AuthContext from '../AuthContext';
 // import GridListEvents from '../Components/GridListEvents';
@@ -464,7 +464,7 @@ function EventsTabPanel({ history }) {
                         {/* Active Events */}
                     </Typography>
 
-                    {activeEvents.length === 0 && <div>
+                    {/* {activeEvents.length === 0 && <div>
                         <Skeleton variant="rect" animation="wave" height={118} />
                         <Skeleton animation="wave" />
                         <Skeleton animation="wave" />
@@ -474,7 +474,10 @@ function EventsTabPanel({ history }) {
                         <Skeleton animation="wave" />
                         <Skeleton animation="wave" />
                         <Skeleton animation="wave" />
-                    </div>}
+                    </div>} */}
+                    {
+                        activeEvents.length === 0 && <Typography align="center">No events, check back later</Typography>
+                    }
                     {
                         isFiltered ? sortedEventsArray.map((event, index) => {
                             return (

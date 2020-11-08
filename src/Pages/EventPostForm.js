@@ -138,6 +138,7 @@ export default function Checkout({ history }) {
   const [participantsType, setParticipantsType] = React.useState("open");
   const [fields, setFields] = React.useState([]);
   const [platformDetails, setPlatformDetails] = React.useState('');
+  const [imageName,setImageName] = React.useState(null);
 
 
 
@@ -191,6 +192,9 @@ export default function Checkout({ history }) {
             venueCollege={venueCollege}
             participantsType={participantsType}
             platformDetails={platformDetails}
+            poster = {image}
+            imageName = {imageName}
+            setImageName = {setImageName}
             setPlatformDetails={setPlatformDetails}
             setThemes={setEventThemes}
             setPoster={setImage}
