@@ -57,6 +57,9 @@ export default function ImgMediaCard(props) {
                 <Button disabled={event.certificate_status.toUpperCase() === "GENERATED"? false : true} download target="_blank" href={process.env.REACT_APP_API_URL + `/api/user/certificate?id=${event.certificate_url}`} size="small" color="primary" onClick={handleShareClick}>
                     Download
                 </Button>
+                <Button disabled={event.certificate_status.toUpperCase() === "GENERATED"? false : true} target="_blank" href={process.env.REACT_APP_API_URL + `/api/user/certificate?id=${event.certificate_url}`} size="small" color="primary" onClick={handleShareClick}>
+                    View
+                </Button>
                 <Typography align="right" variant="body2" color="textSecondary" component="p">
                     {event.certificate_status.toUpperCase()}
                 </Typography>

@@ -12,6 +12,7 @@ import UpdatePasswordTabPanel from './UpdatePasswordTabPanel';
 import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
 import MoreSettingsTabPanel from './MoreSettingsTabPanel';
+import { Box } from '@material-ui/core';
 
 
 function a11yProps(index) {
@@ -24,11 +25,12 @@ function a11yProps(index) {
 const useStyles = makeStyles((theme) => ({
 
     icons: {
-        position: 'absolute',
-        right: theme.spacing(1),
-        top: theme.spacing(1),
+        // position: 'absolute',
+        // right: theme.spacing(1),
+        // top: theme.spacing(1),
         // color: theme.palette.grey[500],
-
+        alignContent:'right',
+        marginRight:theme.spacing(2),
     },
     root: {
         flexGrow: 1,
@@ -76,11 +78,18 @@ function UpdateProfile(props) {
             }}
             classes={{ paper: classes.dialog }}>
             <DialogTitle id="scroll-dialog-title">
-                <div className={classes.icons}>
+                {/* <div className={classes.icons}>
                     <IconButton aria-label="close" className={classes.closeButton} onClick={handleClose}>
                         <CloseIcon fontSize="large" />
                     </IconButton>
-                </div>
+                </div> */}
+                <Box display="flex" flexDirection="column" justifyContent="center">
+                    <Box display="flex" justifyContent="flex-end">
+                    <IconButton aria-label="close" className={classes.closeButton} onClick={handleClose}>
+                        <CloseIcon fontSize="large" />
+                    </IconButton>
+                    </Box>
+                </Box>
                 <div className={classes.root}>
                     <AppBar style={{ alignItems: 'center' }} position="static" color="secondary">
                         <Tabs

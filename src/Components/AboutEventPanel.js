@@ -180,7 +180,7 @@ function AboutEventPanel(props) {
                 <div className={classes.root}>
                     <Grid container component="main">
                         <Grid item xs={12} sm={12} md={4} lg={4} >
-                            <img onClick={handleImageDialogOpen} style={{ maxWidth: '250px' }} alt="event poster" src={process.env.REACT_APP_API_URL + `/api/image?id=${event.poster_url}`}  ></img>
+                            <img onClick={handleImageDialogOpen} style={{ width: '200px',height: '180px' }} alt="event poster" src={process.env.REACT_APP_API_URL + `/api/image?id=${event.poster_url}`}  ></img>
                         </Grid>
                         <Grid item xs={12} sm={12} md={8} lg={8}>
                             <Typography>{event.description} </Typography>

@@ -7,6 +7,7 @@ import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
 import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
 import CancelIcon from '@material-ui/icons/Cancel';
+// import { Document, Page } from 'react-pdf';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -49,6 +50,12 @@ export default function UnregisteredPage(props) {
     const [details, setDetails] = React.useState({});
     const [userFound, setUserFound] = React.useState(true);
     const [date, setDate] = React.useState(null);
+//     const [numPages, setNumPages] = React.useState(null);
+//   const [pageNumber, setPageNumber] = React.useState(1);
+
+//   function onDocumentLoadSuccess({ numPages }) {
+//     setNumPages(numPages);
+//   }
 
     React.useEffect(() => {
         // const pdf = 
@@ -73,6 +80,23 @@ export default function UnregisteredPage(props) {
             }
 
         })
+
+        // fetch(process.env.REACT_APP_API_URL + `/api/verify/get_certificate?id=${id}`, {
+        //     headers: {
+        //         // 'Authorization': `Bearer ${token}`,
+        //         // 'Content-Type': 'application/json',
+        //         // 'Accept': 'application/json'
+        //     },
+        //     method: 'GET',
+        //     responseType: 'blob'
+        // }).then(response =>{
+        //     const file = new Blob(
+        //         [response], 
+        //         {type: 'application/pdf'});
+        //         const fileURL = window.URL.createObjectURL(file);
+        //         console.log(fileURL)
+        //         // window.open(fileURL);
+        // })
     }, [id])
 
     function handleSigninClick() {
@@ -104,8 +128,6 @@ export default function UnregisteredPage(props) {
                     <Typography>Held on {date}</Typography>
                     <Typography style={{ marginTop: "20px" }}>participation by {details.participantname} has been confirmed</Typography>
                 </Box>
-
-
             </Box>}
             {!userFound && <Box m={1} p={1} className={classes.root3}>
                 <Box m={1} p={3} className={classes.root4}>
@@ -113,13 +135,13 @@ export default function UnregisteredPage(props) {
                     <Typography variant="h4">Certificate NOT FOUND</Typography>
                 </Box>
             </Box>}
-            <object width="100%" height="900px" data={process.env.REACT_APP_API_URL + `/api/verify/get_certificate?id=${id}`} type="application/pdf">
+            {/* <object width="100%" height="900px" data={process.env.REACT_APP_API_URL + `/api/verify/get_certificate?id=${id}`} type="application/pdf">
                 <iframe
                     title="pdf document"
                     src={process.env.REACT_APP_API_URL + `/api/verify/get_certificate?id=${id}`}
                 />
-                {/* <embed src="https://ellipseapp.com/api/user/certificate?id=FfSlio810858d83fb929979dd2e53c4be3a7e1" type="application/pdf" /> */}
-            </object>
+               
+            </object> */}
         </div>
     );
 }
