@@ -22,15 +22,12 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import PhoneImage from '../Components/Images/logo300.svg';
 // import HomePageCarousel from '../Components/HomePageCarousel';
 // import FavoriteIcon from '@material-ui/icons/Favorite';
-import {detect}  from 'detect-browser';
+import { detect } from 'detect-browser';
 
 //function for alert
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
-
-
-
 
 
 
@@ -53,7 +50,33 @@ const Signin = ({ history }) => {
   const abortController = new AbortController();
   const browser = detect();
 
+  //timeout function
+  function timeout(ms, promise) {
+    return new Promise((resolve, reject) => {
+      const timer = setTimeout(() => {
+        reject(new Error('TIMEOUT'))
+      }, ms)
 
+      promise
+        .then(value => {
+          clearTimeout(timer)
+          resolve(value)
+        })
+        .catch(reason => {
+          setLoading(false);
+          setState({
+            open: true,
+            vertical: 'top',
+            horizontal: 'center',
+            message: 'Something went wrong Try Again',
+            type: "error",
+            autoHide: 4000
+          });
+          clearTimeout(timer)
+          reject(reason)
+        })
+    })
+  }
 
   const handleClose = async (event, reason) => {
     if (reason === 'clickaway') {
@@ -140,7 +163,7 @@ const Signin = ({ history }) => {
       };
       data = JSON.stringify(payload);
       // console.log(data);
-      fetch(process.env.REACT_APP_API_URL + '/api/users/login', {
+      timeout(25000, fetch(process.env.REACT_APP_API_URL + '/api/users/login', {
         signal: abortController.signal,
         headers: {
           'Content-Type': 'application/json',
@@ -148,7 +171,7 @@ const Signin = ({ history }) => {
         },
         method: 'POST',
         body: data
-      }).then((response) => {
+      })).then((response) => {
         // console.log(response);
         if (response.status === 200) {
           // console.log
@@ -194,6 +217,7 @@ const Signin = ({ history }) => {
       })
     }
   }
+
   const lToken = localStorage.getItem('token');
   if (lToken) {
     return <Redirect to="/home" />;

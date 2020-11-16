@@ -42,7 +42,7 @@ export default function FormDialog(props) {
     const token = localStorage.getItem('token');
     const [notificationms,setNotifications] = React.useState([]);
     React.useEffect(() => {
-        fetch(process.env.REACT_APP_API_URL+'/api/get_notifications', {
+        fetch(process.env.REACT_APP_API_URL+'/api/get_notifications_desc', {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
