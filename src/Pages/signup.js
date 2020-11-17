@@ -19,8 +19,8 @@ import Container from '@material-ui/core/Container';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import {detect}  from 'detect-browser';
-
+import { detect } from 'detect-browser';
+import SupportDialog from '../Components/SupportDialog';
 
 //function for alert
 function Alert(props) {
@@ -43,9 +43,10 @@ const Signup = ({ history }) => {
   const { vertical, horizontal, open, message, type, autoHide } = state;
   const [nameError, setNameError] = React.useState(false);
   const [usernameError, setUserNameError] = React.useState(false);
-  const [passwordError,setPasswordError] = React.useState(false);
+  const [passwordError, setPasswordError] = React.useState(false);
   const [signupButtonDisabled, setSignupButtonDisabled] = React.useState(false);
   const browser = detect();
+  const [supportOpen, setSupportOpen] = React.useState(false);
 
   //timeout function
   function timeout(ms, promise) {
@@ -53,7 +54,7 @@ const Signup = ({ history }) => {
       const timer = setTimeout(() => {
         reject(new Error('TIMEOUT'))
       }, ms)
-  
+
       promise
         .then(value => {
           clearTimeout(timer)
@@ -61,14 +62,14 @@ const Signup = ({ history }) => {
         })
         .catch(reason => {
           setLoading(false);
-            setState({
-              open: true,
-              vertical: 'top',
-              horizontal: 'center',
-              message: 'Something went wrong Try Again',
-              type: "error",
-              autoHide: 4000
-            });
+          setState({
+            open: true,
+            vertical: 'top',
+            horizontal: 'center',
+            message: 'Something went wrong Try Again',
+            type: "error",
+            autoHide: 4000
+          });
           clearTimeout(timer)
           reject(reason)
         })
@@ -84,7 +85,7 @@ const Signup = ({ history }) => {
     setState({ ...state, open: false });
   };
   async function handleSignUp(event) {
-    
+
     event.preventDefault();
     setLoading(true);
     const { fullName, email, password, username, terms } = event.target.elements;
@@ -97,8 +98,8 @@ const Signup = ({ history }) => {
           password: password.value,
           username: username.value,
           type: 'browser',
-        browser_name: browser.name,
-        device_os: browser.os,
+          browser_name: browser.name,
+          device_os: browser.os,
         };
         data = JSON.stringify(payload);
         timeout(25000, fetch(process.env.REACT_APP_API_URL + '/api/users/signup', {
@@ -157,7 +158,7 @@ const Signup = ({ history }) => {
               autoHide: 3000
             });
           }
-          else{
+          else {
             setLoading(false);
             setState({
               open: true,
@@ -223,6 +224,13 @@ const Signup = ({ history }) => {
   const lToken = localStorage.getItem('token');
   if (lToken) {
     return <Redirect to="/home" />;
+  }
+
+  const handleSupportButton = () => {
+    setSupportOpen(true);
+  }
+  const handleSupportClose = () => {
+    setSupportOpen(false);
   }
 
   return (
@@ -308,7 +316,7 @@ const Signup = ({ history }) => {
 
             <Grid item xs={12}>
               <FormControlLabel
-                control={<Checkbox  color="primary" name="terms" />}
+                control={<Checkbox color="primary" name="terms" />}
                 label={<Typography>By signing up I accept the <Link href='/Privacy_Policy.pdf'>Pivacy Policy and Terms of Service</Link></Typography>}
               />
             </Grid>
@@ -330,11 +338,20 @@ const Signup = ({ history }) => {
               </Link>
             </Grid>
           </Grid>
+          <Grid container justify="center">
+
+            <Grid item>
+              <Link onClick={handleSupportButton} variant="body2">
+                {"Get Support"}
+              </Link>
+            </Grid>
+          </Grid>
         </form>
       </div>
       <Box mt={2}>
         <Copyright />
       </Box>
+      <SupportDialog open={supportOpen} handleClose={handleSupportClose}></SupportDialog>
     </Container>
   );
 }

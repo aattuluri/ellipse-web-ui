@@ -23,6 +23,7 @@ import PhoneImage from '../Components/Images/logo300.svg';
 // import HomePageCarousel from '../Components/HomePageCarousel';
 // import FavoriteIcon from '@material-ui/icons/Favorite';
 import { detect } from 'detect-browser';
+import SupportDialog from '../Components/SupportDialog';
 
 //function for alert
 function Alert(props) {
@@ -49,6 +50,7 @@ const Signin = ({ history }) => {
   const [email, setEmail] = React.useState(null);
   const abortController = new AbortController();
   const browser = detect();
+  const [supportOpen,setSupportOpen] = React.useState(false);
 
   //timeout function
   function timeout(ms, promise) {
@@ -223,7 +225,12 @@ const Signin = ({ history }) => {
     return <Redirect to="/home" />;
   }
 
-
+  const handleSupportButton = ()=>{
+    setSupportOpen(true);
+  }
+  const handleSupportClose = () =>{
+    setSupportOpen(false);
+  }
 
   return (
     <React.Fragment>
@@ -312,6 +319,18 @@ const Signin = ({ history }) => {
                   </Link>
                 </Grid>
               </Grid>
+              <Grid container>
+                <Grid item xs>
+                  {/* <Link href="/forgotpassword" variant="body2">
+                    Forgot password?
+                </Link> */}
+                </Grid>
+                <Grid item>
+                  <Link onClick={handleSupportButton} variant="body2">
+                    {"Get Support"}
+                  </Link>
+                </Grid>
+              </Grid>
             </form>
             <Box display="flex" flexDirection="column" justifyContent="flex-end">
               <Copyright></Copyright>
@@ -343,6 +362,7 @@ const Signin = ({ history }) => {
             </Box>
           </Box>
         </Grid> */}
+        <SupportDialog open={supportOpen} handleClose={handleSupportClose}></SupportDialog>
       </Grid>
 
     </React.Fragment>
