@@ -111,7 +111,7 @@ export default function EventReportDialog(props) {
                     boxShadow: 'none',
                 },
             }} onClose={props.handleClose} aria-labelledby="form-dialog-title">
-                <DialogTitle id="form-dialog-title">FeedBack)</DialogTitle>
+                <DialogTitle id="form-dialog-title">FeedBack</DialogTitle>
                 <DialogContent>
                     <Grid container spacing={2} >
                         <Grid item xs={12}>

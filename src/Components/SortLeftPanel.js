@@ -218,7 +218,6 @@ function SortLeftPanel(props) {
                                         <FormControlLabel value={value} control={<Radio color="default" />} label={value} />
                                     </ListItemIcon>
                                     {/* <ListItemText id={labelId} primary={value} /> */}
-
                                 </ListItem>
                             );
                         })}
@@ -227,8 +226,6 @@ function SortLeftPanel(props) {
                 <Button className={classes.filterButton} onClick={props.handleSortApplyButton} variant="contained" > Apply </Button>
                 <Button className={classes.filterButton} onClick={props.handlesortDiscardButton} variant="contained">Discard</Button>
             </Paper>
-
-
             <div>
             </div>
         </div>

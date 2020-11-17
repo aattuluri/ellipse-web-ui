@@ -159,7 +159,7 @@ function EventsTabPanel({ history }) {
     // const user = JSON.parse(localStorage.getItem('user'));
     // const url = user.imageUrl;
     const token = localStorage.getItem('token');
-    const user = React.useContext(AuthContext);
+    const {currentUser} = React.useContext(AuthContext);
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
     const [imageDialogOpen, setImageDialogOpen] = React.useState(false);
@@ -234,6 +234,8 @@ function EventsTabPanel({ history }) {
         // console.log(sortStartDate);
         // console.log(modeSortChecked);
         // console.log(sortCollegeType);
+        // console.log(sortCollegeType);
+        //     console.log(user);
         setFilterDialogOpen(false);
         if (sortStartDate != null && sortEndDate != null) {
             const dateRangeSortedEvents = sortByDateRange(sortStartDate, sortEndDate, activeEvents);
@@ -248,7 +250,7 @@ function EventsTabPanel({ history }) {
                     const feeSortedEvents = sortByCost(typeSortedEvents);
                     setSortedEventsArray(feeSortedEvents);
                     setIsFiltered(true);
-                    if (sortCollegeType === user.college_name) {
+                    if (sortCollegeType === currentUser.college_name) {
                         const collegeSortedEvents = sortByCollege(feeSortedEvents);
                         setSortedEventsArray(collegeSortedEvents);
                         setIsFiltered(true);
@@ -259,13 +261,13 @@ function EventsTabPanel({ history }) {
                 const feeSortedEvents = sortByCost(dateRangeSortedEvents);
                 setSortedEventsArray(feeSortedEvents);
                 setIsFiltered(true);
-                if (sortCollegeType === user.college_name) {
+                if (sortCollegeType === currentUser.college_name) {
                     const collegeSortedEvents = sortByCollege(feeSortedEvents);
                     setSortedEventsArray(collegeSortedEvents);
                     setIsFiltered(true);
                 }
             }
-            else if (sortCollegeType === user.collegeName) {
+            else if (sortCollegeType === currentUser.collegeName) {
                 const collegeSortedEvents = sortByCollege(dateRangeSortedEvents);
                 setSortedEventsArray(collegeSortedEvents);
                 setIsFiltered(true);
@@ -284,7 +286,7 @@ function EventsTabPanel({ history }) {
                     const feeSortedEvents = sortByCost(dateSortedEvents);
                     setSortedEventsArray(feeSortedEvents);
                     setIsFiltered(true);
-                    if (sortCollegeType === user.collegeName) {
+                    if (sortCollegeType === currentUser.collegeName) {
                         const collegeSortedEvents = sortByCollege(feeSortedEvents);
                         setSortedEventsArray(collegeSortedEvents);
                         setIsFiltered(true);
@@ -295,13 +297,13 @@ function EventsTabPanel({ history }) {
                 const feeSortedEvents = sortByCost(dateSortedEvents);
                 setSortedEventsArray(feeSortedEvents);
                 setIsFiltered(true);
-                if (sortCollegeType === user.collegeName) {
+                if (sortCollegeType === currentUser.collegeName) {
                     const collegeSortedEvents = sortByCollege(feeSortedEvents);
                     setSortedEventsArray(collegeSortedEvents);
                     setIsFiltered(true);
                 }
             }
-            else if (sortCollegeType === user.collegeName) {
+            else if (sortCollegeType === currentUser.collegeName) {
                 const collegeSortedEvents = sortByCollege(dateSortedEvents);
                 setSortedEventsArray(collegeSortedEvents);
                 setIsFiltered(true);
@@ -309,7 +311,7 @@ function EventsTabPanel({ history }) {
         }
         else if (modeSortChecked.length > 1) {
             const typeSortedEvents = sortByMode(activeEvents);
-            console.log(sortByMode(activeEvents));
+            // console.log(sortByMode(activeEvents));
 
             setSortedEventsArray(typeSortedEvents);
             setIsFiltered(true);
@@ -324,7 +326,9 @@ function EventsTabPanel({ history }) {
             setSortedEventsArray(feeSortedEvents);
             setIsFiltered(true);
         }
-        else if (sortCollegeType === user.college_name) {
+        else if (sortCollegeType === currentUser.college_name) {
+            // console.log(sortCollegeType);
+            // console.log(currentUser.college_name);
             const collegeSortedEvents = sortByCollege(activeEvents);
             setSortedEventsArray(collegeSortedEvents);
             setIsFiltered(true);
@@ -355,9 +359,9 @@ function EventsTabPanel({ history }) {
                 console.log(sevent);
                 sDEvents.push(sevent);
             }
-            console.log(sortedEventsArray);
+            // console.log(sortedEventsArray);
         })
-        console.log(sDEvents);
+        // console.log(sDEvents);
         return sDEvents;
     }
     function sortByMode(sEvents) {
@@ -368,7 +372,7 @@ function EventsTabPanel({ history }) {
                 sortedEvents.push(sevent);
             }
         })
-        console.log(sortedEvents);
+        // console.log(sortedEvents);
         return sortedEvents;
     }
 
@@ -385,9 +389,8 @@ function EventsTabPanel({ history }) {
     function sortByCollege(sEvents) {
         var sortedEvents = [];
         sEvents.forEach(sevent => {
-            console.log(user.college_name);
-            console.log(sevent.college_name);
-            if (user.college_name === sevent.college_name) {
+            
+            if (currentUser.college_name === sevent.college_name) {
                 sortedEvents.push(sevent);
             }
         })
@@ -433,7 +436,7 @@ function EventsTabPanel({ history }) {
 
     return (
         <div>
-            <Grid container component="main" >
+            <Grid container component="main" style={{marginBottom: "50px"}}>
                 <Grid item xs={false} md={3} lg={2} style={{ padding: "10px" }} >
                     <Paper className={classes.root}>
                         <Paper className={classes.leftSubPaper}>
@@ -463,7 +466,6 @@ function EventsTabPanel({ history }) {
                     <Typography variant="h5" style={{ paddingTop: '5px',paddingBottom: '7px' }}>
                         {/* Active Events */}
                     </Typography>
-
                     {/* {activeEvents.length === 0 && <div>
                         <Skeleton variant="rect" animation="wave" height={118} />
                         <Skeleton animation="wave" />
@@ -484,7 +486,7 @@ function EventsTabPanel({ history }) {
                                 <EventCard
                                     key={index}
                                     click={handleClick}
-                                    url={user.imageUrl}
+                                    url={currentUser.imageUrl}
                                     name={event.name}
                                     startTime={event.start_time}
                                     endTime={event.finish_time}
@@ -503,7 +505,7 @@ function EventsTabPanel({ history }) {
                                 <EventCard
                                     key={index}
                                     click={handleClick}
-                                    url={user.imageUrl}
+                                    url={currentUser.imageUrl}
                                     name={event.name}
                                     startTime={event.start_time}
                                     endTime={event.finish_time}
@@ -558,16 +560,13 @@ function EventsTabPanel({ history }) {
                                 variant="outlined"
                                 fullWidth
                                 size="large"
-                                className={classes.feedBackButton}
-                                 >
+                                className={classes.feedBackButton}>
                                 Report Bug/Feedback
                             </Button>
-                           
-
                         </Paper>
                     </Paper>
-
                 </Grid>
+            
             </Grid>
             <div>
             <FeedBackDialog open={feedBackOpen} handleClose={closeFeedBckDialog}></FeedBackDialog>
