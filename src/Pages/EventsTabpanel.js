@@ -436,7 +436,7 @@ function EventsTabPanel({ history }) {
 
     return (
         <div>
-            <Grid container component="main" style={{marginBottom: "50px"}}>
+            <Grid container component="main" >
                 <Grid item xs={false} md={3} lg={2} style={{ padding: "10px" }} >
                     <Paper className={classes.root}>
                         <Paper className={classes.leftSubPaper}>
@@ -458,7 +458,7 @@ function EventsTabPanel({ history }) {
                     </Paper>
                     <Button className={classes.mobileFilterButton} variant="outlined" onClick={handlefilterButtonClicked} >Filters</Button>
                 </Grid>
-                <Grid item xs={12} sm={12} md={9} lg={8}>
+                <Grid item xs={12} sm={12} md={9} lg={8} style={{marginBottom: "50px"}}>
                     {/* <Typography variant="h5" style={{ paddingTop: '5px' }}>
                         Your College Events
                     </Typography>
