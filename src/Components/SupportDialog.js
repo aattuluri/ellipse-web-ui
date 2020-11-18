@@ -29,7 +29,8 @@ export default function EventReportDialog(props) {
     function handleDescChange(event) {
         setDesc(event.target.value);
     }
-
+    console.log(title);
+    console.log(desc);
 
     return (
         <div>
@@ -75,6 +76,7 @@ export default function EventReportDialog(props) {
                     <Link href={`mailto:support@ellipseapp.com?subject = ${title}&body = ${desc}`} variant="body2">
                         SEND
                     </Link>
+                    
                 </DialogActions>
             </Dialog>
         </div>

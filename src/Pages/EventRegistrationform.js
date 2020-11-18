@@ -248,8 +248,10 @@ const Signup = (props) => {
     // console.log(checkedValues);
     // console.log(formValues);
     const formkeys = Object.keys(formValues);
+    var count = 0;
     formkeys.forEach(v => {
       if (formValues[v] === null) {
+        count = count + 1;
         setState({
           open: true,
           vertical: 'top',
@@ -258,52 +260,56 @@ const Signup = (props) => {
           type: "error",
           autoHide: 4000
         });
+        // break;
       }
     })
-    try {
-      var data = new FormData();
-      const d = { data: formValues }
-      data = JSON.stringify(d);
-      fetch(process.env.REACT_APP_API_URL + `/api/event/register?id=${id}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        method: 'POST',
-        body: data
-      }).then(response => {
-        // console.log(response);
-        if (response.status === 200) {
-          response.json().then(value => {
-            // console.log(value);
-
-            setLoading(false);
-            setState({
-              open: true,
-              vertical: 'top',
-              horizontal: 'center',
-              message: 'Registration successful.Stay tunned with notifications and announcements',
-              type: "success",
-              autoHide: 4000
-            });
-          })
-        }
-
-      })
+    if(count === 0){
+      try {
+        var data = new FormData();
+        const d = { data: formValues }
+        data = JSON.stringify(d);
+        fetch(process.env.REACT_APP_API_URL + `/api/event/register?id=${id}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          method: 'POST',
+          body: data
+        }).then(response => {
+          // console.log(response);
+          if (response.status === 200) {
+            response.json().then(value => {
+              // console.log(value);
+  
+              setLoading(false);
+              setState({
+                open: true,
+                vertical: 'top',
+                horizontal: 'center',
+                message: 'Registration successful.Stay tunned with notifications and announcements',
+                type: "success",
+                autoHide: 4000
+              });
+            })
+          }
+  
+        })
+      }
+      catch (error) {
+        setLoading(false);
+        setState({
+          open: true,
+          vertical: 'top',
+          horizontal: 'center',
+          message: error.message,
+          type: "error",
+          autoHide: 6000
+        })
+  
+      }
     }
-    catch (error) {
-      setLoading(false);
-      setState({
-        open: true,
-        vertical: 'top',
-        horizontal: 'center',
-        message: error.message,
-        type: "error",
-        autoHide: 6000
-      })
-
-    }
+    
 
   }
 
@@ -441,19 +447,20 @@ const Signup = (props) => {
                         ))
                       }
                       renderInput={(params) => (
-                        <TextField {...params} name={field.name} label={field.title} placeholder={field.name} />
+                        <TextField required {...params} name={field.name} label={field.title} placeholder={field.name} />
                       )}
                     />
                   </Grid>
                 )
               })}
               {radioFields.map((field, index) => {
+                console.log(field.options[0])
                 return (
                   <Grid item xs={12}>
                     <FormLabel required component="legend">{field.title}</FormLabel>
-                    <RadioGroup required aria-label="address" name={field.title} value={formValues[field.title]} onChange={handleradioChange} style={{ display: "inline" }}>
+                    <RadioGroup required aria-label="address" name={field.title} defaultValue={field.options[0]} value={formValues[field.title]} onChange={handleradioChange} style={{ display: "inline" }}>
                       {field.options.map((option) => {
-                        return <FormControlLabel value={option} control={<Radio color="default" />} label={option} />
+                        return <FormControlLabel required value={option} control={<Radio color="default" />} label={option} />
                       })}
 
                       {/* <FormControlLabel value="Paid" control={<Radio color="default" />} label="Paid" /> */}
@@ -473,9 +480,10 @@ const Signup = (props) => {
                           variant="inline"
                           format="dd MMM yyyy hh:mm a zzz"
                           margin="normal"
-                          id="startDate"
-                          label="Start Date"
-                          name="startDate"
+                          id={field.title}
+                          label={field.title}
+                          name={field.title}
+                          // defaultValue={Date.now()}
                           value={formValues[field.title]}
                           onChange={handleDateChange(field.title)}
                           KeyboardButtonProps={{
