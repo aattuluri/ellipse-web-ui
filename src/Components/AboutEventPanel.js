@@ -249,7 +249,7 @@ function AboutEventPanel(props) {
                                 {!notRegistered && <Box className={classes.root0}>
                                     <Box className={classes.adminDetails}>
                                         <Box>
-                                            <Avatar className={classes.avatar} alt={adminDetails.name} src={process.env.REACT_APP_API_URL + `/api/image?id=${adminDetails.profile_pic}`} />
+                                            <Avatar className={classes.avatar} alt={adminDetails.name} src={adminDetails.profile_pic !== null && process.env.REACT_APP_API_URL + `/api/image?id=${adminDetails.profile_pic}`} />
                                         </Box>
                                         <Box>
                                             <Box>
