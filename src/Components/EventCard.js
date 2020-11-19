@@ -11,12 +11,13 @@ import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Chip from '@material-ui/core/Chip';
 import CameraAltOutlinedIcon from '@material-ui/icons/CameraAltOutlined';
-import Paper from '@material-ui/core/Paper';
-import Popper from '@material-ui/core/Popper';
+// import Paper from '@material-ui/core/Paper';
+// import Popper from '@material-ui/core/Popper';
 import MenuItem from '@material-ui/core/MenuItem';
-import MenuList from '@material-ui/core/MenuList';
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-import Grow from '@material-ui/core/Grow';
+// import MenuList from '@material-ui/core/MenuList';
+// import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+// import Grow from '@material-ui/core/Grow';
+import Menu from '@material-ui/core/Menu';
 
 
 import EventReportDialog from './EventReportDialog';
@@ -59,40 +60,49 @@ function Eventcard(props) {
   const startDate = new Date(event.start_time);
   const endDate = new Date(event.finish_time);
   const regEndDate = new Date(event.registration_end_time);
-  const [open, setOpen] = React.useState(false);
+  // const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef(null);
   const [imageLoaded, setImageLoaded] = React.useState(false);
   const [reportDialogOpen, setReportDialogOpen] = React.useState(false);
   const [shareDialogOpen, setShareDialogOpen] = React.useState(false);
 
+  const [anchorEl, setAnchorEl] = React.useState(null);
 
+  // const isMenuOpen = Boolean(anchorEl);
+  // const handleToggle = () => {
+  //   setOpen((prevOpen) => !prevOpen);
+  // };
 
-  const handleToggle = () => {
-    setOpen((prevOpen) => !prevOpen);
+  // const handleClose = (event) => {
+  //   if (anchorRef.current && anchorRef.current.contains(event.target)) {
+  //     return;
+  //   }
+
+  //   // setOpen(false);
+  // };
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = (event) => {
-    if (anchorRef.current && anchorRef.current.contains(event.target)) {
-      return;
-    }
-
-    setOpen(false);
+  const handleClose = () => {
+    setAnchorEl(null);
   };
 
-  function handleListKeyDown(event) {
-    if (event.key === 'Tab') {
-      event.preventDefault();
-      setOpen(false);
-    }
-  }
+  // function handleListKeyDown(event) {
+  //   if (event.key === 'Tab') {
+  //     event.preventDefault();
+  //     setOpen(false);
+  //   }
+  // }
 
-  const prevOpen = React.useRef(open);
-  React.useEffect(() => {
-    if (prevOpen.current === true && open === false) {
-      anchorRef.current.focus();
-    }
-    prevOpen.current = open;
-  }, [open]);
+  // const prevOpen = React.useRef(open);
+  // React.useEffect(() => {
+  //   if (prevOpen.current === true && open === false) {
+  //     anchorRef.current.focus();
+  //   }
+  //   prevOpen.current = open;
+  // }, [open]);
   function handleImageClick() {
     props.imageDialog(event)
   }
@@ -143,12 +153,25 @@ function Eventcard(props) {
         action={
           <div>
             <IconButton ref={anchorRef}
-              aria-controls={open ? 'menu-list-grow' : undefined}
+              aria-controls={Boolean(anchorEl) ? 'menu-list-grow' : undefined}
               aria-haspopup="true"
-              onClick={handleToggle}>
+              onClick={handleClick}>
               <MoreVertIcon />
             </IconButton>
-            <Popper className={classes.morePopup} open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
+            <Menu
+      anchorEl={anchorEl}
+      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      id={'menu'}
+      keepMounted
+      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+      open={Boolean(anchorEl)}
+      onClose={handleClose}
+    >
+      <MenuItem onClick={handleShareClick}>Share</MenuItem>
+                        <MenuItem onClick={handleReportClick}>Report</MenuItem>
+
+    </Menu>
+            {/* <Popper className={classes.morePopup} open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
               {({ TransitionProps, placement }) => (
                 <Grow
                   {...TransitionProps}
@@ -159,13 +182,13 @@ function Eventcard(props) {
                       <MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
                         <MenuItem onClick={handleShareClick}>Share</MenuItem>
                         <MenuItem onClick={handleReportClick}>Report</MenuItem>
-                        {/* <MenuItem onClick={handleClose}>Logout</MenuItem> */}
+                        
                       </MenuList>
                     </ClickAwayListener>
                   </Paper>
                 </Grow>
               )}
-            </Popper>
+            </Popper> */}
           </div>
         }
         title={
