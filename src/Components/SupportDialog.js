@@ -73,7 +73,7 @@ export default function EventReportDialog(props) {
                     <Button onClick={props.handleClose} color="primary">
                         Cancel
                     </Button>
-                    <Link href={`mailto:support@ellipseapp.com?subject = ${title}&body = ${desc}`} variant="body2">
+                    <Link href={`mailto:support@ellipseapp.com?subject=${title}&body=${desc}`} target="_blank" rel="noopener noreferrer" variant="body2">
                         SEND
                     </Link>
                     
