@@ -150,6 +150,7 @@ const ForgotPassword = ({ history }) => {
     if (message === "Succesful! Login to continue") {
       history.replace("/");
     }
+    setState({ ...state, open: false });
   }
 
 

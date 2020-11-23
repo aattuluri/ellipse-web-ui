@@ -19,8 +19,18 @@ import UnregisteredPage from './Pages/UnregisteredPage';
 import NetworkDetector from './NetworkDetector';
 import VerifyCertificate from './Pages/VerifyCertificate';
 import NewHomePage from './Pages/NewHomePage';
+// import { loadReCaptcha } from 'react-recaptcha-google'
 
 function App() {
+  React.useEffect(()=>{
+        // loadReCaptcha();
+        window.grecaptcha.ready(function() {
+          window.grecaptcha.execute('6LcEVOoZAAAAAOjNV_wZFJ7YQMBs4IwKyH-LdU2P', {action: 'submit'}).then(es =>  {
+              // Add your logic to submit to your backend server here.
+              console.log(es);
+          });
+        });
+  })
   return (
     <AuthProvider>
       <Router>

@@ -21,6 +21,7 @@ import MuiAlert from '@material-ui/lab/Alert';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { detect } from 'detect-browser';
 import SupportDialog from '../Components/SupportDialog';
+// import { ReCaptcha } from 'react-recaptcha-google';
 
 //function for alert
 function Alert(props) {
@@ -47,6 +48,17 @@ const Signup = ({ history }) => {
   const [signupButtonDisabled, setSignupButtonDisabled] = React.useState(false);
   const browser = detect();
   const [supportOpen, setSupportOpen] = React.useState(false);
+
+  // const [cDemo,setCDemo] = React.useState(null);
+  // // const inputEl = useRef(null);
+
+  // React.useEffect(()=>{
+  //   // if (cDemo) {
+  //     console.log("started, just a second...")
+  //     // this.captchaDemo.reset();
+  //     // this.captchaDemo.execute();
+  // // }
+  // },[])
 
   //timeout function
   function timeout(ms, promise) {
@@ -85,7 +97,13 @@ const Signup = ({ history }) => {
     setState({ ...state, open: false });
   };
   async function handleSignUp(event) {
-
+    // grecaptcha.ready(function() {
+    //   grecaptcha.execute('reCAPTCHA_site_key', {action: 'submit'}).then(function(token) {
+    //       // Add your logic to submit to your backend server here.
+    //       console.log(token);
+    //       // fetch()
+    //   });
+    // });
     event.preventDefault();
     setLoading(true);
     const { fullName, email, password, username, terms } = event.target.elements;
@@ -233,6 +251,14 @@ const Signup = ({ history }) => {
     setSupportOpen(false);
   }
 
+  // const onLoadRecaptcha = () => {
+
+  // }
+
+  // const verifyCallback = () => {
+
+  // }
+
   return (
     <Container component="main" maxWidth="sm">
       <CssBaseline />
@@ -252,6 +278,14 @@ const Signup = ({ history }) => {
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
+        {/* <ReCaptcha
+            // ref={(el) => {setCDemo(el)}}
+            size="invisible"
+            render="explicit"
+            sitekey="6LcEVOoZAAAAAOjNV_wZFJ7YQMBs4IwKyH-LdU2P"
+            onloadCallback={onLoadRecaptcha}
+            verifyCallback={verifyCallback}
+        /> */}
         <form className={classes.form} onSubmit={handleSignUp}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
