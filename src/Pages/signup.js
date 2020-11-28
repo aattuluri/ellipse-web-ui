@@ -70,7 +70,7 @@ const Signup = ({ history }) => {
 
     // load the script by passing the URL
     loadScriptByURL("recaptcha-key", `https://www.google.com/recaptcha/api.js?render=${process.env.REACT_APP_SITE_KEY}`, function () {
-      console.log("Script loaded!");
+      // console.log("Script loaded!");
       window.grecaptcha.ready(function () {
         window.grecaptcha.execute('6LcEVOoZAAAAAOjNV_wZFJ7YQMBs4IwKyH-LdU2P', { action: 'submit' }).then(recaptcha_token => {
           // Add your logic to submit to your backend server here.
@@ -86,7 +86,7 @@ const Signup = ({ history }) => {
               "recaptcha_token": recaptcha_token
             })
           }).then(res => {
-            console.log(res);
+            // console.log(res);
             if(res.status === 200){
               res.json().then(result => {
                 // console.log(result)

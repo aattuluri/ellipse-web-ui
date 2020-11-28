@@ -42,60 +42,60 @@ const ForgotPassword = ({ history }) => {
   const [loading, setLoading] = React.useState(false);
   const [loading2, setLoading2] = React.useState(false);
   const { vertical, horizontal, open, message, type, autoHide } = state;
-  const [sendOTPButtonDisabled, setSendOTPButtonDisabled] = React.useState(false);
+  // const [sendOTPButtonDisabled, setSendOTPButtonDisabled] = React.useState(false);
 
-  React.useEffect(() => {
-    const loadScriptByURL = (id, url, callback) => {
-      const isScriptExist = document.getElementById(id);
+  // React.useEffect(() => {
+  //   const loadScriptByURL = (id, url, callback) => {
+  //     const isScriptExist = document.getElementById(id);
 
-      if (!isScriptExist) {
-        var script = document.createElement("script");
-        script.type = "text/javascript";
-        script.src = url;
-        script.id = id;
-        script.onload = function () {
-          if (callback) callback();
-        };
-        document.body.appendChild(script);
-      }
+  //     if (!isScriptExist) {
+  //       var script = document.createElement("script");
+  //       script.type = "text/javascript";
+  //       script.src = url;
+  //       script.id = id;
+  //       script.onload = function () {
+  //         if (callback) callback();
+  //       };
+  //       document.body.appendChild(script);
+  //     }
 
-      if (isScriptExist && callback) callback();
-    }
+  //     if (isScriptExist && callback) callback();
+  //   }
 
-    // load the script by passing the URL
-    loadScriptByURL("recaptcha-key", `https://www.google.com/recaptcha/api.js?render=${process.env.REACT_APP_SITE_KEY}`, function () {
-      console.log("Script loaded!");
-      window.grecaptcha.ready(function () {
-        window.grecaptcha.execute('6LcEVOoZAAAAAOjNV_wZFJ7YQMBs4IwKyH-LdU2P', { action: 'submit' }).then(recaptcha_token => {
-          // Add your logic to submit to your backend server here.
-          // console.log(recaptcha_token);
-          fetch(process.env.REACT_APP_API_URL +'/api/verify_recaptcha', {
-            method: 'POST',
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-              // "name": name,
-              // "email": email,
-              "recaptcha_token": recaptcha_token
-            })
-          }).then(res => {
-            if(res.status === 200){
-              res.json().then(result => {
-                // console.log(result)
-                if (result.success) {
-                  if (result.score < 0.5) {
-                    setSendOTPButtonDisabled(true);
-                  }
-                }
-              })
-            }
+  //   // load the script by passing the URL
+  //   loadScriptByURL("recaptcha-key", `https://www.google.com/recaptcha/api.js?render=${process.env.REACT_APP_SITE_KEY}`, function () {
+  //     console.log("Script loaded!");
+  //     window.grecaptcha.ready(function () {
+  //       window.grecaptcha.execute('6LcEVOoZAAAAAOjNV_wZFJ7YQMBs4IwKyH-LdU2P', { action: 'submit' }).then(recaptcha_token => {
+  //         // Add your logic to submit to your backend server here.
+  //         // console.log(recaptcha_token);
+  //         fetch(process.env.REACT_APP_API_URL +'/api/verify_recaptcha', {
+  //           method: 'POST',
+  //           headers: {
+  //             "Content-Type": "application/json"
+  //           },
+  //           body: JSON.stringify({
+  //             // "name": name,
+  //             // "email": email,
+  //             "recaptcha_token": recaptcha_token
+  //           })
+  //         }).then(res => {
+  //           if(res.status === 200){
+  //             res.json().then(result => {
+  //               // console.log(result)
+  //               if (result.success) {
+  //                 if (result.score < 0.5) {
+  //                   setSendOTPButtonDisabled(true);
+  //                 }
+  //               }
+  //             })
+  //           }
             
-          });
-        });
-      });
-    });
-  }, []);
+  //         });
+  //       });
+  //     });
+  //   });
+  // }, []);
 
 
   async function handlePasswordReset(event) {
@@ -252,7 +252,7 @@ const ForgotPassword = ({ history }) => {
             fullWidth
             variant="contained"
             color="primary"
-            disabled={loading || sendOTPButtonDisabled}
+            disabled={loading}
             className={classes.submit}>
             {loading ? <CircularProgress color="primary" size={24} /> : "Send OTP"}
           </Button>
