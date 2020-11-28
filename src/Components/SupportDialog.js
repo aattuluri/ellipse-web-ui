@@ -29,8 +29,8 @@ export default function EventReportDialog(props) {
     function handleDescChange(event) {
         setDesc(event.target.value);
     }
-    console.log(title);
-    console.log(desc);
+    // console.log(title);
+    // console.log(desc);
 
     return (
         <div>

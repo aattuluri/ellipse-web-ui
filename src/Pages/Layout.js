@@ -16,6 +16,7 @@ import ActiveEventsContext from '../ActiveEventsContext';
 // import {detect}  from 'detect-browser';
 
 
+
 // import OS from 'os';
 
 const useStyles = makeStyles((theme) => ({
@@ -47,6 +48,8 @@ function Layout(props) {
     const value = {currentUser,setCurrentUser};
     const allEventsValue = {allEvents,setAllEvents};
     const activeEventsValue = {activeEvents,setActiveEvents};
+
+    
 
     // console.log(OS.hostname());
     // const browser = detect();
