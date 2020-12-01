@@ -15,6 +15,9 @@ import Checkbox from '@material-ui/core/Checkbox';
 import AddAnnouncementForm from './AddAnnouncementForm';
 import SendEmailForm from './SendEmailForm';
 
+import { CSVLink } from "react-csv";
+
+
 
 
 const useStyles = makeStyles(theme => ({
@@ -23,8 +26,14 @@ const useStyles = makeStyles(theme => ({
   },
   container: {
     maxHeight: 440,
+    // maxWidth: 880
+    // width: '100%',
+  },
+  table: {
+    width: '100%',
   },
   paper: {
+    width: '100%',
     padding: theme.spacing(2),
     display: 'flex',
     overflow: 'auto',
@@ -62,6 +71,7 @@ export default function StickyHeadTable(props) {
   const [announcementDialog, setAnnouncementDialog] = React.useState(false);
   const [sendEmailDialog, setSendEmailDialog] = React.useState(false);
   const event = props.event;
+
 
 
   const handleSelectAllClick = (event) => {
@@ -105,7 +115,9 @@ export default function StickyHeadTable(props) {
   };
 
   React.useEffect(() => {
-    fetch(process.env.REACT_APP_API_URL+`/api/event/registeredEvents?id=${event._id}`, {
+    setHeaders([]);
+    setRowValues([]);
+    fetch(process.env.REACT_APP_API_URL + `/api/event/registeredEvents?id=${event._id}`, {
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json',
@@ -118,10 +130,10 @@ export default function StickyHeadTable(props) {
           const firstdata = value[0].data;
           const columnNames = Object.keys(firstdata);
           columnNames.forEach(item => {
-            setHeaders((headers => [...headers, { id: item, label: item, minWidth: 170 }]))
+            setHeaders((headers => [...headers, { id: item, key: item, label: item, minWidth: 170 }]));
           })
           value.forEach(d => {
-            setRowValues(rowValues => [...rowValues, d.data])
+            setRowValues(rowValues => [...rowValues, d.data]);
           })
         }
 
@@ -155,12 +167,13 @@ export default function StickyHeadTable(props) {
       <AddAnnouncementForm open={announcementDialog} id={event._id} handleClose={handleAnnoucementClose}></AddAnnouncementForm>
       <Grid item xs={12} md={4} lg={9}>
         <Paper className={classes.buttonsPaper}>
+
           <Button variant="contained" onClick={handleAddAnnouncement} className={classes.button}>Add Announcement</Button>
+          {/* <Button variant="contained" onClick={()=>saveAsCsv({ fields, data, filename })} className={classes.button}>Add Announcement</Button> */}
           {/* <Button variant="contained" onClick={handleSendEmail} className={classes.button}>Send Emails to Selected</Button> */}
         </Paper>
       </Grid>
       <Grid item xs={12} md={4} lg={3} >
-
         <Paper className={classes.fixedHeightPaper}>
           <Typography>Total Registrations</Typography>
           <Typography component="p" variant="h4">
@@ -171,8 +184,11 @@ export default function StickyHeadTable(props) {
       <Grid item xs={12}>
         <Paper className={classes.paper}>
           <TableContainer className={classes.container}>
+            <Button variant="contained" className={classes.button}><CSVLink filename={event.name + '.csv'} headers={headers} data={rowValues} style={{ color: '#000000' }}>Download as csv</CSVLink></Button>
             <Table stickyHeader aria-label="sticky table">
               <TableHead>
+                <TableRow>
+                </TableRow>
                 <TableRow >
                   <TableCell padding="checkbox">
                     <Checkbox
@@ -208,8 +224,8 @@ export default function StickyHeadTable(props) {
                           inputProps={{ 'aria-label': 'select all fields' }}
                         /></TableCell>
                       {headers.map((column) => {
-                        
-                        const value = column.id === "Email" ? row[column.id].substr(0,3)+'*****@'+row[column.id].split('@')[1] : row[column.id];
+
+                        const value = column.id === "Email" ? row[column.id].substr(0, 3) + '*****@' + row[column.id].split('@')[1] : row[column.id];
                         return (
                           <TableCell key={column.id} align={column.align}>
                             {column.format && typeof value === 'number' ? column.format(value) : value}

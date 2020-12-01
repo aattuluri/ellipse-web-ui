@@ -17,6 +17,13 @@ import ReplyIcon from '@material-ui/icons/Reply';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Fade from '@material-ui/core/Fade';
 
+// import { io } from 'socket.io-client';
+// import openSocket from "socket.io-client";
+// import socketIOClient from "socket.io-client";
+// const socket = openSocket("http://localhost:4000/");
+
+
+
 
 
 
@@ -108,6 +115,11 @@ export default function JustifyContent(props) {
     };
     const [webSocket, setWebSocket] = React.useState(null);
 
+    // socket.on('connection', (socket) => {
+    //     let token = socket.handshake.query.token;
+    //     // ...
+    //   });
+
     const webConnect = () => {
         const ws = new WebSocket(process.env.REACT_APP_WESOCKET_URL);
         ws.onopen = () => {
@@ -129,6 +141,8 @@ export default function JustifyContent(props) {
         }
     }
     React.useEffect(() => {
+    //     const socket = socketIOClient("localhost:4000");
+    // socket.emit('change color', 'red')
         setLoading(true)
         fetch(process.env.REACT_APP_API_URL + `/api/chat/load_messages?id=${event._id}`, {
             headers: {

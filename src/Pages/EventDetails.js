@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
   },
-  
+
   menuButton: {
     marginRight: 36,
   },
@@ -84,6 +84,7 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     flexGrow: 1,
+    width: '70%',
     [theme.breakpoints.up('md')]: {
       padding: theme.spacing(3),
     },
@@ -91,7 +92,7 @@ const useStyles = makeStyles((theme) => ({
   eventName: {
     [theme.breakpoints.up('md')]: {
       display: 'none',
-  },
+    },
   }
 
 }));
@@ -104,7 +105,7 @@ export default function MiniDrawer(props) {
   const id = props.match.params.eventId;
   const t = localStorage.getItem('theme');
 
-  const [drawerOpen, setDrawerOpen] = React.useState(false);
+  const [drawerOpen, setDrawerOpen] = React.useState(true);
   const [event, setEvent] = React.useState({});
   const [adminAccess, setAdminAccess] = React.useState(false);
   const [currentUser, setCurrentUser] = React.useState({});
@@ -131,23 +132,23 @@ export default function MiniDrawer(props) {
     }).then(response => {
       response.json().then(val => {
         setEvent(val.event);
-        
+
       })
     })
-    
-  }, [token,id])
+
+  }, [token, id])
 
   // console.log(adminAccess)
-  React.useEffect(()=>{
-    if( event.user_id !== undefined && currentUser.user_id !== undefined){
+  React.useEffect(() => {
+    if (event.user_id !== undefined && currentUser.user_id !== undefined) {
       if (event.user_id === currentUser.user_id) {
         // console.log(event);
         // console.log(currentUser)
         setAdminAccess(true);
       }
     }
-    
-  },[currentUser,event])
+
+  }, [currentUser, event])
 
 
 
@@ -270,20 +271,20 @@ export default function MiniDrawer(props) {
     settingsSelected,
     editEventSelected, chatSelected, certificateSelected } = selected;
 
-    function handleSignout(){
-      props.history.replace('/');
-    }
+  function handleSignout() {
+    props.history.replace('/');
+  }
 
-    function handleRegClick() {
-      props.history.push('/event/register/' + event._id);
-      // props.handleReg(event._id);
-  
-    }
+  function handleRegClick() {
+    props.history.push('/event/register/' + event._id);
+    // props.handleReg(event._id);
+
+  }
 
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <EventDetailsNavigationBar event={event} handleSignout={handleSignout} handleHomeClick={handleHomeClick} setUser={setCurrentUser}  dOpen={drawerOpen} setDOpen={setDrawerOpen}></EventDetailsNavigationBar>
+      <EventDetailsNavigationBar event={event} handleSignout={handleSignout} handleHomeClick={handleHomeClick} setUser={setCurrentUser} dOpen={drawerOpen} setDOpen={setDrawerOpen}></EventDetailsNavigationBar>
       <Drawer
         variant="permanent"
         className={clsx(classes.drawer, {
@@ -298,7 +299,7 @@ export default function MiniDrawer(props) {
         }}>
         <div className={classes.toolbar}>
           <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'rtl' ? <ChevronRightIcon color="primary"/> : <ChevronLeftIcon color="primary"/>}
+            {theme.direction === 'rtl' ? <ChevronRightIcon color="primary" /> : <ChevronLeftIcon color="primary" />}
           </IconButton>
         </div>
         <Divider />
@@ -333,7 +334,7 @@ export default function MiniDrawer(props) {
           adminAccess && <List>
             <ListItem button onClick={dashBoardClicked} selected={dashBoardSelected}>
               <ListItemIcon >
-                <DashboardIcon color="primary"/>
+                <DashboardIcon color="primary" />
               </ListItemIcon>
               <ListItemText primary="Dashboard" />
             </ListItem>
@@ -386,26 +387,21 @@ export default function MiniDrawer(props) {
           adminAccess && certificateSelected && event != null && <CertificateDashboard event={event}></CertificateDashboard>
         }
         {
-            infoSelected && event.reg_mode === "form" && <Button disabled={event.registered || adminAccess} size="small" color="primary" variant="contained" className={classes.button} onClick={handleRegClick}>
-              {event.registered ? "Registered" : "Register"}
-            </Button> 
-             
-          }
+          infoSelected && event.reg_mode === "form" && <Button disabled={event.registered || adminAccess} size="small" color="primary" variant="contained" className={classes.button} onClick={handleRegClick}>
+            {event.registered ? "Registered" : "Register"}
+          </Button>
+
+        }
         {
           infoSelected && event.reg_mode !== "form" && <Button disabled={event.registered || adminAccess} size="small" color="primary" variant="contained" className={classes.button}>
-                {t === 'light' ? <a href={event.reg_link}  style={{ textDecoration: 'none', color: '#ffffff' }} target="blank">Register</a> : 
-                <a href={event.reg_link}  style={{ textDecoration: 'none', color: '#000000' }} target="blank">Register</a>}
-              </Button>
+            {t === 'light' ? <a href={event.reg_link} style={{ textDecoration: 'none', color: '#ffffff' }} target="blank">Register</a> :
+              <a href={event.reg_link} style={{ textDecoration: 'none', color: '#000000' }} target="blank">Register</a>}
+          </Button>
         }
         {
           adminAccess && settingsSelected && <Typography>Any queries contact us at support@ellipseapp.com</Typography>
         }
-      </main> 
+      </main>
     </div>
   );
 }
-
-
-
-
-
