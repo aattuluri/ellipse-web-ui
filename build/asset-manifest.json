@@ -1,17 +1,17 @@
 {
   "files": {
     "main.css": "/static/css/main.7176885d.chunk.css",
-    "main.js": "/static/js/main.b4895973.chunk.js",
-    "main.js.map": "/static/js/main.b4895973.chunk.js.map",
+    "main.js": "/static/js/main.11442828.chunk.js",
+    "main.js.map": "/static/js/main.11442828.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.df66fb3b.js",
     "runtime-main.js.map": "/static/js/runtime-main.df66fb3b.js.map",
     "static/css/2.46689a8a.chunk.css": "/static/css/2.46689a8a.chunk.css",
-    "static/js/2.5d23e659.chunk.js": "/static/js/2.5d23e659.chunk.js",
-    "static/js/2.5d23e659.chunk.js.map": "/static/js/2.5d23e659.chunk.js.map",
+    "static/js/2.c92ba9af.chunk.js": "/static/js/2.c92ba9af.chunk.js",
+    "static/js/2.c92ba9af.chunk.js.map": "/static/js/2.c92ba9af.chunk.js.map",
     "index.html": "/index.html",
     "static/css/2.46689a8a.chunk.css.map": "/static/css/2.46689a8a.chunk.css.map",
     "static/css/main.7176885d.chunk.css.map": "/static/css/main.7176885d.chunk.css.map",
-    "static/js/2.5d23e659.chunk.js.LICENSE.txt": "/static/js/2.5d23e659.chunk.js.LICENSE.txt",
+    "static/js/2.c92ba9af.chunk.js.LICENSE.txt": "/static/js/2.c92ba9af.chunk.js.LICENSE.txt",
     "static/media/certificate_sample.6f46be5a.png": "/static/media/certificate_sample.6f46be5a.png",
     "static/media/google-play-badge.561e4a2c.png": "/static/media/google-play-badge.561e4a2c.png",
     "static/media/logo.cc1ac587.svg": "/static/media/logo.cc1ac587.svg",
@@ -23,8 +23,8 @@
   "entrypoints": [
     "static/js/runtime-main.df66fb3b.js",
     "static/css/2.46689a8a.chunk.css",
-    "static/js/2.5d23e659.chunk.js",
+    "static/js/2.c92ba9af.chunk.js",
     "static/css/main.7176885d.chunk.css",
-    "static/js/main.b4895973.chunk.js"
+    "static/js/main.11442828.chunk.js"
   ]
 }

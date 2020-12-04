@@ -18,6 +18,12 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Fade from '@material-ui/core/Fade';
 // import { TextField } from '@material-ui/core';
 
+import socketIOClient from "socket.io-client";
+const socket = socketIOClient("https://staging.ellipseapp.com",{
+    path: '/ws',
+    // transports: ['websocket']
+});
+
 
 
 
@@ -113,29 +119,43 @@ export default function JustifyContent(props) {
     const handleClose = () => {
         setDialogOpen(false);
     };
-    const [webSocket, setWebSocket] = React.useState(null);
+    // const [webSocket, setWebSocket] = React.useState(null);
 
-    const webConnect = () => {
-        const ws = new WebSocket(process.env.REACT_APP_WESOCKET_URL);
-        ws.onopen = () => {
-            // console.log("connected")
-            setWebSocket(ws);
-            ws.onmessage = (message) => {
-                const mes = JSON.parse(message.data);
+    // const webConnect = () => {
+    //     const ws = new WebSocket(process.env.REACT_APP_WESOCKET_URL);
+    //     ws.onopen = () => {
+    //         // console.log("connected")
+    //         setWebSocket(ws);
+    //         ws.onmessage = (message) => {
+    //             const mes = JSON.parse(message.data);
+    //             const cMes = mes.msg;
+    //             if (mes.event_id === event._id) {
+    //                 // console.log(cMes);
+    //                 setChatMessages(chatMessages => [...chatMessages, cMes]);
+    //             }
+    //         }
+    //         setLoading(false)
+    //     }
+    //     ws.onclose = () => {
+    //         check();
+    //         console.log("closed");
+    //     }
+    // }
+    React.useEffect(() => {
+        socket.on('connect',()=>{
+            console.log(socket.id);
+            console.log("connected");
+        })
+        // socket.on('error',())
+        socket.emit('initial_room',event._id);
+        socket.on('chatmessage',(message)=>{
+            const mes = JSON.parse(message);
                 const cMes = mes.msg;
                 if (mes.event_id === event._id) {
                     // console.log(cMes);
                     setChatMessages(chatMessages => [...chatMessages, cMes]);
                 }
-            }
-            setLoading(false)
-        }
-        ws.onclose = () => {
-            check();
-            console.log("closed");
-        }
-    }
-    React.useEffect(() => {
+        })
         setLoading(true)
         fetch(process.env.REACT_APP_API_URL + `/api/chat/load_messages?id=${event._id}`, {
             headers: {
@@ -148,7 +168,8 @@ export default function JustifyContent(props) {
             response.json().then(value => {
                 // console.log(value);
                 setChatMessages(value);
-                webConnect();
+                setLoading(false)
+                // webConnect();
             })
         })
         if (reference != null) {
@@ -181,12 +202,12 @@ export default function JustifyContent(props) {
     }, [chatMessages, reference])
 
 
-    const check = () => {
-        if (!webSocket || webSocket.readyState === WebSocket.readyState) {
-            console.log("checking");
-            webConnect();
-        }
-    }
+    // const check = () => {
+    //     if (!webSocket || webSocket.readyState === WebSocket.readyState) {
+    //         console.log("checking");
+    //         webConnect();
+    //     }
+    // }
 
 
 
@@ -195,7 +216,7 @@ export default function JustifyContent(props) {
 
         const d = new Date();
         // console.log(d.toISOString())
-        webSocket.send(JSON.stringify({
+        socket.emit("chatmessage",JSON.stringify({
             action: "send_message",
             event_id: event._id,
             msg: {
@@ -207,6 +228,18 @@ export default function JustifyContent(props) {
                 'date': d.toISOString()
             }
         }));
+        // webSocket.send(JSON.stringify({
+        //     action: "send_message",
+        //     event_id: event._id,
+        //     msg: {
+        //         'id': user.user_id + Date.now(),
+        //         'user_id': user.user_id,
+        //         'user_name': user.name,
+        //         'user_pic': user.profile_pic,
+        //         'message': message,
+        //         'date': d.toISOString()
+        //     }
+        // }));
         if (reference != null) {
             reference.scrollIntoView({ behavior: "smooth" })
         }
