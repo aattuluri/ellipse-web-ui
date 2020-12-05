@@ -21,6 +21,7 @@ import AboutEventPanel from '../Components/AboutEventPanel';
 import EventsTimeLinePanel from '../Components/EventTimeLinePanel';
 import EvenstAnnouncementsPanel from '../Components/EventsAnnouncementsPanel';
 import ChatPanel from '../Components/EventsChatPanel';
+import EventsTeamPanel from '../Components/EventsTeamPanel';
 import { Typography } from '@material-ui/core';
 import AuthContext from '../AuthContext';
 
@@ -210,6 +211,8 @@ function EventsDialog(props) {
                             <Tab label="Announcements" {...a11yProps(2)} />
                             <Tab label="Chat" {...a11yProps(3)} />
 
+                            <Tab label="Participation" {...a11yProps(4)}></Tab>
+                            {/* <Tab label="Submission"></Tab> */}
                         </Tabs>
                     </Paper>
                 </div>
@@ -227,6 +230,7 @@ function EventsDialog(props) {
                 <EvenstAnnouncementsPanel value={value} index={2} event={props.event}></EvenstAnnouncementsPanel>
                 {value === 3 && chatAcess && <ChatPanel value={value} index={3} event={props.event}></ChatPanel>}
                 {value === 3 && !chatAcess && <Typography align="center" variant="h5" >Register for the event to continue</Typography>}
+                <EventsTeamPanel value={value} index={4} event={props.event}></EventsTeamPanel>
             </DialogContent>
             <DialogActions className={classes.action}>
                 <Box className={classes.bottomBar} display="flex"
