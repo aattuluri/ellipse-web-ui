@@ -12,14 +12,16 @@ import Tab from '@material-ui/core/Tab';
 import SubPanel1 from './EventsTeamSubPanel1';
 import SubPanel2 from './EventsTeamSubPanel2';
 import SubPanel3 from './EventsTeamSubPanel3';
+import { Typography } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
     root: {
         alignItems: "center",
         // backgroundColor: theme.palette.primary.light,
         marginBottom: theme.spacing(2),
-        padding: theme.spacing(1),
-        alignContent: "center"
+        padding: theme.spacing(0),
+        alignContent: "center",
+        // position: 'fixed'
 
     },
     media: {
@@ -57,6 +59,9 @@ const useStyles = makeStyles((theme) => ({
         alignItems: "center",
         justifyContent: 'center',
         backgroundColor: theme.palette.secondary.main,
+        // position: '-webkit-sticky',
+        // position: 'sticky'
+        // position: 'fixed'
         // marginBottom: theme.spacing(2),
         // padding: theme.spacing(1)
 
@@ -67,13 +72,36 @@ function AboutEventPanel(props) {
     const classes = useStyles();
     const { children, value, url, index, ...other } = props;
     // const user = JSON.parse(localStorage.getItem('user'));
-    // const token = localStorage.getItem('token');
-    // const event = props.event;
+    const token = localStorage.getItem('token');
+    const event = props.event;
     const [subIndexValue, setSubIndexValue] = React.useState(0);
+    const [teamedUp, setTeamedUp] = React.useState(false);
+    const [registration, setRegistration] = React.useState({});
 
     const handleChange = (event, newValue) => {
         setSubIndexValue(newValue);
     };
+
+    React.useEffect(() => {
+        try {
+            fetch(process.env.REACT_APP_API_URL + `/api/event/get_user_registration?id=${event._id}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                method: 'GET',
+            }).then(response => {
+                response.json().then(value => {
+                    setRegistration(value[0]);
+                    setTeamedUp(value[0].teamed_up);
+                })
+            })
+        }
+        catch (e) {
+            console.log(e);
+        }
+    }, [event,token])
 
 
     return (
@@ -98,9 +126,12 @@ function AboutEventPanel(props) {
                             <Tab label="Join Team" />
                         </Tabs>
                     </Paper>
-                    <SubPanel1 value={subIndexValue} index={1} event={props.event}></SubPanel1>
-                    <SubPanel2 value={subIndexValue} index={2} event={props.event}></SubPanel2>
-                    <SubPanel3 value={subIndexValue} index={3} event={props.event}></SubPanel3>
+                    {teamedUp && <SubPanel1 value={subIndexValue} registration={registration} index={1} event={props.event}></SubPanel1>}
+                    {!teamedUp && subIndexValue === 1 && <Typography>Join team or create a team</Typography>}
+                    {!teamedUp && <SubPanel2 value={subIndexValue} index={2} event={props.event}></SubPanel2>}
+                    {teamedUp && subIndexValue === 2 && <Typography>Team already created</Typography>}
+                    {!teamedUp && <SubPanel3 value={subIndexValue} index={3} event={props.event}></SubPanel3>}
+                    {teamedUp && subIndexValue === 3 && <Typography>Team created or joined, delete to join other teams</Typography>}
                 </div>
             )}
         </div>
