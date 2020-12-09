@@ -83,6 +83,11 @@ function AboutEventPanel(props) {
     };
 
     React.useEffect(() => {
+        getData();
+        // eslint-disable-next-line
+    }, [event,token])
+
+    const getData = () =>{
         try {
             fetch(process.env.REACT_APP_API_URL + `/api/event/get_user_registration?id=${event._id}`, {
                 headers: {
@@ -101,7 +106,7 @@ function AboutEventPanel(props) {
         catch (e) {
             console.log(e);
         }
-    }, [event,token])
+    }
 
 
     return (
@@ -126,7 +131,7 @@ function AboutEventPanel(props) {
                             <Tab label="Join Team" />
                         </Tabs>
                     </Paper>
-                    {teamedUp && <SubPanel1 value={subIndexValue} registration={registration} index={1} event={props.event}></SubPanel1>}
+                    {teamedUp && <SubPanel1 getData={getData} value={subIndexValue} registration={registration} index={1} event={props.event}></SubPanel1>}
                     {!teamedUp && subIndexValue === 1 && <Typography>Join team or create a team</Typography>}
                     {!teamedUp && <SubPanel2 value={subIndexValue} index={2} event={props.event}></SubPanel2>}
                     {teamedUp && subIndexValue === 2 && <Typography>Team already created</Typography>}

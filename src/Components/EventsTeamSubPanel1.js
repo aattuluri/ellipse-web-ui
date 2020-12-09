@@ -107,6 +107,7 @@ function AboutEventPanel(props) {
       body: data
     }).then((response) => {
       response.json().then(value => {
+        props.getData();
         // console.log(value);
         // props.fetchAll()
       })
@@ -131,6 +132,7 @@ function AboutEventPanel(props) {
     }).then((response) => {
       response.json().then(value => {
         console.log(value);
+        props.getData();
         // props.fetchAll()
       })
     })
