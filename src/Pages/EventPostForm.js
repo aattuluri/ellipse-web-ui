@@ -139,6 +139,10 @@ export default function Checkout({ history }) {
   const [fields, setFields] = React.useState([]);
   const [platformDetails, setPlatformDetails] = React.useState('');
   const [imageName, setImageName] = React.useState(null);
+  const [isTeam,setIsTeam] = React.useState(false);
+  const [minTeamSize,setMinTeamSize] = React.useState(1);
+  const [maxTeamSize,setMaxTeamSize] = React.useState(1);
+
 
 
 
@@ -193,6 +197,12 @@ export default function Checkout({ history }) {
             participantsType={participantsType}
             platformDetails={platformDetails}
             poster={image}
+            isTeam = {isTeam}
+            minTeamSize={minTeamSize}
+            maxTeamSize={maxTeamSize}
+            setIsTeam={setIsTeam}
+            setMinTeamSize={setMinTeamSize}
+            setMaxTeamSize={setMaxTeamSize}
             imageName={imageName}
             setImageName={setImageName}
             setPlatformDetails={setPlatformDetails}
@@ -255,7 +265,9 @@ export default function Checkout({ history }) {
         reg_fields: allFields,
         reg_mode: registrationMode,
         o_allowed: oAllowed,
-        platform_details: platformDetails
+        platform_details: platformDetails,
+        isTeamed: isTeam,
+        team_size: {min_team_size:minTeamSize,max_team_size:maxTeamSize}
       };
       data = JSON.stringify(payload);
       fetch(process.env.REACT_APP_API_URL + '/api/events', {
@@ -342,6 +354,7 @@ export default function Checkout({ history }) {
 
   const handleBack = () => {
     setActiveStep(activeStep - 1);
+    setIsTeam(false)
   };
 
   function handleCloseButton() {

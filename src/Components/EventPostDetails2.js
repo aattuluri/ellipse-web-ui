@@ -167,6 +167,14 @@ export default function AddressForm(props) {
     setTandcOpen(true);
   }
 
+  function handleTeamChange(event,value){
+    if(value === "team"){
+      props.setIsTeam(true);
+    }
+    else{
+      props.setIsTeam(false);
+    }
+  }
 
   return (
     <React.Fragment>
@@ -302,6 +310,37 @@ export default function AddressForm(props) {
               <FormControlLabel value="onlycollege" control={<Radio color="default" />} label={`Only ${props.college}`} />
             </RadioGroup>
           </Grid>
+          <Grid item xs={12}>
+            <FormLabel required component="legend">Participation Type</FormLabel>
+            <RadioGroup required aria-label="address" name="teamed" defaultValue="individual" onChange={handleTeamChange} style={{ display: "inline" }}>
+              <FormControlLabel value="individual" control={<Radio color="default" />} label="Individual" />
+              <FormControlLabel value="team" control={<Radio color="default" />} label="Team" />
+            </RadioGroup>
+          </Grid>
+          {props.isTeam && <Grid item xs={12} lg={6}>
+            <TextField
+              autoComplete='off'
+              required
+              id="maxTeam"
+              name="minTeam"
+              label="Minimum Team Members"
+              fullWidth
+              value={props.minTeamSize || ""}
+              onChange={(e)=>{props.setMinTeamSize(e.target.value)}}
+            />
+          </Grid>}
+          {props.isTeam && <Grid item xs={12} lg={6}>
+            <TextField
+              autoComplete='off'
+              required
+              id="maxTeam"
+              name="maxTeam"
+              label="Maximum Team Members"
+              fullWidth
+              value={props.maxTeamSize || ""}
+              onChange={(e)=>{props.setMaxTeamSize(e.target.value)}}
+            />
+          </Grid>}
           {props.eventMode === "Online" && <Grid item xs={12}>
             <TextField
               multiline={true}
@@ -365,7 +404,6 @@ export default function AddressForm(props) {
                 renderInput={(params) => <TextField fullWidth required {...params} label="Venue College" />}
               />
             </Grid> */}
-
           </React.Fragment>}
           {props.registrationMode !== "form" && <Grid item xs={12}>
           <Typography>By posting the event.I accept the <Button onClick={handleTermsClick} color="primary">Terms and Conditions</Button></Typography>
