@@ -3,12 +3,15 @@ import { Typography, Box, Avatar, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import List from '@material-ui/core/List';
+// import { cleanup } from '@testing-library/react';
 
 import TeamMemberListItem from './TeamMemberListItem';
 import TeamMemberRequestListItem from './TeamMemberRequestListItem';
 
 import AuthContext from '../AuthContext';
 import TeamEditDialog from './EditTeamDialog';
+// import ChatMessage from '../Components/ChatMessage';
+// import ChatTextField from './ChatTextField';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -45,6 +48,65 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: '99%',
     marginTop: theme.spacing(2)
 
+  },
+  root3: {
+    display: "flex",
+    justifyContent: "flex-start",
+    minWidth: theme.spacing(30)
+  },
+  root6: {
+    display: "flex",
+    justifyContent: "center",
+
+  },
+  // stickyHeader: {
+  //     position: "sticky",
+  //     position: "-webkit-sticky",
+  //     top: 0,
+  // },
+
+  topBar: {
+    // display: 'fixed'
+    maxHeight: "300px"
+  },
+  root4: {
+    marginRight: theme.spacing(0)
+  },
+  root5: {
+    marginLeft: theme.spacing(0),
+    maxWidth: '65%',
+    overflow: 'auto',
+    //    textOverflow: "ellipsis"
+  },
+  root2: {
+    // backgroundColor: theme.palette.background.paper,
+    // borderRadius: theme.spacing(1),
+    textDecorationColor: theme.palette.secondary.light,
+    maxWidth: '65%',
+    minWidth: '20%',
+    overflow: 'auto',
+    marginLeft: theme.spacing(1)
+    // textOverflow: "ellipsis"
+  },
+  bottomBar: {
+    position: 'absolute',
+    // flexGrow: 1,
+    // zIndex: '5',
+    right: theme.spacing(4),
+    bottom: theme.spacing(4),
+    left: "200px",
+    padding: theme.spacing(0, 3),
+    backgroundColor: theme.palette.background.paper,
+    borderRadius: theme.spacing(5),
+  },
+  progress: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  message: {
+    display: "flex",
+    justifyContent: "flex-start",
   }
 
 }));
@@ -61,10 +123,12 @@ function AboutEventPanel(props) {
   const [admin, setAdmin] = React.useState(false);
   const [editDialogOpen, setEditDialogOpen] = React.useState(false);
 
-  React.useEffect(() => {
+
+  React.useEffect(()=>{
     fetchAll()
     // eslint-disable-next-line
-  }, [])
+  },[])
+
 
   const fetchAll = () => {
     try {
@@ -155,57 +219,61 @@ function AboutEventPanel(props) {
       hidden={value !== index}
       {...other}>
       {value === index && (
-        <div className={classes.grid}>
-          <Grid container component="main" >
-            <Grid item xs={12} md={6}>
-              <Box className={classes.root0}>
-                <Box className={classes.adminDetails}>
-                  <Box>
-                    <Avatar className={classes.avatar} alt={teamDetails.team_name}>S</Avatar>
-                  </Box>
-                  <Box>
+        <React.Fragment>
+          <div className={classes.grid}>
+            <Grid container component="main" >
+              <Grid item xs={12} md={6}>
+                <Box className={classes.root0}>
+                  <Box className={classes.adminDetails}>
                     <Box>
-                      <Typography variant="h5">{teamDetails.team_name}</Typography>
+                      <Avatar className={classes.avatar} alt={teamDetails.team_name}>S</Avatar>
                     </Box>
                     <Box>
-                      <Typography color="textSecondary" variant="body2">{teamDetails.description}</Typography>
+                      <Box>
+                        <Typography variant="h5">{teamDetails.team_name}</Typography>
+                      </Box>
+                      <Box>
+                        <Typography color="textSecondary" variant="body2">{teamDetails.description}</Typography>
+                      </Box>
                     </Box>
                   </Box>
                 </Box>
-              </Box>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <Box display="flex" justifyContent="flex-end">
+                  {!admin && <Button onClick={handleLeaveButton}>Leave</Button>}
+                  {admin && <Button onClick={handleEditButton}>Edit</Button>}
+                  {admin && <Button onClick={handleDeleteButton}>Delete</Button>}
+                </Box>
+              </Grid>
             </Grid>
-            <Grid item xs={12} md={6}>
-              <Box display="flex" justifyContent="flex-end">
-                {!admin && <Button onClick={handleLeaveButton}>Leave</Button>}
-                {admin && <Button onClick={handleEditButton}>Edit</Button>}
-                {admin && <Button onClick={handleDeleteButton}>Delete</Button>}
-              </Box>
+            <Grid container component="main" >
+              <Grid item xs={12} md={6}>
+                <Typography color="textSecondary" style={{ marginTop: "7px" }}>Team Members</Typography>
+                {teamDetails.members !== undefined && <List dense={true}>
+                  {teamDetails.members.map((v) => {
+                    return <TeamMemberListItem fetchAll={fetchAll} admin={admin} event={props.event} id={teamDetails} user_id={v}></TeamMemberListItem>
+                  })}
+                </List>}
+              </Grid>
+              <Grid item xs={12} md={6}>
+                {admin && <Typography color="textSecondary" style={{ marginTop: "7px" }}>Team up Requests</Typography>}
+                {admin && <List dense={true}>
+                  {
+                    teamDetails.received_requests.map(v => {
+                      return <TeamMemberRequestListItem fetchAll={fetchAll} event={props.event} id={teamDetails} user_id={v}></TeamMemberRequestListItem>
+                    })
+                  }
+                </List>}
+              </Grid>
             </Grid>
-          </Grid>
-          <Grid container component="main" >
-            <Grid item xs={12} md={6}>
-              <Typography color="textSecondary" style={{ marginTop: "7px" }}>Team Members</Typography>
-              {teamDetails.members !== undefined && <List dense={true}>
-                {teamDetails.members.map((v) => {
-                  return <TeamMemberListItem fetchAll={fetchAll} admin={admin} event={props.event} id={teamDetails} user_id={v}></TeamMemberListItem>
-                })}
-              </List>}
-            </Grid>
-            <Grid item xs={12} md={6}>
-              {admin && <Typography color="textSecondary" style={{ marginTop: "7px" }}>Team up Requests</Typography>}
-              {admin && <List dense={true}>
-                {
-                  teamDetails.received_requests.map(v => {
-                    return <TeamMemberRequestListItem fetchAll={fetchAll} event={props.event} id={teamDetails} user_id={v}></TeamMemberRequestListItem>
-                  })
-                }
-              </List>}
-            </Grid>
-          </Grid>
-          <TeamEditDialog open={editDialogOpen} handleClose={handleClose} team_id={teamDetails._id} title={teamDetails.team_name} desc={teamDetails.description}></TeamEditDialog>
-        </div>
+            <TeamEditDialog open={editDialogOpen} handleClose={handleClose} team_id={teamDetails._id} title={teamDetails.team_name} desc={teamDetails.description}></TeamEditDialog>
+          </div>
+        </React.Fragment>
       )}
     </div>
   );
 }
 export default AboutEventPanel;
+
+// {/* <ChatMessage adminId={event.user_id} message={value} ></ChatMessage> */}

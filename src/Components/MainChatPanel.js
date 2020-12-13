@@ -1,29 +1,29 @@
 import React from 'react';
 // import ChatMessage from '../Components/ChatMessage';
 import AuthContext from '../AuthContext';
-import ChatTextField from './ChatTextField';
+import ChatTextField from './MainChatTextField';
 import { cleanup } from '@testing-library/react';
 
 import Box from '@material-ui/core/Box';
 import { makeStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
-import { Typography, List, Divider, IconButton } from '@material-ui/core';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import ListItemText from '@material-ui/core/ListItemText';
-import Dialog from '@material-ui/core/Dialog';
+import { Typography } from '@material-ui/core';
+// import ListItem from '@material-ui/core/ListItem';
+// import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+// import ListItemText from '@material-ui/core/ListItemText';
+// import Dialog from '@material-ui/core/Dialog';
 import DeleteIcon from '@material-ui/icons/Delete';
 import ReplyIcon from '@material-ui/icons/Reply';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Fade from '@material-ui/core/Fade';
-
+import { Divider, IconButton } from '@material-ui/core';
+// import { TextField } from '@material-ui/core';
 
 // import socketIOClient from "socket.io-client";
 // const socket = socketIOClient("https://staging.ellipseapp.com",{
 //     path: '/ws',
 //     // transports: ['websocket']
 // });
-
 
 
 
@@ -64,6 +64,7 @@ const useStyles = makeStyles((theme) => ({
 
     topBar: {
         // display: 'fixed'
+        height: '100%'
     },
     root4: {
         marginRight: theme.spacing(0)
@@ -112,78 +113,121 @@ const useStyles = makeStyles((theme) => ({
     inline: {
         whiteSpace: 'pre-line',
     },
+    textField: {
+        position: 'sticky',
+        bottom: 0,
+    },
+    header: {
+        position: 'sticky',
+        top: 65,
+        backgroundColor: theme.palette.secondary.main,
+        padding: theme.spacing(2),
+        zIndex: 8
+    }
 
 }));
 
 export default function JustifyContent(props) {
-
     const { children, value, url, index, ...other } = props;
     const { currentUser } = React.useContext(AuthContext);
+    const user = props.user
     const token = localStorage.getItem('token');
     const event = props.event;
-    const open = props.open;
-    const [dialogOpen, setDialogOpen] = React.useState(false);
+    const team = props.event;
     const [loading, setLoading] = React.useState(false);
 
     const [reference, setReferenece] = React.useState(null);
     // const [currentReference,setCurrenmtReference] = React.useState(null);
     const [chatMessages, setChatMessages] = React.useState([]);
-    // const [showOptions, setShowOptiona] = React.useState("");
     const classes = useStyles();
     var counterDate = null;
 
-    const handleClose = () => {
-        setDialogOpen(false);
-    };
-    const [webSocket, setWebSocket] = React.useState(null);
 
+    const [webSocket, setWebSocket] = React.useState(null);
 
     const webConnect = () => {
         const ws = new WebSocket(process.env.REACT_APP_WESOCKET_URL);
         ws.onopen = () => {
             // console.log("connected")
             setWebSocket(ws);
-            ws.send(JSON.stringify({
-                action: "join_event_room",
-                event_id: event._id,
-                msg: {
-                    'user_id': currentUser.user_id,
-                }
-            }));
+            if(props.chatType === "event"){
+                ws.send(JSON.stringify({
+                    action: "join_event_room",
+                    event_id: event._id,
+                    msg: {
+                        'user_id': currentUser.user_id,
+                    }
+                }));
+            }
+            else{
+                ws.send(JSON.stringify({
+                    action: "join_team_room",
+                    team_id: event._id,
+                    msg: {
+                        'user_id': currentUser.user_id,
+                    }
+                }));
+            }
+            
             ws.onmessage = (message) => {
                 const mes = JSON.parse(message.data);
                 const cMes = mes.msg;
-                // console.log(mes);
-                if (mes.event_id === event._id) {
-                    // console.log(cMes);
-                    setChatMessages(chatMessages => [...chatMessages, cMes]);
+                if(props.chatType === "event"){
+                    if (mes.event_id === event._id) {
+                        setChatMessages(chatMessages => [...chatMessages, cMes]);
+                    }
                 }
+                else{
+                    if (mes.team_id === event._id) {
+                        setChatMessages(chatMessages => [...chatMessages, cMes]);
+                    }
+                }
+                
             }
             setLoading(false)
         }
         ws.onclose = () => {
-
             check();
-            // console.log("closed");
+            console.log("closed");
         }
     }
     React.useEffect(() => {
+        // console.log(props.chatType);
         setLoading(true)
-        fetch(process.env.REACT_APP_API_URL + `/api/chat/load_messages?id=${event._id}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            method: 'GET',
-        }).then(response => {
-            response.json().then(value => {
-                // console.log(value);
-                setChatMessages(value);
-                webConnect();
-                // setLoading(false)
+        if(props.chatType === "event"){
+            fetch(process.env.REACT_APP_API_URL + `/api/chat/load_messages?id=${event._id}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                method: 'GET',
+            }).then(response => {
+                response.json().then(value => {
+                    // console.log(value);
+                    setChatMessages(value);
+                    // setLoading(false)
+                    webConnect();
+                })
             })
-        })
+        }else{
+            fetch(process.env.REACT_APP_API_URL + `/api/chat/load_team_chat_messages?id=${event._id}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                method: 'GET',
+            }).then(response => {
+                response.json().then(value => {
+                    // console.log(value);
+                    setChatMessages(value);
+                    // setLoading(false)
+                    webConnect();
+                })
+            })
+        }
+        
         if (reference != null) {
             reference.scrollIntoView({ behavior: "smooth" })
         }
@@ -216,7 +260,7 @@ export default function JustifyContent(props) {
 
     const check = () => {
         if (!webSocket || webSocket.readyState === WebSocket.readyState) {
-            // console.log("checking");
+            console.log("checking");
             webConnect();
         }
     }
@@ -225,33 +269,40 @@ export default function JustifyContent(props) {
 
 
     const handleSendClick = (message) => {
-
         const d = new Date();
-        // console.log(d.toISOString())
-        webSocket.send(JSON.stringify({
-            action: "send_message",
-            event_id: event._id,
-            msg: {
-                'id': currentUser.user_id + Date.now(),
-                'user_id': currentUser.user_id,
-                'user_name': currentUser.name,
-                'user_pic': currentUser.profile_pic,
-                'message': message,
-                'date': d.toISOString()
-            }
-        }));
+        if(props.chatType === "event"){
+            webSocket.send(JSON.stringify({
+                action: "send_message",
+                event_id: event._id,
+                msg: {
+                    'id': user.user_id + Date.now(),
+                    'user_id': user.user_id,
+                    'user_name': user.name,
+                    'user_pic': user.profile_pic,
+                    'message': message,
+                    'date': d.toISOString()
+                }
+            }));
+        }
+        else {
+            webSocket.send(JSON.stringify({
+                action: "send_team_message",
+                team_id: event._id,
+                msg: {
+                    'id': user.user_id + Date.now(),
+                    'user_id': user.user_id,
+                    'user_name': user.name,
+                    'user_pic': user.profile_pic,
+                    'message': message,
+                    'date': d.toISOString()
+                }
+            }));
+        }
+        
         if (reference != null) {
             reference.scrollIntoView({ behavior: "smooth" })
         }
     }
-
-    // const showHoverOptions = (id) => () => {
-    //     setShowOptiona(id);
-    // }
-
-    // const hideHoverOptions = () => {
-    //     setShowOptiona('');
-    // }
 
     return (
         <div
@@ -260,38 +311,24 @@ export default function JustifyContent(props) {
             {...other}>
             {value === index && (
                 <div>
+
+                    <div className={classes.header}>
+                        <Typography>{props.chatType === "event" ? event.name : team.team_name}</Typography>
+                    </div>
                     <div className={classes.progress}>
                         <Fade
+
                             in={loading}
                             unmountOnExit>
                             <CircularProgress />
+
                         </Fade>
                     </div>
-
-                    <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={dialogOpen}>
-                        <List>
-                            <ListItem button>
-                                <ListItemAvatar>
-                                    <Avatar>
-                                        <ReplyIcon />
-                                    </Avatar>
-                                </ListItemAvatar>
-                                <ListItemText primary="Reply" />
-                            </ListItem>
-                            <ListItem autoFocus button>
-                                <ListItemAvatar>
-                                    <Avatar>
-                                        <DeleteIcon />
-                                    </Avatar>
-                                </ListItemAvatar>
-                                <ListItemText primary="Delete" />
-                            </ListItem>
-                        </List>
-                    </Dialog>
 
                     <Box className={classes.topBar}>
                         {
                             chatMessages.map((value, index) => {
+
                                 const currentDate = new Date();
                                 const messageDate = new Date(value.date);
                                 const date = new Date(value.date);
@@ -323,13 +360,13 @@ export default function JustifyContent(props) {
                                                             </Box>
                                                         </Box>
                                                         <Box>
-                                                    <IconButton style={{padding:'0px',margin:'0px'}}>
-                                                        <ReplyIcon style={{ color: '#aaaaaa' }}></ReplyIcon>
-                                                    </IconButton>
-                                                    {currentUser.user_id === value.user_id && <IconButton style={{padding:'0px',margin:'0px'}}>
-                                                        <DeleteIcon style={{ color: '#aaaaaa' }}></DeleteIcon>
-                                                    </IconButton>}
-                                                </Box>
+                                                            <IconButton style={{ padding: '0px', margin: '0px' }}>
+                                                                <ReplyIcon style={{ color: '#aaaaaa' }}></ReplyIcon>
+                                                            </IconButton>
+                                                            {user.user_id === value.user_id && <IconButton style={{ padding: '0px', margin: '0px' }}>
+                                                                <DeleteIcon style={{ color: '#aaaaaa' }}></DeleteIcon>
+                                                            </IconButton>}
+                                                        </Box>
                                                     </Box>
 
                                                     <Box>
@@ -363,10 +400,10 @@ export default function JustifyContent(props) {
                                                     </Box>
                                                 </Box>
                                                 <Box>
-                                                    <IconButton style={{padding:'0px',margin:'0px'}}>
+                                                    <IconButton style={{ padding: '0px', margin: '0px' }}>
                                                         <ReplyIcon style={{ color: '#aaaaaa' }}></ReplyIcon>
                                                     </IconButton>
-                                                    {currentUser.user_id === value.user_id && <IconButton style={{padding:'0px',margin:'0px'}}>
+                                                    {user.user_id === value.user_id && <IconButton style={{ padding: '0px', margin: '0px' }}>
                                                         <DeleteIcon style={{ color: '#aaaaaa' }}></DeleteIcon>
                                                     </IconButton>}
                                                 </Box>
@@ -385,79 +422,13 @@ export default function JustifyContent(props) {
                         <div style={{ float: "left", clear: "both", paddingBottom: '60px', }}
                             ref={(el) => { setReferenece(el) }}>
                         </div>
-                        <div>
-                            <ChatTextField loading={loading} open={open} handleSend={handleSendClick}  ></ChatTextField>
-                        </div>
-                    </Box>
 
+                    </Box>
+                    <div className={classes.textField}>
+                        <ChatTextField loading={loading} open={undefined} handleSend={handleSendClick}  ></ChatTextField>
+                    </div>
                 </div>
             )}
         </div>
     );
 }
-
-
-// if (messageDate.toDateString() !== counterDate) {
-//     counterDate = messageDate.toDateString();
-//     if (value.user_id === currentUser.user_id) {
-//         return (<React.Fragment key={index}>
-
-//             <Box m={1} p={1} key={index} position="sticky" className={classes.root6}>
-//                 <Typography variant="body2">{currentDate.toDateString() === messageDate.toDateString() ? "Today" : messageDate.toDateString()}</Typography>
-//             </Box>
-
-//             <Box m={1} p={1} key={index + 1} className={classes.root3}>
-
-//                 <Box className={classes.root2} whiteSpace="normal" onClick={() => setDialogOpen(false)} >
-//                     <ChatMessage adminId={event.user_id} message={value} ></ChatMessage>
-//                 </Box>
-//                 <Box className={classes.root5}>
-//                     <Avatar alt={value.userName} src={process.env.REACT_APP_API_URL + `/api/image?id=${value.user_pic}`} />
-//                 </Box>
-//             </Box></React.Fragment>);
-
-//     }
-//     else {
-//         return (<React.Fragment>
-
-
-//             <Box m={1} p={1} key={index} className={classes.root6}>
-//                 <Typography variant="body2">{currentDate.toDateString() === messageDate.toDateString() ? "Today" : messageDate.toDateString()}</Typography>
-//             </Box>
-
-
-//             <Box m={1} key={index} className={classes.root}>
-//                 <Box className={classes.root4}>
-//                     <Avatar alt={value.userName} src={process.env.REACT_APP_API_URL + `/api/image?id=${value.user_pic}`} />
-//                 </Box>
-//                 <Box className={classes.root2} whiteSpace="normal" >
-//                     <ChatMessage adminId={event.user_id} message={value}></ChatMessage>
-//                 </Box>
-//             </Box></React.Fragment>);
-//     }
-
-
-// }
-
-// if (value.user_id === currentUser.user_id) {
-//     return (<Box m={1} p={1} key={index} className={classes.root3}>
-
-//         <Box className={classes.root2} onClick={() => setDialogOpen(false)} whiteSpace="normal">
-//             <ChatMessage adminId={event.user_id} message={value}></ChatMessage>
-//         </Box>
-//         <Box className={classes.root5}>
-//             <Avatar alt={value.userName} src={process.env.REACT_APP_API_URL + `/api/image?id=${value.user_pic}`} />
-//         </Box>
-//     </Box>);
-
-// }
-// else {
-//     return (<Box m={1} key={index} className={classes.root}>
-//         <Box className={classes.root4}>
-//             <Avatar alt={value.userName} src={process.env.REACT_APP_API_URL + `/api/image?id=${value.user_pic}`} />
-//         </Box>
-//         <Box className={classes.root2} whiteSpace="normal">
-//             <ChatMessage adminId={event.user_id} message={value}></ChatMessage>
-//         </Box>
-//     </Box>);
-// }

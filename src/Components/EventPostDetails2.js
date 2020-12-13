@@ -321,6 +321,7 @@ export default function AddressForm(props) {
             <TextField
               autoComplete='off'
               required
+              type="number"
               id="maxTeam"
               name="minTeam"
               label="Minimum Team Members"
@@ -333,6 +334,7 @@ export default function AddressForm(props) {
             <TextField
               autoComplete='off'
               required
+              type="number"
               id="maxTeam"
               name="maxTeam"
               label="Maximum Team Members"

@@ -1,5 +1,5 @@
 import React from 'react';
-import clsx from 'clsx';
+// import clsx from 'clsx';
 
 //Materail imports
 import Box from '@material-ui/core/Box';
@@ -11,33 +11,15 @@ import IconButton from '@material-ui/core/IconButton';
 
 const useStyles = makeStyles((theme) => ({
     bottomBar: {
-        position: 'absolute',
-        right: theme.spacing(4),
-        bottom: theme.spacing(4),
-        left: theme.spacing(4),
+        // position: 'absolute',
+        // right: theme.spacing(4),
+        // bottom: theme.spacing(4),
+        // left: theme.spacing(4),
         padding: theme.spacing(0, 3),
         backgroundColor: theme.palette.background.paper,
         borderRadius: theme.spacing(5),
+        
     },
-    open: {
-        position: 'fixed',
-        right: theme.spacing(4),
-        bottom: theme.spacing(4),
-        left: theme.spacing(34),
-        padding: theme.spacing(0, 3),
-        backgroundColor: theme.palette.background.paper,
-        borderRadius: theme.spacing(5),
-    },
-    close: {
-        // width: '85%',
-        position: 'fixed',
-        right: theme.spacing(4),
-        bottom: theme.spacing(4),
-        left: theme.spacing(13),
-        padding: theme.spacing(0, 3),
-        backgroundColor: theme.palette.background.paper,
-        borderRadius: theme.spacing(5),
-    }
 
 }));
 
@@ -46,16 +28,7 @@ export default function JustifyContent(props) {
     const classes = useStyles();
     const [sendButtonDisabled, setSendButtonDisabled] = React.useState(true);
     const [newmessage, setNewMessage] = React.useState(null);
-    const [cl, setCl] = React.useState(classes.bottomBar);
-    React.useEffect(() => {
-        if (props.open !== undefined) {
-            setCl(clsx({
-                [classes.open]: props.open,
-                [classes.close]: !props.open,
-            }))
-        }
-        // eslint-disable-next-line
-    }, [props.open])
+    
     const handleNewMessage = (event) => {
         setNewMessage(event.target.value);
         setSendButtonDisabled(false);
@@ -89,7 +62,7 @@ export default function JustifyContent(props) {
 
 
     return (
-        <Box className={cl} display="flex"
+        <Box className={classes.bottomBar} display="flex"
             alignItems="center"
             justifyContent="center">
 

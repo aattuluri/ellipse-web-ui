@@ -124,6 +124,7 @@ export default function JustifyContent(props) {
     const open = props.open;
     const [dialogOpen, setDialogOpen] = React.useState(false);
     const [loading, setLoading] = React.useState(false);
+    const registration = props.registration;
 
     const [reference, setReferenece] = React.useState(null);
     // const [currentReference,setCurrenmtReference] = React.useState(null);
@@ -144,8 +145,8 @@ export default function JustifyContent(props) {
             // console.log("connected")
             setWebSocket(ws);
             ws.send(JSON.stringify({
-                action: "join_event_room",
-                event_id: event._id,
+                action: "join_team_room",
+                team_id: registration.team_id,
                 msg: {
                     'user_id': currentUser.user_id,
                 }
@@ -154,10 +155,10 @@ export default function JustifyContent(props) {
                 const mes = JSON.parse(message.data);
                 const cMes = mes.msg;
                 // console.log(mes);
-                if (mes.event_id === event._id) {
+                // if (mes.event_id === event._id) {
                     // console.log(cMes);
                     setChatMessages(chatMessages => [...chatMessages, cMes]);
-                }
+                // }
             }
             setLoading(false)
         }
@@ -169,7 +170,7 @@ export default function JustifyContent(props) {
     }
     React.useEffect(() => {
         setLoading(true)
-        fetch(process.env.REACT_APP_API_URL + `/api/chat/load_messages?id=${event._id}`, {
+        fetch(process.env.REACT_APP_API_URL + `/api/chat/load_team_chat_messages?id=${registration.team_id}`, {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
@@ -229,8 +230,8 @@ export default function JustifyContent(props) {
         const d = new Date();
         // console.log(d.toISOString())
         webSocket.send(JSON.stringify({
-            action: "send_message",
-            event_id: event._id,
+            action: "send_team_message",
+            team_id: registration.team_id,
             msg: {
                 'id': currentUser.user_id + Date.now(),
                 'user_id': currentUser.user_id,
@@ -397,67 +398,7 @@ export default function JustifyContent(props) {
 }
 
 
-// if (messageDate.toDateString() !== counterDate) {
-//     counterDate = messageDate.toDateString();
-//     if (value.user_id === currentUser.user_id) {
-//         return (<React.Fragment key={index}>
-
-//             <Box m={1} p={1} key={index} position="sticky" className={classes.root6}>
-//                 <Typography variant="body2">{currentDate.toDateString() === messageDate.toDateString() ? "Today" : messageDate.toDateString()}</Typography>
-//             </Box>
-
-//             <Box m={1} p={1} key={index + 1} className={classes.root3}>
-
-//                 <Box className={classes.root2} whiteSpace="normal" onClick={() => setDialogOpen(false)} >
-//                     <ChatMessage adminId={event.user_id} message={value} ></ChatMessage>
-//                 </Box>
-//                 <Box className={classes.root5}>
-//                     <Avatar alt={value.userName} src={process.env.REACT_APP_API_URL + `/api/image?id=${value.user_pic}`} />
-//                 </Box>
-//             </Box></React.Fragment>);
-
-//     }
-//     else {
-//         return (<React.Fragment>
 
 
-//             <Box m={1} p={1} key={index} className={classes.root6}>
-//                 <Typography variant="body2">{currentDate.toDateString() === messageDate.toDateString() ? "Today" : messageDate.toDateString()}</Typography>
-//             </Box>
 
 
-//             <Box m={1} key={index} className={classes.root}>
-//                 <Box className={classes.root4}>
-//                     <Avatar alt={value.userName} src={process.env.REACT_APP_API_URL + `/api/image?id=${value.user_pic}`} />
-//                 </Box>
-//                 <Box className={classes.root2} whiteSpace="normal" >
-//                     <ChatMessage adminId={event.user_id} message={value}></ChatMessage>
-//                 </Box>
-//             </Box></React.Fragment>);
-//     }
-
-
-// }
-
-// if (value.user_id === currentUser.user_id) {
-//     return (<Box m={1} p={1} key={index} className={classes.root3}>
-
-//         <Box className={classes.root2} onClick={() => setDialogOpen(false)} whiteSpace="normal">
-//             <ChatMessage adminId={event.user_id} message={value}></ChatMessage>
-//         </Box>
-//         <Box className={classes.root5}>
-//             <Avatar alt={value.userName} src={process.env.REACT_APP_API_URL + `/api/image?id=${value.user_pic}`} />
-//         </Box>
-//     </Box>);
-
-// }
-// else {
-//     return (<Box m={1} key={index} className={classes.root}>
-//         <Box className={classes.root4}>
-//             <Avatar alt={value.userName} src={process.env.REACT_APP_API_URL + `/api/image?id=${value.user_pic}`} />
-//         </Box>
-//         <Box className={classes.root2} whiteSpace="normal">
-//             <ChatMessage adminId={event.user_id} message={value}></ChatMessage>
-//         </Box>
-//     </Box>);
-// }

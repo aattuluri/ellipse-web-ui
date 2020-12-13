@@ -1,5 +1,5 @@
 import React from 'react';
-import ChatMessage from '../Components/ChatMessage';
+// import ChatMessage from '../Components/ChatMessage';
 // import AuthContext from '../AuthContext';
 import ChatTextField from './ChatTextField';
 import { cleanup } from '@testing-library/react';
@@ -16,6 +16,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import ReplyIcon from '@material-ui/icons/Reply';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Fade from '@material-ui/core/Fade';
+import { Divider, IconButton } from '@material-ui/core';
 // import { TextField } from '@material-ui/core';
 
 // import socketIOClient from "socket.io-client";
@@ -33,18 +34,22 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: "flex-start",
     },
     root2: {
-        backgroundColor: theme.palette.background.paper,
-        borderRadius: theme.spacing(1),
+        // backgroundColor: theme.palette.background.paper,
+        // borderRadius: theme.spacing(1),
         textDecorationColor: theme.palette.secondary.light,
-        maxWidth: '65%',
-        minWidth: '20%',
+        width: '95%',
+        // minWidth: '20%',
         overflow: 'auto',
+        marginLeft: theme.spacing(1)
         // textOverflow: "ellipsis"
     },
     root3: {
         display: "flex",
-        justifyContent: "flex-end",
-        minWidth: theme.spacing(30)
+        justifyContent: "flex-start",
+        '&:hover': {
+            background: "rgb(0, 189, 170,0.3)",
+        },
+        // minWidth: theme.spacing(30)
     },
     root6: {
         display: "flex",
@@ -61,10 +66,10 @@ const useStyles = makeStyles((theme) => ({
         // display: 'fixed'
     },
     root4: {
-        marginRight: theme.spacing(0.5)
+        marginRight: theme.spacing(0)
     },
     root5: {
-        marginLeft: theme.spacing(0.5),
+        marginLeft: theme.spacing(0),
         maxWidth: '65%',
         overflow: 'auto',
         //    textOverflow: "ellipsis"
@@ -92,11 +97,21 @@ const useStyles = makeStyles((theme) => ({
         flexDirection: 'column',
         alignItems: 'center',
     },
-    textField: {
-        zIndex: '100',
-        position: 'fixed',
-        bottom: '0px'
-    }
+    message: {
+        display: "flex",
+        justifyContent: "flex-start",
+    },
+    message2: {
+        display: "none",
+        // justifyContent: "flex-end",
+    },
+    message3: {
+        display: "flex",
+        justifyContent: "flex-end",
+    },
+    inline: {
+        whiteSpace: 'pre-line',
+    },
 
 }));
 
@@ -289,70 +304,91 @@ export default function JustifyContent(props) {
 
                                 const currentDate = new Date();
                                 const messageDate = new Date(value.date);
+                                const date = new Date(value.date);
                                 if (messageDate.toDateString() !== counterDate) {
                                     counterDate = messageDate.toDateString();
-                                    if (value.user_id === user.user_id) {
-                                        return (<React.Fragment key={index}>
-
+                                    return (
+                                        <React.Fragment>
+                                            <Divider></Divider>
                                             <Box m={1} p={1} key={index} position="sticky" className={classes.root6}>
                                                 <Typography variant="body2">{currentDate.toDateString() === messageDate.toDateString() ? "Today" : messageDate.toDateString()}</Typography>
                                             </Box>
-
                                             <Box m={1} p={1} key={index + 1} className={classes.root3}>
-
-                                                <Box className={classes.root2} whiteSpace="normal" onClick={() => setDialogOpen(false)} >
-                                                    <ChatMessage message={value} ></ChatMessage>
-                                                </Box>
                                                 <Box className={classes.root5}>
-                                                    <Avatar alt={value.userName} src={process.env.REACT_APP_API_URL + `/api/image?id=${value.user_pic}`} />
+                                                    <Avatar variant="square" alt={value.userName} src={process.env.REACT_APP_API_URL + `/api/image?id=${value.user_pic}`} />
                                                 </Box>
-                                            </Box></React.Fragment>);
+                                                <Box className={classes.root2} whiteSpace="normal">
+                                                    <Box style={{ display: 'flex', justifyContent: 'flex-start' }}>
+                                                        <Box flexGrow={1} className={classes.message}>
+                                                            <Box>
+                                                                <Typography variant="body1">{value.user_name + "   "}</Typography>
+                                                            </Box>
+                                                            <Box style={{ marginLeft: "7px" }}>
+                                                                <Typography component="span"
+                                                                    variant="body2"
+                                                                    style={{ fontSize: "0.9em" }}
+                                                                    color="textSecondary">
+                                                                    {"   " + date.toLocaleTimeString([], { timeStyle: 'short' })}
+                                                                </Typography>
+                                                            </Box>
+                                                        </Box>
+                                                        <Box>
+                                                    <IconButton style={{padding:'0px',margin:'0px'}}>
+                                                        <ReplyIcon style={{ color: '#aaaaaa' }}></ReplyIcon>
+                                                    </IconButton>
+                                                    {user.user_id === value.user_id && <IconButton style={{padding:'0px',margin:'0px'}}>
+                                                        <DeleteIcon style={{ color: '#aaaaaa' }}></DeleteIcon>
+                                                    </IconButton>}
+                                                </Box>
+                                                    </Box>
 
-                                    }
-                                    else {
-                                        return (<React.Fragment>
-
-
-                                            <Box m={1} p={1} key={index} className={classes.root6}>
-                                                <Typography variant="body2">{currentDate.toDateString() === messageDate.toDateString() ? "Today" : messageDate.toDateString()}</Typography>
+                                                    <Box>
+                                                        <Typography variant="body2"
+                                                            style={{ fontSize: "1.2em" }}
+                                                            color="textSecondary">{value.message}</Typography>
+                                                    </Box>
+                                                </Box>
                                             </Box>
-
-
-                                            <Box m={1} key={index} className={classes.root}>
-                                                <Box className={classes.root4}>
-                                                    <Avatar alt={value.userName} src={process.env.REACT_APP_API_URL + `/api/image?id=${value.user_pic}`} />
-                                                </Box>
-                                                <Box className={classes.root2} whiteSpace="normal" >
-                                                    <ChatMessage message={value}></ChatMessage>
-                                                </Box>
-                                            </Box></React.Fragment>);
-                                    }
-
-
+                                        </React.Fragment>
+                                    );
                                 }
-
-                                if (value.user_id === user.user_id) {
-                                    return (<Box m={1} p={1} key={index} className={classes.root3}>
-
-                                        <Box className={classes.root2} onClick={() => setDialogOpen(false)} whiteSpace="normal">
-                                            <ChatMessage message={value}></ChatMessage>
-                                        </Box>
+                                return (
+                                    <Box m={1} p={1} key={index + 1} className={classes.root3}>
                                         <Box className={classes.root5}>
-                                            <Avatar alt={value.userName} src={process.env.REACT_APP_API_URL + `/api/image?id=${value.user_pic}`} />
-                                        </Box>
-                                    </Box>);
-
-                                }
-                                else {
-                                    return (<Box m={1} key={index} className={classes.root}>
-                                        <Box className={classes.root4}>
-                                            <Avatar alt={value.userName} src={process.env.REACT_APP_API_URL + `/api/image?id=${value.user_pic}`} />
+                                            <Avatar variant="square" alt={value.userName} src={process.env.REACT_APP_API_URL + `/api/image?id=${value.user_pic}`} />
                                         </Box>
                                         <Box className={classes.root2} whiteSpace="normal">
-                                            <ChatMessage message={value}></ChatMessage>
+                                            <Box style={{ display: 'flex', justifyContent: 'flex-start' }}>
+                                                <Box flexGrow={1} className={classes.message}>
+                                                    <Box>
+                                                        <Typography variant="body1">{value.user_name + "   "}</Typography>
+                                                    </Box>
+                                                    <Box style={{ marginLeft: "7px" }}>
+                                                        <Typography component="span"
+                                                            variant="body2"
+                                                            style={{ fontSize: "0.9em" }}
+                                                            color="textSecondary">
+                                                            {"   " + date.toLocaleTimeString([], { timeStyle: 'short' })}
+                                                        </Typography>
+                                                    </Box>
+                                                </Box>
+                                                <Box>
+                                                    <IconButton style={{padding:'0px',margin:'0px'}}>
+                                                        <ReplyIcon style={{ color: '#aaaaaa' }}></ReplyIcon>
+                                                    </IconButton>
+                                                    {user.user_id === value.user_id && <IconButton style={{padding:'0px',margin:'0px'}}>
+                                                        <DeleteIcon style={{ color: '#aaaaaa' }}></DeleteIcon>
+                                                    </IconButton>}
+                                                </Box>
+                                            </Box>
+                                            <Box whiteSpace="normal">
+                                                <Typography className={classes.inline} variant="body2"
+                                                    style={{ fontSize: "1.2em" }}
+                                                    color="textSecondary">{value.message}</Typography>
+                                            </Box>
                                         </Box>
-                                    </Box>);
-                                }
+                                    </Box>
+                                );
 
                             })
                         }

@@ -85,7 +85,7 @@ const EventEdit = (props) => {
   const [selectedrequirements, setSelectedRequirements] = React.useState([]);
   // const [image, setImage] = React.useState(null);
   // const [imageName, setImageName] = React.useState("");
-  const [addressType,setAddressType] = React.useState("");
+  const [addressType, setAddressType] = React.useState("");
   const [feeType, setFeeType] = React.useState("Free");
   const [collegeName, setCollegeName] = React.useState(null);
   const [regMode, setRegMode] = React.useState(null);
@@ -101,10 +101,12 @@ const EventEdit = (props) => {
   // const [collegesNames, setCollegesName] = React.useState([]);
 
   const token = localStorage.getItem('token');
-  const [eventTags,setEventTags] = React.useState([]);
-  const [requirements,setRequirements] = React.useState([]);
-  const [eventTypes,setEventTypes] = React.useState([]);
-  const [platformDetails,setPlatformDetails] = React.useState('');
+  const [eventTags, setEventTags] = React.useState([]);
+  const [requirements, setRequirements] = React.useState([]);
+  const [eventTypes, setEventTypes] = React.useState([]);
+  const [platformDetails, setPlatformDetails] = React.useState('');
+  const [isTeamed, setIsTeamed] = React.useState(false);
+  const [teamSize, setTeamSize] = React.useState({});
 
 
   // const eventTypes = ["Hackathon", "Coding Contest", "Webinar"];
@@ -159,6 +161,9 @@ const EventEdit = (props) => {
     setVenueCollege(event.venue_college);
     setPlatformDetails(event.platform_details);
     setAddressType(event.venue_type);
+    setIsTeamed(event.isTeamed);
+    setTeamSize(event.team_size);
+
     // setParticipantsType(event.o_allowed)
     if (event.o_allowed === true) {
       setParticipantsType("open")
@@ -166,7 +171,7 @@ const EventEdit = (props) => {
     else {
       setParticipantsType("onlycollege")
     }
-    fetch(process.env.REACT_APP_API_URL+'/api/event/get_event_keywords', {
+    fetch(process.env.REACT_APP_API_URL + '/api/event/get_event_keywords', {
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json',
@@ -177,14 +182,14 @@ const EventEdit = (props) => {
       response.json().then(value => {
         // setColleges(value);
         value.forEach((v) => {
-          if(v.type === "EventTags"){
-            setEventTags((eventTags)=> [...eventTags,v.title]);
+          if (v.type === "EventTags") {
+            setEventTags((eventTags) => [...eventTags, v.title]);
           }
-          else if(v.type === "EventRequirements"){
-            setRequirements((r)=>[...r,v.title]);
+          else if (v.type === "EventRequirements") {
+            setRequirements((r) => [...r, v.title]);
           }
-          else{
-            setEventTypes((r)=>[...r,v.title]);
+          else {
+            setEventTypes((r) => [...r, v.title]);
           }
         })
       })
@@ -378,7 +383,7 @@ const EventEdit = (props) => {
   //   setVenueCollege(value);
   // }
 
-  function handlePlatformChange(event){
+  function handlePlatformChange(event) {
     setPlatformDetails(event.target.value);
   }
 
@@ -705,8 +710,43 @@ const EventEdit = (props) => {
               <FormLabel component="legend">Address</FormLabel>
               <RadioGroup aria-label="address" name="address" value={addressType} onChange={handleAddressTypeChange} style={{ display: "inline" }}>
                 <FormControlLabel value="College/University" control={<Radio color="default" />} label="College/University" />
-                <FormControlLabel  value="Other" control={<Radio color="default" />} label="Others" />
+                <FormControlLabel value="Other" control={<Radio color="default" />} label="Others" />
               </RadioGroup>
+            </Grid>}
+            <Grid item xs={12}>
+              <FormLabel required component="legend">Participation Type</FormLabel>
+              <RadioGroup required aria-label="address" name="teamed" value={isTeamed ? "team" : "individual"} style={{ display: "inline" }}>
+                <FormControlLabel disabled value="individual" control={<Radio color="default" />} label="Individual" />
+                <FormControlLabel disabled value="team" control={<Radio color="default" />} label="Team" />
+              </RadioGroup>
+            </Grid>
+            {isTeamed && <Grid item xs={12} lg={6}>
+              <TextField
+                disabled
+                autoComplete='off'
+                required
+                type="number"
+                id="maxTeam"
+                name="minTeam"
+                label="Minimum Team Members"
+                fullWidth
+                value={teamSize.min_team_size || ""}
+              // onChange={(e)=>{props.setMinTeamSize(e.target.value)}}
+              />
+            </Grid>}
+            {isTeamed && <Grid item xs={12} lg={6}>
+              <TextField
+                disabled
+                autoComplete='off'
+                required
+                type="number"
+                id="maxTeam"
+                name="maxTeam"
+                label="Maximum Team Members"
+                fullWidth
+                value={teamSize.max_team_size || ""}
+              // onChange={(e)=>{props.setMaxTeamSize(e.target.value)}}
+              />
             </Grid>}
             {eventMode === "Offline" &&
               <Grid item xs={12} lg={6}>
@@ -753,22 +793,22 @@ const EventEdit = (props) => {
               />
             </Grid>
             {eventMode === "Online" && <Grid item xs={12}>
-            <TextField
-              multiline={true}
-              helperText="Enter link for the platform, you can also add it later"
-              rows="5"
-              variant='outlined'
-              placeholder="Enter details about your online platform"
-              autoComplete='off'
-              // required
-              id="platform"
-              name="platform"
-              label="Platform"
-              fullWidth
-              onChange={handlePlatformChange}
-              value={platformDetails || ""}
-            />
-          </Grid>}
+              <TextField
+                multiline={true}
+                helperText="Enter link for the platform, you can also add it later"
+                rows="5"
+                variant='outlined'
+                placeholder="Enter details about your online platform"
+                autoComplete='off'
+                // required
+                id="platform"
+                name="platform"
+                label="Platform"
+                fullWidth
+                onChange={handlePlatformChange}
+                value={platformDetails || ""}
+              />
+            </Grid>}
           </Grid>
           <Button
             type="submit"

@@ -22,7 +22,7 @@ import EventsTimeLinePanel from '../Components/EventTimeLinePanel';
 import EvenstAnnouncementsPanel from '../Components/EventsAnnouncementsPanel';
 import ChatPanel from '../Components/EventsChatPanel';
 import EventsTeamPanel from '../Components/EventsTeamPanel';
-import { Typography } from '@material-ui/core';
+import { Divider, Typography } from '@material-ui/core';
 import AuthContext from '../AuthContext';
 
 
@@ -111,19 +111,24 @@ function EventsDialog(props) {
     // const token = localStorage.getItem('token');
     const [shareDialogOpen, setShareDialogOpen] = React.useState(false);
     const [chatAcess, setChatAcess] = React.useState(false);
+    const [teamAccess,setTeamAccess] = React.useState(false);
+    const [subIndexValue, setSubIndexValue] = React.useState(0);
 
     React.useEffect(() => {
         if (event.registered || event.reg_mode !== "form") {
-            setChatAcess(true)
+            setChatAcess(true);
+            setTeamAccess(true);
         } else if (event.user_id === currentUser.user_id) {
-            setChatAcess(true)
+            setChatAcess(true);
         }
         else {
             setChatAcess(false)
         }
     }, [event, currentUser])
 
-
+    const handleSubIndexChange = (event, newValue) => {
+        setSubIndexValue(newValue);
+    };
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -211,10 +216,27 @@ function EventsDialog(props) {
                             <Tab label="Announcements" {...a11yProps(2)} />
                             <Tab label="Chat" {...a11yProps(3)} />
 
-                            <Tab label="Participation" {...a11yProps(4)}></Tab>
+                            {event.isTeamed && <Tab label="Participation" {...a11yProps(4)}></Tab>}
                             {/* <Tab label="Submission"></Tab> */}
                         </Tabs>
                     </Paper>
+                    <Divider></Divider>
+                    {value === 4 && <Paper className={classes.root2}>
+                        <Tabs
+                            value={subIndexValue}
+                            onChange={handleSubIndexChange}
+                            indicatorColor="primary"
+                            textColor="primary"
+                            variant="scrollable"
+                            scrollButtons="on"
+                        >
+                            <Tab label="Submissions" />
+                            <Tab label="Your Team" />
+                            <Tab label="Team Chat"/>
+                            <Tab label="Create Team" />
+                            <Tab label="Join Team" />
+                        </Tabs>
+                    </Paper>}
                 </div>
             </DialogTitle>
             <DialogContent className={classes.dialogContent} dividers={true} >
@@ -230,7 +252,8 @@ function EventsDialog(props) {
                 <EvenstAnnouncementsPanel value={value} index={2} event={props.event}></EvenstAnnouncementsPanel>
                 {value === 3 && chatAcess && <ChatPanel value={value} index={3} event={props.event}></ChatPanel>}
                 {value === 3 && !chatAcess && <Typography align="center" variant="h5" >Register for the event to continue</Typography>}
-                <EventsTeamPanel value={value} index={4} event={props.event}></EventsTeamPanel>
+                {teamAccess && event.isTeamed && <EventsTeamPanel subIndexValue={subIndexValue} value={value} index={4} event={props.event}></EventsTeamPanel>}
+                {value === 4 && !teamAccess && <Typography align="center" variant="h5" >Register for the event to continue</Typography>}
             </DialogContent>
             <DialogActions className={classes.action}>
                 <Box className={classes.bottomBar} display="flex"
@@ -242,7 +265,6 @@ function EventsDialog(props) {
                     hidden={value === 3}>
                     {value !== 3 && (
                         <div className={classes.buttonDiv}>
-
                             {
                                 event.reg_mode === "form" ? <Button disabled={event.registered ? true : false} size="small" color="primary" variant="contained" className={classes.button} onClick={handleRegClick}>
                                     {event.registered ? "Registered" : "Register"}

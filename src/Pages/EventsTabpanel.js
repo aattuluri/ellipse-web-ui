@@ -1,6 +1,6 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
-import EventCard from '../Components/EventCard';
+// import EventCard from '../Components/EventCard';
 import { makeStyles } from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -8,7 +8,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Grid from '@material-ui/core/Grid';
 import { Typography } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
-import { withRouter} from "react-router";
+import { withRouter } from "react-router";
 import List from '@material-ui/core/List';
 import EventsDialog from '../Components/EventsDialog';
 import Fab from '@material-ui/core/Fab';
@@ -29,6 +29,7 @@ import Divider from '@material-ui/core/Divider';
 import ActiveEventsContext from '../ActiveEventsContext';
 
 import FeedBackDialog from '../Components/FeedBackDialog';
+import ExplorePanel from '../Components/EventsMainTabPanel';
 // function a11yProps(index) {
 //     return {
 //         id: `scrollable-auto-tab-${index}`,
@@ -154,12 +155,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function EventsTabPanel({ history }) {
-    localStorage.setItem('tabIndex',0);
+    localStorage.setItem('tabIndex', 0);
     // const { children, value, url, index, ...other } = props;
     // const user = JSON.parse(localStorage.getItem('user'));
     // const url = user.imageUrl;
     const token = localStorage.getItem('token');
-    const {currentUser} = React.useContext(AuthContext);
+    const { currentUser } = React.useContext(AuthContext);
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
     const [imageDialogOpen, setImageDialogOpen] = React.useState(false);
@@ -176,11 +177,11 @@ function EventsTabPanel({ history }) {
     const [modeSortChecked, setModeSortChecked] = React.useState([0]);
     const [filterDialogOpen, setFilterDialogOpen] = React.useState(false);
     // const [selectedImage, setSelectedImage] = React.useState(null);
-    const {activeEvents} = React.useContext(ActiveEventsContext);
+    const { activeEvents } = React.useContext(ActiveEventsContext);
     const [registerdEvents, setRegisteredEvents] = React.useState([]);
-    const [feedBackOpen,setFeedBackOpen] = React.useState(false);
+    const [feedBackOpen, setFeedBackOpen] = React.useState(false);
 
-    
+
 
     React.useEffect(() => {
         // console.log(allEvents);
@@ -191,7 +192,7 @@ function EventsTabPanel({ history }) {
         // return <Redirect to="/" />;
         history.replace("/")
     }
-    
+
     const handleClose = () => {
         setOpen(false);
     };
@@ -214,11 +215,11 @@ function EventsTabPanel({ history }) {
         setSortEndDate(date);
     }
 
-    const handleFeedBackButtonClick = () =>{
+    const handleFeedBackButtonClick = () => {
         setFeedBackOpen(true);
     }
 
-    const closeFeedBckDialog = () =>{
+    const closeFeedBckDialog = () => {
         setFeedBackOpen(false);
     }
 
@@ -389,7 +390,7 @@ function EventsTabPanel({ history }) {
     function sortByCollege(sEvents) {
         var sortedEvents = [];
         sEvents.forEach(sevent => {
-            
+
             if (currentUser.college_name === sevent.college_name) {
                 sortedEvents.push(sevent);
             }
@@ -458,12 +459,19 @@ function EventsTabPanel({ history }) {
                     </Paper>
                     <Button className={classes.mobileFilterButton} variant="outlined" onClick={handlefilterButtonClicked} >Filters</Button>
                 </Grid>
-                <Grid item xs={12} sm={12} md={9} lg={8} style={{marginBottom: "50px"}}>
+
+                <Grid item xs={12} sm={12} md={9} lg={8} style={{ marginBottom: "50px" }}>
+                    <ExplorePanel
+                        isFiltered={isFiltered}
+                        sortedEventsArray={sortedEventsArray}
+                        handleClick={handleClick}
+                        handleImageDialogOpen={handleImageDialogOpen}
+                        handleRegistrationButton={handleRegistrationButton}></ExplorePanel>
                     {/* <Typography variant="h5" style={{ paddingTop: '5px' }}>
                         Your College Events
                     </Typography>
                     <GridListEvents click={handleClick} events={allEvents.filter((event) => event.college_name === user.college_name)} ></GridListEvents> */}
-                    <Typography variant="h5" style={{ paddingTop: '5px',paddingBottom: '7px' }}>
+                    <Typography variant="h5" style={{ paddingTop: '5px', paddingBottom: '7px' }}>
                         {/* Active Events */}
                     </Typography>
                     {/* {activeEvents.length === 0 && <div>
@@ -477,49 +485,7 @@ function EventsTabPanel({ history }) {
                         <Skeleton animation="wave" />
                         <Skeleton animation="wave" />
                     </div>} */}
-                    {
-                        activeEvents.length === 0 && <Typography align="center">No events, check back later</Typography>
-                    }
-                    {
-                        isFiltered ? sortedEventsArray.map((event, index) => {
-                            return (
-                                <EventCard
-                                    key={index}
-                                    click={handleClick}
-                                    url={currentUser.imageUrl}
-                                    name={event.name}
-                                    startTime={event.start_time}
-                                    endTime={event.finish_time}
-                                    eventMode={event.eventMode}
-                                    eventType={event.eventType}
-                                    regEndTime={event.registrationEndTime}
-                                    event={event}
-                                    feeType={event.feesType}
-                                    imageDialog={handleImageDialogOpen}
-                                    handleReg={handleRegistrationButton}
-                                    eventId={event}
-                                >
-                                </EventCard>)
-                        }) : activeEvents.map((event, index) => {
-                            return (
-                                <EventCard
-                                    key={index}
-                                    click={handleClick}
-                                    url={currentUser.imageUrl}
-                                    name={event.name}
-                                    startTime={event.start_time}
-                                    endTime={event.finish_time}
-                                    eventMode={event.eventMode}
-                                    eventType={event.eventType}
-                                    regEndTime={event.registrationEndTime}
-                                    eventId={event}
-                                    feeType={event.feesType}
-                                    imageDialog={handleImageDialogOpen}
-                                    handleReg={handleRegistrationButton}
-                                    event={event}
-                                >
-                                </EventCard>)
-                        })}
+
                 </Grid>
                 <Grid item xs={12} sm={12} md={4} lg={2} >
                     <Fab color="primary" aria-label="add" className={classes.fab} onClick={handlePostButtonClick}>
@@ -536,22 +502,22 @@ function EventsTabPanel({ history }) {
                                 Post Event
                             </Button>
                             <List className={classes.root2}>
-                                
+
                                 <Typography variant="body2">Registered Events</Typography>
                                 {
                                     registerdEvents.map((event, index) => {
                                         return <React.Fragment key={index} >
-                                        <ListItem onClick={handleRegisterdEventClick(event)} key={index} button>
-                                            <ListItemAvatar>
-                                                <Avatar  variant="square"
-                                                    alt={event.name}
-                                                    src={process.env.REACT_APP_API_URL+`/api/image?id=${event.poster_url}`}
-                                                />
-                                            </ListItemAvatar>
-                                            <ListItemText  primary={event.name} />
-                                            
-                                        </ListItem>
-                                        <Divider  /></React.Fragment>
+                                            <ListItem onClick={handleRegisterdEventClick(event)} key={index} button>
+                                                <ListItemAvatar>
+                                                    <Avatar variant="square"
+                                                        alt={event.name}
+                                                        src={process.env.REACT_APP_API_URL + `/api/image?id=${event.poster_url}`}
+                                                    />
+                                                </ListItemAvatar>
+                                                <ListItemText primary={event.name} />
+
+                                            </ListItem>
+                                            <Divider /></React.Fragment>
                                     })
                                 }
                             </List>
@@ -566,10 +532,10 @@ function EventsTabPanel({ history }) {
                         </Paper>
                     </Paper>
                 </Grid>
-            
+
             </Grid>
             <div>
-            <FeedBackDialog open={feedBackOpen} handleClose={closeFeedBckDialog}></FeedBackDialog>
+                <FeedBackDialog open={feedBackOpen} handleClose={closeFeedBckDialog}></FeedBackDialog>
                 {open && <EventsDialog
                     open={open}
                     event={selectedEvent}

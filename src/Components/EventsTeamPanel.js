@@ -5,13 +5,14 @@ import { makeStyles } from '@material-ui/core/styles';
 // import LaptopMacIcon from '@material-ui/icons/LaptopMac';
 // import HotelIcon from '@material-ui/icons/Hotel';
 // import RepeatIcon from '@material-ui/icons/Repeat';
-import Paper from '@material-ui/core/Paper';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
+// import Paper from '@material-ui/core/Paper';
+// import Tabs from '@material-ui/core/Tabs';
+// import Tab from '@material-ui/core/Tab';
 
 import SubPanel1 from './EventsTeamSubPanel1';
 import SubPanel2 from './EventsTeamSubPanel2';
 import SubPanel3 from './EventsTeamSubPanel3';
+import EventsTeamChatPanel from './EventsTeamChatPanel';
 import { Typography } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
@@ -74,13 +75,13 @@ function AboutEventPanel(props) {
     // const user = JSON.parse(localStorage.getItem('user'));
     const token = localStorage.getItem('token');
     const event = props.event;
-    const [subIndexValue, setSubIndexValue] = React.useState(0);
+    // const [subIndexValue, setSubIndexValue] = React.useState(0);
     const [teamedUp, setTeamedUp] = React.useState(false);
     const [registration, setRegistration] = React.useState({});
-
-    const handleChange = (event, newValue) => {
-        setSubIndexValue(newValue);
-    };
+    const subIndexValue = props.subIndexValue;
+    // const handleChange = (event, newValue) => {
+    //     setSubIndexValue(newValue);
+    // };
 
     React.useEffect(() => {
         getData();
@@ -97,10 +98,13 @@ function AboutEventPanel(props) {
                 },
                 method: 'GET',
             }).then(response => {
-                response.json().then(value => {
-                    setRegistration(value[0]);
-                    setTeamedUp(value[0].teamed_up);
-                })
+                if(response.status === 200){
+                    response.json().then(value => {
+                        setRegistration(value[0]);
+                        setTeamedUp(value[0].teamed_up);
+                    })
+                }
+                
             })
         }
         catch (e) {
@@ -116,7 +120,7 @@ function AboutEventPanel(props) {
             {...other}>
             {value === index && (
                 <div className={classes.root}>
-                    <Paper className={classes.root2}>
+                    {/* <Paper className={classes.root2}>
                         <Tabs
                             value={subIndexValue}
                             onChange={handleChange}
@@ -127,16 +131,18 @@ function AboutEventPanel(props) {
                         >
                             <Tab label="Submissions" />
                             <Tab label="Your Team" />
+                            <Tab label="Team Chat"/>
                             <Tab label="Create Team" />
                             <Tab label="Join Team" />
                         </Tabs>
-                    </Paper>
+                    </Paper> */}
                     {teamedUp && <SubPanel1 getData={getData} value={subIndexValue} registration={registration} index={1} event={props.event}></SubPanel1>}
-                    {!teamedUp && subIndexValue === 1 && <Typography>Join team or create a team</Typography>}
-                    {!teamedUp && <SubPanel2 value={subIndexValue} index={2} event={props.event}></SubPanel2>}
-                    {teamedUp && subIndexValue === 2 && <Typography>Team already created</Typography>}
-                    {!teamedUp && <SubPanel3 value={subIndexValue} index={3} event={props.event}></SubPanel3>}
-                    {teamedUp && subIndexValue === 3 && <Typography>Team created or joined, delete to join other teams</Typography>}
+                    {teamedUp && <EventsTeamChatPanel value={subIndexValue} registration={registration} index={2} event={props.event}></EventsTeamChatPanel>}
+                    {!teamedUp && subIndexValue === (1 || 2) && <Typography>Join team or create a team</Typography>}
+                    {!teamedUp && <SubPanel2 value={subIndexValue} index={3} event={props.event}></SubPanel2>}
+                    {teamedUp && subIndexValue === 3 && <Typography>Team already created</Typography>}
+                    {!teamedUp && <SubPanel3 value={subIndexValue} index={4} event={props.event}></SubPanel3>}
+                    {teamedUp && subIndexValue === 4 && <Typography>Team created or joined, delete to join other teams</Typography>}
                 </div>
             )}
         </div>

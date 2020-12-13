@@ -26,6 +26,7 @@ import NotificationsDialog from '../Components/NotficationsDialog';
 import Switch from '@material-ui/core/Switch';
 import { Button } from '@material-ui/core';
 import Logo from '../Components/Images/logo.svg';
+import TelegramIcon from '@material-ui/icons/Telegram'
 // import DarkLogo from '../Components/Images/dark_theme_logo.png';
 // import LightLogo from '../Components/Images/light_theme_logo.png';
 // import CuboidLogo from '../Components/Images/Cuboid logo.png'
@@ -199,9 +200,9 @@ const NavigationBar = function ({ history }) {
   function handleExploreClick() {
     history.push("/yourevents")
   }
-  // function handleChatClick() {
-  //   history.push('/chat')
-  // }
+  function handleChatClick() {
+    history.push('/chat')
+  }
   const handleClose = () => {
     setOpen(false);
     setNotificationsOpen(false);
@@ -272,8 +273,8 @@ const NavigationBar = function ({ history }) {
                 >
                   <Tab onClick={handleHomeClick} icon={<HomeIcon />} aria-label="home" />
                   <Tab onClick={handleeventClick} icon={<EventIcon />} aria-label="event" />
-                  {/* <Tab onClick={handleChatClick} icon={<TelegramIcon />} aria-label="favorite" /> */}
-                  <Tab onClick={handleExploreClick} icon={<ExploreIcon />} aria-label="person" />
+                  <Tab onClick={handleChatClick} icon={<TelegramIcon />} aria-label="favorite" />
+                  {/* <Tab onClick={handleExploreClick} icon={<ExploreIcon />} aria-label="person" /> */}
                   <Tab onClick={handleProfileClick} icon={<PersonPinIcon />} aria-label="person" />
                 </Tabs>
               </Paper>
