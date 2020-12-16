@@ -111,10 +111,10 @@ function EventsDialog(props) {
     // const token = localStorage.getItem('token');
     const [shareDialogOpen, setShareDialogOpen] = React.useState(false);
     const [chatAcess, setChatAcess] = React.useState(false);
-    const [teamAccess,setTeamAccess] = React.useState(false);
+    const [teamAccess, setTeamAccess] = React.useState(false);
     const [subIndexValue, setSubIndexValue] = React.useState(0);
-
     React.useEffect(() => {
+        // console.log(event.registered);
         if (event.registered || event.reg_mode !== "form") {
             setChatAcess(true);
             setTeamAccess(true);
@@ -125,7 +125,7 @@ function EventsDialog(props) {
             setChatAcess(false)
         }
     }, [event, currentUser])
-
+    // console.log(chatAcess);
     const handleSubIndexChange = (event, newValue) => {
         setSubIndexValue(newValue);
     };
@@ -170,7 +170,7 @@ function EventsDialog(props) {
             classes={{ paper: classes.dialog }}
         >
             <DialogTitle id="scroll-dialog-title">
-            <Box className={classes.mobileHead} display="flex" flexDirection="column" justifyContent="center">
+                <Box className={classes.mobileHead} display="flex" flexDirection="column" justifyContent="center">
                     {/* <Box display="flex" justifyContent="flex-start">
                         {event.name}
                     </Box> */}
@@ -183,9 +183,9 @@ function EventsDialog(props) {
                         </IconButton>
                     </Box>
                 </Box>
-            {event.name}
-            {/* <Typography className={classes.mobileHead} style={{}} variant="h6">{event.name}</Typography> */}
-            
+                {event.name}
+                {/* <Typography className={classes.mobileHead} style={{}} variant="h6">{event.name}</Typography> */}
+
                 <div className={classes.icons}>
                     {/* <IconButton aria-label="add to favorites">
                         <FavoriteIcon />
@@ -200,7 +200,7 @@ function EventsDialog(props) {
                         <CloseIcon fontSize="large" />
                     </IconButton>
                 </div>
-                
+
                 <div className={classes.root}>
                     <Paper className={classes.root2}>
                         <Tabs
@@ -232,7 +232,7 @@ function EventsDialog(props) {
                         >
                             <Tab label="Submissions" />
                             <Tab label="Your Team" />
-                            <Tab label="Team Chat"/>
+                            <Tab label="Team Chat" />
                             <Tab label="Create Team" />
                             <Tab label="Join Team" />
                         </Tabs>
@@ -273,7 +273,6 @@ function EventsDialog(props) {
                                             <a href={event.reg_link} style={{ textDecoration: 'none', color: '#000000' }} target="blank">Register</a>}
                                     </Button>
                             }
-
                         </div>
                     )}
 

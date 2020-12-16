@@ -10,6 +10,7 @@ import TeamMemberRequestListItem from './TeamMemberRequestListItem';
 
 import AuthContext from '../AuthContext';
 import TeamEditDialog from './EditTeamDialog';
+import WebSocketContext from '../WebSocketContext';
 // import ChatMessage from '../Components/ChatMessage';
 // import ChatTextField from './ChatTextField';
 
@@ -123,11 +124,13 @@ function AboutEventPanel(props) {
   const [admin, setAdmin] = React.useState(false);
   const [editDialogOpen, setEditDialogOpen] = React.useState(false);
 
+  const { webSocketContext } = React.useContext(WebSocketContext);
 
-  React.useEffect(()=>{
+
+  React.useEffect(() => {
     fetchAll()
     // eslint-disable-next-line
-  },[])
+  }, [])
 
 
   const fetchAll = () => {
@@ -156,6 +159,7 @@ function AboutEventPanel(props) {
   }
 
   const handleDeleteButton = () => {
+    const d = new Date();
     var data = new FormData();
     data = JSON.stringify({
       team_id: teamDetails._id,
@@ -174,11 +178,13 @@ function AboutEventPanel(props) {
         props.getData();
         // console.log(value);
         // props.fetchAll()
+
       })
     })
   }
 
   const handleLeaveButton = () => {
+    const d = new Date();
     var data = new FormData();
     data = JSON.stringify({
       team_id: teamDetails._id,
@@ -194,11 +200,28 @@ function AboutEventPanel(props) {
       method: 'POST',
       body: data
     }).then((response) => {
-      response.json().then(value => {
-        console.log(value);
-        props.getData();
-        // props.fetchAll()
-      })
+      if (response.status === 200) {
+        response.json().then(value => {
+          console.log(value);
+          props.getData();
+          // props.fetchAll()
+          if (webSocketContext) {
+            webSocketContext.send(JSON.stringify({
+              action: "team_status_update_message",
+              team_id: registration.team_id,
+              msg: {
+                'id': currentUser.user_id + Date.now(),
+                'user_id': currentUser.user_id,
+                'user_name': currentUser.name,
+                'user_pic': currentUser.profile_pic,
+                'message_type': 'team_status_update_message',
+                'message': currentUser.name + " has left the team",
+                'date': d.toISOString()
+              }
+            }));
+          }
+        })
+      }
     })
   }
 

@@ -197,12 +197,12 @@ function CalenderPanel({history}) {
                 </Grid>
                 </Grid>
                 <div>
-                    <EventsDialog
+                    {open && <EventsDialog
                         open={open}
                         event={selectedEvent}
                         handleClose={handleClose}
                         handleReg={handleRegistrationButton}
-                        ></EventsDialog>
+                        ></EventsDialog>}
                 </div>
             </div>
         </div>

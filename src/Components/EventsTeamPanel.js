@@ -100,8 +100,12 @@ function AboutEventPanel(props) {
             }).then(response => {
                 if(response.status === 200){
                     response.json().then(value => {
+                        // console.log(value);
                         setRegistration(value[0]);
-                        setTeamedUp(value[0].teamed_up);
+                        if(value[0].teamed_up){
+                            setTeamedUp(value[0].teamed_up);
+                        }
+                        
                     })
                 }
                 

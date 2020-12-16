@@ -1,6 +1,7 @@
 import React from 'react';
 // import ChatMessage from '../Components/ChatMessage';
 // import AuthContext from '../AuthContext';
+// import WebSocketContext from '../WebSocketContext';
 import ChatTextField from './ChatTextField';
 import { cleanup } from '@testing-library/react';
 
@@ -251,6 +252,7 @@ export default function JustifyContent(props) {
                 'user_id': user.user_id,
                 'user_name': user.name,
                 'user_pic': user.profile_pic,
+                'message_type': 'normal_text_message',
                 'message': message,
                 'date': d.toISOString()
             }

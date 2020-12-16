@@ -8,9 +8,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import { Typography } from '@material-ui/core';
-
-
-
+import WebSocketContext from '../WebSocketContext';
+import AuthContext from '../AuthContext';
 
 
 // const useStyles = makeStyles((theme) => ({
@@ -24,13 +23,13 @@ import { Typography } from '@material-ui/core';
 // }));
 
 
-
-
 function Eventcard(props) {
     const token = localStorage.getItem('token');
+    const { currentUser } = React.useContext(AuthContext);
     //   const classes = useStyles();
     const event = props.event;
     const [memberDetails, setMemberDetails] = React.useState({});
+    const { webSocketContext } = React.useContext(WebSocketContext);
 
     React.useEffect(() => {
         try {
@@ -51,9 +50,10 @@ function Eventcard(props) {
         catch (e) {
             console.log(e);
         }
-    }, [props,token])
+    }, [props, token])
 
     const handleAcceptButton = () => {
+        const d = new Date();
         var data = new FormData();
         data = JSON.stringify({
             event_id: event._id,
@@ -71,12 +71,27 @@ function Eventcard(props) {
         }).then((response) => {
             response.json().then(value => {
                 // console.log(value);
+                if (webSocketContext) {
+                    webSocketContext.send(JSON.stringify({
+                        action: "team_status_update_message",
+                        team_id: props.id._id,
+                        msg: {
+                            'id': props.user_id + Date.now(),
+                            'user_id': currentUser.user_id,
+                            'user_name': memberDetails.name,
+                            'user_pic': memberDetails.user_pic,
+                            'message_type': 'team_status_update_message',
+                            'message': memberDetails.name + " has joined the team",
+                            'date': d.toISOString()
+                        }
+                    }));
+                }
                 props.fetchAll();
             })
         })
     }
 
-    
+
 
     return (
         <ListItem>

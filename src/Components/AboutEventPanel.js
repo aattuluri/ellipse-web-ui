@@ -68,15 +68,15 @@ function AboutEventPanel(props) {
     const [timeLabel, setTimeLabel] = React.useState("Registration Ends in");
     const [adminDetails, setAdminDetails] = React.useState({});
     const [imageDialogOpen, setImageDialogOpen] = React.useState(false);
-    const [notRegistered,setNotRegistered] = React.useState(false);
-    React.useEffect(()=>{
-        if(props.notRegistered){
+    const [notRegistered, setNotRegistered] = React.useState(false);
+    React.useEffect(() => {
+        if (props.notRegistered) {
             setNotRegistered(true)
         }
         else {
             setNotRegistered(false)
         }
-    },[props])
+    }, [props])
 
     React.useEffect(() => {
         if (event.requirements !== undefined) {
@@ -180,7 +180,7 @@ function AboutEventPanel(props) {
                 <div className={classes.root}>
                     <Grid container component="main">
                         <Grid item xs={12} sm={12} md={4} lg={4} >
-                            <img onClick={handleImageDialogOpen} style={{ width: '200px',height: '180px' }} alt="event poster" src={process.env.REACT_APP_API_URL + `/api/image?id=${event.poster_url}`}  ></img>
+                            <img onClick={handleImageDialogOpen} style={{ width: '200px', height: '180px' }} alt="event poster" src={process.env.REACT_APP_API_URL + `/api/image?id=${event.poster_url}`}  ></img>
                         </Grid>
                         <Grid item xs={12} sm={12} md={8} lg={8}>
                             <Typography>{event.description} </Typography>

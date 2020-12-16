@@ -12,6 +12,7 @@ import NavigationBar from './NavigationBar';
 import EventsContext from '../EventsContext';
 import AuthContext from '../AuthContext';
 import ActiveEventsContext from '../ActiveEventsContext';
+import WebSocketContext from '../WebSocketContext';
 // import dot from 'dote'
 // import {detect}  from 'detect-browser';
 
@@ -44,19 +45,41 @@ function Layout(props) {
     const [open, setOpen] = React.useState(true);
     const [authorized, setAuthorized] = React.useState(true);
     const [userDetailsDone, setUserDetailsDone] = React.useState(true);
+    const [webSocketContext, setWebSocketContext] = React.useState(null);
 
-    const value = {currentUser,setCurrentUser};
-    const allEventsValue = {allEvents,setAllEvents};
-    const activeEventsValue = {activeEvents,setActiveEvents};
+    const value = { currentUser, setCurrentUser };
+    const allEventsValue = { allEvents, setAllEvents };
+    const activeEventsValue = { activeEvents, setActiveEvents };
+    const webSocketValue = {webSocketContext, setWebSocketContext};
 
-    
+    const webConnect = () => {
+        const ws = new WebSocket(process.env.REACT_APP_WESOCKET_URL);
+        ws.onopen = () => {
+            // console.log("connected");
+            // console.log(ws);
+            // // setWebSocket(ws);
+            setWebSocketContext(ws);
+        }
+        ws.onclose = () => {
 
+            check();
+            // console.log("closed");
+        }
+    }
+
+    const check = () => {
+        if (!webSocketContext || webSocketContext.readyState === WebSocket.readyState) {
+            // console.log("checking");
+            webConnect();
+        }
+    }
     // console.log(OS.hostname());
     // const browser = detect();
-// console.log(browser)
+    // console.log(browser)
 
 
     React.useEffect(() => {
+        webConnect()
         fetch(process.env.REACT_APP_API_URL + '/api/users/me', {
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -158,7 +181,7 @@ function Layout(props) {
         if (currentUser.verified) {
             return <Redirect to="/userinfo"></Redirect>
         } else {
-            console.log("xyz")
+            // console.log("xyz")
             try {
                 var data2 = new FormData();
                 const payload2 = {
@@ -188,28 +211,31 @@ function Layout(props) {
         }
     }
 
+
     return (
         <AuthContext.Provider value={value}>
-            <EventsContext.Provider value={allEventsValue}>
-                <ActiveEventsContext.Provider value={activeEventsValue}>
-                    {
-                        currentUser != null && <div>
-                            <Paper className={classes.root}>
-                                <NavigationBar></NavigationBar>
-                            </Paper>
-                            <div>
-                                {props.children}
+            <WebSocketContext.Provider value={webSocketValue}>
+                <EventsContext.Provider value={allEventsValue}>
+                    <ActiveEventsContext.Provider value={activeEventsValue}>
+                        {
+                            currentUser != null && <div>
+                                <Paper className={classes.root}>
+                                    <NavigationBar></NavigationBar>
+                                </Paper>
+                                <div>
+                                    {props.children}
+                                </div>
                             </div>
-                        </div>
-                    }
-                    {
-                        currentUser == null && <Backdrop className={classes.backdrop} open={open}>
-                            <CircularProgress color="inherit" />
-                        </Backdrop>
+                        }
+                        {
+                            currentUser == null && <Backdrop className={classes.backdrop} open={open}>
+                                <CircularProgress color="inherit" />
+                            </Backdrop>
 
-                    }
-                </ActiveEventsContext.Provider>
-            </EventsContext.Provider>
+                        }
+                    </ActiveEventsContext.Provider>
+                </EventsContext.Provider>
+            </WebSocketContext.Provider>
         </AuthContext.Provider>
 
 

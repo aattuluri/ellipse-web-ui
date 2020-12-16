@@ -45,9 +45,9 @@ export default function JustifyContent(props) {
     }
 
     const handleKeyPress = (e) => {
-        console.log(newmessage);
+        // console.log(newmessage);
         if (newmessage.length > 1) {
-            console.log(newmessage.length);
+            // console.log(newmessage.length);
             if (e.keyCode === 13 && !e.shiftKey) {
                 e.preventDefault();
                 props.handleSend(newmessage);

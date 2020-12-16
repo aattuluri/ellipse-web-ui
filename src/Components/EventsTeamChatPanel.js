@@ -3,6 +3,7 @@ import React from 'react';
 import AuthContext from '../AuthContext';
 import ChatTextField from './ChatTextField';
 import { cleanup } from '@testing-library/react';
+import WebSocketContext from '../WebSocketContext';
 
 import Box from '@material-ui/core/Box';
 import { makeStyles } from '@material-ui/core/styles';
@@ -112,6 +113,9 @@ const useStyles = makeStyles((theme) => ({
     inline: {
         whiteSpace: 'pre-line',
     },
+    avatar: {
+        backgroundColor: theme.palette.primary.main,
+    }
 
 }));
 
@@ -132,42 +136,38 @@ export default function JustifyContent(props) {
     // const [showOptions, setShowOptiona] = React.useState("");
     const classes = useStyles();
     var counterDate = null;
+    const { webSocketContext } = React.useContext(WebSocketContext);
 
     const handleClose = () => {
         setDialogOpen(false);
     };
-    const [webSocket, setWebSocket] = React.useState(null);
 
-
-    const webConnect = () => {
-        const ws = new WebSocket(process.env.REACT_APP_WESOCKET_URL);
-        ws.onopen = () => {
-            // console.log("connected")
-            setWebSocket(ws);
-            ws.send(JSON.stringify({
+    React.useEffect(() => {
+        if (webSocketContext) {
+            webSocketContext.send(JSON.stringify({
                 action: "join_team_room",
                 team_id: registration.team_id,
                 msg: {
                     'user_id': currentUser.user_id,
                 }
             }));
-            ws.onmessage = (message) => {
-                const mes = JSON.parse(message.data);
-                const cMes = mes.msg;
-                // console.log(mes);
-                // if (mes.event_id === event._id) {
-                    // console.log(cMes);
-                    setChatMessages(chatMessages => [...chatMessages, cMes]);
-                // }
-            }
-            setLoading(false)
         }
-        ws.onclose = () => {
+    }, [])
 
-            check();
-            // console.log("closed");
+
+    if (webSocketContext) {
+        console.log("xyshs")
+        webSocketContext.onmessage = (message) => {
+            const mes = JSON.parse(message.data);
+            const cMes = mes.msg;
+            // console.log(mes);
+            if (mes.team_id === registration.team_id) {
+                // console.log(cMes);
+                setChatMessages(chatMessages => [...chatMessages, cMes]);
+            }
         }
     }
+
     React.useEffect(() => {
         setLoading(true)
         fetch(process.env.REACT_APP_API_URL + `/api/chat/load_team_chat_messages?id=${registration.team_id}`, {
@@ -181,8 +181,8 @@ export default function JustifyContent(props) {
             response.json().then(value => {
                 // console.log(value);
                 setChatMessages(value);
-                webConnect();
-                // setLoading(false)
+                // webConnect();
+                setLoading(false)
             })
         })
         if (reference != null) {
@@ -215,32 +215,27 @@ export default function JustifyContent(props) {
     }, [chatMessages, reference])
 
 
-    const check = () => {
-        if (!webSocket || webSocket.readyState === WebSocket.readyState) {
-            // console.log("checking");
-            webConnect();
-        }
-    }
-
-
-
 
     const handleSendClick = (message) => {
 
         const d = new Date();
         // console.log(d.toISOString())
-        webSocket.send(JSON.stringify({
-            action: "send_team_message",
-            team_id: registration.team_id,
-            msg: {
-                'id': currentUser.user_id + Date.now(),
-                'user_id': currentUser.user_id,
-                'user_name': currentUser.name,
-                'user_pic': currentUser.profile_pic,
-                'message': message,
-                'date': d.toISOString()
-            }
-        }));
+        if (webSocketContext) {
+            webSocketContext.send(JSON.stringify({
+                action: "send_team_message",
+                team_id: registration.team_id,
+                msg: {
+                    'id': currentUser.user_id + Date.now(),
+                    'user_id': currentUser.user_id,
+                    'user_name': currentUser.name,
+                    'user_pic': currentUser.profile_pic,
+                    'message_type': 'normal_text_message',
+                    'message': message,
+                    'date': d.toISOString()
+                }
+            }));
+        }
+
         if (reference != null) {
             reference.scrollIntoView({ behavior: "smooth" })
         }
@@ -298,6 +293,52 @@ export default function JustifyContent(props) {
                                 const date = new Date(value.date);
                                 if (messageDate.toDateString() !== counterDate) {
                                     counterDate = messageDate.toDateString();
+                                    if (value.message_type === 'team_status_update_message') {
+                                        return (
+                                            <React.Fragment>
+                                                <Divider></Divider>
+                                                <Box m={1} p={1} key={index} position="sticky" className={classes.root6}>
+                                                    <Typography variant="body2">{currentDate.toDateString() === messageDate.toDateString() ? "Today" : messageDate.toDateString()}</Typography>
+                                                </Box>
+                                                <Box m={1} p={1} key={index + 1} className={classes.root3}>
+                                                    <Box className={classes.root5}>
+                                                        <Avatar className={classes.avatar} color="primary" variant="square" alt={'EllipseBot'}  >E</Avatar>
+                                                    </Box>
+                                                    <Box className={classes.root2} whiteSpace="normal">
+                                                        <Box style={{ display: 'flex', justifyContent: 'flex-start' }}>
+                                                            <Box flexGrow={1} className={classes.message}>
+                                                                <Box>
+                                                                    <Typography variant="body1">{"EllipseBot" + "   "}</Typography>
+                                                                </Box>
+                                                                <Box style={{ marginLeft: "7px" }}>
+                                                                    <Typography component="span"
+                                                                        variant="body2"
+                                                                        style={{ fontSize: "0.9em" }}
+                                                                        color="textSecondary">
+                                                                        {"   " + date.toLocaleTimeString([], { timeStyle: 'short' })}
+                                                                    </Typography>
+                                                                </Box>
+                                                            </Box>
+                                                            <Box>
+                                                                <IconButton style={{ padding: '0px', margin: '0px' }}>
+                                                                    <ReplyIcon style={{ color: '#aaaaaa' }}></ReplyIcon>
+                                                                </IconButton>
+                                                                {currentUser.user_id === value.user_id && <IconButton style={{ padding: '0px', margin: '0px' }}>
+                                                                    <DeleteIcon style={{ color: '#aaaaaa' }}></DeleteIcon>
+                                                                </IconButton>}
+                                                            </Box>
+                                                        </Box>
+                                                        <Box>
+                                                            <Typography variant="body2"
+                                                                style={{ fontSize: "1.2em" }}
+                                                                color="textSecondary">{value.message}</Typography>
+                                                        </Box>
+                                                    </Box>
+                                                </Box>
+                                            </React.Fragment>
+                                        );
+
+                                    }
                                     return (
                                         <React.Fragment>
                                             <Divider></Divider>
@@ -324,15 +365,14 @@ export default function JustifyContent(props) {
                                                             </Box>
                                                         </Box>
                                                         <Box>
-                                                    <IconButton style={{padding:'0px',margin:'0px'}}>
-                                                        <ReplyIcon style={{ color: '#aaaaaa' }}></ReplyIcon>
-                                                    </IconButton>
-                                                    {currentUser.user_id === value.user_id && <IconButton style={{padding:'0px',margin:'0px'}}>
-                                                        <DeleteIcon style={{ color: '#aaaaaa' }}></DeleteIcon>
-                                                    </IconButton>}
-                                                </Box>
+                                                            <IconButton style={{ padding: '0px', margin: '0px' }}>
+                                                                <ReplyIcon style={{ color: '#aaaaaa' }}></ReplyIcon>
+                                                            </IconButton>
+                                                            {currentUser.user_id === value.user_id && <IconButton style={{ padding: '0px', margin: '0px' }}>
+                                                                <DeleteIcon style={{ color: '#aaaaaa' }}></DeleteIcon>
+                                                            </IconButton>}
+                                                        </Box>
                                                     </Box>
-
                                                     <Box>
                                                         <Typography variant="body2"
                                                             style={{ fontSize: "1.2em" }}
@@ -342,6 +382,46 @@ export default function JustifyContent(props) {
                                             </Box>
                                         </React.Fragment>
                                     );
+                                }
+                                if (value.message_type === 'team_status_update_message') {
+                                    return (
+                                        <Box m={1} p={1} key={index + 1} className={classes.root3}>
+                                            <Box className={classes.root5}>
+                                                <Avatar className={classes.avatar} variant="square" alt={value.userName}  >E</Avatar>
+                                            </Box>
+                                            <Box className={classes.root2} whiteSpace="normal">
+                                                <Box style={{ display: 'flex', justifyContent: 'flex-start' }}>
+                                                    <Box flexGrow={1} className={classes.message}>
+                                                        <Box>
+                                                            <Typography variant="body1">{"EllipseBot" + "   "}</Typography>
+                                                        </Box>
+                                                        <Box style={{ marginLeft: "7px" }}>
+                                                            <Typography component="span"
+                                                                variant="body2"
+                                                                style={{ fontSize: "0.9em" }}
+                                                                color="textSecondary">
+                                                                {"   " + date.toLocaleTimeString([], { timeStyle: 'short' })}
+                                                            </Typography>
+                                                        </Box>
+                                                    </Box>
+                                                    <Box>
+                                                        <IconButton style={{ padding: '0px', margin: '0px' }}>
+                                                            <ReplyIcon style={{ color: '#aaaaaa' }}></ReplyIcon>
+                                                        </IconButton>
+                                                        {currentUser.user_id === value.user_id && <IconButton style={{ padding: '0px', margin: '0px' }}>
+                                                            <DeleteIcon style={{ color: '#aaaaaa' }}></DeleteIcon>
+                                                        </IconButton>}
+                                                    </Box>
+                                                </Box>
+                                                <Box whiteSpace="normal">
+                                                    <Typography className={classes.inline} variant="body2"
+                                                        style={{ fontSize: "1.2em" }}
+                                                        color="textSecondary">{value.message}
+                                                    </Typography>
+                                                </Box>
+                                            </Box>
+                                        </Box>
+                                    )
                                 }
                                 return (
                                     <Box m={1} p={1} key={index + 1} className={classes.root3}>
@@ -364,10 +444,10 @@ export default function JustifyContent(props) {
                                                     </Box>
                                                 </Box>
                                                 <Box>
-                                                    <IconButton style={{padding:'0px',margin:'0px'}}>
+                                                    <IconButton style={{ padding: '0px', margin: '0px' }}>
                                                         <ReplyIcon style={{ color: '#aaaaaa' }}></ReplyIcon>
                                                     </IconButton>
-                                                    {currentUser.user_id === value.user_id && <IconButton style={{padding:'0px',margin:'0px'}}>
+                                                    {currentUser.user_id === value.user_id && <IconButton style={{ padding: '0px', margin: '0px' }}>
                                                         <DeleteIcon style={{ color: '#aaaaaa' }}></DeleteIcon>
                                                     </IconButton>}
                                                 </Box>
@@ -375,7 +455,8 @@ export default function JustifyContent(props) {
                                             <Box whiteSpace="normal">
                                                 <Typography className={classes.inline} variant="body2"
                                                     style={{ fontSize: "1.2em" }}
-                                                    color="textSecondary">{value.message}</Typography>
+                                                    color="textSecondary">{value.message}
+                                                </Typography>
                                             </Box>
                                         </Box>
                                     </Box>
@@ -396,9 +477,3 @@ export default function JustifyContent(props) {
         </div>
     );
 }
-
-
-
-
-
-

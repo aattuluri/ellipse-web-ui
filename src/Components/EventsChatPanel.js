@@ -2,6 +2,7 @@ import React from 'react';
 // import ChatMessage from '../Components/ChatMessage';
 import AuthContext from '../AuthContext';
 import ChatTextField from './ChatTextField';
+import WebSocketContext from '../WebSocketContext';
 import { cleanup } from '@testing-library/react';
 
 import Box from '@material-ui/core/Box';
@@ -16,6 +17,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import ReplyIcon from '@material-ui/icons/Reply';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Fade from '@material-ui/core/Fade';
+
 
 
 // import socketIOClient from "socket.io-client";
@@ -135,38 +137,34 @@ export default function JustifyContent(props) {
     const handleClose = () => {
         setDialogOpen(false);
     };
-    const [webSocket, setWebSocket] = React.useState(null);
+    // const [webSocket, setWebSocket] = React.useState(null);
+    const { webSocketContext } = React.useContext(WebSocketContext);
 
-
-    const webConnect = () => {
-        const ws = new WebSocket(process.env.REACT_APP_WESOCKET_URL);
-        ws.onopen = () => {
-            // console.log("connected")
-            setWebSocket(ws);
-            ws.send(JSON.stringify({
+    React.useEffect(() => {
+        if (webSocketContext) {
+            webSocketContext.send(JSON.stringify({
                 action: "join_event_room",
                 event_id: event._id,
                 msg: {
                     'user_id': currentUser.user_id,
                 }
             }));
-            ws.onmessage = (message) => {
-                const mes = JSON.parse(message.data);
-                const cMes = mes.msg;
-                // console.log(mes);
-                if (mes.event_id === event._id) {
-                    // console.log(cMes);
-                    setChatMessages(chatMessages => [...chatMessages, cMes]);
-                }
-            }
-            setLoading(false)
         }
-        ws.onclose = () => {
+    }, [webSocketContext,currentUser,event])
 
-            check();
-            // console.log("closed");
+
+    if (webSocketContext) {
+        webSocketContext.onmessage = (message) => {
+            const mes = JSON.parse(message.data);
+            const cMes = mes.msg;
+            // console.log(mes);
+            if (mes.event_id === event._id) {
+                // console.log(cMes);
+                setChatMessages(chatMessages => [...chatMessages, cMes]);
+            }
         }
     }
+
     React.useEffect(() => {
         setLoading(true)
         fetch(process.env.REACT_APP_API_URL + `/api/chat/load_messages?id=${event._id}`, {
@@ -180,8 +178,8 @@ export default function JustifyContent(props) {
             response.json().then(value => {
                 // console.log(value);
                 setChatMessages(value);
-                webConnect();
-                // setLoading(false)
+                // webConnect();
+                setLoading(false);
             })
         })
         if (reference != null) {
@@ -214,32 +212,26 @@ export default function JustifyContent(props) {
     }, [chatMessages, reference])
 
 
-    const check = () => {
-        if (!webSocket || webSocket.readyState === WebSocket.readyState) {
-            // console.log("checking");
-            webConnect();
-        }
-    }
-
-
-
-
     const handleSendClick = (message) => {
 
         const d = new Date();
         // console.log(d.toISOString())
-        webSocket.send(JSON.stringify({
-            action: "send_message",
-            event_id: event._id,
-            msg: {
-                'id': currentUser.user_id + Date.now(),
-                'user_id': currentUser.user_id,
-                'user_name': currentUser.name,
-                'user_pic': currentUser.profile_pic,
-                'message': message,
-                'date': d.toISOString()
-            }
-        }));
+        if (webSocketContext) {
+            webSocketContext.send(JSON.stringify({
+                action: "send_message",
+                event_id: event._id,
+                msg: {
+                    'id': currentUser.user_id + Date.now(),
+                    'user_id': currentUser.user_id,
+                    'user_name': currentUser.name,
+                    'user_pic': currentUser.profile_pic,
+                    'message_type': 'normal_text_message',
+                    'message': message,
+                    'date': d.toISOString()
+                }
+            }));
+        }
+
         if (reference != null) {
             reference.scrollIntoView({ behavior: "smooth" })
         }
@@ -323,13 +315,13 @@ export default function JustifyContent(props) {
                                                             </Box>
                                                         </Box>
                                                         <Box>
-                                                    <IconButton style={{padding:'0px',margin:'0px'}}>
-                                                        <ReplyIcon style={{ color: '#aaaaaa' }}></ReplyIcon>
-                                                    </IconButton>
-                                                    {currentUser.user_id === value.user_id && <IconButton style={{padding:'0px',margin:'0px'}}>
-                                                        <DeleteIcon style={{ color: '#aaaaaa' }}></DeleteIcon>
-                                                    </IconButton>}
-                                                </Box>
+                                                            <IconButton style={{ padding: '0px', margin: '0px' }}>
+                                                                <ReplyIcon style={{ color: '#aaaaaa' }}></ReplyIcon>
+                                                            </IconButton>
+                                                            {currentUser.user_id === value.user_id && <IconButton style={{ padding: '0px', margin: '0px' }}>
+                                                                <DeleteIcon style={{ color: '#aaaaaa' }}></DeleteIcon>
+                                                            </IconButton>}
+                                                        </Box>
                                                     </Box>
 
                                                     <Box>
@@ -363,10 +355,10 @@ export default function JustifyContent(props) {
                                                     </Box>
                                                 </Box>
                                                 <Box>
-                                                    <IconButton style={{padding:'0px',margin:'0px'}}>
+                                                    <IconButton style={{ padding: '0px', margin: '0px' }}>
                                                         <ReplyIcon style={{ color: '#aaaaaa' }}></ReplyIcon>
                                                     </IconButton>
-                                                    {currentUser.user_id === value.user_id && <IconButton style={{padding:'0px',margin:'0px'}}>
+                                                    {currentUser.user_id === value.user_id && <IconButton style={{ padding: '0px', margin: '0px' }}>
                                                         <DeleteIcon style={{ color: '#aaaaaa' }}></DeleteIcon>
                                                     </IconButton>}
                                                 </Box>
@@ -461,3 +453,41 @@ export default function JustifyContent(props) {
 //         </Box>
 //     </Box>);
 // }
+
+
+// const webConnect = () => {
+    //     const ws = new WebSocket(process.env.REACT_APP_WESOCKET_URL);
+    //     ws.onopen = () => {
+    //         // console.log("connected")
+    //         setWebSocket(ws);
+    //         ws.send(JSON.stringify({
+    //             action: "join_event_room",
+    //             event_id: event._id,
+    //             msg: {
+    //                 'user_id': currentUser.user_id,
+    //             }
+    //         }));
+    //         ws.onmessage = (message) => {
+    //             const mes = JSON.parse(message.data);
+    //             const cMes = mes.msg;
+    //             // console.log(mes);
+    //             if (mes.event_id === event._id) {
+    //                 // console.log(cMes);
+    //                 setChatMessages(chatMessages => [...chatMessages, cMes]);
+    //             }
+    //         }
+    //         setLoading(false)
+    //     }
+    //     ws.onclose = () => {
+
+    //         check();
+    //         // console.log("closed");
+    //     }
+    // }
+
+       // const check = () => {
+    //     if (!webSocket || webSocket.readyState === WebSocket.readyState) {
+    //         // console.log("checking");
+    //         webConnect();
+    //     }
+    // }

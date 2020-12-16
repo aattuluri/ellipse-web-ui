@@ -74,7 +74,7 @@ function ChatPage(props) {
                 response.json().then(value => {
                     
                     setTeams(value);
-                    console.log(value);
+                    // console.log(value);
                 })
             }
             else if (response.status === 401) {
