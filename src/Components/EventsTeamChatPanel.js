@@ -156,7 +156,7 @@ export default function JustifyContent(props) {
 
 
     if (webSocketContext) {
-        console.log("xyshs")
+        // console.log("xyshs")
         webSocketContext.onmessage = (message) => {
             const mes = JSON.parse(message.data);
             const cMes = mes.msg;
@@ -319,14 +319,7 @@ export default function JustifyContent(props) {
                                                                     </Typography>
                                                                 </Box>
                                                             </Box>
-                                                            <Box>
-                                                                <IconButton style={{ padding: '0px', margin: '0px' }}>
-                                                                    <ReplyIcon style={{ color: '#aaaaaa' }}></ReplyIcon>
-                                                                </IconButton>
-                                                                {currentUser.user_id === value.user_id && <IconButton style={{ padding: '0px', margin: '0px' }}>
-                                                                    <DeleteIcon style={{ color: '#aaaaaa' }}></DeleteIcon>
-                                                                </IconButton>}
-                                                            </Box>
+                                                            
                                                         </Box>
                                                         <Box>
                                                             <Typography variant="body2"

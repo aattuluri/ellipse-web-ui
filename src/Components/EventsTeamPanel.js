@@ -14,6 +14,8 @@ import SubPanel2 from './EventsTeamSubPanel2';
 import SubPanel3 from './EventsTeamSubPanel3';
 import EventsTeamChatPanel from './EventsTeamChatPanel';
 import { Typography } from '@material-ui/core';
+import WebSocketContext from '../WebSocketContext';
+import AuthContext from '../AuthContext';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -72,6 +74,7 @@ const useStyles = makeStyles((theme) => ({
 function AboutEventPanel(props) {
     const classes = useStyles();
     const { children, value, url, index, ...other } = props;
+    const { currentUser } = React.useContext(AuthContext);
     // const user = JSON.parse(localStorage.getItem('user'));
     const token = localStorage.getItem('token');
     const event = props.event;
@@ -79,6 +82,8 @@ function AboutEventPanel(props) {
     const [teamedUp, setTeamedUp] = React.useState(false);
     const [registration, setRegistration] = React.useState({});
     const subIndexValue = props.subIndexValue;
+
+    const { webSocketContext } = React.useContext(WebSocketContext);
     // const handleChange = (event, newValue) => {
     //     setSubIndexValue(newValue);
     // };
@@ -87,6 +92,40 @@ function AboutEventPanel(props) {
         getData();
         // eslint-disable-next-line
     }, [event,token])
+
+
+    React.useEffect(() => {
+        if (webSocketContext) {
+            if(registration !== {}){
+                console.log("xxxxx")
+                webSocketContext.send(JSON.stringify({
+                    action: "join_team_room",
+                    team_id: registration.team_id,
+                    msg: {
+                        'user_id': currentUser.user_id,
+                    }
+                }));
+            }
+            
+        }
+    }, [registration])
+
+
+    if (webSocketContext) {
+        // console.log("xyshs")
+        webSocketContext.onmessage = (message) => {
+            const mes = JSON.parse(message.data);
+            const cMes = mes.msg;
+            console.log(mes);
+            if(mes.action === "receive_team_status_message"){
+                getData()
+            }
+            // if (mes.team_id === registration.team_id) {
+            //     // console.log(cMes);
+            //     // setChatMessages(chatMessages => [...chatMessages, cMes]);
+            // }
+        }
+    }
 
     const getData = () =>{
         try {
