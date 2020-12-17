@@ -10,6 +10,7 @@ import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
 import { Typography } from '@material-ui/core';
 
 import AuthContext from '../AuthContext';
+import WebSocketContext from '../WebSocketContext';
 
 
 
@@ -32,6 +33,7 @@ function Eventcard(props) {
     //   const classes = useStyles();
       const event = props.event;
     const [memberDetails, setMemberDetails] = React.useState({});
+    const { webSocketContext } = React.useContext(WebSocketContext);
 
     React.useEffect(() => {
         fetchAll()
@@ -61,6 +63,7 @@ function Eventcard(props) {
     }
 
     const handleRemoveButton = () =>{
+        const d = new Date();
         var data = new FormData();
         data = JSON.stringify({
             event_id: event._id,
@@ -80,6 +83,35 @@ function Eventcard(props) {
             response.json().then(value => {
                 // console.log(value);
                 props.fetchAll()
+                if (webSocketContext) {
+                    webSocketContext.send(JSON.stringify({
+                        action: "team_status_update_message",
+                        team_id: props.id._id,
+                        msg: {
+                            'id': props.user_id + Date.now(),
+                            'user_id': currentUser.user_id,
+                            'user_name': memberDetails.name,
+                            'user_pic': memberDetails.user_pic,
+                            'message_type': 'team_status_update_message',
+                            'message': memberDetails.name + " was removed from the team",
+                            'date': d.toISOString()
+                        }
+                    }));
+                    webSocketContext.send(JSON.stringify({
+                        action: "team_status_update_status",
+                        team_id: props.id._id,
+                        users: props.id.members,
+                        msg: {
+                          'id': currentUser.user_id + Date.now(),
+                          'user_id': currentUser.user_id,
+                          'user_name': currentUser.name,
+                          'user_pic': currentUser.profile_pic,
+                          'message_type': 'team_status_update_message',
+                          'message': currentUser.name + " has left the team",
+                          'date': d.toISOString()
+                        }
+                      }));
+                }
             })
         })
     }

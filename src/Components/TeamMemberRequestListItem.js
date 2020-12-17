@@ -22,7 +22,6 @@ import AuthContext from '../AuthContext';
 
 // }));
 
-
 function Eventcard(props) {
     const token = localStorage.getItem('token');
     const { currentUser } = React.useContext(AuthContext);
@@ -70,7 +69,9 @@ function Eventcard(props) {
             body: data
         }).then((response) => {
             response.json().then(value => {
-                // console.log(value);
+                console.log(value);
+                props.fetchAll();
+
                 if (webSocketContext) {
                     webSocketContext.send(JSON.stringify({
                         action: "team_status_update_message",
@@ -85,8 +86,22 @@ function Eventcard(props) {
                             'date': d.toISOString()
                         }
                     }));
+                    webSocketContext.send(JSON.stringify({
+                        action: "team_status_update_status",
+                        team_id: props.id._id,
+                        users: [value.updated_user_id],
+                        msg: {
+                          'id': currentUser.user_id + Date.now(),
+                          'user_id': currentUser.user_id,
+                          'user_name': currentUser.name,
+                          'user_pic': currentUser.profile_pic,
+                          'message_type': 'team_status_update_message',
+                          'message': currentUser.name + " has left the team",
+                          'date': d.toISOString()
+                        }
+                      }));
                 }
-                props.fetchAll();
+                
             })
         })
     }

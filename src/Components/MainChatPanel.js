@@ -2,6 +2,7 @@ import React from 'react';
 // import ChatMessage from '../Components/ChatMessage';
 import AuthContext from '../AuthContext';
 import WebSocketContext from '../WebSocketContext';
+import WebSocketDataContext from '../WebSocketDataContext';
 import ChatTextField from './MainChatTextField';
 import { cleanup } from '@testing-library/react';
 
@@ -145,6 +146,17 @@ export default function JustifyContent(props) {
 
     const { webSocketContext } = React.useContext(WebSocketContext);
 
+    const {eventChatMessages} = React.useContext(WebSocketDataContext);
+    const {setEventChatMessages} = React.useContext(WebSocketDataContext);
+
+    const { teamChatMessages } = React.useContext(WebSocketDataContext);
+    const { setTeamChatMessages } = React.useContext(WebSocketDataContext);
+
+
+    React.useEffect(()=>{
+
+    },[])
+
     
 
     React.useEffect(() => {
@@ -170,24 +182,47 @@ export default function JustifyContent(props) {
         }
     }, [webSocketContext,currentUser,event,props])
 
-
-    if (webSocketContext) {
-        webSocketContext.onmessage = (message) => {
-            const mes = JSON.parse(message.data);
-            const cMes = mes.msg;
-            if (props.chatType === "event") {
+    React.useEffect(()=>{
+        // console.log(eventChatMessages);
+        if (props.chatType === "event") {
+            eventChatMessages.forEach(mes => {
+                const cMes = mes.msg;
                 if (mes.event_id === event._id) {
                     setChatMessages(chatMessages => [...chatMessages, cMes]);
+                    setEventChatMessages(eventChatMessages.filter(m=>{return m !== mes}));
                 }
-            }
-            else {
+            });
+        }
+        else {
+            teamChatMessages.forEach(mes => {
+                const cMes = mes.msg;
                 if (mes.team_id === event._id) {
                     setChatMessages(chatMessages => [...chatMessages, cMes]);
+                    setTeamChatMessages(teamChatMessages.filter(m => { return m !== mes }));
                 }
-            }
-
+            });
         }
-    }
+        // eslint-disable-next-line
+    },[eventChatMessages,event,teamChatMessages])
+
+
+    // if (webSocketContext) {
+    //     webSocketContext.onmessage = (message) => {
+    //         const mes = JSON.parse(message.data);
+    //         const cMes = mes.msg;
+    //         if (props.chatType === "event") {
+    //             if (mes.event_id === event._id) {
+    //                 setChatMessages(chatMessages => [...chatMessages, cMes]);
+    //             }
+    //         }
+    //         else {
+    //             if (mes.team_id === event._id) {
+    //                 setChatMessages(chatMessages => [...chatMessages, cMes]);
+    //             }
+    //         }
+
+    //     }
+    // }
 
 
     React.useEffect(() => {

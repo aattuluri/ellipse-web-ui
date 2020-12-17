@@ -13,6 +13,7 @@ import EventsContext from '../EventsContext';
 import AuthContext from '../AuthContext';
 import ActiveEventsContext from '../ActiveEventsContext';
 import WebSocketContext from '../WebSocketContext';
+import WebSocketDataContext from '../WebSocketDataContext';
 // import dot from 'dote'
 // import {detect}  from 'detect-browser';
 
@@ -46,11 +47,18 @@ function Layout(props) {
     const [authorized, setAuthorized] = React.useState(true);
     const [userDetailsDone, setUserDetailsDone] = React.useState(true);
     const [webSocketContext, setWebSocketContext] = React.useState(null);
+    const [eventChatMessages, setEventChatMessages] = React.useState([]);
+    const [teamChatMessages, setTeamChatMessages] = React.useState([]);
+    const [teamUpdateStatus,setTeamUpdateStatus] = React.useState([]);
 
     const value = { currentUser, setCurrentUser };
     const allEventsValue = { allEvents, setAllEvents };
     const activeEventsValue = { activeEvents, setActiveEvents };
-    const webSocketValue = {webSocketContext, setWebSocketContext};
+    const webSocketValue = { webSocketContext, setWebSocketContext };
+    const webSocketDataContextValue = { 
+        eventChatMessages, setEventChatMessages, 
+        teamChatMessages, setTeamChatMessages, 
+        teamUpdateStatus, setTeamUpdateStatus };
 
     const webConnect = () => {
         const ws = new WebSocket(process.env.REACT_APP_WESOCKET_URL);
@@ -59,6 +67,22 @@ function Layout(props) {
             // console.log(ws);
             // // setWebSocket(ws);
             setWebSocketContext(ws);
+        }
+        ws.onmessage = (message) => {
+            const mes = JSON.parse(message.data);
+            // const cMes = mes.msg;
+            console.log(mes);
+            if(mes.action === "receive_event_chat_message"){
+                setEventChatMessages(chatMessages => [...chatMessages, mes]);
+            }
+            else if(mes.action === "receive_team_message"){
+                setTeamChatMessages(chatMessages=>[...chatMessages, mes]);
+            }
+            else if(mes.action === "receive_team_update_message"){
+                setTeamUpdateStatus(chatMessages=>[...chatMessages, mes]);
+            }
+            
+            // setEventChatMessages(mes);
         }
         ws.onclose = () => {
 
@@ -215,26 +239,28 @@ function Layout(props) {
     return (
         <AuthContext.Provider value={value}>
             <WebSocketContext.Provider value={webSocketValue}>
-                <EventsContext.Provider value={allEventsValue}>
-                    <ActiveEventsContext.Provider value={activeEventsValue}>
-                        {
-                            currentUser != null && <div>
-                                <Paper className={classes.root}>
-                                    <NavigationBar></NavigationBar>
-                                </Paper>
-                                <div>
-                                    {props.children}
+                <WebSocketDataContext.Provider value={webSocketDataContextValue}>
+                    <EventsContext.Provider value={allEventsValue}>
+                        <ActiveEventsContext.Provider value={activeEventsValue}>
+                            {
+                                currentUser != null && <div>
+                                    <Paper className={classes.root}>
+                                        <NavigationBar></NavigationBar>
+                                    </Paper>
+                                    <div>
+                                        {props.children}
+                                    </div>
                                 </div>
-                            </div>
-                        }
-                        {
-                            currentUser == null && <Backdrop className={classes.backdrop} open={open}>
-                                <CircularProgress color="inherit" />
-                            </Backdrop>
+                            }
+                            {
+                                currentUser == null && <Backdrop className={classes.backdrop} open={open}>
+                                    <CircularProgress color="inherit" />
+                                </Backdrop>
 
-                        }
-                    </ActiveEventsContext.Provider>
-                </EventsContext.Provider>
+                            }
+                        </ActiveEventsContext.Provider>
+                    </EventsContext.Provider>
+                </WebSocketDataContext.Provider>
             </WebSocketContext.Provider>
         </AuthContext.Provider>
 

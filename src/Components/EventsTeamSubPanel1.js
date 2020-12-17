@@ -130,7 +130,26 @@ function AboutEventPanel(props) {
   React.useEffect(() => {
     fetchAll()
     // eslint-disable-next-line
-  }, [])
+  }, [props.registration])
+
+//   if (webSocketContext) {
+//     // console.log("xyshs")
+//     webSocketContext.onmessage = (message) => {
+//         const mes = JSON.parse(message.data);
+//         const cMes = mes.msg;
+//         console.log(mes);
+//         if(mes.action === "receive_team_status_status"){
+//             console.log("hurray")
+//             // getData()
+//             fetchAll()
+//         }
+//         // if (mes.team_id === registration.team_id) {
+//         //     // console.log(cMes);
+//         //     // setChatMessages(chatMessages => [...chatMessages, cMes]);
+//         // }
+//     }
+// }
+
 
 
   const fetchAll = () => {
@@ -159,7 +178,7 @@ function AboutEventPanel(props) {
   }
 
   const handleDeleteButton = () => {
-    const d = new Date();
+    // const d = new Date();
     var data = new FormData();
     data = JSON.stringify({
       team_id: teamDetails._id,
@@ -202,13 +221,27 @@ function AboutEventPanel(props) {
     }).then((response) => {
       if (response.status === 200) {
         response.json().then(value => {
-          console.log(value);
+          // console.log(value);
           props.getData();
           // props.fetchAll()
           if (webSocketContext) {
             webSocketContext.send(JSON.stringify({
               action: "team_status_update_message",
               team_id: registration.team_id,
+              msg: {
+                'id': currentUser.user_id + Date.now(),
+                'user_id': currentUser.user_id,
+                'user_name': currentUser.name,
+                'user_pic': currentUser.profile_pic,
+                'message_type': 'team_status_update_message',
+                'message': currentUser.name + " has left the team",
+                'date': d.toISOString()
+              }
+            }));
+            webSocketContext.send(JSON.stringify({
+              action: "team_status_update_status",
+              team_id: registration.team_id,
+              users: teamDetails.members,
               msg: {
                 'id': currentUser.user_id + Date.now(),
                 'user_id': currentUser.user_id,

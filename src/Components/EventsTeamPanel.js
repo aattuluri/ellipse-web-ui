@@ -16,6 +16,7 @@ import EventsTeamChatPanel from './EventsTeamChatPanel';
 import { Typography } from '@material-ui/core';
 import WebSocketContext from '../WebSocketContext';
 import AuthContext from '../AuthContext';
+import WebSocketDataContext from '../WebSocketDataContext';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -84,9 +85,16 @@ function AboutEventPanel(props) {
     const subIndexValue = props.subIndexValue;
 
     const { webSocketContext } = React.useContext(WebSocketContext);
+
+    const {teamUpdateStatus} = React.useContext(WebSocketDataContext);
     // const handleChange = (event, newValue) => {
     //     setSubIndexValue(newValue);
     // };
+
+    React.useEffect(()=>{
+        getData()
+        // eslint-disable-next-line
+    },[teamUpdateStatus])
 
     React.useEffect(() => {
         getData();
@@ -97,35 +105,35 @@ function AboutEventPanel(props) {
     React.useEffect(() => {
         if (webSocketContext) {
             if(registration !== {}){
-                console.log("xxxxx")
+                // console.log("xxxxx")
                 webSocketContext.send(JSON.stringify({
-                    action: "join_team_room",
+                    action: "join_team_update_status",
                     team_id: registration.team_id,
                     msg: {
                         'user_id': currentUser.user_id,
                     }
                 }));
             }
-            
         }
-    }, [registration])
+    }, [registration,currentUser,webSocketContext])
 
 
-    if (webSocketContext) {
-        // console.log("xyshs")
-        webSocketContext.onmessage = (message) => {
-            const mes = JSON.parse(message.data);
-            const cMes = mes.msg;
-            console.log(mes);
-            if(mes.action === "receive_team_status_message"){
-                getData()
-            }
-            // if (mes.team_id === registration.team_id) {
-            //     // console.log(cMes);
-            //     // setChatMessages(chatMessages => [...chatMessages, cMes]);
-            // }
-        }
-    }
+    // if (webSocketContext) {
+    //     // console.log("xyshs")
+    //     webSocketContext.onmessage = (message) => {
+    //         const mes = JSON.parse(message.data);
+    //         const cMes = mes.msg;
+    //         console.log(mes);
+    //         if(mes.action === "receive_team_status_status"){
+    //             console.log("hurray")
+    //             getData()
+    //         }
+    //         // if (mes.team_id === registration.team_id) {
+    //         //     // console.log(cMes);
+    //         //     // setChatMessages(chatMessages => [...chatMessages, cMes]);
+    //         // }
+    //     }
+    // }
 
     const getData = () =>{
         try {
@@ -141,9 +149,9 @@ function AboutEventPanel(props) {
                     response.json().then(value => {
                         // console.log(value);
                         setRegistration(value[0]);
-                        if(value[0].teamed_up){
+                        // if(value[0].teamed_up){
                             setTeamedUp(value[0].teamed_up);
-                        }
+                        // }
                         
                     })
                 }
@@ -180,9 +188,9 @@ function AboutEventPanel(props) {
                         </Tabs>
                     </Paper> */}
                     {teamedUp && <SubPanel1 getData={getData} value={subIndexValue} registration={registration} index={1} event={props.event}></SubPanel1>}
-                    {teamedUp && <EventsTeamChatPanel value={subIndexValue} registration={registration} index={2} event={props.event}></EventsTeamChatPanel>}
+                    {teamedUp && subIndexValue === 2 && <EventsTeamChatPanel value={subIndexValue} registration={registration} index={2} event={props.event}></EventsTeamChatPanel>}
                     {!teamedUp && subIndexValue === (1 || 2) && <Typography>Join team or create a team</Typography>}
-                    {!teamedUp && <SubPanel2 value={subIndexValue} index={3} event={props.event}></SubPanel2>}
+                    {!teamedUp && <SubPanel2 value={subIndexValue} index={3} event={props.event} getData={getData}></SubPanel2>}
                     {teamedUp && subIndexValue === 3 && <Typography>Team already created</Typography>}
                     {!teamedUp && <SubPanel3 value={subIndexValue} index={4} event={props.event}></SubPanel3>}
                     {teamedUp && subIndexValue === 4 && <Typography>Team created or joined, delete to join other teams</Typography>}

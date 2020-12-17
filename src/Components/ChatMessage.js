@@ -79,7 +79,6 @@ function ChatMessage(props) {
                                     </a>
                                 )}
                             >{message.message}</Linkify>
-                            {/* <Linkify properties={{ target: '_blank', style: { color: 'red', fontWeight: 'bold' } }}>{message.message}</Linkify> */}
                         </Typography>
                         {/* <Box>
                             <Typography
