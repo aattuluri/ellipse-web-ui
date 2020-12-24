@@ -72,26 +72,26 @@ const useStyles = makeStyles((theme) => ({
 function ChatMessage(props) {
     const classes = useStyles();
     const message = props.message;
-    // const [userType, setUserType] = React.useState('')
+    const [userType, setUserType] = React.useState('')
     const date = new Date(message.date);
     const { currentUser } = React.useContext(AuthContext);
 
-    // useEffect(() => {
-    //     if (props.adminId === message.user_id) {
-    //         setUserType(' (Admin)')
-    //     }
-    // }, [props.adminId, message])
+    React.useEffect(() => {
+        if (props.adminId === message.user_id) {
+            setUserType(' (Admin)')
+        }
+    }, [props.adminId, message])
 
     return (
         <Box m={1} p={1} key={props.index + 1} className={classes.root3}>
             <Box className={classes.root5}>
-                <Avatar variant="square" alt={message.userName} src={process.env.REACT_APP_API_URL + `/api/image?id=${message.user_pic}`} />
+                <Avatar alt={message.userName} src={message.user_pic && process.env.REACT_APP_API_URL + `/api/image?id=${message.user_pic}`} />
             </Box>
             <Box className={classes.root2} whiteSpace="normal">
                 <Box style={{ display: 'flex', justifyContent: 'flex-start' }}>
                     <Box flexGrow={1} className={classes.message}>
                         <Box>
-                            <Typography variant="body1">{message.user_name + "   "}</Typography>
+                            <Typography variant="body1">{message.user_name + "   "+userType}</Typography>
                         </Box>
                         <Box style={{ marginLeft: "7px" }}>
                             <Typography component="span"
@@ -103,10 +103,10 @@ function ChatMessage(props) {
                         </Box>
                     </Box>
                     <Box>
-                        <IconButton style={{ padding: '0px', margin: '0px' }}>
+                        <IconButton  style={{ padding: '0px', margin: '0px' }}>
                             <ReplyIcon style={{ color: '#aaaaaa' }}></ReplyIcon>
                         </IconButton>
-                        {currentUser.user_id === message.user_id && <IconButton style={{ padding: '0px', margin: '0px' }}>
+                        {currentUser.user_id === message.user_id && <IconButton onClick={props.handleMessageDeleteButton(message)} style={{ padding: '0px', margin: '0px' }}>
                             <DeleteIcon style={{ color: '#aaaaaa' }}></DeleteIcon>
                         </IconButton>}
                     </Box>

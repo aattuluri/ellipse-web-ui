@@ -142,6 +142,7 @@ export default function Checkout({ history }) {
   const [isTeam,setIsTeam] = React.useState(false);
   const [minTeamSize,setMinTeamSize] = React.useState(1);
   const [maxTeamSize,setMaxTeamSize] = React.useState(1);
+  const [rounds,setRounds] = React.useState([]);
 
 
 
@@ -226,13 +227,16 @@ export default function Checkout({ history }) {
           <EventPostDetails3
             handleBack={handleBack}
             fields={fields}
-            setFields={setRegFields} handlePost={handleEventPost}>
+            setFields={setRegFields} 
+            rounds={rounds}
+            setRounds={setRounds}
+            handlePost={handleEventPost}>
           </EventPostDetails3>);
       default:
         throw new Error('Unknown step');
     }
   }
-
+console.log(rounds)
 
   const handleEventPost = (allFields) => {
     var oAllowed = false;
@@ -267,7 +271,8 @@ export default function Checkout({ history }) {
         o_allowed: oAllowed,
         platform_details: platformDetails,
         isTeamed: isTeam,
-        team_size: {min_team_size:minTeamSize,max_team_size:maxTeamSize}
+        team_size: {min_team_size:minTeamSize,max_team_size:maxTeamSize},
+        rounds: rounds
       };
       data = JSON.stringify(payload);
       fetch(process.env.REACT_APP_API_URL + '/api/events', {

@@ -124,7 +124,11 @@ function EventsDialog(props) {
         else {
             setChatAcess(false)
         }
-    }, [event, currentUser])
+        if(props.openTeams){
+            setValue(4);
+            setSubIndexValue(1);
+        }
+    }, [event, currentUser, props.openTeams])
     // console.log(chatAcess);
     const handleSubIndexChange = (event, newValue) => {
         setSubIndexValue(newValue);

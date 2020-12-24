@@ -61,6 +61,7 @@ const Signup = (props) => {
   const [userMessage, setUserMessage] = React.useState(false);
 
   const [formValues, setFormValues] = React.useState(null);
+  const [uploadFiles, setUploadFiles] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
   // const [fields, setFields] = React.useState([]);
   const [normalFields, setNormalFields] = React.useState([]);
@@ -70,6 +71,7 @@ const Signup = (props) => {
   const [dateFields, setDateFields] = React.useState([]);
   const [longDescFields, setLongDescFields] = React.useState([]);
   const [linkFields, setLinkFields] = React.useState([]);
+  const [fileUploadFields, setFileUploadFields] = React.useState([]);
 
   const { vertical, horizontal, open, message, type, autoHide } = state;
   const id = props.match.params.eventId;
@@ -79,9 +81,9 @@ const Signup = (props) => {
   const colleges = ["VIT University,Vellore", "GITAM University", "SRM University"];
   const [tandcOpen, setTandcOpen] = React.useState(false);
 
-  const {currentUser} = React.useContext(AuthContext);
-  const {setAllEvents} = React.useContext(EventsContext);
-  const {setActiveEvents} = React.useContext(ActiveEventsContext);
+  const { currentUser } = React.useContext(AuthContext);
+  const { setAllEvents } = React.useContext(EventsContext);
+  const { setActiveEvents } = React.useContext(ActiveEventsContext);
 
   function handleTermsClick() {
     setTandcOpen(true);
@@ -95,7 +97,7 @@ const Signup = (props) => {
       setCanRegister(false);
       setUserMessage(currentUser.designation + " cannot register")
     }
-    if(event.status === 'pending'){
+    if (event.status === 'pending') {
       setCanRegister(false)
       setUserMessage("Event is not accepted yet check back later");
     }
@@ -168,6 +170,7 @@ const Signup = (props) => {
           // setLongDescFields(allFields.filter((f) => f.field === "long_desc"));
           setDropDownFields(allFields.filter(f => f.field === "dropdown"));
           setLinkFields(allFields.filter(f => f.field === "link"));
+          setFileUploadFields(allFields.filter(f => f.field === "file_upload"));
 
         }
         setBackDropOpen(false);
@@ -180,31 +183,31 @@ const Signup = (props) => {
       props.history.push('/home')
       fetch(process.env.REACT_APP_API_URL + '/api/events', {
         headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
         },
         method: 'GET'
-    }).then(response => {
+      }).then(response => {
         if (response.status === 200) {
-            response.json().then(value => {
-                // console.log(value)
-                value.sort((a, b) => {
-                    return new Date(a.start_time) - new Date(b.start_time);
-                })
-                setAllEvents(value);
-                setActiveEvents(value.filter(e => {
-                    const cDate = new Date();
-                    const eDate = new Date(e.finish_time);
-                    return cDate < eDate && e.status !== "pending"
-                }))
+          response.json().then(value => {
+            // console.log(value)
+            value.sort((a, b) => {
+              return new Date(a.start_time) - new Date(b.start_time);
             })
+            setAllEvents(value);
+            setActiveEvents(value.filter(e => {
+              const cDate = new Date();
+              const eDate = new Date(e.finish_time);
+              return cDate < eDate && e.status !== "pending"
+            }))
+          })
         }
         else if (response.status === 401) {
-            localStorage.removeItem('token');
+          localStorage.removeItem('token');
         }
 
-    })
+      })
     }
     setState({ ...state, open: false });
   }
@@ -244,57 +247,143 @@ const Signup = (props) => {
 
   function handleEventRegistration(e) {
     e.preventDefault();
-    // setLoading(true);
-    // console.log(checkedValues);
-    // console.log(formValues);
+    var uploadedFilesIds = [];
     const formkeys = Object.keys(formValues);
+    const fileFormKeys = Object.keys(uploadFiles);
     var count = 0;
     formkeys.forEach(v => {
       if (formValues[v] === null) {
-        count = count + 1;
-        setState({
-          open: true,
-          vertical: 'top',
-          horizontal: 'center',
-          message: 'Please fill in all fields',
-          type: "error",
-          autoHide: 4000
-        });
+        if (v.includes(fileFormKeys)) {
+
+        } else {
+          count = count + 1;
+          setState({
+            open: true,
+            vertical: 'top',
+            horizontal: 'center',
+            message: 'Please fill in all fields',
+            type: "error",
+            autoHide: 4000
+          });
+        }
+
         // break;
       }
     })
-    if(count === 0){
+    if (fileFormKeys) {
+      fileFormKeys.forEach(f => {
+        if (uploadFiles[f] === null) {
+          count = count + 1;
+          setState({
+            open: true,
+            vertical: 'top',
+            horizontal: 'center',
+            message: 'Please fill in all fields',
+            type: "error",
+            autoHide: 4000
+          });
+          // break;
+        }
+      })
+    }
+
+    var finalValues = formValues;
+    if (count === 0) {
       try {
-        var data = new FormData();
-        const d = { data: formValues }
-        data = JSON.stringify(d);
-        fetch(process.env.REACT_APP_API_URL + `/api/event/register?id=${id}`, {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          method: 'POST',
-          body: data
-        }).then(response => {
-          // console.log(response);
-          if (response.status === 200) {
-            response.json().then(value => {
-              // console.log(value);
-  
-              setLoading(false);
-              setState({
-                open: true,
-                vertical: 'top',
-                horizontal: 'center',
-                message: 'Registration successful.Stay tunned with notifications and announcements',
-                type: "success",
-                autoHide: 4000
-              });
+        console.log('a');
+        if (fileFormKeys.length > 0) {
+          console.log('b');
+          fileFormKeys.forEach((key, index) => {
+            console.log(index);
+            console.log(fileFormKeys.length)
+            var data1 = new FormData();
+            data1.append('uploaded_file', uploadFiles[key]);
+            fetch(process.env.REACT_APP_API_URL + `/api/event/register/upload_file?id=${id}`, {
+              headers: {
+                'Authorization': `Bearer ${token}`,
+              },
+              method: 'POST',
+              body: data1
+            }).then((response) => {
+              if (response.status === 200) {
+                response.json().then(value => {
+                  console.log(value);
+                  setFormValues({ ...formValues, [key]: value.file_name })
+                  finalValues[key] = value.file_name
+                  uploadedFilesIds.push({ [key]: value.file_name });
+                  if (uploadedFilesIds.length === fileFormKeys.length) {
+                    // console.log(uploadedFilesIds);
+                    // console.log(finalValues);
+                    var data = new FormData();
+                    const d = { data: finalValues }
+                    data = JSON.stringify(d);
+                    fetch(process.env.REACT_APP_API_URL + `/api/event/register?id=${id}`, {
+                      headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                      },
+                      method: 'POST',
+                      body: data
+                    }).then(response => {
+                      // console.log(response);
+                      if (response.status === 200) {
+                        response.json().then(value => {
+                          // console.log(value);
+
+                          setLoading(false);
+                          setState({
+                            open: true,
+                            vertical: 'top',
+                            horizontal: 'center',
+                            message: 'Registration successful.Stay tunned with notifications and announcements',
+                            type: "success",
+                            autoHide: 4000
+                          });
+                        })
+                      }
+
+                    })
+                  }
+                })
+              }
             })
-          }
-  
-        })
+          })
+        }
+        else {
+          var data = new FormData();
+          const d = { data: finalValues }
+          data = JSON.stringify(d);
+          fetch(process.env.REACT_APP_API_URL + `/api/event/register?id=${id}`, {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            method: 'POST',
+            body: data
+          }).then(response => {
+            // console.log(response);
+            if (response.status === 200) {
+              response.json().then(value => {
+                // console.log(value);
+
+                setLoading(false);
+                setState({
+                  open: true,
+                  vertical: 'top',
+                  horizontal: 'center',
+                  message: 'Registration successful.Stay tunned with notifications and announcements',
+                  type: "success",
+                  autoHide: 4000
+                });
+              })
+            }
+
+          })
+        }
+
+
       }
       catch (error) {
         setLoading(false);
@@ -306,15 +395,29 @@ const Signup = (props) => {
           type: "error",
           autoHide: 6000
         })
-  
+
       }
     }
-    
+
 
   }
 
   function handleBack() {
     props.history.goBack();
+  }
+
+  function handleFileSelect(event) {
+    console.log(event.target.name)
+    if (event.target.files[0]) {
+      setUploadFiles({ ...uploadFiles, [event.target.name]: event.target.files[0] });
+      // setImage(event.target.files[0]);
+      // setImageAsFile(imageFile => (image))
+      // const url = URL.createObjectURL(event.target.files[0]);
+      // const fileType = event.target.files[0].type;
+      // setImageurl(url);
+      // setImageType(fileType.substr(fileType.indexOf('/') + 1));
+    }
+
   }
 
 
@@ -535,6 +638,14 @@ const Signup = (props) => {
                         autoFocus
                       />
                     </Grid>)
+                })
+              }
+              {
+                fileUploadFields.map((field, index) => {
+                  return <Grid item xs={12}>
+                  <Typography>{field.title}</Typography>
+                    <input id="contained-button-file" name={field.title} required type="file" onChange={handleFileSelect} ></input>
+                  </Grid>
                 })
               }
 

@@ -178,8 +178,8 @@ function ChatPage(props) {
                                         <ListItemIcon>
                                             <ListItemAvatar>
                                                 <Avatar
-                                                    // alt={`Avatar n°${value + 1}`}
-                                                    src={process.env.REACT_APP_API_URL + `/api/image?id=${value.posterUrl}`}
+                                                    alt={value.team_name}
+                                                    src="abc.jpg"
                                                 />
                                             </ListItemAvatar>
                                         </ListItemIcon>

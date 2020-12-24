@@ -50,6 +50,8 @@ function Layout(props) {
     const [eventChatMessages, setEventChatMessages] = React.useState([]);
     const [teamChatMessages, setTeamChatMessages] = React.useState([]);
     const [teamUpdateStatus,setTeamUpdateStatus] = React.useState([]);
+    const [deletedEventChatMessages,setDeletedEventChatMessages] = React.useState([]);
+    const [deletedTeamChatMessages,setDeletedTeamChatMessages] = React.useState([]);
 
     const value = { currentUser, setCurrentUser };
     const allEventsValue = { allEvents, setAllEvents };
@@ -58,7 +60,9 @@ function Layout(props) {
     const webSocketDataContextValue = { 
         eventChatMessages, setEventChatMessages, 
         teamChatMessages, setTeamChatMessages, 
-        teamUpdateStatus, setTeamUpdateStatus };
+        teamUpdateStatus, setTeamUpdateStatus, 
+        deletedEventChatMessages, setDeletedEventChatMessages, 
+        deletedTeamChatMessages, setDeletedTeamChatMessages };
 
     const webConnect = () => {
         const ws = new WebSocket(process.env.REACT_APP_WESOCKET_URL);
@@ -71,7 +75,7 @@ function Layout(props) {
         ws.onmessage = (message) => {
             const mes = JSON.parse(message.data);
             // const cMes = mes.msg;
-            console.log(mes);
+            // console.log(mes);
             if(mes.action === "receive_event_chat_message"){
                 setEventChatMessages(chatMessages => [...chatMessages, mes]);
             }
@@ -80,6 +84,13 @@ function Layout(props) {
             }
             else if(mes.action === "receive_team_update_message"){
                 setTeamUpdateStatus(chatMessages=>[...chatMessages, mes]);
+            }
+            else if(mes.action === "delete_event_chat_message"){
+                // console.log(mes);
+                setDeletedEventChatMessages(chatMessages=>[...chatMessages, mes]);
+            }
+            else if(mes.action === "delete_team_chat_message"){
+                setDeletedTeamChatMessages(chatMessages=>[...chatMessages, mes]);
             }
             
             // setEventChatMessages(mes);

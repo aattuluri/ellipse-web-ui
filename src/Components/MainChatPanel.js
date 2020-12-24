@@ -5,21 +5,34 @@ import WebSocketContext from '../WebSocketContext';
 import WebSocketDataContext from '../WebSocketDataContext';
 import ChatTextField from './MainChatTextField';
 import { cleanup } from '@testing-library/react';
+import EventsContext from '../EventsContext';
 
 import Box from '@material-ui/core/Box';
 import { makeStyles } from '@material-ui/core/styles';
-import Avatar from '@material-ui/core/Avatar';
-import { Typography } from '@material-ui/core';
+// import Avatar from '@material-ui/core/Avatar';
+import { IconButton, Typography } from '@material-ui/core';
 // import ListItem from '@material-ui/core/ListItem';
 // import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 // import ListItemText from '@material-ui/core/ListItemText';
 // import Dialog from '@material-ui/core/Dialog';
-import DeleteIcon from '@material-ui/icons/Delete';
-import ReplyIcon from '@material-ui/icons/Reply';
+// import DeleteIcon from '@material-ui/icons/Delete';
+// import ReplyIcon from '@material-ui/icons/Reply';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Fade from '@material-ui/core/Fade';
-import { Divider, IconButton } from '@material-ui/core';
+import InfoIcon from '@material-ui/icons/Info';
+import EventsDialog from '../Components/EventsDialog';
+// import { Divider, IconButton } from '@material-ui/core';
 // import { TextField } from '@material-ui/core';
+
+
+import MessageBox1 from './MessageBox1';
+import MessageBox2 from './MessageBox2';
+import MessageBox3 from './MessageBox3';
+import MessageBox4 from './MessageBox4';
+import MessageBox5 from './MessageBox5';
+import MessageDeleteDialog from './MessageDeleteDialog';
+import MessageReplyDialog from './MessageReplyDialog';
+
 
 // import socketIOClient from "socket.io-client";
 // const socket = socketIOClient("https://staging.ellipseapp.com",{
@@ -132,11 +145,19 @@ const useStyles = makeStyles((theme) => ({
 export default function JustifyContent(props) {
     const { children, value, url, index, ...other } = props;
     const { currentUser } = React.useContext(AuthContext);
+    const {allEvents} = React.useContext(EventsContext);
+    const [open, setOpen] = React.useState(false);
+    const [selectedEvent, setSelectedEvent] = React.useState([]);
     const user = props.user
     const token = localStorage.getItem('token');
     const event = props.event;
     const team = props.event;
     const [loading, setLoading] = React.useState(false);
+    
+    const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
+    const [openReplyDialog, setOpenReplyDialog] = React.useState(false);
+    const [messageToBeDeleted, setMessageToBeDeleted] = React.useState({});
+    const [messageToBeReplied, setMessagesToBeReplied] = React.useState({});
 
     const [reference, setReferenece] = React.useState(null);
     // const [currentReference,setCurrenmtReference] = React.useState(null);
@@ -146,18 +167,25 @@ export default function JustifyContent(props) {
 
     const { webSocketContext } = React.useContext(WebSocketContext);
 
-    const {eventChatMessages} = React.useContext(WebSocketDataContext);
-    const {setEventChatMessages} = React.useContext(WebSocketDataContext);
+    const { eventChatMessages } = React.useContext(WebSocketDataContext);
+    const { setEventChatMessages } = React.useContext(WebSocketDataContext);
 
     const { teamChatMessages } = React.useContext(WebSocketDataContext);
     const { setTeamChatMessages } = React.useContext(WebSocketDataContext);
 
+    const { deletedTeamChatMessages, setDeletedTeamChatMessages } = React.useContext(WebSocketDataContext);
+    const { deletedEventChatMessages, setDeletedEventChatMessages } = React.useContext(WebSocketDataContext);
 
-    React.useEffect(()=>{
 
-    },[])
+    React.useEffect(() => {
 
-    
+    }, [])
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+
 
     React.useEffect(() => {
         if (webSocketContext) {
@@ -180,16 +208,16 @@ export default function JustifyContent(props) {
                 }));
             }
         }
-    }, [webSocketContext,currentUser,event,props])
+    }, [webSocketContext, currentUser, event, props])
 
-    React.useEffect(()=>{
+    React.useEffect(() => {
         // console.log(eventChatMessages);
         if (props.chatType === "event") {
             eventChatMessages.forEach(mes => {
                 const cMes = mes.msg;
                 if (mes.event_id === event._id) {
                     setChatMessages(chatMessages => [...chatMessages, cMes]);
-                    setEventChatMessages(eventChatMessages.filter(m=>{return m !== mes}));
+                    setEventChatMessages(eventChatMessages.filter(m => { return m !== mes }));
                 }
             });
         }
@@ -203,7 +231,30 @@ export default function JustifyContent(props) {
             });
         }
         // eslint-disable-next-line
-    },[eventChatMessages,event,teamChatMessages])
+    }, [eventChatMessages, event, teamChatMessages])
+
+    React.useEffect(() => {
+        // console.log(eventChatMessages);
+        if (props.chatType === "event") {
+            deletedEventChatMessages.forEach(mes => {
+                const cMes = mes.msg;
+                if (mes.event_id === event._id) {
+                    setChatMessages(chatMessages.filter(m => { return JSON.stringify(m) !== JSON.stringify(cMes) }));
+                    setDeletedEventChatMessages(eventChatMessages.filter(m => { return m !== mes }));
+                }
+            })
+        }
+        else {
+            deletedTeamChatMessages.forEach(mes => {
+                const cMes = mes.msg;
+                if (mes.team_id === event._id) {
+                    setChatMessages(chatMessages.filter(m => { return JSON.stringify(m) !== JSON.stringify(cMes) }));
+                    setDeletedTeamChatMessages(teamChatMessages.filter(m => { return m !== mes }));
+                }
+            })
+        }
+        // eslint-disable-next-line
+    }, [deletedEventChatMessages, deletedTeamChatMessages])
 
 
     // if (webSocketContext) {
@@ -298,13 +349,14 @@ export default function JustifyContent(props) {
         const d = new Date();
         if (props.chatType === "event") {
             webSocketContext.send(JSON.stringify({
-                action: "send_message",
+                action: "send_event_message",
                 event_id: event._id,
                 msg: {
                     'id': user.user_id + Date.now(),
                     'user_id': user.user_id,
                     'user_name': user.name,
                     'user_pic': user.profile_pic,
+                    'message_type': 'normal_text_message',
                     'message': message,
                     'date': d.toISOString()
                 }
@@ -319,6 +371,7 @@ export default function JustifyContent(props) {
                     'user_id': user.user_id,
                     'user_name': user.name,
                     'user_pic': user.profile_pic,
+                    'message_type': 'normal_text_message',
                     'message': message,
                     'date': d.toISOString()
                 }
@@ -332,13 +385,18 @@ export default function JustifyContent(props) {
 
     const handleMessageDeleteButton = (mes) => () => {
         // console.log(mes);
+        setMessageToBeDeleted(mes);
+        setOpenDeleteDialog(true);
+    }
+
+    const handleDeleteConfirmation = (mes) => () => {
         if (props.chatType === "event") {
             webSocketContext.send(JSON.stringify({
                 action: "delete_event_chat_message",
                 event_id: event._id,
                 msg: mes
             }));
-            setChatMessages(chatMessages.filter(m=>{return m !== mes}))
+            setChatMessages(chatMessages.filter(m => { return m !== mes }))
         }
         else {
             webSocketContext.send(JSON.stringify({
@@ -346,10 +404,39 @@ export default function JustifyContent(props) {
                 team_id: event._id,
                 msg: mes
             }));
-            setChatMessages(chatMessages.filter(m=>{return m !== mes}))
+            setChatMessages(chatMessages.filter(m => { return m !== mes }))
         }
-        
-        
+        setOpenDeleteDialog(false);
+    }
+
+    const handleReplyButton = (mes) => () => {
+        setMessagesToBeReplied(mes);
+        setOpenReplyDialog(true);
+    }
+
+    const handleReplyConfirmation = (mes) => {
+        const d = new Date();
+        webSocketContext.send(JSON.stringify({
+            action: "send_event_message",
+            event_id: event._id,
+            msg: {
+                'id': user.user_id + Date.now(),
+                'user_id': user.user_id,
+                'user_name': user.name,
+                'user_pic': user.profile_pic,
+                'message_type': 'reply_text_message',
+                'message': mes,
+                'replied_to': messageToBeReplied.id,
+                'date': d.toISOString()
+            }
+        }));
+        setMessageToBeDeleted("");
+        setOpenReplyDialog(false);
+    }
+
+    const handleInfoButton = (id) => () => {
+        setSelectedEvent(allEvents.filter((e=>{return e._id === id}))[0]);
+        setOpen(true);
     }
 
     return (
@@ -360,7 +447,16 @@ export default function JustifyContent(props) {
             {value === index && (
                 <div>
                     <div className={classes.header}>
-                        <Typography>{props.chatType === "event" ? event.name : team.team_name}</Typography>
+                        <Box display="flex">
+                            <Box flexGrow={1}>
+                                <Typography>{props.chatType === "event" ? event.name : team.team_name}</Typography>
+                            </Box>
+                            <Box>
+                                <IconButton style={{marginTop:'0px',padding: '0px'}} onClick={handleInfoButton(props.chatType==="event" ? event._id : team.event_id)}>
+                                    <InfoIcon></InfoIcon>
+                                </IconButton>
+                            </Box>
+                        </Box>
                     </div>
                     <div className={classes.progress}>
                         <Fade
@@ -377,100 +473,82 @@ export default function JustifyContent(props) {
                             chatMessages.map((value, index) => {
                                 const currentDate = new Date();
                                 const messageDate = new Date(value.date);
-                                const date = new Date(value.date);
                                 if (messageDate.toDateString() !== counterDate) {
                                     counterDate = messageDate.toDateString();
+                                    if (value.message_type === 'team_status_update_message') {
+                                        return (
+                                            <MessageBox3
+                                            handleViewClick={handleInfoButton(props.chatType==="event" ? event._id : team.event_id)}
+                                                message={value}
+                                                currentDate={currentDate}
+                                                handleReplyButton={handleReplyButton}
+                                                handleMessageDeleteButton={handleMessageDeleteButton}
+                                                messageDate={messageDate}
+                                                index={index}></MessageBox3>
+                                        );
+                                    }
+                                    else if (value.message_type === 'reply_text_message') {
+                                        const repliedMessage = chatMessages.filter(m => { return m.id === value.replied_to })
+                                        return (
+                                            <MessageBox5
+                                                divider={true}
+                                                repliedMessage={repliedMessage}
+                                                message={value}
+                                                currentDate={currentDate}
+                                                handleReplyButton={handleReplyButton}
+                                                handleMessageDeleteButton={handleMessageDeleteButton}
+                                                messageDate={messageDate}
+                                                index={index}></MessageBox5>
+                                        );
+                                    }
                                     return (
-                                        <React.Fragment>
-                                            {/* <Divider></Divider> */}
-                                            <Box m={1} p={1} key={index} className={classes.root6}>
-                                                <Box flexGrow={1} marginTop={1}>
-                                                    <Divider></Divider>
-                                                </Box>
-                                                <Box>
-                                                    <Typography variant="body2">{currentDate.toDateString() === messageDate.toDateString() ? "Today" : messageDate.toDateString()}</Typography>
-                                                </Box>
-                                                <Box flexGrow={1} marginTop={1}>
-                                                    <Divider></Divider>
-                                                </Box>
-                                            </Box>
-                                            <Box m={1} p={1} key={index + 1} className={classes.root3}>
-                                                <Box className={classes.root5}>
-                                                    <Avatar variant="square" alt={value.userName} src={(value.user_pic !== null && value.user_pic !== "") && process.env.REACT_APP_API_URL + `/api/image?id=${value.user_pic}`} />
-                                                </Box>
-                                                <Box className={classes.root2} whiteSpace="normal">
-                                                    <Box style={{ display: 'flex', justifyContent: 'flex-start' }}>
-                                                        <Box flexGrow={1} className={classes.message}>
-                                                            <Box>
-                                                                <Typography variant="body1">{value.user_name + "   "}</Typography>
-                                                            </Box>
-                                                            <Box style={{ marginLeft: "7px" }}>
-                                                                <Typography component="span"
-                                                                    variant="body2"
-                                                                    style={{ fontSize: "0.9em" }}
-                                                                    color="textSecondary">
-                                                                    {"   " + date.toLocaleTimeString([], { timeStyle: 'short' })}
-                                                                </Typography>
-                                                            </Box>
-                                                        </Box>
-                                                        <Box>
-                                                            <IconButton style={{ padding: '0px', margin: '0px' }}>
-                                                                <ReplyIcon style={{ color: '#aaaaaa' }}></ReplyIcon>
-                                                            </IconButton>
-                                                            {user.user_id === value.user_id && <IconButton onClick={handleMessageDeleteButton(value)} style={{ padding: '0px', margin: '0px' }}>
-                                                                <DeleteIcon style={{ color: '#aaaaaa' }}></DeleteIcon>
-                                                            </IconButton>}
-                                                        </Box>
-                                                    </Box>
+                                        <MessageBox1
+                                            adminId={props.chatType === "event" ? event.user_id : ""}
+                                            message={value}
+                                            handleReplyButton={handleReplyButton}
+                                            handleMessageDeleteButton={handleMessageDeleteButton}
+                                            currentDate={currentDate}
+                                            messageDate={messageDate}
+                                            index={index}></MessageBox1>
+                                    );
 
-                                                    <Box>
-                                                        <Typography variant="body2"
-                                                            style={{ fontSize: "1.2em" }}
-                                                            color="textSecondary">{value.message}</Typography>
-                                                    </Box>
-                                                </Box>
-                                            </Box>
-                                        </React.Fragment>
+                                }
+                                if (value.message_type === 'team_status_update_message') {
+                                    return (
+                                        <MessageBox4
+                                        handleViewClick={handleInfoButton(props.chatType==="event" ? event._id : team.event_id)}
+                                            message={value}
+                                            currentDate={currentDate}
+                                            handleReplyButton={handleReplyButton}
+                                            handleMessageDeleteButton={handleMessageDeleteButton}
+                                            messageDate={messageDate}
+                                            index={index}></MessageBox4>
+                                    )
+                                }
+                                else if (value.message_type === 'reply_text_message') {
+                                    const repliedMessage = chatMessages.filter(m => { return m.id === value.replied_to })
+                                    return (
+                                        <MessageBox5
+                                            divider={false}
+                                            repliedMessage={repliedMessage}
+                                            message={value}
+                                            currentDate={currentDate}
+                                            handleReplyButton={handleReplyButton}
+                                            handleMessageDeleteButton={handleMessageDeleteButton}
+                                            messageDate={messageDate}
+                                            index={index}></MessageBox5>
                                     );
                                 }
                                 return (
-                                    <Box m={1} p={1} key={index + 1} className={classes.root3}>
-                                        <Box className={classes.root5}>
-                                            <Avatar variant="square" alt={value.userName} src={process.env.REACT_APP_API_URL + `/api/image?id=${value.user_pic}`} />
-                                        </Box>
-                                        <Box className={classes.root2} whiteSpace="normal">
-                                            <Box style={{ display: 'flex', justifyContent: 'flex-start' }}>
-                                                <Box flexGrow={1} className={classes.message}>
-                                                    <Box>
-                                                        <Typography variant="body1">{value.user_name + "   "}</Typography>
-                                                    </Box>
-                                                    <Box style={{ marginLeft: "7px" }}>
-                                                        <Typography component="span"
-                                                            variant="body2"
-                                                            style={{ fontSize: "0.9em" }}
-                                                            color="textSecondary">
-                                                            {"   " + date.toLocaleTimeString([], { timeStyle: 'short' })}
-                                                        </Typography>
-                                                    </Box>
-                                                </Box>
-                                                <Box>
-                                                    <IconButton style={{ padding: '0px', margin: '0px' }}>
-                                                        <ReplyIcon style={{ color: '#aaaaaa' }}></ReplyIcon>
-                                                    </IconButton>
-                                                    {user.user_id === value.user_id && <IconButton onClick={handleMessageDeleteButton(value)} style={{ padding: '0px', margin: '0px' }}>
-                                                        <DeleteIcon style={{ color: '#aaaaaa' }}></DeleteIcon>
-                                                    </IconButton>}
-                                                </Box>
-                                            </Box>
-                                            <Box whiteSpace="normal">
-                                                <Typography className={classes.inline} variant="body2"
-                                                    style={{ fontSize: "1.2em" }}
-                                                    color="textSecondary">{value.message}</Typography>
-                                            </Box>
-                                        </Box>
-                                    </Box>
+                                    <MessageBox2
+                                        message={value}
+                                        adminId={props.chatType === "event" ? event.user_id : ""}
+                                        currentDate={currentDate}
+                                        handleReplyButton={handleReplyButton}
+                                        handleMessageDeleteButton={handleMessageDeleteButton}
+                                        messageDate={messageDate}
+                                        index={index}></MessageBox2>
                                 );
-
                             })
                         }
                         <div style={{ float: "left", clear: "both", paddingBottom: '60px', }}
@@ -479,13 +557,129 @@ export default function JustifyContent(props) {
 
                     </Box>
                     <div className={classes.textField}>
-                        <ChatTextField loading={loading} open={undefined} handleSend={handleSendClick}  ></ChatTextField>
+                        <ChatTextField
+                            loading={loading}
+                            open={undefined}
+                            handleSend={handleSendClick}  ></ChatTextField>
                     </div>
+                    <MessageDeleteDialog
+                        open={openDeleteDialog}
+                        message={messageToBeDeleted}
+                        setOpen={setOpenDeleteDialog}
+                        handleDeleteConfirmation={handleDeleteConfirmation}>
+                    </MessageDeleteDialog>
+
+                    <MessageReplyDialog
+                        open={openReplyDialog}
+                        message={messageToBeReplied}
+                        setOpen={setOpenReplyDialog}
+                        handleReplyConfirmation={handleReplyConfirmation}></MessageReplyDialog>
+                    {open && <EventsDialog
+                        open={open}
+                        event={selectedEvent}
+                        handleClose={handleClose}
+                        openTeams={props.chatType=== 'event' ? false : true}
+                        // handleReg={handleRegistrationButton}
+                        ></EventsDialog>}
                 </div>
+                
             )}
         </div>
     );
 }
+
+// return (
+//     <React.Fragment>
+//         {/* <Divider></Divider> */}
+//         <Box m={1} p={1} key={index} className={classes.root6}>
+//             <Box flexGrow={1} marginTop={1}>
+//                 <Divider></Divider>
+//             </Box>
+//             <Box>
+//                 <Typography variant="body2">{currentDate.toDateString() === messageDate.toDateString() ? "Today" : messageDate.toDateString()}</Typography>
+//             </Box>
+//             <Box flexGrow={1} marginTop={1}>
+//                 <Divider></Divider>
+//             </Box>
+//         </Box>
+//         <Box m={1} p={1} key={index + 1} className={classes.root3}>
+//             <Box className={classes.root5}>
+//                 <Avatar variant="square" alt={value.userName} src={(value.user_pic !== null && value.user_pic !== "") && process.env.REACT_APP_API_URL + `/api/image?id=${value.user_pic}`} />
+//             </Box>
+//             <Box className={classes.root2} whiteSpace="normal">
+//                 <Box style={{ display: 'flex', justifyContent: 'flex-start' }}>
+//                     <Box flexGrow={1} className={classes.message}>
+//                         <Box>
+//                             <Typography variant="body1">{value.user_name + "   "}</Typography>
+//                         </Box>
+//                         <Box style={{ marginLeft: "7px" }}>
+//                             <Typography component="span"
+//                                 variant="body2"
+//                                 style={{ fontSize: "0.9em" }}
+//                                 color="textSecondary">
+//                                 {"   " + date.toLocaleTimeString([], { timeStyle: 'short' })}
+//                             </Typography>
+//                         </Box>
+//                     </Box>
+//                     <Box>
+//                         <IconButton style={{ padding: '0px', margin: '0px' }}>
+//                             <ReplyIcon style={{ color: '#aaaaaa' }}></ReplyIcon>
+//                         </IconButton>
+//                         {user.user_id === value.user_id && <IconButton onClick={handleMessageDeleteButton(value)} style={{ padding: '0px', margin: '0px' }}>
+//                             <DeleteIcon style={{ color: '#aaaaaa' }}></DeleteIcon>
+//                         </IconButton>}
+//                     </Box>
+//                 </Box>
+
+//                 <Box>
+//                     <Typography variant="body2"
+//                         style={{ fontSize: "1.2em" }}
+//                         color="textSecondary">{value.message}</Typography>
+//                 </Box>
+//             </Box>
+//         </Box>
+//     </React.Fragment>
+// );
+
+
+// return (
+//     <Box m={1} p={1} key={index + 1} className={classes.root3}>
+//         <Box className={classes.root5}>
+//             <Avatar variant="square" alt={value.userName} src={process.env.REACT_APP_API_URL + `/api/image?id=${value.user_pic}`} />
+//         </Box>
+//         <Box className={classes.root2} whiteSpace="normal">
+//             <Box style={{ display: 'flex', justifyContent: 'flex-start' }}>
+//                 <Box flexGrow={1} className={classes.message}>
+//                     <Box>
+//                         <Typography variant="body1">{value.user_name + "   "}</Typography>
+//                     </Box>
+//                     <Box style={{ marginLeft: "7px" }}>
+//                         <Typography component="span"
+//                             variant="body2"
+//                             style={{ fontSize: "0.9em" }}
+//                             color="textSecondary">
+//                             {"   " + date.toLocaleTimeString([], { timeStyle: 'short' })}
+//                         </Typography>
+//                     </Box>
+//                 </Box>
+//                 <Box>
+//                     <IconButton style={{ padding: '0px', margin: '0px' }}>
+//                         <ReplyIcon style={{ color: '#aaaaaa' }}></ReplyIcon>
+//                     </IconButton>
+//                     {user.user_id === value.user_id && <IconButton onClick={handleMessageDeleteButton(value)} style={{ padding: '0px', margin: '0px' }}>
+//                         <DeleteIcon style={{ color: '#aaaaaa' }}></DeleteIcon>
+//                     </IconButton>}
+//                 </Box>
+//             </Box>
+//             <Box whiteSpace="normal">
+//                 <Typography className={classes.inline} variant="body2"
+//                     style={{ fontSize: "1.2em" }}
+//                     color="textSecondary">{value.message}</Typography>
+//             </Box>
+//         </Box>
+//     </Box>
+// );
+
 
 
 // const webConnect = () => {

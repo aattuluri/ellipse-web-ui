@@ -4,7 +4,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Linkify from 'react-linkify';
 
-import { Typography} from '@material-ui/core';
+import { Typography, Button } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 // import DeleteIcon from '@material-ui/icons/Delete';
 // import ReplyIcon from '@material-ui/icons/Reply';
@@ -68,6 +68,12 @@ const useStyles = makeStyles((theme) => ({
     },
     avatar: {
         backgroundColor: theme.palette.primary.main,
+    },
+    avatarLetterStyle: {
+        fontFamily: 'Gugi',
+        fontWeight: 'bold',
+        fontSize: '1.3em',
+        marginTop: theme.spacing(0.5)
     }
 
 }));
@@ -88,7 +94,9 @@ function ChatMessage(props) {
     return (
         <Box m={1} p={1} key={props.index + 1} className={classes.root3}>
             <Box className={classes.root5}>
-            <Avatar className={classes.avatar} color="primary" variant="square" alt={'EllipseBot'}  >E</Avatar>
+                <Avatar className={classes.avatar} color="primary" alt={'EllipseBot'}  >
+                    <Typography className={classes.avatarLetterStyle}>E</Typography>
+                </Avatar>
             </Box>
             <Box className={classes.root2} whiteSpace="normal">
                 <Box style={{ display: 'flex', justifyContent: 'flex-start' }}>
@@ -118,13 +126,14 @@ function ChatMessage(props) {
                     <Typography component="span" variant="body2" color="textSecondary" className={classes.inline}>
                         <Linkify
                             componentDecorator={(decoratedHref, decoratedText, key) => (
-                                <a target="blank" style={{ color: 'red',fontWeight: 'bold' }} href={decoratedHref} key={key}>
+                                <a target="blank" style={{ color: 'red', fontWeight: 'bold' }} href={decoratedHref} key={key}>
                                     {decoratedText}
                                 </a>
                             )}
                         >{message.message}</Linkify>
                     </Typography>
                 </Box>
+                <Button onClick={props.handleViewClick} color="primary">View Team</Button>
             </Box>
         </Box>
     );

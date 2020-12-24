@@ -8,19 +8,20 @@ import { cleanup } from '@testing-library/react';
 
 import Box from '@material-ui/core/Box';
 import { makeStyles } from '@material-ui/core/styles';
-import Avatar from '@material-ui/core/Avatar';
-import { List} from '@material-ui/core';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import ListItemText from '@material-ui/core/ListItemText';
-import Dialog from '@material-ui/core/Dialog';
-import DeleteIcon from '@material-ui/icons/Delete';
-import ReplyIcon from '@material-ui/icons/Reply';
+// import Avatar from '@material-ui/core/Avatar';
+// import { List } from '@material-ui/core';
+// import ListItem from '@material-ui/core/ListItem';
+// import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+// import ListItemText from '@material-ui/core/ListItemText';
+// import Dialog from '@material-ui/core/Dialog';
+// import DeleteIcon from '@material-ui/icons/Delete';
+// import ReplyIcon from '@material-ui/icons/Reply';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Fade from '@material-ui/core/Fade';
 
 import MessageBox1 from './MessageBox1';
 import MessageBox2 from './MessageBox2';
+import MessageDeleteDialog from './MessageDeleteDialog';
 
 
 
@@ -120,7 +121,6 @@ export default function JustifyContent(props) {
     const token = localStorage.getItem('token');
     const event = props.event;
     const open = props.open;
-    const [dialogOpen, setDialogOpen] = React.useState(false);
     const [loading, setLoading] = React.useState(false);
 
     const [reference, setReferenece] = React.useState(null);
@@ -129,15 +129,16 @@ export default function JustifyContent(props) {
     // const [showOptions, setShowOptiona] = React.useState("");
     const classes = useStyles();
     var counterDate = null;
-
-    const handleClose = () => {
-        setDialogOpen(false);
-    };
     // const [webSocket, setWebSocket] = React.useState(null);
     const { webSocketContext } = React.useContext(WebSocketContext);
 
-    const {eventChatMessages} = React.useContext(WebSocketDataContext);
-    const {setEventChatMessages} = React.useContext(WebSocketDataContext);
+    const { eventChatMessages } = React.useContext(WebSocketDataContext);
+    const { setEventChatMessages } = React.useContext(WebSocketDataContext);
+
+    const { deletedEventChatMessages, setDeletedEventChatMessages } = React.useContext(WebSocketDataContext);
+
+    const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
+    const [messageToBeDeleted, setMessageToBeDeleted] = React.useState({});
 
     React.useEffect(() => {
         if (webSocketContext) {
@@ -149,21 +150,21 @@ export default function JustifyContent(props) {
                 }
             }));
         }
-    }, [webSocketContext,currentUser,event])
+    }, [webSocketContext, currentUser, event])
 
-    React.useEffect(()=>{
+    React.useEffect(() => {
         // console.log(eventChatMessages);
         eventChatMessages.forEach(mes => {
             const cMes = mes.msg;
-    //         // console.log(mes);
+            //         // console.log(mes);
             if (mes.event_id === event._id) {
                 // console.log(cMes);
                 setChatMessages(chatMessages => [...chatMessages, cMes]);
-                setEventChatMessages(eventChatMessages.filter(m=>{return m !== mes}));
+                setEventChatMessages(eventChatMessages.filter(m => { return m !== mes }));
             }
         });
         // eslint-disable-next-line
-    },[eventChatMessages,event])
+    }, [eventChatMessages, event])
 
     React.useEffect(() => {
         setLoading(true)
@@ -218,7 +219,7 @@ export default function JustifyContent(props) {
         // console.log(d.toISOString())
         if (webSocketContext) {
             webSocketContext.send(JSON.stringify({
-                action: "send_message",
+                action: "send_event_message",
                 event_id: event._id,
                 msg: {
                     'id': currentUser.user_id + Date.now(),
@@ -237,13 +238,34 @@ export default function JustifyContent(props) {
         }
     }
 
-    // const showHoverOptions = (id) => () => {
-    //     setShowOptiona(id);
-    // }
+    React.useEffect(() => {
+        deletedEventChatMessages.forEach(mes => {
+            const cMes = mes.msg;
+            if (mes.event_id === event._id) {
+                setChatMessages(chatMessages.filter(m => { return JSON.stringify(m) !== JSON.stringify(cMes) }));
+                setDeletedEventChatMessages(eventChatMessages.filter(m => { return m !== mes }));
+            }
+        })
 
-    // const hideHoverOptions = () => {
-    //     setShowOptiona('');
-    // }
+        // eslint-disable-next-line
+    }, [deletedEventChatMessages])
+
+    const handleMessageDeleteButton = (mes) => () => {
+        // console.log(mes);
+        setMessageToBeDeleted(mes);
+        setOpenDeleteDialog(true);
+    }
+
+    const handleDeleteConfirmation = (mes) => () => {
+        webSocketContext.send(JSON.stringify({
+            action: "delete_event_chat_message",
+            event_id: event._id,
+            msg: mes
+        }));
+        setChatMessages(chatMessages.filter(m => { return m !== mes }))
+
+        setOpenDeleteDialog(false);
+    }
 
     return (
         <div
@@ -260,27 +282,6 @@ export default function JustifyContent(props) {
                         </Fade>
                     </div>
 
-                    <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={dialogOpen}>
-                        <List>
-                            <ListItem button>
-                                <ListItemAvatar>
-                                    <Avatar>
-                                        <ReplyIcon />
-                                    </Avatar>
-                                </ListItemAvatar>
-                                <ListItemText primary="Reply" />
-                            </ListItem>
-                            <ListItem autoFocus button>
-                                <ListItemAvatar>
-                                    <Avatar>
-                                        <DeleteIcon />
-                                    </Avatar>
-                                </ListItemAvatar>
-                                <ListItemText primary="Delete" />
-                            </ListItem>
-                        </List>
-                    </Dialog>
-
                     <Box className={classes.topBar}>
                         {
                             chatMessages.map((value, index) => {
@@ -289,24 +290,30 @@ export default function JustifyContent(props) {
                                 if (messageDate.toDateString() !== counterDate) {
                                     counterDate = messageDate.toDateString();
                                     return (
-                                        <MessageBox1 message={value} currentDate={currentDate} messageDate={messageDate} index={index}></MessageBox1>
-                                        
+                                        <MessageBox1 adminId={event.user_id} handleMessageDeleteButton={handleMessageDeleteButton} message={value} currentDate={currentDate} messageDate={messageDate} index={index}></MessageBox1>
+
                                     );
                                 }
                                 return (
-                                    <MessageBox2 message={value} currentDate={currentDate} messageDate={messageDate} index={index}></MessageBox2>
+                                    <MessageBox2 adminId={event.user_id} handleMessageDeleteButton={handleMessageDeleteButton} message={value} currentDate={currentDate} messageDate={messageDate} index={index}></MessageBox2>
                                 );
 
                             })
                         }
-                        <div style={{ float: "left", clear: "both", paddingBottom: '60px', }}
-                            ref={(el) => { setReferenece(el) }}>
-                        </div>
+                        
                         <div>
                             <ChatTextField loading={loading} open={open} handleSend={handleSendClick}  ></ChatTextField>
                         </div>
                     </Box>
-
+                    <div style={{ float: "left", clear: "both", marginBottom: '60px', }}
+                            ref={(el) => { setReferenece(el) }}>
+                        </div>
+                    <MessageDeleteDialog
+                        open={openDeleteDialog}
+                        message={messageToBeDeleted}
+                        setOpen={setOpenDeleteDialog}
+                        handleDeleteConfirmation={handleDeleteConfirmation}>
+                    </MessageDeleteDialog>
                 </div>
             )}
         </div>

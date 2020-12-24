@@ -90,8 +90,8 @@ function Eventcard(props) {
                         msg: {
                             'id': props.user_id + Date.now(),
                             'user_id': currentUser.user_id,
-                            'user_name': memberDetails.name,
-                            'user_pic': memberDetails.user_pic,
+                            'user_name': currentUser.name,
+                            'user_pic': currentUser.user_pic,
                             'message_type': 'team_status_update_message',
                             'message': memberDetails.name + " was removed from the team",
                             'date': d.toISOString()
@@ -120,7 +120,7 @@ function Eventcard(props) {
         <ListItem>
             <ListItemAvatar>
                 <Avatar>
-                    <Avatar alt={memberDetails.name} src={process.env.REACT_APP_API_URL + `/api/image?id=${memberDetails.user_pic}`} />
+                    <Avatar alt={memberDetails.name} src={memberDetails.user_pic ? process.env.REACT_APP_API_URL + `/api/image?id=${memberDetails.user_pic}` : "abc.jpg"} />
                 </Avatar>
             </ListItemAvatar>
             <ListItemText

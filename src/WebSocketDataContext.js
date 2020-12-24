@@ -6,7 +6,12 @@ const WebSocketDataContext = React.createContext({
     teamChatMessages: [],
     setTeamChatMessages: ()=>{},
     teamUpdateStatus: [],
-    setTeamUpdateStatus: ()=>{}
+    setTeamUpdateStatus: ()=>{},
+    deletedEventChatMessages: [],
+    setDeletedEventChatMessages: ()=>{},
+    deletedTeamChatMessages: [],
+    setDeletedTeamChatMessages: ()=>{}
+
 });
  
 export default WebSocketDataContext;

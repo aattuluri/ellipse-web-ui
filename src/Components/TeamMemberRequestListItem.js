@@ -111,7 +111,7 @@ function Eventcard(props) {
     return (
         <ListItem>
             <ListItemAvatar>
-                <Avatar alt={memberDetails.name} src={process.env.REACT_APP_API_URL + `/api/image?id=${memberDetails.user_pic}`} />
+                <Avatar alt={memberDetails.name} src={memberDetails.user_pic ? process.env.REACT_APP_API_URL + `/api/image?id=${memberDetails.user_pic}` : "abc.lpg"} />
             </ListItemAvatar>
             <ListItemText
                 primary={memberDetails.name}

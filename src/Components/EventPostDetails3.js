@@ -8,13 +8,15 @@ import Chip from '@material-ui/core/Chip';
 import FormLabel from '@material-ui/core/FormLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormGroup from '@material-ui/core/FormGroup';
-import AddFieldDialog from '../Components/AddFieldDialog';
+
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
 
+import AddFieldDialog from '../Components/AddFieldDialog';
+import AddRoundsDialog from '../Components/AddRoundsDialog';
 import TermsandConditions from '../Components/EventPostTermsandConditions';
 
 
@@ -74,9 +76,11 @@ export default function AddressForm(props) {
     const classes = useStyles();
     // const [loading, setLoading] = React.useState(false);
     const [open, setOpen] = React.useState(false);
+    const [roundsDialogOpen, setRoundsDialogOpen] = React.useState(false);
     const [tandcOpen, setTandcOpen] = React.useState(false);
     const handleClose = () => {
         setOpen(false);
+        setRoundsDialogOpen(false);
     };
 
     const fields = {
@@ -135,6 +139,10 @@ export default function AddressForm(props) {
 
     };
 
+    const handleRoundDelete = (chipToDelete) => () => {
+        props.setRounds(rounds => rounds.filter((chip) => chip.title !== chipToDelete.title))
+    }
+
     async function handlePostButton(e) {
         e.preventDefault();
         await props.setFields(selectedFields);
@@ -145,15 +153,25 @@ export default function AddressForm(props) {
         setTandcOpen(true);
     }
 
+    const handleAddRounds = (r) => {
+        props.setRounds(rounds => [...rounds, r]);
+    }
+
     return (
         <React.Fragment>
-
             <form className={classes.form} onSubmit={handlePostButton}>
                 <Grid container spacing={3}>
                     <AddFieldDialog
                         open={open}
                         handleClose={handleClose}
                         handleAdd={handleFieldAddButton}></AddFieldDialog>
+                    <AddRoundsDialog
+                        roundsCount={props.rounds.length}
+                        open={roundsDialogOpen}
+                        handleClose={handleClose}
+                        handleAdd={handleAddRounds}>
+
+                    </AddRoundsDialog>
                     <Grid item xs={12}>
                         <FormControl component="fieldset" className={classes.formControl}>
                             <FormLabel component="legend">Fields for your Registration Form</FormLabel>
@@ -205,9 +223,40 @@ export default function AddressForm(props) {
                         </Paper>
                     </Grid>
                     <Grid item xs={12}>
+                        <FormControl component="fieldset" className={classes.formControl}>
+                            <FormLabel component="legend">Rounds(Optional)</FormLabel>
+
+                        </FormControl>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Button
+                            variant="outlined"
+                            color="default"
+                            onClick={() => { setRoundsDialogOpen(true) }}>
+                            Add Rounds
+                        </Button>
+                    </Grid>
+                    <Grid>
+                        <Paper component="ul" className={classes.root}>
+                            {props.rounds.map((data) => {
+                                return (
+                                    <li key={data.key}>
+                                        <Chip
+                                            label={data.title}
+                                            onDelete={handleRoundDelete(data)}
+                                            className={classes.chip}
+                                        />
+                                    </li>
+                                );
+                            })}
+                        </Paper>
+                    </Grid>
+                    <Grid item xs={12}>
                         <Typography>By posting the event.I accept the
                         <Button color="primary" onClick={handleTermsClick}>
-                                Terms and Conditions</Button></Typography>
+                                Terms and Conditions
+                        </Button>
+                        </Typography>
                     </Grid>
                 </Grid>
                 <div className={classes.buttons}>
@@ -219,7 +268,7 @@ export default function AddressForm(props) {
                         variant="contained"
                         color="primary"
                         className={classes.button}>
-                    Post
+                        Post
                     </Button>
                 </div>
             </form>

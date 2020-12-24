@@ -35,14 +35,19 @@ export default function FormDialog(props) {
     setSelectedOptions(values);
   }
   function handleAddButton() {
-    if (type !== "radiobuttons" && type !== "checkboxes" && type !== "dropdown") {
-      props.handleAdd({ [name]: { 'title': name, 'field': type, 'options': [] } }, name);
+    if(name != null && type != null){
+      // console.log(type)
+      if (type !== "radiobuttons" && type !== "checkboxes" && type !== "dropdown") {
+        props.handleAdd({ [name]: { 'title': name, 'field': type, 'options': [] } }, name);
+      }
+      else {
+        props.handleAdd({ [name]: { 'title': name, 'field': type, 'options': selectedOptions } }, name);
+      }
+      setName(null);
+      setType(null);
+      setSelectedOptions(['option1', 'option2']);
+      props.handleClose()
     }
-    else {
-      props.handleAdd({ [name]: { 'title': name, 'field': type, 'options': selectedOptions } }, name);
-    }
-    props.handleClose()
-
   }
 
 
@@ -81,7 +86,7 @@ export default function FormDialog(props) {
                     name: 'type',
                     id: 'outlined-age-native-simple',
                   }}
-                  value={props.eventMode}
+                  value={type}
                   onChange={handleTypeChange}
                 >
                   <option aria-label="None" value="" />
@@ -92,6 +97,7 @@ export default function FormDialog(props) {
                   <option value="radiobuttons">Radio Button</option>
                   <option value="checkboxes">Check Box</option>
                   <option value="link">Link</option>
+                  <option value="file_upload">File Upload</option>
                 </Select>
               </FormControl>
             </Grid>

@@ -282,7 +282,7 @@ function AboutEventPanel(props) {
                 <Box className={classes.root0}>
                   <Box className={classes.adminDetails}>
                     <Box>
-                      <Avatar className={classes.avatar} alt={teamDetails.team_name}>S</Avatar>
+                      <Avatar className={classes.avatar} alt={teamDetails.team_name} src="abc.jpg"></Avatar>
                     </Box>
                     <Box>
                       <Box>

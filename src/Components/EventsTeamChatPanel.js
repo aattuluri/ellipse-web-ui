@@ -8,14 +8,14 @@ import WebSocketDataContext from '../WebSocketDataContext';
 
 import Box from '@material-ui/core/Box';
 import { makeStyles } from '@material-ui/core/styles';
-import Avatar from '@material-ui/core/Avatar';
-import { List} from '@material-ui/core';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import ListItemText from '@material-ui/core/ListItemText';
-import Dialog from '@material-ui/core/Dialog';
-import DeleteIcon from '@material-ui/icons/Delete';
-import ReplyIcon from '@material-ui/icons/Reply';
+// import Avatar from '@material-ui/core/Avatar';
+// import { List } from '@material-ui/core';
+// import ListItem from '@material-ui/core/ListItem';
+// import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+// import ListItemText from '@material-ui/core/ListItemText';
+// import Dialog from '@material-ui/core/Dialog';
+// import DeleteIcon from '@material-ui/icons/Delete';
+// import ReplyIcon from '@material-ui/icons/Reply';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Fade from '@material-ui/core/Fade';
 
@@ -23,6 +23,7 @@ import MessageBox1 from './MessageBox1';
 import MessageBox2 from './MessageBox2';
 import MessageBox3 from './MessageBox3';
 import MessageBox4 from './MessageBox4';
+import MessageDeleteDialog from './MessageDeleteDialog';
 
 // import socketIOClient from "socket.io-client";
 // const socket = socketIOClient("https://staging.ellipseapp.com",{
@@ -131,7 +132,6 @@ export default function JustifyContent(props) {
     const token = localStorage.getItem('token');
     const event = props.event;
     const open = props.open;
-    const [dialogOpen, setDialogOpen] = React.useState(false);
     const [loading, setLoading] = React.useState(false);
     const registration = props.registration;
 
@@ -146,9 +146,11 @@ export default function JustifyContent(props) {
     const { teamChatMessages } = React.useContext(WebSocketDataContext);
     const { setTeamChatMessages } = React.useContext(WebSocketDataContext);
 
-    const handleClose = () => {
-        setDialogOpen(false);
-    };
+    const { deletedTeamChatMessages, setDeletedTeamChatMessages } = React.useContext(WebSocketDataContext);
+
+    const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
+    const [messageToBeDeleted, setMessageToBeDeleted] = React.useState({});
+
 
     React.useEffect(() => {
         if (webSocketContext) {
@@ -175,22 +177,17 @@ export default function JustifyContent(props) {
         // eslint-disable-next-line
     }, [teamChatMessages, registration])
 
+    React.useEffect(() => {
+        deletedTeamChatMessages.forEach(mes => {
+            const cMes = mes.msg;
+            if (mes.team_id === registration.team_id) {
+                setChatMessages(chatMessages.filter(m => { return JSON.stringify(m) !== JSON.stringify(cMes) }));
+                setDeletedTeamChatMessages(deletedTeamChatMessages.filter(m => { return m !== mes }));
+            }
+        })
+        // eslint-disable-next-line
+    }, [deletedTeamChatMessages])
 
-    // if (webSocketContext) {
-    //     // console.log("xyshs")
-    //     webSocketContext.onmessage = (message) => {
-    //         const mes = JSON.parse(message.data);
-    //         const cMes = mes.msg;
-    //         console.log(mes);
-    //         if(mes.action !== "receive_team_status_status"){
-    //             if (mes.team_id === registration.team_id) {
-    //                 // console.log(cMes);
-    //                 setChatMessages(chatMessages => [...chatMessages, cMes]);
-    //             }
-    //         }
-
-    //     }
-    // }
 
     React.useEffect(() => {
         setLoading(true)
@@ -265,13 +262,22 @@ export default function JustifyContent(props) {
         }
     }
 
-    // const showHoverOptions = (id) => () => {
-    //     setShowOptiona(id);
-    // }
+    const handleMessageDeleteButton = (mes) => () => {
+        // console.log("delete")
+        setMessageToBeDeleted(mes);
+        setOpenDeleteDialog(true);
+    }
 
-    // const hideHoverOptions = () => {
-    //     setShowOptiona('');
-    // }
+    const handleDeleteConfirmation = (mes) => () => {
+        
+            webSocketContext.send(JSON.stringify({
+                action: "delete_team_chat_message",
+                team_id: registration.team_id,
+                msg: mes
+            }));
+            setChatMessages(chatMessages.filter(m => { return m !== mes }))
+        setOpenDeleteDialog(false);
+    }
 
     return (
         <div
@@ -288,27 +294,6 @@ export default function JustifyContent(props) {
                         </Fade>
                     </div>
 
-                    <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={dialogOpen}>
-                        <List>
-                            <ListItem button>
-                                <ListItemAvatar>
-                                    <Avatar>
-                                        <ReplyIcon />
-                                    </Avatar>
-                                </ListItemAvatar>
-                                <ListItemText primary="Reply" />
-                            </ListItem>
-                            <ListItem autoFocus button>
-                                <ListItemAvatar>
-                                    <Avatar>
-                                        <DeleteIcon />
-                                    </Avatar>
-                                </ListItemAvatar>
-                                <ListItemText primary="Delete" />
-                            </ListItem>
-                        </List>
-                    </Dialog>
-
                     <Box className={classes.topBar}>
                         {
                             chatMessages.map((value, index) => {
@@ -318,31 +303,57 @@ export default function JustifyContent(props) {
                                     counterDate = messageDate.toDateString();
                                     if (value.message_type === 'team_status_update_message') {
                                         return (
-                                            <MessageBox3 message={value} currentDate={currentDate} messageDate={messageDate} index={index}></MessageBox3>
+                                            <MessageBox3
+                                                handleMessageDeleteButton={handleMessageDeleteButton}
+                                                message={value}
+                                                currentDate={currentDate}
+                                                messageDate={messageDate}
+                                                index={index}></MessageBox3>
                                         );
                                     }
                                     return (
-                                        <MessageBox1 message={value} currentDate={currentDate} messageDate={messageDate} index={index}></MessageBox1>
+                                        <MessageBox1
+                                            handleMessageDeleteButton={handleMessageDeleteButton}
+                                            message={value}
+                                            currentDate={currentDate}
+                                            messageDate={messageDate}
+                                            index={index}></MessageBox1>
                                     );
                                 }
                                 if (value.message_type === 'team_status_update_message') {
                                     return (
-                                        <MessageBox4 message={value} currentDate={currentDate} messageDate={messageDate} index={index}></MessageBox4>
+                                        <MessageBox4
+                                            handleMessageDeleteButton={handleMessageDeleteButton}
+                                            message={value}
+                                            currentDate={currentDate}
+                                            messageDate={messageDate}
+                                            index={index}></MessageBox4>
                                     )
                                 }
                                 return (
-                                    <MessageBox2 message={value} currentDate={currentDate} messageDate={messageDate} index={index}></MessageBox2>
+                                    <MessageBox2
+                                        handleMessageDeleteButton={handleMessageDeleteButton}
+                                        message={value}
+                                        currentDate={currentDate}
+                                        messageDate={messageDate}
+                                        index={index}></MessageBox2>
                                 );
                             })
                         }
                         <div style={{ float: "left", clear: "both", paddingBottom: '60px', }}
                             ref={(el) => { setReferenece(el) }}>
                         </div>
-                        <div>
+                        
+                    </Box>
+                    <div>
                             <ChatTextField loading={loading} open={open} handleSend={handleSendClick}  ></ChatTextField>
                         </div>
-                    </Box>
-
+                    <MessageDeleteDialog
+                        open={openDeleteDialog}
+                        message={messageToBeDeleted}
+                        setOpen={setOpenDeleteDialog}
+                        handleDeleteConfirmation={handleDeleteConfirmation}>
+                    </MessageDeleteDialog>
                 </div>
             )}
         </div>

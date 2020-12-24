@@ -10,7 +10,8 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 // import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
-import { Grid, Button } from '@material-ui/core';
+import { Grid, Button, IconButton } from '@material-ui/core';
+import GetAppIcon from '@material-ui/icons/GetApp';
 import Checkbox from '@material-ui/core/Checkbox';
 import AddAnnouncementForm from './AddAnnouncementForm';
 import SendEmailForm from './SendEmailForm';
@@ -70,9 +71,19 @@ export default function StickyHeadTable(props) {
   const [selected, setSelected] = React.useState([]);
   const [announcementDialog, setAnnouncementDialog] = React.useState(false);
   const [sendEmailDialog, setSendEmailDialog] = React.useState(false);
+  const [fileColumns, setFileColumns] = React.useState([]);
   const event = props.event;
 
+  React.useEffect(() => {
+    event.reg_fields.forEach(v => {
+      if (v.field === "file_upload") {
+        setFileColumns([...fileColumns, v.title]);
+      }
+    })
+    // eslint-disable-next-line
+  }, [event,fileColumns])
 
+  // console.log(fileColumns);
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
@@ -224,13 +235,19 @@ export default function StickyHeadTable(props) {
                           inputProps={{ 'aria-label': 'select all fields' }}
                         /></TableCell>
                       {headers.map((column) => {
-
-                        const value = column.id === "Email" ? row[column.id].substr(0, 3) + '*****@' + row[column.id].split('@')[1] : row[column.id];
-                        return (
-                          <TableCell key={column.id} align={column.align}>
-                            {column.format && typeof value === 'number' ? column.format(value) : value}
+                        if (fileColumns.includes(column.id)) {
+                          return <TableCell key={column.id} align={column.align}>
+                            <IconButton download target="_blank" href={process.env.REACT_APP_API_URL + `/api/event/registration/get_file?id=${row[column.id]}`} size="small" color="primary"><GetAppIcon></GetAppIcon></IconButton>
                           </TableCell>
-                        );
+                        } else {
+                          const value = column.id === "Email" ? row[column.id].substr(0, 3) + '*****@' + row[column.id].split('@')[1] : row[column.id];
+                          return (
+                            <TableCell key={column.id} align={column.align}>
+                              {column.format && typeof value === 'number' ? column.format(value) : value}
+                            </TableCell>
+                          );
+                        }
+
                       })}
                     </TableRow>
                   );

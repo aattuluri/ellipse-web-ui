@@ -9,6 +9,8 @@ import Avatar from '@material-ui/core/Avatar';
 import Box from '@material-ui/core/Box';
 // import AuthContext from '../AuthContext';
 import ImageDialog from '../Components/ImageDialog';
+import GroupIcon from '@material-ui/icons/Group';
+import PersonIcon from '@material-ui/icons/Person';
 
 
 
@@ -180,21 +182,67 @@ function AboutEventPanel(props) {
                 <div className={classes.root}>
                     <Grid container component="main">
                         <Grid item xs={12} sm={12} md={4} lg={4} >
-                            <img onClick={handleImageDialogOpen} style={{ width: '200px', height: '180px' }} alt="event poster" src={process.env.REACT_APP_API_URL + `/api/image?id=${event.poster_url}`}  ></img>
+                            <img
+                                onClick={handleImageDialogOpen}
+                                style={{ width: '200px', height: '180px' }}
+                                alt="event poster"
+                                src={process.env.REACT_APP_API_URL + `/api/image?id=${event.poster_url}`}></img>
                         </Grid>
                         <Grid item xs={12} sm={12} md={8} lg={8}>
                             <Typography>{event.description} </Typography>
-                            <Typography style={{ marginTop: "20px", marginBottom: '20' }}>{timeLabel}</Typography>
-                            <Typography variant="h5">{timerComponents.length ? timerComponents : <span>Time's up!</span>}</Typography>
+                            <Typography
+                                style={{ marginTop: "20px", marginBottom: '20' }}>
+                                {timeLabel}
+                            </Typography>
+                            <Typography
+                                variant="h5">
+                                {timerComponents.length ? timerComponents : <span>Time's up!</span>}
+                            </Typography>
                             {/* <Typography>Starts at {event.start_time}</Typography>
                         <Typography>Ends at {event.finish_time}</Typography> */}
                             <div style={{ marginTop: '10px' }}>
-                                <Chip variant="outlined" color="inherit" label={event.event_type}></Chip>
+                                <Chip
+                                    variant="outlined"
+                                    color="inherit"
+                                    label={event.event_type}></Chip>
 
-                                <Chip style={{ marginLeft: '5px' }} variant="outlined" color="inherit" label={event.fee_type}></Chip>
-                                <Chip style={{ marginLeft: '5px' }} variant="outlined" color="inherit" label={event.event_mode}></Chip>
+                                <Chip
+                                    style={{ marginLeft: '5px' }}
+                                    variant="outlined"
+                                    color="inherit"
+                                    label={event.fee_type}></Chip>
+                                <Chip style={{ marginLeft: '5px' }}
+                                    variant="outlined"
+                                    color="inherit"
+                                    label={event.event_mode}></Chip>
+                                {event.isTeamed && <Chip
+                                    style={{ marginLeft: '5px' }}
+                                    variant="outlined"
+                                    color="inherit"
+                                    label={<Box display="flex">
+                                        <Box><GroupIcon></GroupIcon></Box>
+                                        <Box
+                                            marginTop={0.7}
+                                            marginLeft={0.5}>
+                                            {"  " + event.team_size.min_team_size + "-" + event.team_size.max_team_size}
+                                        </Box>
+                                    </Box>}></Chip>}
+                                {!event.isTeamed && <Chip
+                                    style={{ marginLeft: '5px' }}
+                                    variant="outlined"
+                                    color="inherit"
+                                    label={
+                                        <Box display="flex">
+                                            <Box><PersonIcon></PersonIcon></Box>
+                                            <Box marginTop={0.7}>Individual</Box>
+                                        </Box>}></Chip>}
                                 {tags != null && tags.map(val => {
-                                    return <Chip key={val} style={{ marginLeft: '5px' }} variant="outlined" color="inherit" label={val}></Chip>
+                                    return <Chip
+                                        key={val}
+                                        style={{ marginLeft: '5px' }}
+                                        variant="outlined"
+                                        color="inherit"
+                                        label={val}></Chip>
                                 })}
                             </div>
 

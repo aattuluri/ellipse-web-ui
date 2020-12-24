@@ -9,6 +9,7 @@ import { makeStyles } from '@material-ui/core/styles';
 // import Tabs from '@material-ui/core/Tabs';
 // import Tab from '@material-ui/core/Tab';
 
+import SubmissionPanel from './EventSubmissionPanel';
 import SubPanel1 from './EventsTeamSubPanel1';
 import SubPanel2 from './EventsTeamSubPanel2';
 import SubPanel3 from './EventsTeamSubPanel3';
@@ -187,6 +188,7 @@ function AboutEventPanel(props) {
                             <Tab label="Join Team" />
                         </Tabs>
                     </Paper> */}
+                    <SubmissionPanel getData={getData} value={subIndexValue} registration={registration} index={0} event={props.event}></SubmissionPanel>
                     {teamedUp && <SubPanel1 getData={getData} value={subIndexValue} registration={registration} index={1} event={props.event}></SubPanel1>}
                     {teamedUp && subIndexValue === 2 && <EventsTeamChatPanel value={subIndexValue} registration={registration} index={2} event={props.event}></EventsTeamChatPanel>}
                     {!teamedUp && subIndexValue === (1 || 2) && <Typography>Join team or create a team</Typography>}
