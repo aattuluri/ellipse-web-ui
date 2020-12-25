@@ -315,7 +315,7 @@ const NavigationBar = function ({ history }) {
                 <Tab onClick={handleHomeClick} icon={< HomeIcon />} aria-label="home" />
                 <Tab onClick={handleeventClick} icon={<EventIcon />} aria-label="event" />
                 {/* <Tab onClick={handleChatClick} icon={<TelegramIcon />} aria-label="messages" /> */}
-                <Tab onClick={handleExploreClick} icon={<ExploreIcon />} aria-label="explore" />
+                <Tab onClick={handleChatClick} icon={<TelegramIcon />} aria-label="favorite" />
                 <Tab onClick={handleProfileClick} icon={<PersonPinIcon />} aria-label="person" />
               </Tabs>
             </Paper>

@@ -21,6 +21,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Fade from '@material-ui/core/Fade';
 import InfoIcon from '@material-ui/icons/Info';
 import EventsDialog from '../Components/EventsDialog';
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 // import { Divider, IconButton } from '@material-ui/core';
 // import { TextField } from '@material-ui/core';
 
@@ -129,15 +130,23 @@ const useStyles = makeStyles((theme) => ({
         whiteSpace: 'pre-line',
     },
     textField: {
-        position: 'sticky',
+        textAlign: 'center',
+        position: 'fixed',
+        width: '75%',
         bottom: 0,
+        [theme.breakpoints.down('sm')]: {
+            width: '100%'
+        },
     },
     header: {
         position: 'sticky',
         top: 64,
         backgroundColor: theme.palette.secondary.main,
         padding: theme.spacing(2),
-        zIndex: 8
+        zIndex: 8,
+        [theme.breakpoints.down('sm')]: {
+            top: 104
+        },
     }
 
 }));
@@ -145,7 +154,7 @@ const useStyles = makeStyles((theme) => ({
 export default function JustifyContent(props) {
     const { children, value, url, index, ...other } = props;
     const { currentUser } = React.useContext(AuthContext);
-    const {allEvents} = React.useContext(EventsContext);
+    const { allEvents } = React.useContext(EventsContext);
     const [open, setOpen] = React.useState(false);
     const [selectedEvent, setSelectedEvent] = React.useState([]);
     const user = props.user
@@ -153,7 +162,7 @@ export default function JustifyContent(props) {
     const event = props.event;
     const team = props.event;
     const [loading, setLoading] = React.useState(false);
-    
+
     const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
     const [openReplyDialog, setOpenReplyDialog] = React.useState(false);
     const [messageToBeDeleted, setMessageToBeDeleted] = React.useState({});
@@ -435,8 +444,12 @@ export default function JustifyContent(props) {
     }
 
     const handleInfoButton = (id) => () => {
-        setSelectedEvent(allEvents.filter((e=>{return e._id === id}))[0]);
+        setSelectedEvent(allEvents.filter((e => { return e._id === id }))[0]);
         setOpen(true);
+    }
+
+    const handleBackButton = () => {
+        props.openDialog(false)
     }
 
     return (
@@ -448,11 +461,16 @@ export default function JustifyContent(props) {
                 <div>
                     <div className={classes.header}>
                         <Box display="flex">
+                            <Box >
+                                { props.mobile && <IconButton style={{ marginTop: '0px', padding: '0px' }} onClick={handleBackButton}>
+                                    <ArrowBackIosIcon></ArrowBackIosIcon>
+                                </IconButton>}
+                            </Box>
                             <Box flexGrow={1}>
                                 <Typography>{props.chatType === "event" ? event.name : team.team_name}</Typography>
                             </Box>
                             <Box>
-                                <IconButton style={{marginTop:'0px',padding: '0px'}} onClick={handleInfoButton(props.chatType==="event" ? event._id : team.event_id)}>
+                                <IconButton style={{ marginTop: '0px', padding: '0px' }} onClick={handleInfoButton(props.chatType === "event" ? event._id : team.event_id)}>
                                     <InfoIcon></InfoIcon>
                                 </IconButton>
                             </Box>
@@ -478,7 +496,7 @@ export default function JustifyContent(props) {
                                     if (value.message_type === 'team_status_update_message') {
                                         return (
                                             <MessageBox3
-                                            handleViewClick={handleInfoButton(props.chatType==="event" ? event._id : team.event_id)}
+                                                handleViewClick={handleInfoButton(props.chatType === "event" ? event._id : team.event_id)}
                                                 message={value}
                                                 currentDate={currentDate}
                                                 handleReplyButton={handleReplyButton}
@@ -516,7 +534,7 @@ export default function JustifyContent(props) {
                                 if (value.message_type === 'team_status_update_message') {
                                     return (
                                         <MessageBox4
-                                        handleViewClick={handleInfoButton(props.chatType==="event" ? event._id : team.event_id)}
+                                            handleViewClick={handleInfoButton(props.chatType === "event" ? event._id : team.event_id)}
                                             message={value}
                                             currentDate={currentDate}
                                             handleReplyButton={handleReplyButton}
@@ -578,11 +596,11 @@ export default function JustifyContent(props) {
                         open={open}
                         event={selectedEvent}
                         handleClose={handleClose}
-                        openTeams={props.chatType=== 'event' ? false : true}
-                        // handleReg={handleRegistrationButton}
-                        ></EventsDialog>}
+                        openTeams={props.chatType === 'event' ? false : true}
+                    // handleReg={handleRegistrationButton}
+                    ></EventsDialog>}
                 </div>
-                
+
             )}
         </div>
     );

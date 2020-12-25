@@ -38,7 +38,7 @@ function Eventcard(props) {
     React.useEffect(() => {
         fetchAll()
         // eslint-disable-next-line
-    }, [])
+    }, [props])
 
     const fetchAll = () =>{
         try {
@@ -61,7 +61,6 @@ function Eventcard(props) {
             console.log(e);
         }
     }
-
     const handleRemoveButton = () =>{
         const d = new Date();
         var data = new FormData();

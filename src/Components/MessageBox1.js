@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
     root5: {
         marginLeft: theme.spacing(0),
         maxWidth: '65%',
-        overflow: 'auto',
+        // overflow: 'auto',
         //    textOverflow: "ellipsis"
     },
     message: {

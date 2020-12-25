@@ -8,6 +8,10 @@ import WebSocketContext from '../WebSocketContext';
 import AuthContext from '../AuthContext';
 // import Autocomplete from '@material-ui/lab/Autocomplete';
 
+import TeamMemberListItem from './TeamMemberListItem';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Fade from '@material-ui/core/Fade';
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -58,7 +62,12 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "rgb(0, 189, 170,0.2)",
     maxWidth: '99%'
 
-  }
+  },
+  progress: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
 
 }));
 
@@ -70,6 +79,9 @@ function AboutEventPanel(props) {
   const event = props.event;
   const [teams, setTeams] = React.useState([]);
   const [sentRequests, setSentRequests] = React.useState([]);
+  const [showMembers, setShowMembers] = React.useState(false);
+  const [teamIndex, setTeamIndex] = React.useState(null);
+  const [loading, setLoading] = React.useState(false);
 
   const { currentUser } = React.useContext(AuthContext);
 
@@ -80,7 +92,8 @@ function AboutEventPanel(props) {
     // eslint-disable-next-line
   }, [])
 
-  const getData = () =>{
+  const getData = () => {
+    setLoading(true);
     try {
       fetch(process.env.REACT_APP_API_URL + `/api/event/get_all_teams?id=${event._id}`, {
         headers: {
@@ -93,6 +106,7 @@ function AboutEventPanel(props) {
         response.json().then(value => {
           // console.log(value);
           setTeams(value);
+          setLoading(false);
         })
       })
     }
@@ -119,7 +133,7 @@ function AboutEventPanel(props) {
     }
   }
 
-  const handleRequestButton = (id,team) => () => {
+  const handleRequestButton = (id, team) => () => {
     const d = new Date();
     var data = new FormData();
     data = JSON.stringify({
@@ -137,42 +151,45 @@ function AboutEventPanel(props) {
     }).then((response) => {
       response.json().then(value => {
         // console.log(value);
-        getData()
+        // getData()
         // setUpdated(true);
         if (webSocketContext) {
           webSocketContext.send(JSON.stringify({
-              action: "team_status_update_message",
-              team_id: id,
-              msg: {
-                  'id': currentUser.user_id + Date.now(),
-                  'user_id': currentUser.user_id,
-                  'user_name': currentUser.name,
-                  'user_pic': currentUser.profile_pic,
-                  'message_type': 'team_status_update_message',
-                  'message': currentUser.name + " has requested to join the team",
-                  'date': d.toISOString()
-              }
+            action: "team_status_update_message",
+            team_id: id,
+            msg: {
+              'id': currentUser.user_id + Date.now(),
+              'user_id': currentUser.user_id,
+              'user_name': currentUser.name,
+              'user_pic': currentUser.profile_pic,
+              'message_type': 'team_status_update_message',
+              'message': currentUser.name + " has requested to join the team",
+              'date': d.toISOString()
+            }
           }));
           webSocketContext.send(JSON.stringify({
-              action: "team_status_update_status",
-              team_id: id,
-              users: team.members,
-              msg: {
-                'id': currentUser.user_id + Date.now(),
-                'user_id': currentUser.user_id,
-                'user_name': currentUser.name,
-                'user_pic': currentUser.profile_pic,
-                'message_type': 'team_status_update_message',
-                'message': currentUser.name + " has requested to join the team",
-                'date': d.toISOString()
-              }
-            }));
-      }
+            action: "team_status_update_status",
+            team_id: id,
+            users: team.members,
+            msg: {
+              'id': currentUser.user_id + Date.now(),
+              'user_id': currentUser.user_id,
+              'user_name': currentUser.name,
+              'user_pic': currentUser.profile_pic,
+              'message_type': 'team_status_update_message',
+              'message': currentUser.name + " has requested to join the team",
+              'date': d.toISOString()
+            }
+          }));
+          getData();
+        }
       })
     })
   }
 
-  const handleWithdrawButton = (id,team) => () => {
+  const handleWithdrawButton = (id, team) => () => {
+    console.log(id);
+    console.log(team);
     var data = new FormData();
     data = JSON.stringify({
       event_id: event._id,
@@ -191,39 +208,54 @@ function AboutEventPanel(props) {
         // console.log(value);
         // setUpdated(true);
         const d = new Date();
-        getData();
+
         if (webSocketContext) {
           webSocketContext.send(JSON.stringify({
-              action: "team_status_update_message",
-              team_id: id,
-              msg: {
-                  'id': currentUser.user_id + Date.now(),
-                  'user_id': currentUser.user_id,
-                  'user_name': currentUser.name,
-                  'user_pic': currentUser.profile_pic,
-                  'message_type': 'team_status_update_message',
-                  'message': currentUser.name + " has withdrawn the team join request",
-                  'date': d.toISOString()
-              }
+            action: "team_status_update_message",
+            team_id: id,
+            msg: {
+              'id': currentUser.user_id + Date.now(),
+              'user_id': currentUser.user_id,
+              'user_name': currentUser.name,
+              'user_pic': currentUser.profile_pic,
+              'message_type': 'team_status_update_message',
+              'message': currentUser.name + " has withdrawn the team join request",
+              'date': d.toISOString()
+            }
           }));
           webSocketContext.send(JSON.stringify({
-              action: "team_status_update_status",
-              team_id: id,
-              users: team.members,
-              msg: {
-                'id': currentUser.user_id + Date.now(),
-                'user_id': currentUser.user_id,
-                'user_name': currentUser.name,
-                'user_pic': currentUser.profile_pic,
-                'message_type': 'team_status_update_message',
-                'message': currentUser.name + " has withdrawen the team join request",
-                'date': d.toISOString()
-              }
-            }));
-      }
+            action: "team_status_update_status",
+            team_id: id,
+            users: team.members,
+            msg: {
+              'id': currentUser.user_id + Date.now(),
+              'user_id': currentUser.user_id,
+              'user_name': currentUser.name,
+              'user_pic': currentUser.profile_pic,
+              'message_type': 'team_status_update_message',
+              'message': currentUser.name + " has withdrawen the team join request",
+              'date': d.toISOString()
+            }
+          }));
+          getData();
+        }
       })
     })
   }
+
+  const handleViewMwmbersClick = (v) => () => {
+
+    if (showMembers) {
+      setShowMembers(false);
+      setTeamIndex({});
+    }
+    else {
+      setShowMembers(true);
+      setTeamIndex(v);
+    }
+
+  }
+
   return (
     <div
       role="tabpanel"
@@ -231,6 +263,13 @@ function AboutEventPanel(props) {
       {...other}>
       {value === index && (
         <div className={classes.root}>
+          <div className={classes.progress}>
+            <Fade
+              in={loading}
+              unmountOnExit>
+              <CircularProgress />
+            </Fade>
+          </div>
           <TextField variant="outlined" label="Team id" fullWidth margin="dense"></TextField>
           <Box display="flex" justifyContent="center">
             <Button fullWidth color="primary" className={classes.button} variant="contained">Join</Button>
@@ -261,7 +300,7 @@ function AboutEventPanel(props) {
                   <Grid item xs={12} md={6}>
                     <Box display="flex" justifyContent="flex-end">
                       <Button>View Members</Button>
-                      <Button onClick={handleWithdrawButton(searchedTeam._id,searchedTeam)}>Withdraw</Button>
+                      <Button onClick={handleWithdrawButton(searchedTeam._id, searchedTeam)}>Withdraw</Button>
                     </Box>
                   </Grid>
                 </Grid>
@@ -303,6 +342,13 @@ function AboutEventPanel(props) {
                             </Box>
                             <Box>
                               <Typography color="textSecondary" variant="body2">{v.description}</Typography>
+                              {showMembers && v === teamIndex && <div>
+                                {
+                                  v.members.map((value, index) => {
+                                    return <TeamMemberListItem admin={false} event={props.event} id={v} user_id={value}></TeamMemberListItem>
+                                  })
+                                }
+                              </div>}
                             </Box>
                           </Box>
                         </Box>
@@ -310,16 +356,15 @@ function AboutEventPanel(props) {
                     </Grid>
                     <Grid item xs={12} md={6}>
                       <Box display="flex" justifyContent="flex-end">
-                        <Button>View Members</Button>
-                        <Button onClick={handleRequestButton(v._id,v)}>Request</Button>
+                        <Button onClick={handleViewMwmbersClick(v)}>{(showMembers && v === teamIndex) ? "Hide Members" : "View Members"}</Button>
+                        <Button onClick={handleRequestButton(v._id, v)}>Request</Button>
                       </Box>
                     </Grid>
                   </Grid>
                 }
-                else{
+                else {
                   return null
                 }
-
               })
             }
           </div>

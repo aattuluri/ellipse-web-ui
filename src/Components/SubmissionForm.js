@@ -56,6 +56,7 @@ function AboutEventPanel(props) {
 
     const [userMessage, setUserMessage] = React.useState(false);
     const [access, setAccess] = React.useState(true);
+    const [editAccess,setEditAccess] = React.useState(false);
 
     const [formValues, setFormValues] = React.useState(null);
     const [uploadFiles, setUploadFiles] = React.useState([]);
@@ -71,7 +72,6 @@ function AboutEventPanel(props) {
     const [fileUploadFields, setFileUploadFields] = React.useState([]);
 
     const { vertical, horizontal, open, message, type, autoHide } = state;
-    const id = "";
     const [backDropOpen, setBackDropOpen] = React.useState(true);
     // const [event, setEvent] = React.useState({});
     const event = props.event;
@@ -84,6 +84,7 @@ function AboutEventPanel(props) {
     const currentRound = props.round;
     const currentDate = new Date();
     const roundStartDate = new Date(currentRound.start_date);
+    const [submission,setSubmission] = React.useState({});
     // const roundEndDate = new Date(currentRound.end_date);
 
     // function handleTermsClick() {
@@ -99,15 +100,53 @@ function AboutEventPanel(props) {
     }, [event, currentUser])
 
     React.useEffect(() => {
-        if (props.team) {
+        if (!props.individual && props.team) {
             if (props.team.submissions[props.index].is_submitted) {
                 setAccess(false);
                 setUserMessage("submission Already made");
+                setEditAccess(true);
+                getSubmission(props.team.submissions[props.index].submission_id)
             }
         }
-
+        else if (props.registration) {
+            if (props.registration.submissions[props.index].is_submitted) {
+                setAccess(false);
+                setUserMessage("submission Already made");
+                setEditAccess(true);
+                getSubmission(props.registration.submissions[props.index].submission_id)
+            }
+        }
+        // eslint-disable-next-line
     }, [props])
 
+    const getSubmission = (id) => {
+        try {
+            fetch(process.env.REACT_APP_API_URL + `/api/event/get_submission?id=${id}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                method: 'GET',
+            }).then(response => {
+                if (response.status === 200) {
+                    response.json().then(value => {
+                        console.log(value);
+                        const keys = Object.keys(value.submission);
+                        setSubmission(value);
+                        console.log(keys);
+                        keys.forEach((sub, index) => {
+                            setFormValues(formValues => ({ ...formValues, [sub]: value.submission[sub] }))
+                        })
+                    })
+                }
+
+            })
+        }
+        catch (e) {
+            console.log(e);
+        }
+    }
 
     React.useEffect(() => {
 
@@ -145,7 +184,7 @@ function AboutEventPanel(props) {
 
         }
         setBackDropOpen(false);
-    }, [token, currentUser,props.fields])
+    }, [token, currentUser, props.fields])
 
     function handleClose() {
         if (message === "Successful.Stay tunned with notifications and announcements") {
@@ -193,8 +232,8 @@ function AboutEventPanel(props) {
         var uploadedFilesIds = [];
         const formkeys = Object.keys(formValues);
         const fileFormKeys = Object.keys(uploadFiles);
-        console.log(formkeys);
-        console.log(fileFormKeys);
+        // console.log(formkeys);
+        // console.log(fileFormKeys);
         var count = 0;
         formkeys.forEach(v => {
             if (formValues[v] === null) {
@@ -257,7 +296,7 @@ function AboutEventPanel(props) {
                                         // console.log(uploadedFilesIds);
                                         // console.log(finalValues);
                                         var data = new FormData();
-                                        const d = { event_id: event._id, submission: finalValues, team_id: props.team_id, is_teamed: true, event_round: currentRound.title }
+                                        const d = props.individual ? { event_id: event._id, reg_id: props.registration._id, submission: finalValues, is_teamed: false, event_round: currentRound.title } : { event_id: event._id, submission: finalValues, team_id: props.team_id, is_teamed: true, event_round: currentRound.title }
                                         data = JSON.stringify(d);
                                         fetch(process.env.REACT_APP_API_URL + `/api/event/team/add_submission`, {
                                             headers: {
@@ -294,9 +333,9 @@ function AboutEventPanel(props) {
                 }
                 else {
                     var data = new FormData();
-                    const d = { data: finalValues }
+                    const d = props.individual ? { event_id: event._id, reg_id: props.registration._id, submission: finalValues, is_teamed: false, event_round: currentRound.title } : { event_id: event._id, submission: finalValues, team_id: props.team_id, is_teamed: true, event_round: currentRound.title }
                     data = JSON.stringify(d);
-                    fetch(process.env.REACT_APP_API_URL + `/api/event/register?id=${id}`, {
+                    fetch(process.env.REACT_APP_API_URL + `/api/event/team/add_submission`, {
                         headers: {
                             'Authorization': `Bearer ${token}`,
                             'Content-Type': 'application/json',
@@ -315,12 +354,13 @@ function AboutEventPanel(props) {
                                     open: true,
                                     vertical: 'top',
                                     horizontal: 'center',
-                                    message: 'Registration successful.Stay tunned with notifications and announcements',
+                                    message: 'Successful.Stay tunned with notifications and announcements',
                                     type: "success",
                                     autoHide: 4000
                                 });
                             })
                         }
+
                     })
                 }
             }
@@ -355,8 +395,158 @@ function AboutEventPanel(props) {
     }
 
 
+    const handleEditButton = () => {
+        setLoading(true);
+        var uploadedFilesIds = [];
+        const formkeys = Object.keys(formValues);
+        const fileFormKeys = Object.keys(uploadFiles);
+        // console.log(formkeys);
+        // console.log(fileFormKeys);
+        var count = 0;
+        formkeys.forEach(v => {
+            if (formValues[v] === null) {
+                if (v.includes(fileFormKeys)) {
 
+                } else {
+                    count = count + 1;
+                    setLoading(false);
+                    setState({
+                        open: true,
+                        vertical: 'top',
+                        horizontal: 'center',
+                        message: 'Please fill in all fields',
+                        type: "error",
+                        autoHide: 4000
+                    });
+                }
 
+                // break;
+            }
+        })
+        if (fileFormKeys) {
+            fileFormKeys.forEach(f => {
+                if (uploadFiles[f] === null) {
+                    count = count + 1;
+                    setLoading(false);
+                    setState({
+                        open: true,
+                        vertical: 'top',
+                        horizontal: 'center',
+                        message: 'Please fill in all fields',
+                        type: "error",
+                        autoHide: 4000
+                    });
+                    // break;
+                }
+            })
+        }
+
+        var finalValues = formValues;
+        if (count === 0) {
+            try {
+                if (fileFormKeys.length > 0) {
+                    fileFormKeys.forEach((key, index) => {
+                        var data1 = new FormData();
+                        data1.append('uploaded_file', uploadFiles[key]);
+                        fetch(process.env.REACT_APP_API_URL + `/api/event/register/upload_file?id=${event._id}`, {
+                            headers: {
+                                'Authorization': `Bearer ${token}`,
+                            },
+                            method: 'POST',
+                            body: data1
+                        }).then((response) => {
+                            if (response.status === 200) {
+                                response.json().then(value => {
+                                    setFormValues({ ...formValues, [key]: value.file_name })
+                                    finalValues[key] = value.file_name
+                                    uploadedFilesIds.push({ [key]: value.file_name });
+                                    if (uploadedFilesIds.length === fileFormKeys.length) {
+                                        // console.log(uploadedFilesIds);
+                                        // console.log(finalValues);
+                                        var data = new FormData();
+                                        const d = { sub_id: submission._id, submission: finalValues, is_teamed: true }
+                                        data = JSON.stringify(d);
+                                        fetch(process.env.REACT_APP_API_URL + `/api/event/team/edit_submission`, {
+                                            headers: {
+                                                'Authorization': `Bearer ${token}`,
+                                                'Content-Type': 'application/json',
+                                                'Accept': 'application/json'
+                                            },
+                                            method: 'POST',
+                                            body: data
+                                        }).then(response => {
+                                            // console.log(response);
+                                            if (response.status === 200) {
+                                                response.json().then(value => {
+                                                    // console.log(value);
+
+                                                    setLoading(false);
+                                                    setState({
+                                                        open: true,
+                                                        vertical: 'top',
+                                                        horizontal: 'center',
+                                                        message: 'Successful.Stay tunned with notifications and announcements',
+                                                        type: "success",
+                                                        autoHide: 4000
+                                                    });
+                                                })
+                                            }
+
+                                        })
+                                    }
+                                })
+                            }
+                        })
+                    })
+                }
+                else {
+                    var data = new FormData();
+                    const d = { sub_id: submission._id, submission: finalValues, is_teamed: true }
+                    data = JSON.stringify(d);
+                    fetch(process.env.REACT_APP_API_URL + `/api/event/team/edit_submission`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        method: 'POST',
+                        body: data
+                    }).then(response => {
+                        // console.log(response);
+                        if (response.status === 200) {
+                            response.json().then(value => {
+                                // console.log(value);
+
+                                setLoading(false);
+                                setState({
+                                    open: true,
+                                    vertical: 'top',
+                                    horizontal: 'center',
+                                    message: 'Successful.Stay tunned with notifications and announcements',
+                                    type: "success",
+                                    autoHide: 4000
+                                });
+                            })
+                        }
+
+                    })
+                }
+            }
+            catch (error) {
+                setLoading(false);
+                setState({
+                    open: true,
+                    vertical: 'top',
+                    horizontal: 'center',
+                    message: error.message,
+                    type: "error",
+                    autoHide: 6000
+                })
+
+            }
+        }
+    }
+    
     return (
         <div>
             <CssBaseline />
@@ -420,7 +610,7 @@ function AboutEventPanel(props) {
                                         fullWidth
                                         id={field.title}
                                         onChange={handleChange}
-                                        value={formValues[field.title]}
+                                        value={formValues[field.title] || ""}
                                         label={field.title}
                                         autoFocus
                                     />
@@ -497,7 +687,7 @@ function AboutEventPanel(props) {
                                             label={field.title}
                                             name={field.title}
                                             // defaultValue={Date.now()}
-                                            value={formValues[field.title]}
+                                            value={formValues[field.title] || ""}
                                             onChange={handleDateChange(field.title)}
                                             KeyboardButtonProps={{
                                                 'aria-label': 'change date',
@@ -525,6 +715,7 @@ function AboutEventPanel(props) {
                                         label={field.title}
                                         fullWidth
                                         onChange={handleLondDescChange}
+                                        value={formValues[field.title] || ""}
                                     // value={props.about}
                                     />
                                 </Grid>
@@ -543,7 +734,7 @@ function AboutEventPanel(props) {
                                         fullWidth
                                         id={field.title}
                                         onChange={handleChange}
-                                        value={formValues[field.title]}
+                                        value={formValues[field.title] || ""}
                                         label={field.title}
                                         autoFocus
                                     />
@@ -576,6 +767,17 @@ function AboutEventPanel(props) {
                 {
                     !access && <Typography>{userMessage}</Typography>
                 }
+                {editAccess && <Button
+                    // type="submit"
+                    onClick={handleEditButton}
+                    fullWidth
+                    variant="contained"
+                    color="primary"
+                    disabled={loading}
+                    className={classes.submit}
+                >
+                    {loading ? <CircularProgress color="primary" size={24} /> : "Edit"}
+                </Button>}
             </form>
         </div>
     )

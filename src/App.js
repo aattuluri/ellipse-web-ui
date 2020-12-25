@@ -43,8 +43,9 @@ function App() {
             <Route exact path="/userinfo" component={UserInfo}></Route>
             <Route exact path="/otpverification" component={OTPVer}></Route>
             <Route exact path="/un/event/:eventId" component={UnregisteredPage}></Route>
-            {/* <Route exact path="/resetforgotpassword" component ={ForgotPassword2}></Route> */}
             <Route exact path="/event/:eventId" component={EventDetails} />
+            {/* <Route exact path="/resetforgotpassword" component ={ForgotPassword2}></Route> */}
+            
             <Route exact path="/verify_certificate/:id" component={VerifyCertificate}></Route>
             <Layout>
               <Route path="/home" component={EventsTabPanel}></Route>
@@ -55,6 +56,7 @@ function App() {
 
               <Route exact path="/event/register/:eventId" component={EventRegisterForm} />
               <Route exact path="/yourevents" component={ExplorePanel}></Route>
+              
             </Layout>
           </Switch>
         </div>

@@ -1,6 +1,8 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 // import Grid from '@material-ui/core/Grid';
+import Box from '@material-ui/core/Box';
+import ChatTextField from '../Components/MainChatTextField';
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -20,9 +22,16 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 // import Checkbox from '@material-ui/core/Checkbox';
 // import { Route } from 'react-router';
 // import ChatPanel from '../Components/ChatPanel';
-import { Paper } from '@material-ui/core';
+import { IconButton, Paper, Typography } from '@material-ui/core';
 import EventsContext from '../EventsContext';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
+
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import PhoneIcon from '@material-ui/icons/Phone';
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import PersonPinIcon from '@material-ui/icons/PersonPin';
 // import EventsContext from '../EventsContext';
 
 const useStyles = makeStyles((theme) => ({
@@ -51,16 +60,17 @@ function ChatPage(props) {
     // const { children, value, url, index, ...other } = props;
     // const user = JSON.parse(localStorage.getItem('user'));
     const token = localStorage.getItem('token');
+    const theme = useTheme();
     const classes = useStyles();
     const { allEvents } = React.useContext(EventsContext);
-    const [teams,setTeams] = React.useState([]);
+    const [teams, setTeams] = React.useState([]);
     // const [open, setOpen] = React.useState(false);
     const [checked, setChecked] = React.useState([0]);
     const regEvents = allEvents.filter((val) => {
         return val.registered === true;
     });
 
-    React.useEffect(()=>{
+    React.useEffect(() => {
         fetch(process.env.REACT_APP_API_URL + '/api/user/get_all_teams', {
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -72,7 +82,7 @@ function ChatPage(props) {
             // console.log(response);
             if (response.status === 200) {
                 response.json().then(value => {
-                    
+
                     setTeams(value);
                     // console.log(value);
                 })
@@ -83,7 +93,7 @@ function ChatPage(props) {
             }
 
         })
-    },[token])
+    }, [token])
     const handleToggle = (value, userid) => () => {
         const currentIndex = checked.indexOf(value);
         const newChecked = [];
@@ -96,6 +106,9 @@ function ChatPage(props) {
         props.setChatType('event')
         props.setChatId(value);
         props.setAdminId(userid);
+        if (theme.breakpoints.width('md') >= window.innerWidth) {
+            props.openDialog(true);
+        }
         setChecked(newChecked);
     };
 
@@ -112,6 +125,9 @@ function ChatPage(props) {
         props.setChatId(value);
         props.setAdminId(userid);
         setChecked(newChecked);
+        if (theme.breakpoints.width('md') >= window.innerWidth) {
+            props.openDialog(true);
+        }
     };
 
     // const handleClick = (v) => () => {
@@ -131,6 +147,45 @@ function ChatPage(props) {
         <div>
             <div className={classes.root}>
                 <Paper className={classes.root}>
+                    {/* <Box display="flex" justifyContent="center">
+                        <Box paddingRight={1} paddingLeft={1}>
+                            <IconButton>
+                                <Box >
+                                    <Box>
+                                        <PhoneIcon color="primary" />
+                                    </Box>
+                                    <Box>
+                                        <Typography color="textSecondary" variant="body2">Events</Typography>
+                                    </Box>
+                                </Box>
+                            </IconButton>
+                        </Box>
+                        <Box paddingRight={1} paddingLeft={1}>
+                            <IconButton>
+                                <Box >
+                                    <Box>
+                                        <PhoneIcon color="primary" />
+                                    </Box>
+                                    <Box>
+                                        <Typography color="textSecondary" variant="body2">Events</Typography>
+                                    </Box>
+                                </Box>
+                            </IconButton>
+                        </Box>
+                        <Box paddingRight={1} paddingLeft={1}>
+                            <IconButton>
+                                <Box >
+                                    <Box>
+                                        <PhoneIcon color="primary" />
+                                    </Box>
+                                    <Box>
+                                        <Typography color="textSecondary" variant="body2">Events</Typography>
+                                    </Box>
+                                </Box>
+                            </IconButton>
+                        </Box>
+                    </Box> */}
+                    {/* <ChatTextField></ChatTextField> */}
                     <List className={classes.root2}>
                         {regEvents.map((value) => {
                             const labelId = `checkbox-list-label-${value._id}`;

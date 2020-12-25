@@ -22,6 +22,7 @@ import EventsTimeLinePanel from '../Components/EventTimeLinePanel';
 import EvenstAnnouncementsPanel from '../Components/EventsAnnouncementsPanel';
 import ChatPanel from '../Components/EventsChatPanel';
 import EventsTeamPanel from '../Components/EventsTeamPanel';
+import EventSubmissionPanel from '../Components/EventSubmissionPanel';
 import { Divider, Typography } from '@material-ui/core';
 import AuthContext from '../AuthContext';
 
@@ -219,13 +220,13 @@ function EventsDialog(props) {
                             <Tab label="Schedule" {...a11yProps(1)} />
                             <Tab label="Announcements" {...a11yProps(2)} />
                             <Tab label="Chat" {...a11yProps(3)} />
-
+                            {!event.isTeamed &&  <Tab label="Submission" {...a11yProps(4)}></Tab>}
                             {event.isTeamed && <Tab label="Participation" {...a11yProps(4)}></Tab>}
                             {/* <Tab label="Submission"></Tab> */}
                         </Tabs>
                     </Paper>
                     <Divider></Divider>
-                    {value === 4 && <Paper className={classes.root2}>
+                    {event.isTeamed && value === 4 && <Paper className={classes.root2}>
                         <Tabs
                             value={subIndexValue}
                             onChange={handleSubIndexChange}
@@ -257,6 +258,7 @@ function EventsDialog(props) {
                 {value === 3 && chatAcess && <ChatPanel value={value} index={3} event={props.event}></ChatPanel>}
                 {value === 3 && !chatAcess && <Typography align="center" variant="h5" >Register for the event to continue</Typography>}
                 {teamAccess && event.isTeamed && <EventsTeamPanel subIndexValue={subIndexValue} value={value} index={4} event={props.event}></EventsTeamPanel>}
+                {chatAcess && value ===4 && !event.isTeamed && <EventSubmissionPanel individual={true} event ={props.event}></EventSubmissionPanel>}
                 {value === 4 && !teamAccess && <Typography align="center" variant="h5" >Register for the event to continue</Typography>}
             </DialogContent>
             <DialogActions className={classes.action}>

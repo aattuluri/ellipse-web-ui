@@ -188,7 +188,7 @@ function AboutEventPanel(props) {
                             <Tab label="Join Team" />
                         </Tabs>
                     </Paper> */}
-                    <SubmissionPanel getData={getData} value={subIndexValue} registration={registration} index={0} event={props.event}></SubmissionPanel>
+                    <SubmissionPanel getData={getData} individual={false} value={subIndexValue} registration={registration} index={0} event={props.event}></SubmissionPanel>
                     {teamedUp && <SubPanel1 getData={getData} value={subIndexValue} registration={registration} index={1} event={props.event}></SubPanel1>}
                     {teamedUp && subIndexValue === 2 && <EventsTeamChatPanel value={subIndexValue} registration={registration} index={2} event={props.event}></EventsTeamChatPanel>}
                     {!teamedUp && subIndexValue === (1 || 2) && <Typography>Join team or create a team</Typography>}
