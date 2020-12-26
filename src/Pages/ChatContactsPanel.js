@@ -1,8 +1,8 @@
 import React from 'react';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 // import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
-import ChatTextField from '../Components/MainChatTextField';
+// import Box from '@material-ui/core/Box';
+// import ChatTextField from '../Components/MainChatTextField';
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -22,16 +22,16 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 // import Checkbox from '@material-ui/core/Checkbox';
 // import { Route } from 'react-router';
 // import ChatPanel from '../Components/ChatPanel';
-import { IconButton, Paper, Typography } from '@material-ui/core';
+import { Paper} from '@material-ui/core';
 import EventsContext from '../EventsContext';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 
-import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import PhoneIcon from '@material-ui/icons/Phone';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import PersonPinIcon from '@material-ui/icons/PersonPin';
+// import AppBar from '@material-ui/core/AppBar';
+// import Tabs from '@material-ui/core/Tabs';
+// import Tab from '@material-ui/core/Tab';
+// import PhoneIcon from '@material-ui/icons/Phone';
+// import FavoriteIcon from '@material-ui/icons/Favorite';
+// import PersonPinIcon from '@material-ui/icons/PersonPin';
 // import EventsContext from '../EventsContext';
 
 const useStyles = makeStyles((theme) => ({

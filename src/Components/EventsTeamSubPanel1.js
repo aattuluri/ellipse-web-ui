@@ -132,45 +132,47 @@ function AboutEventPanel(props) {
     // eslint-disable-next-line
   }, [props.registration])
 
-//   if (webSocketContext) {
-//     // console.log("xyshs")
-//     webSocketContext.onmessage = (message) => {
-//         const mes = JSON.parse(message.data);
-//         const cMes = mes.msg;
-//         console.log(mes);
-//         if(mes.action === "receive_team_status_status"){
-//             console.log("hurray")
-//             // getData()
-//             fetchAll()
-//         }
-//         // if (mes.team_id === registration.team_id) {
-//         //     // console.log(cMes);
-//         //     // setChatMessages(chatMessages => [...chatMessages, cMes]);
-//         // }
-//     }
-// }
+  //   if (webSocketContext) {
+  //     // console.log("xyshs")
+  //     webSocketContext.onmessage = (message) => {
+  //         const mes = JSON.parse(message.data);
+  //         const cMes = mes.msg;
+  //         console.log(mes);
+  //         if(mes.action === "receive_team_status_status"){
+  //             console.log("hurray")
+  //             // getData()
+  //             fetchAll()
+  //         }
+  //         // if (mes.team_id === registration.team_id) {
+  //         //     // console.log(cMes);
+  //         //     // setChatMessages(chatMessages => [...chatMessages, cMes]);
+  //         // }
+  //     }
+  // }
 
 
 
   const fetchAll = () => {
     try {
-      fetch(process.env.REACT_APP_API_URL + `/api/event/get_team_details?id=${registration.team_id}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        method: 'GET',
-      }).then(response => {
-        response.json().then(value => {
-          // console.log(value);
-          setTeamDetails(value[0]);
-
-          if (value[0].user_id === currentUser.user_id) {
-            setAdmin(true);
-          }
+      if(registration.team_id !== null){
+        fetch(process.env.REACT_APP_API_URL + `/api/event/get_team_details?id=${registration.team_id}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          method: 'GET',
+        }).then(response => {
+          response.json().then(value => {
+            // console.log(value);
+            setTeamDetails(value[0]);
+  
+            if (value[0].user_id === currentUser.user_id) {
+              setAdmin(true);
+            }
+          })
         })
-      })
+      }
     }
     catch (e) {
       console.log(e);

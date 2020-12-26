@@ -87,25 +87,25 @@ function AboutEventPanel(props) {
 
     const { webSocketContext } = React.useContext(WebSocketContext);
 
-    const {teamUpdateStatus} = React.useContext(WebSocketDataContext);
+    const { teamUpdateStatus } = React.useContext(WebSocketDataContext);
     // const handleChange = (event, newValue) => {
     //     setSubIndexValue(newValue);
     // };
 
-    React.useEffect(()=>{
+    React.useEffect(() => {
         getData()
         // eslint-disable-next-line
-    },[teamUpdateStatus])
+    }, [teamUpdateStatus])
 
     React.useEffect(() => {
         getData();
         // eslint-disable-next-line
-    }, [event,token])
+    }, [event, token])
 
 
     React.useEffect(() => {
         if (webSocketContext) {
-            if(registration !== {}){
+            if (registration !== {}) {
                 // console.log("xxxxx")
                 webSocketContext.send(JSON.stringify({
                     action: "join_team_update_status",
@@ -116,27 +116,10 @@ function AboutEventPanel(props) {
                 }));
             }
         }
-    }, [registration,currentUser,webSocketContext])
+    }, [registration, currentUser, webSocketContext])
 
 
-    // if (webSocketContext) {
-    //     // console.log("xyshs")
-    //     webSocketContext.onmessage = (message) => {
-    //         const mes = JSON.parse(message.data);
-    //         const cMes = mes.msg;
-    //         console.log(mes);
-    //         if(mes.action === "receive_team_status_status"){
-    //             console.log("hurray")
-    //             getData()
-    //         }
-    //         // if (mes.team_id === registration.team_id) {
-    //         //     // console.log(cMes);
-    //         //     // setChatMessages(chatMessages => [...chatMessages, cMes]);
-    //         // }
-    //     }
-    // }
-
-    const getData = () =>{
+    const getData = () => {
         try {
             fetch(process.env.REACT_APP_API_URL + `/api/event/get_user_registration?id=${event._id}`, {
                 headers: {
@@ -146,17 +129,17 @@ function AboutEventPanel(props) {
                 },
                 method: 'GET',
             }).then(response => {
-                if(response.status === 200){
+                if (response.status === 200) {
                     response.json().then(value => {
                         // console.log(value);
                         setRegistration(value[0]);
                         // if(value[0].teamed_up){
-                            setTeamedUp(value[0].teamed_up);
+                        setTeamedUp(value[0].teamed_up);
                         // }
-                        
+
                     })
                 }
-                
+
             })
         }
         catch (e) {
@@ -188,10 +171,12 @@ function AboutEventPanel(props) {
                             <Tab label="Join Team" />
                         </Tabs>
                     </Paper> */}
-                    <SubmissionPanel getData={getData} individual={false} value={subIndexValue} registration={registration} index={0} event={props.event}></SubmissionPanel>
+                    {teamedUp && <SubmissionPanel getData={getData} individual={false} value={subIndexValue} registration={registration} index={0} event={props.event}></SubmissionPanel>}
                     {teamedUp && <SubPanel1 getData={getData} value={subIndexValue} registration={registration} index={1} event={props.event}></SubPanel1>}
                     {teamedUp && subIndexValue === 2 && <EventsTeamChatPanel value={subIndexValue} registration={registration} index={2} event={props.event}></EventsTeamChatPanel>}
-                    {!teamedUp && subIndexValue === (1 || 2) && <Typography>Join team or create a team</Typography>}
+                    {!teamedUp && subIndexValue === 0 && <Typography>Join team or create a team</Typography>}
+                    {!teamedUp && subIndexValue === 1 && <Typography>Join team or create a team</Typography>}
+                    {!teamedUp && subIndexValue === 2 && <Typography>Join team or create a team</Typography>}
                     {!teamedUp && <SubPanel2 value={subIndexValue} index={3} event={props.event} getData={getData}></SubPanel2>}
                     {teamedUp && subIndexValue === 3 && <Typography>Team already created</Typography>}
                     {!teamedUp && <SubPanel3 value={subIndexValue} index={4} event={props.event}></SubPanel3>}

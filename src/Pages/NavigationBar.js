@@ -15,7 +15,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import EventIcon from '@material-ui/icons/Event';
 import useStyles from '../Themes/MainHomeStyles';
-import ExploreIcon from '@material-ui/icons/Explore';
+// import ExploreIcon from '@material-ui/icons/Explore';
 import SettingsIcon from '@material-ui/icons/Settings';
 import HomeIcon from '@material-ui/icons/Home';
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -197,9 +197,9 @@ const NavigationBar = function ({ history }) {
   function handleProfileClick() {
     history.push("/profile")
   }
-  function handleExploreClick() {
-    history.push("/yourevents")
-  }
+  // function handleExploreClick() {
+  //   history.push("/yourevents")
+  // }
   function handleChatClick() {
     history.push('/chat')
   }

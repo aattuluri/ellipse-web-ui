@@ -11,6 +11,12 @@ import AuthContext from '../AuthContext';
 import TeamMemberListItem from './TeamMemberListItem';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Fade from '@material-ui/core/Fade';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 
 const useStyles = makeStyles((theme) => ({
@@ -73,6 +79,14 @@ const useStyles = makeStyles((theme) => ({
 
 function AboutEventPanel(props) {
   const classes = useStyles();
+  const [state, setState] = React.useState({
+    open: false,
+    vertical: 'top',
+    horizontal: 'center',
+    message: 'success',
+    type: 'error',
+    autoHide: 6000,
+  });
   const { children, value, url, index, ...other } = props;
   // const user = JSON.parse(localStorage.getItem('user'));
   const token = localStorage.getItem('token');
@@ -86,11 +100,19 @@ function AboutEventPanel(props) {
   const { currentUser } = React.useContext(AuthContext);
 
   const { webSocketContext } = React.useContext(WebSocketContext);
+  const { vertical, horizontal, open, message, type, autoHide } = state;
 
   React.useEffect(() => {
     getData();
     // eslint-disable-next-line
   }, [])
+
+  function handleClose() {
+    if (message === "Successful.Stay tunned with notifications and announcements") {
+      props.fetchAll();
+    }
+    setState({ ...state, open: false });
+  }
 
   const getData = () => {
     setLoading(true);
@@ -149,41 +171,43 @@ function AboutEventPanel(props) {
       method: 'POST',
       body: data
     }).then((response) => {
-      response.json().then(value => {
-        // console.log(value);
-        // getData()
-        // setUpdated(true);
-        if (webSocketContext) {
-          webSocketContext.send(JSON.stringify({
-            action: "team_status_update_message",
-            team_id: id,
-            msg: {
-              'id': currentUser.user_id + Date.now(),
-              'user_id': currentUser.user_id,
-              'user_name': currentUser.name,
-              'user_pic': currentUser.profile_pic,
-              'message_type': 'team_status_update_message',
-              'message': currentUser.name + " has requested to join the team",
-              'date': d.toISOString()
-            }
-          }));
-          webSocketContext.send(JSON.stringify({
-            action: "team_status_update_status",
-            team_id: id,
-            users: team.members,
-            msg: {
-              'id': currentUser.user_id + Date.now(),
-              'user_id': currentUser.user_id,
-              'user_name': currentUser.name,
-              'user_pic': currentUser.profile_pic,
-              'message_type': 'team_status_update_message',
-              'message': currentUser.name + " has requested to join the team",
-              'date': d.toISOString()
-            }
-          }));
-          getData();
-        }
-      })
+      if (response.status === 200) {
+        response.json().then(value => {
+          // console.log(value);
+          // getData()
+          // setUpdated(true);
+          if (webSocketContext) {
+            webSocketContext.send(JSON.stringify({
+              action: "team_status_update_message",
+              team_id: id,
+              msg: {
+                'id': currentUser.user_id + Date.now(),
+                'user_id': currentUser.user_id,
+                'user_name': currentUser.name,
+                'user_pic': currentUser.profile_pic,
+                'message_type': 'team_status_update_message',
+                'message': currentUser.name + " has requested to join the team",
+                'date': d.toISOString()
+              }
+            }));
+            webSocketContext.send(JSON.stringify({
+              action: "team_status_update_status",
+              team_id: id,
+              users: team.members,
+              msg: {
+                'id': currentUser.user_id + Date.now(),
+                'user_id': currentUser.user_id,
+                'user_name': currentUser.name,
+                'user_pic': currentUser.profile_pic,
+                'message_type': 'team_status_update_message',
+                'message': currentUser.name + " has requested to join the team",
+                'date': d.toISOString()
+              }
+            }));
+            getData();
+          }
+        })
+      }
     })
   }
 
@@ -204,50 +228,59 @@ function AboutEventPanel(props) {
       method: 'POST',
       body: data
     }).then((response) => {
-      response.json().then(value => {
-        // console.log(value);
-        // setUpdated(true);
-        const d = new Date();
+      if (response.status === 200) {
+        response.json().then(value => {
+          // console.log(value);
+          // setUpdated(true);
+          const d = new Date();
 
-        if (webSocketContext) {
-          webSocketContext.send(JSON.stringify({
-            action: "team_status_update_message",
-            team_id: id,
-            msg: {
-              'id': currentUser.user_id + Date.now(),
-              'user_id': currentUser.user_id,
-              'user_name': currentUser.name,
-              'user_pic': currentUser.profile_pic,
-              'message_type': 'team_status_update_message',
-              'message': currentUser.name + " has withdrawn the team join request",
-              'date': d.toISOString()
-            }
-          }));
-          webSocketContext.send(JSON.stringify({
-            action: "team_status_update_status",
-            team_id: id,
-            users: team.members,
-            msg: {
-              'id': currentUser.user_id + Date.now(),
-              'user_id': currentUser.user_id,
-              'user_name': currentUser.name,
-              'user_pic': currentUser.profile_pic,
-              'message_type': 'team_status_update_message',
-              'message': currentUser.name + " has withdrawen the team join request",
-              'date': d.toISOString()
-            }
-          }));
-          getData();
-        }
-      })
+          if (webSocketContext) {
+            webSocketContext.send(JSON.stringify({
+              action: "team_status_update_message",
+              team_id: id,
+              msg: {
+                'id': currentUser.user_id + Date.now(),
+                'user_id': currentUser.user_id,
+                'user_name': currentUser.name,
+                'user_pic': currentUser.profile_pic,
+                'message_type': 'team_status_update_message',
+                'message': currentUser.name + " has withdrawn the team join request",
+                'date': d.toISOString()
+              }
+            }));
+            webSocketContext.send(JSON.stringify({
+              action: "team_status_update_status",
+              team_id: id,
+              users: team.members,
+              msg: {
+                'id': currentUser.user_id + Date.now(),
+                'user_id': currentUser.user_id,
+                'user_name': currentUser.name,
+                'user_pic': currentUser.profile_pic,
+                'message_type': 'team_status_update_message',
+                'message': currentUser.name + " has withdrawen the team join request",
+                'date': d.toISOString()
+              }
+            }));
+            getData();
+          }
+        })
+      }
+
     })
   }
 
-  const handleViewMwmbersClick = (v) => () => {
+  const handleViewMembersClick = (v) => () => {
 
     if (showMembers) {
-      setShowMembers(false);
-      setTeamIndex({});
+      if (teamIndex !== {}) {
+        setTeamIndex(v);
+      }
+      else {
+        setShowMembers(false);
+        setTeamIndex({});
+      }
+
     }
     else {
       setShowMembers(true);
@@ -263,6 +296,15 @@ function AboutEventPanel(props) {
       {...other}>
       {value === index && (
         <div className={classes.root}>
+          <Snackbar
+            anchorOrigin={{ vertical, horizontal }}
+            open={open}
+            autoHideDuration={autoHide}
+            onClose={handleClose}
+            key={vertical + horizontal}
+          >
+            <Alert onClose={handleClose} severity={type}>{message}</Alert>
+          </Snackbar>
           <div className={classes.progress}>
             <Fade
               in={loading}
@@ -274,7 +316,7 @@ function AboutEventPanel(props) {
           <Box display="flex" justifyContent="center">
             <Button fullWidth color="primary" className={classes.button} variant="contained">Join</Button>
           </Box>
-          <Typography >Sent Requests</Typography>
+          {sentRequests.length !== 0 && <Typography variant="body2" color="textSecondary">Sent Requests</Typography>}
           {
             sentRequests.map((v) => {
               const searchedTeam = teams.find(t => t._id === v);
@@ -292,6 +334,13 @@ function AboutEventPanel(props) {
                           </Box>
                           <Box>
                             <Typography color="textSecondary" variant="body2">{searchedTeam.description}</Typography>
+                            {showMembers && searchedTeam === teamIndex && <div>
+                              {
+                                searchedTeam.members.map((value, index) => {
+                                  return <TeamMemberListItem admin={false} event={props.event} id={searchedTeam} user_id={value}></TeamMemberListItem>
+                                })
+                              }
+                            </div>}
                           </Box>
                         </Box>
                       </Box>
@@ -299,8 +348,8 @@ function AboutEventPanel(props) {
                   </Grid>
                   <Grid item xs={12} md={6}>
                     <Box display="flex" justifyContent="flex-end">
-                      <Button>View Members</Button>
-                      <Button onClick={handleWithdrawButton(searchedTeam._id, searchedTeam)}>Withdraw</Button>
+                      <Button disabled={loading} onClick={handleViewMembersClick(searchedTeam)}>{(showMembers && searchedTeam === teamIndex) ? "Hide Members" : "View Members"}</Button>
+                      <Button disabled={loading} onClick={handleWithdrawButton(searchedTeam._id, searchedTeam)}>Withdraw</Button>
                     </Box>
                   </Grid>
                 </Grid>
@@ -312,7 +361,7 @@ function AboutEventPanel(props) {
             })
           }
           {/* <Typography>No Sent Request</Typography> */}
-          <Typography>All Teams</Typography>
+          <Typography variant="body2" color="textSecondary">All Teams</Typography>
           {/* <TextField label="Search(Team Name)" variant="filled" style={{height:"40px"}}></TextField> */}
           {/* <Autocomplete
                 freeSolo
@@ -325,6 +374,7 @@ function AboutEventPanel(props) {
                   className={classes.inputInput} />}
               /> */}
           {/* <div style={{margin:'0px',padding:'0px',height:'350px', overflowY:'auto'}}> */}
+          {!loading && teams.length === 0 && <Typography>No Teams Found Create one</Typography>}
           <div>
             {
               teams.map(v => {
@@ -356,8 +406,8 @@ function AboutEventPanel(props) {
                     </Grid>
                     <Grid item xs={12} md={6}>
                       <Box display="flex" justifyContent="flex-end">
-                        <Button onClick={handleViewMwmbersClick(v)}>{(showMembers && v === teamIndex) ? "Hide Members" : "View Members"}</Button>
-                        <Button onClick={handleRequestButton(v._id, v)}>Request</Button>
+                        <Button disabled={loading} onClick={handleViewMembersClick(v)}>{(showMembers && v === teamIndex) ? "Hide Members" : "View Members"}</Button>
+                        <Button disabled={loading} onClick={handleRequestButton(v._id, v)}>Request</Button>
                       </Box>
                     </Grid>
                   </Grid>

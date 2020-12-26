@@ -56,7 +56,7 @@ function AboutEventPanel(props) {
 
     const [userMessage, setUserMessage] = React.useState(false);
     const [access, setAccess] = React.useState(true);
-    const [editAccess,setEditAccess] = React.useState(false);
+    const [editAccess, setEditAccess] = React.useState(false);
 
     const [formValues, setFormValues] = React.useState(null);
     const [uploadFiles, setUploadFiles] = React.useState([]);
@@ -84,7 +84,7 @@ function AboutEventPanel(props) {
     const currentRound = props.round;
     const currentDate = new Date();
     const roundStartDate = new Date(currentRound.start_date);
-    const [submission,setSubmission] = React.useState({});
+    const [submission, setSubmission] = React.useState({});
     // const roundEndDate = new Date(currentRound.end_date);
 
     // function handleTermsClick() {
@@ -131,10 +131,8 @@ function AboutEventPanel(props) {
             }).then(response => {
                 if (response.status === 200) {
                     response.json().then(value => {
-                        console.log(value);
                         const keys = Object.keys(value.submission);
                         setSubmission(value);
-                        console.log(keys);
                         keys.forEach((sub, index) => {
                             setFormValues(formValues => ({ ...formValues, [sub]: value.submission[sub] }))
                         })
@@ -546,7 +544,7 @@ function AboutEventPanel(props) {
             }
         }
     }
-    
+
     return (
         <div>
             <CssBaseline />

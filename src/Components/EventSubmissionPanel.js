@@ -150,23 +150,25 @@ function AboutEventPanel(props) {
     const fetchAll = () => {
         setLoading(true);
         try {
-            fetch(process.env.REACT_APP_API_URL + `/api/event/get_team_details?id=${props.registration.team_id}`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                method: 'GET',
-            }).then(response => {
-                response.json().then(value => {
-                    // console.log(value);
-                    setTeamDetails(value[0]);
-                    setLoading(false)
-                    // if (value[0].user_id === currentUser.user_id) {
-                    //     setAdmin(true);
-                    // }
+            if(props.registration.team_id !== null){
+                fetch(process.env.REACT_APP_API_URL + `/api/event/get_team_details?id=${props.registration.team_id}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    method: 'GET',
+                }).then(response => {
+                    response.json().then(value => {
+                        // console.log(value);
+                        setTeamDetails(value[0]);
+                        setLoading(false)
+                        // if (value[0].user_id === currentUser.user_id) {
+                        //     setAdmin(true);
+                        // }
+                    })
                 })
-            })
+            }
         }
         catch (e) {
             console.log(e);
