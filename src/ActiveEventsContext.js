@@ -2,7 +2,9 @@ import React from 'react';
  
 const ActiveEventsContext = React.createContext({
     activeEvents: null,
-    setActiveEvents: ()=>{}
+    setActiveEvents: ()=>{},
+    contextLoading: false,
+    setContextLoading: ()=>{}
 });
  
 export default ActiveEventsContext;

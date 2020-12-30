@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1),
     padding: theme.spacing(2),
     backgroundColor: "rgb(0, 189, 170,0.1)",
-    maxWidth: '99%',
+    // maxWidth: '99%',
     marginTop: theme.spacing(2)
 
   },

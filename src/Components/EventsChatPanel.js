@@ -291,23 +291,20 @@ export default function JustifyContent(props) {
                                     counterDate = messageDate.toDateString();
                                     return (
                                         <MessageBox1 adminId={event.user_id} handleMessageDeleteButton={handleMessageDeleteButton} message={value} currentDate={currentDate} messageDate={messageDate} index={index}></MessageBox1>
-
                                     );
                                 }
                                 return (
                                     <MessageBox2 adminId={event.user_id} handleMessageDeleteButton={handleMessageDeleteButton} message={value} currentDate={currentDate} messageDate={messageDate} index={index}></MessageBox2>
                                 );
-
                             })
                         }
-                        
                         <div>
                             <ChatTextField loading={loading} open={open} handleSend={handleSendClick}  ></ChatTextField>
                         </div>
                     </Box>
                     <div style={{ float: "left", clear: "both", marginBottom: '60px', }}
-                            ref={(el) => { setReferenece(el) }}>
-                        </div>
+                        ref={(el) => { setReferenece(el) }}>
+                    </div>
                     <MessageDeleteDialog
                         open={openDeleteDialog}
                         message={messageToBeDeleted}

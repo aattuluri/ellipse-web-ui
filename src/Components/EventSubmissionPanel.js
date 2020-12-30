@@ -114,6 +114,9 @@ const useStyles = makeStyles((theme) => ({
         display: "flex",
         justifyContent: "flex-start",
     },
+    accordion: {
+        backgroundColor: theme.palette.secondary.main
+    }
 
 }));
 
@@ -250,7 +253,7 @@ function AboutEventPanel(props) {
                                     const cDate = new Date();
                                     const sDate = new Date(value.start_date);
                                     const eDate = new Date(value.end_date);
-                                    return <Accordion>
+                                    return <Accordion className={classes.accordion}>
                                         <AccordionSummary
                                             expandIcon={<ExpandMoreIcon />}
                                             aria-controls="panel1a-content"

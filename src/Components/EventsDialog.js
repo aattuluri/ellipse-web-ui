@@ -25,6 +25,7 @@ import EventsTeamPanel from '../Components/EventsTeamPanel';
 import EventSubmissionPanel from '../Components/EventSubmissionPanel';
 import { Divider, Typography } from '@material-ui/core';
 import AuthContext from '../AuthContext';
+// import VerticalTabBar from './VerticalTabBar';
 
 
 
@@ -45,7 +46,6 @@ const useStyles = makeStyles((theme) => ({
             display: 'none'
         },
         // color: theme.palette.grey[500],
-
     },
     root: {
 
@@ -113,6 +113,7 @@ function EventsDialog(props) {
     const [shareDialogOpen, setShareDialogOpen] = React.useState(false);
     const [chatAcess, setChatAcess] = React.useState(false);
     const [teamAccess, setTeamAccess] = React.useState(false);
+    const [adminAccess, setAdminAccess] = React.useState(false);
     const [subIndexValue, setSubIndexValue] = React.useState(0);
     React.useEffect(() => {
         // console.log(event.registered);
@@ -121,6 +122,7 @@ function EventsDialog(props) {
             setTeamAccess(true);
         } else if (event.user_id === currentUser.user_id) {
             setChatAcess(true);
+            setAdminAccess(true);
         }
         else {
             setChatAcess(false)
@@ -228,6 +230,7 @@ function EventsDialog(props) {
                     <Divider></Divider>
                     {event.isTeamed && value === 4 && <Paper className={classes.root2}>
                         <Tabs
+                        // style={{backgroundColor: "#00bdaa"}}
                             value={subIndexValue}
                             onChange={handleSubIndexChange}
                             indicatorColor="primary"
@@ -238,8 +241,8 @@ function EventsDialog(props) {
                             <Tab label="Submissions" />
                             <Tab label="Your Team" />
                             <Tab label="Team Chat" />
-                            <Tab label="Create Team" />
-                            <Tab label="Join Team" />
+                            {/* <Tab label="Create Team" />
+                            <Tab label="Join Team" /> */}
                         </Tabs>
                     </Paper>}
                 </div>
@@ -253,12 +256,13 @@ function EventsDialog(props) {
                     value={value}
                     index={0}
                     event={props.event}></AboutEventPanel>
+                    {/* {value === 2 && <VerticalTabBar value={value} index={1} subIndexValue={subIndexValue}  event={props.event}></VerticalTabBar>} */}
                 <EventsTimeLinePanel value={value} index={1} event={props.event}></EventsTimeLinePanel>
                 <EvenstAnnouncementsPanel value={value} index={2} event={props.event}></EvenstAnnouncementsPanel>
                 {value === 3 && chatAcess && <ChatPanel value={value} index={3} event={props.event}></ChatPanel>}
                 {value === 3 && !chatAcess && <Typography align="center" variant="h5" >Register for the event to continue</Typography>}
-                {teamAccess && event.isTeamed && <EventsTeamPanel subIndexValue={subIndexValue} value={value} index={4} event={props.event}></EventsTeamPanel>}
-                {chatAcess && value ===4 && !event.isTeamed && <EventSubmissionPanel individual={true} event ={props.event}></EventSubmissionPanel>}
+                {teamAccess && event.isTeamed && !adminAccess && <EventsTeamPanel subIndexValue={subIndexValue} value={value} index={4} event={props.event}></EventsTeamPanel>}
+                {chatAcess && value ===4 && !event.isTeamed && !adminAccess &&<EventSubmissionPanel individual={true} event ={props.event}></EventSubmissionPanel>}
                 {value === 4 && !teamAccess && <Typography align="center" variant="h5" >Register for the event to continue</Typography>}
             </DialogContent>
             <DialogActions className={classes.action}>

@@ -19,6 +19,7 @@ import Paper from '@material-ui/core/Paper';
 import ActiveEvents from '../ActiveEventsContext';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import Skeleton from '@material-ui/lab/Skeleton';
 
 import EventCard from '../Components/EventCard';
 import AuthContext from '../AuthContext';
@@ -119,7 +120,7 @@ function ExplorePanel(props) {
     const [open, setOpen] = React.useState(false);
     const [selectedEvent, setSelectedEvent] = React.useState([]);
     const { allEvents } = React.useContext(EventsContext);
-    const { activeEvents } = React.useContext(ActiveEvents);
+    const { activeEvents, contextLoading } = React.useContext(ActiveEvents);
     const { currentUser } = React.useContext(AuthContext);
     const regEvents = allEvents.filter((val) => {
         return val.registered === true;
@@ -172,9 +173,20 @@ function ExplorePanel(props) {
             <div className={classes.content}>
                 {value === 0 && <React.Fragment>
                     {
-                        activeEvents.length === 0 && <Typography align="center">No events, check back later</Typography>
+                        !contextLoading && activeEvents !== null && activeEvents.length === 0 && <Typography align="center">No events, check back later</Typography>
                     }
-                    {
+                    {contextLoading && <div>
+                        <Skeleton variant="rect" animation="wave" height={118} />
+                        <Skeleton animation="wave" />
+                        <Skeleton animation="wave" />
+                        <Skeleton animation="wave" />
+                        <br></br><br></br>
+                        <Skeleton variant="rect" animation="wave" height={118} />
+                        <Skeleton animation="wave" />
+                        <Skeleton animation="wave" />
+                        <Skeleton animation="wave" />
+                    </div>}
+                    {activeEvents !== null && <div>{
                         props.isFiltered ? props.sortedEventsArray.map((event, index) => {
                             return (
                                 <EventCard
@@ -214,6 +226,7 @@ function ExplorePanel(props) {
                                 >
                                 </EventCard>)
                         })}
+                    </div>}
                 </React.Fragment>}
                 {value === 1 && <Grid container component="main" alignItems="center" spacing={1}>
                     {

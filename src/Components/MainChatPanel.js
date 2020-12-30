@@ -449,6 +449,7 @@ export default function JustifyContent(props) {
     }
 
     const handleBackButton = () => {
+        props.setSelectedChat(null);
         props.openDialog(false)
     }
 
@@ -572,7 +573,6 @@ export default function JustifyContent(props) {
                         <div style={{ float: "left", clear: "both", paddingBottom: '60px', }}
                             ref={(el) => { setReferenece(el) }}>
                         </div>
-
                     </Box>
                     <div className={classes.textField}>
                         <ChatTextField
@@ -600,7 +600,6 @@ export default function JustifyContent(props) {
                     // handleReg={handleRegistrationButton}
                     ></EventsDialog>}
                 </div>
-
             )}
         </div>
     );

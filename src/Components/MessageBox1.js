@@ -6,8 +6,9 @@ import Linkify from 'react-linkify';
 
 import { Typography, Divider, IconButton } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
-import DeleteIcon from '@material-ui/icons/Delete';
-import ReplyIcon from '@material-ui/icons/Reply';
+// import DeleteIcon from '@material-ui/icons/Delete';
+import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
+// import ReplyIcon from '@material-ui/icons/Reply';
 import Avatar from '@material-ui/core/Avatar';
 
 import AuthContext from '../AuthContext';
@@ -85,14 +86,13 @@ function ChatMessage(props) {
     return (
         <React.Fragment>
             <Box display="flex">
-                <Box flexGrow={1} paddingTop={1}>
+                <Box flexGrow={1} paddingTop={1} paddingRight={1}>
                     <Divider></Divider>
                 </Box>
                 <Typography variant="body2">{props.currentDate.toDateString() === props.messageDate.toDateString() ? "Today" : props.messageDate.toDateString()}</Typography>
-                <Box flexGrow={1} paddingTop={1}>
+                <Box flexGrow={1} paddingTop={1} paddingLeft={1}>
                     <Divider></Divider>
                 </Box>
-
             </Box>
 
             
@@ -116,11 +116,11 @@ function ChatMessage(props) {
                             </Box>
                         </Box>
                         <Box>
-                            <IconButton style={{ padding: '0px', margin: '0px' }}>
+                            {/* <IconButton style={{ padding: '0px', margin: '0px' }}>
                                 <ReplyIcon style={{ color: '#aaaaaa' }}></ReplyIcon>
-                            </IconButton>
+                            </IconButton> */}
                             {currentUser.user_id === message.user_id && <IconButton onClick={props.handleMessageDeleteButton(message)} style={{ padding: '0px', margin: '0px' }}>
-                                <DeleteIcon style={{ color: '#aaaaaa' }}></DeleteIcon>
+                                <DeleteOutlinedIcon style={{ color: '#aaaaaa' }}></DeleteOutlinedIcon>
                             </IconButton>}
                         </Box>
                     </Box>

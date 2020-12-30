@@ -182,7 +182,6 @@ function EventsTabPanel({ history }) {
     const [feedBackOpen, setFeedBackOpen] = React.useState(false);
 
 
-
     React.useEffect(() => {
         // console.log(allEvents);
         setRegisteredEvents(activeEvents.filter((value) => value.registered === true))
@@ -196,12 +195,15 @@ function EventsTabPanel({ history }) {
     const handleClose = () => {
         setOpen(false);
     };
-    const handleClick = function (event, image) {
+    const handleClick = function (event) {
         // console.log(id);
-        setSelectedEvent(event);
-        // setSelectedImage(image);
-        setOpen(true);
-        // history.push('eventdetails')
+        if (event.registered) {
+            history.push(`/event/${event._id}`)
+        } else {
+            setSelectedEvent(event);
+            // setSelectedImage(image);
+            setOpen(true);
+        }
     }
     const handlePostButtonClick = () => {
         history.push('/post')

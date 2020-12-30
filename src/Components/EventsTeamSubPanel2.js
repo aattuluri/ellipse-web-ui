@@ -62,7 +62,7 @@ function AboutEventPanel(props) {
                     <TextField variant="outlined" label="Team Name" required name="name" fullWidth margin="dense"></TextField>
                     <TextField variant="outlined" label="Description" required name="desc" fullWidth margin="dense"></TextField>
                     <Box display="flex" justifyContent="center">
-                        <Button type="submit" fullWidth color="primary" className={classes.button} variant="contained">Create</Button>
+                        <Button type="submit" fullWidth color="primary" className={classes.button} variant="contained">Create Team</Button>
                     </Box>
                     </form>
                     

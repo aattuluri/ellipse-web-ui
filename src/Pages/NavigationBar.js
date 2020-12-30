@@ -26,7 +26,9 @@ import NotificationsDialog from '../Components/NotficationsDialog';
 import Switch from '@material-ui/core/Switch';
 import { Button } from '@material-ui/core';
 import Logo from '../Components/Images/logo.svg';
-import TelegramIcon from '@material-ui/icons/Telegram'
+// import TelegramIcon from '@material-ui/icons/Telegram'
+import ChatOutlinedIcon from '@material-ui/icons/ChatOutlined';
+import Tooltip from '@material-ui/core/Tooltip';
 // import DarkLogo from '../Components/Images/dark_theme_logo.png';
 // import LightLogo from '../Components/Images/light_theme_logo.png';
 // import CuboidLogo from '../Components/Images/Cuboid logo.png'
@@ -271,23 +273,23 @@ const NavigationBar = function ({ history }) {
                   aria-label="icon"
 
                 >
-                  <Tab onClick={handleHomeClick} icon={<HomeIcon />} aria-label="home" />
-                  <Tab onClick={handleeventClick} icon={<EventIcon />} aria-label="event" />
-                  <Tab onClick={handleChatClick} icon={<TelegramIcon />} aria-label="favorite" />
+                  <Tooltip title="Home"><Tab onClick={handleHomeClick} icon={<HomeIcon />} aria-label="home" /></Tooltip>
+                  <Tooltip title="Calender View"><Tab onClick={handleeventClick} icon={<EventIcon />} aria-label="event" /></Tooltip>
+                  <Tooltip title="Chat"><Tab onClick={handleChatClick} icon={<ChatOutlinedIcon />} aria-label="favorite" /></Tooltip>
                   {/* <Tab onClick={handleExploreClick} icon={<ExploreIcon />} aria-label="person" /> */}
-                  <Tab onClick={handleProfileClick} icon={<PersonPinIcon />} aria-label="person" />
+                  <Tooltip title="Profile"><Tab onClick={handleProfileClick} icon={<PersonPinIcon />} aria-label="person" /></Tooltip>
                 </Tabs>
               </Paper>
             </div>
 
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
-              <IconButton aria-label="notifications" color="inherit" onClick={handleNotificationClick}>
+              <Tooltip title="Notifications"><IconButton aria-label="notifications" color="inherit" onClick={handleNotificationClick}>
                 <Badge badgeContent={notificationsCount} color="secondary">
                   <NotificationsIcon />
                 </Badge>
-              </IconButton>
-              <IconButton
+              </IconButton></Tooltip>
+              <Tooltip title="Settings"><IconButton
                 edge="end"
                 aria-label="account of current user"
                 aria-controls={menuId}
@@ -295,7 +297,7 @@ const NavigationBar = function ({ history }) {
                 onClick={handleProfileMenuOpen}
                 color="inherit">
                 <SettingsIcon></SettingsIcon>
-              </IconButton>
+              </IconButton></Tooltip>
             </div>
           </Toolbar>
         </AppBar>
@@ -312,11 +314,11 @@ const NavigationBar = function ({ history }) {
                 textColor="primary"
               // aria-label="icon tabs example"
               >
-                <Tab onClick={handleHomeClick} icon={< HomeIcon />} aria-label="home" />
-                <Tab onClick={handleeventClick} icon={<EventIcon />} aria-label="event" />
+                <Tooltip title="Notifications"><Tab onClick={handleHomeClick} icon={< HomeIcon />} aria-label="home" /></Tooltip>
+                <Tooltip title="Notifications"><Tab onClick={handleeventClick} icon={<EventIcon />} aria-label="event" /></Tooltip>
                 {/* <Tab onClick={handleChatClick} icon={<TelegramIcon />} aria-label="messages" /> */}
-                <Tab onClick={handleChatClick} icon={<TelegramIcon />} aria-label="favorite" />
-                <Tab onClick={handleProfileClick} icon={<PersonPinIcon />} aria-label="person" />
+                <Tooltip title="Notifications"><Tab onClick={handleChatClick} icon={<ChatOutlinedIcon></ChatOutlinedIcon>} aria-label="favorite" /></Tooltip>
+                <Tooltip title="Notifications"><Tab onClick={handleProfileClick} icon={<PersonPinIcon />} aria-label="person" /></Tooltip>
               </Tabs>
             </Paper>
           </div>

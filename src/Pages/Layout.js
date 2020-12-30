@@ -42,6 +42,7 @@ function Layout(props) {
     const classes = useStyles();
     const [allEvents, setAllEvents] = React.useState([]);
     const [activeEvents, setActiveEvents] = React.useState([]);
+    const [contextLoading,setContextLoading] = React.useState(false);
     const [currentUser, setCurrentUser] = React.useState(null);
     const [open, setOpen] = React.useState(true);
     const [authorized, setAuthorized] = React.useState(true);
@@ -55,7 +56,7 @@ function Layout(props) {
 
     const value = { currentUser, setCurrentUser };
     const allEventsValue = { allEvents, setAllEvents };
-    const activeEventsValue = { activeEvents, setActiveEvents };
+    const activeEventsValue = { activeEvents, setActiveEvents,contextLoading,setContextLoading };
     const webSocketValue = { webSocketContext, setWebSocketContext };
     const webSocketDataContextValue = { 
         eventChatMessages, setEventChatMessages, 
@@ -108,12 +109,9 @@ function Layout(props) {
             webConnect();
         }
     }
-    // console.log(OS.hostname());
-    // const browser = detect();
-    // console.log(browser)
-
 
     React.useEffect(() => {
+        setContextLoading(true);
         webConnect()
         fetch(process.env.REACT_APP_API_URL + '/api/users/me', {
             headers: {
@@ -192,12 +190,17 @@ function Layout(props) {
                         const cDate = new Date();
                         const eDate = new Date(e.finish_time);
                         return cDate < eDate && e.status !== "pending"
-                    }))
+                    }));
+                    setContextLoading(false);
                 })
             }
             else if (response.status === 401) {
                 localStorage.removeItem('token');
                 setAuthorized(false);
+                setContextLoading(false);
+            }
+            else{
+                setContextLoading(false);
             }
 
         })

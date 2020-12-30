@@ -60,8 +60,7 @@ function ChatPage({ history }) {
                 {mobileChat && <Grid container>
                     <Grid item xs={12}>
                         <Paper className={classes.mobile}>
-                            <ChatContactsPanel></ChatContactsPanel>
-                            {selectedChat != null && <ChatPanel mobile={true} openDialog={setMobileChat} chatType={chatType} user={currentUser} adminId={adminId} event={selectedChat}></ChatPanel>}
+                            {selectedChat != null && <ChatPanel setSelectedChat={setSelectedChat} mobile={true} openDialog={setMobileChat} chatType={chatType} user={currentUser} adminId={adminId} event={selectedChat}></ChatPanel>}
                         </Paper>
                     </Grid>
                 </Grid>

@@ -184,7 +184,7 @@ function AboutEventPanel(props) {
                         <Grid item xs={12} sm={12} md={4} lg={4} >
                             <img
                                 onClick={handleImageDialogOpen}
-                                style={{ width: '200px', height: '180px' }}
+                                style={{ width: '240px', height: '180px' }}
                                 alt="event poster"
                                 src={process.env.REACT_APP_API_URL + `/api/image?id=${event.poster_url}`}></img>
                         </Grid>

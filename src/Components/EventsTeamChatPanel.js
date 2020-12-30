@@ -340,7 +340,7 @@ export default function JustifyContent(props) {
                                 );
                             })
                         }
-                        <div style={{ float: "left", clear: "both", paddingBottom: '60px', }}
+                        <div style={{ float: "left", clear: "both", paddingBottom: '70px', }}
                             ref={(el) => { setReferenece(el) }}>
                         </div>
                         

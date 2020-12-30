@@ -57,6 +57,7 @@ function Eventcard(props) {
   const classes = useStyles();
   const event = props.event;
   const t = localStorage.getItem('theme');
+  // const theme = useTheme()
   const startDate = new Date(event.start_time);
   const endDate = new Date(event.finish_time);
   const regEndDate = new Date(event.registration_end_time);
@@ -159,18 +160,18 @@ function Eventcard(props) {
               <MoreVertIcon />
             </IconButton>
             <Menu
-      anchorEl={anchorEl}
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      id={'menu'}
-      keepMounted
-      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-      open={Boolean(anchorEl)}
-      onClose={handleClose}
-    >
-      <MenuItem onClick={handleShareClick}>Share</MenuItem>
-                        <MenuItem onClick={handleReportClick}>Report</MenuItem>
+              anchorEl={anchorEl}
+              anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+              id={'menu'}
+              keepMounted
+              transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
+            >
+              <MenuItem onClick={handleShareClick}>Share</MenuItem>
+              <MenuItem onClick={handleReportClick}>Report</MenuItem>
 
-    </Menu>
+            </Menu>
             {/* <Popper className={classes.morePopup} open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
               {({ TransitionProps, placement }) => (
                 <Grow
@@ -192,7 +193,7 @@ function Eventcard(props) {
           </div>
         }
         title={
-          <Typography  variant="h5" color="textPrimary" component="p">
+          <Typography variant="h5" color="textPrimary" component="p">
             {props.name}
           </Typography>
         }
@@ -221,9 +222,9 @@ function Eventcard(props) {
         handleClose={handleShareClose}></EventShareDialog>
       <CardActions disableSpacing>
         <div className={classes.buttonDiv}>
-          <Button size="small" color="primary" variant="outlined" className={classes.button} onClick={handleMoreButtonClick}>
+          {<Button size="small" color="primary" variant="outlined" className={classes.button} onClick={handleMoreButtonClick}>
             See More
-        </Button>
+        </Button>}
           {
             event.reg_mode === "form" ? <Button disabled={event.registered ? true : false} size="small" color="primary" variant="contained" className={classes.button} onClick={handleRegClick}>
               {event.registered ? "Registered" : "Register"}

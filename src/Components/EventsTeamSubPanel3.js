@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, TextField, Typography, Box, } from '@material-ui/core';
+import { Button,  Typography, Box, } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 // import PeopleIcon from '@material-ui/icons/People';
@@ -273,8 +273,15 @@ function AboutEventPanel(props) {
   const handleViewMembersClick = (v) => () => {
 
     if (showMembers) {
+
       if (teamIndex !== {}) {
-        setTeamIndex(v);
+        if (teamIndex === v) {
+          setShowMembers(false);
+          setTeamIndex({});
+        }
+        else {
+          setTeamIndex(v)
+        }
       }
       else {
         setShowMembers(false);
@@ -286,7 +293,6 @@ function AboutEventPanel(props) {
       setShowMembers(true);
       setTeamIndex(v);
     }
-
   }
 
   return (
@@ -312,10 +318,10 @@ function AboutEventPanel(props) {
               <CircularProgress />
             </Fade>
           </div>
-          <TextField variant="outlined" label="Team id" fullWidth margin="dense"></TextField>
+          {/* <TextField variant="outlined" label="Team id" fullWidth margin="dense"></TextField>
           <Box display="flex" justifyContent="center">
             <Button fullWidth color="primary" className={classes.button} variant="contained">Join</Button>
-          </Box>
+          </Box> */}
           {sentRequests.length !== 0 && <Typography variant="body2" color="textSecondary">Sent Requests</Typography>}
           {
             sentRequests.map((v) => {

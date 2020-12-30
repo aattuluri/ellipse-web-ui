@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
         position: 'fixed',
         right: theme.spacing(4),
         bottom: theme.spacing(4),
-        left: theme.spacing(13),
+        left: theme.spacing(4),
         padding: theme.spacing(0, 3),
         backgroundColor: theme.palette.background.paper,
         borderRadius: theme.spacing(5),

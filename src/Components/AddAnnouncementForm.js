@@ -140,7 +140,6 @@ export default function AnnouncementForm(props) {
             </Grid>
             <Grid item xs={12}>
               <TextField
-                autoFocus
                 margin="dense"
                 id="description"
                 label="Description"
