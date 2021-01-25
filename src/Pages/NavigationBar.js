@@ -49,7 +49,7 @@ const NavigationBar = function ({ history }) {
   const [value, setValue] = React.useState(0);
   // const [allEvents, setAllEvents] = React.useState([]);
   const [searchedEvent, setSearchedEvent] = React.useState([]);
-  const [notificationsCount,setNotificationCount] = React.useState(0);
+  const [notificationsCount, setNotificationCount] = React.useState(0);
 
   const isMenuOpen = Boolean(anchorEl);
   // const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -58,7 +58,7 @@ const NavigationBar = function ({ history }) {
   // const eventypes = ["Hackathon", "Coding Contest", "Webinar"];
   const [open, setOpen] = React.useState(false);
   const [notificationsOpen, setNotificationsOpen] = React.useState(false);
-  const {allEvents} = React.useContext(EventsContext);
+  const { allEvents } = React.useContext(EventsContext);
   useEffect(() => {
     if (localStorage.getItem('tabIndex') != null) {
       const tabIndex = parseInt(localStorage.getItem('tabIndex'));
@@ -93,10 +93,10 @@ const NavigationBar = function ({ history }) {
     }
   }
 
-  const handleNotificationCardClick = (value)=>{
-    if(value){
+  const handleNotificationCardClick = (value) => {
+    if (value) {
       allEvents.forEach(event => {
-        if(event._id === value){
+        if (event._id === value) {
           setSearchedEvent(event);
           setOpen(true);
         }
@@ -121,7 +121,7 @@ const NavigationBar = function ({ history }) {
     handleMobileMenuClose();
   };
 
-  
+
   if (!token) {
     history.replace('/');
   }
@@ -263,7 +263,7 @@ const NavigationBar = function ({ history }) {
               />
             </div>
             <div className={classes.tabs}>
-              <Paper square className={classes.root}>
+              <Paper square className={classes.root} elevation={0}>
                 <Tabs
                   value={value}
                   onChange={handleChange}
@@ -271,7 +271,6 @@ const NavigationBar = function ({ history }) {
                   indicatorColor="primary"
                   textColor="primary"
                   aria-label="icon"
-
                 >
                   <Tooltip title="Home"><Tab onClick={handleHomeClick} icon={<HomeIcon />} aria-label="home" /></Tooltip>
                   <Tooltip title="Calender View"><Tab onClick={handleeventClick} icon={<EventIcon />} aria-label="event" /></Tooltip>

@@ -441,8 +441,8 @@ function EventsTabPanel({ history }) {
         <div>
             <Grid container component="main" >
                 <Grid item xs={false} md={3} lg={2} style={{ padding: "10px" }} >
-                    <Paper className={classes.root}>
-                        <Paper className={classes.leftSubPaper}>
+                    <Paper className={classes.root} elevation="0">
+                        <Paper className={classes.leftSubPaper} elevation="0">
                             <SortLeftPanel
                                 handleSortDateChange={handleSortDateChange}
                                 sortStartDate={sortStartDate}
@@ -493,8 +493,8 @@ function EventsTabPanel({ history }) {
                     <Fab color="primary" aria-label="add" className={classes.fab} onClick={handlePostButtonClick}>
                         <AddIcon />
                     </Fab>
-                    <Paper className={classes.rpaper}>
-                        <Paper className={classes.subRpaper}>
+                    <Paper className={classes.rpaper} elevation={0}>
+                        <Paper className={classes.subRpaper} elevation={0}>
                             <Button
                                 onClick={handlePostButtonClick}
                                 variant="contained"
@@ -585,9 +585,6 @@ function EventsTabPanel({ history }) {
                 </Dialog>
             </div>
         </div>
-
-
-
     );
 }
 

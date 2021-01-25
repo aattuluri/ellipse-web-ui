@@ -28,6 +28,9 @@ import Button from '@material-ui/core/Button';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Paper from '@material-ui/core/Paper';
+// import Box from '@material-ui/core/Box';
+import ShareIcon from '@material-ui/icons/Share';
+import CloseIcon from '@material-ui/icons/Close';
 
 import AuthContext from '../AuthContext';
 import AnnouncementPanel from '../Components/EventsAnnouncementsPanel';
@@ -42,6 +45,8 @@ import EventSubmissionPanel from '../Components/EventSubmissionPanel';
 import EventsTeamPanel from '../Components/EventsTeamPanel';
 import EventDetailsTeamPanel from '../Components/EventDetailsTeamPanel';
 import EventAdminSubmissionPanel from '../Components/EventAdminSubmissionPanel';
+import EventShareDialog from '../Components/EventShareDialog';
+import AdminSettingsPanel from '../Components/AdminSettingsPanel';
 
 const drawerWidth = 240;
 
@@ -128,6 +133,15 @@ const useStyles = makeStyles((theme) => ({
         }),
         marginLeft: drawerWidth,
     },
+    icons: {
+        position: 'absolute',
+        right: theme.spacing(1),
+        top: theme.spacing(1),
+        [theme.breakpoints.down('sm')]: {
+            display: 'none'
+        },
+        // color: theme.palette.grey[500],
+    },
 }));
 
 export default function PersistentDrawerLeft(props) {
@@ -141,6 +155,7 @@ export default function PersistentDrawerLeft(props) {
     const [drawerOpen, setDrawerOpen] = React.useState(true);
     const [event, setEvent] = React.useState({});
     const [adminAccess, setAdminAccess] = React.useState(false);
+    const [moderatorAccess,setModeratorAcces] = React.useState(false);
     const [chatAcess, setChatAcess] = React.useState(false);
     const [teamAccess, setTeamAccess] = React.useState(false);
     const { currentUser } = React.useContext(AuthContext);
@@ -159,6 +174,8 @@ export default function PersistentDrawerLeft(props) {
         teamsSelected: false,
     });
 
+    const [shareDialogOpen, setShareDialogOpen] = React.useState(false);
+
 
 
 
@@ -173,22 +190,30 @@ export default function PersistentDrawerLeft(props) {
         }).then(response => {
             response.json().then(val => {
                 setEvent(val.event);
-                if (val.registered || val.reg_mode !== "form") {
-                    setChatAcess(true);
+                // console.log(event)
+                if (event.isTeamed && val.registered) {
                     setTeamAccess(true);
-                } else if (val.user_id === currentUser.user_id) {
+                }
+                if (val.event.registered || val.event.reg_mode !== "form") {
+                    setChatAcess(true);
+
+                } else if (val.event.user_id === currentUser.user_id) {
                     setChatAcess(true);
                     setTeamAccess(false);
                 }
                 else {
                     setChatAcess(false)
                 }
+                if(val.event.moderators.includes(currentUser.user_id)){
+                    setModeratorAcces(true);
+                    setChatAcess(true);
+                }
+
             })
         })
+        // eslint-disable-next-line
+    }, [token, id, currentUser])
 
-    }, [token, id,currentUser])
-
-    // console.log(adminAccess)
     React.useEffect(() => {
         if (event.user_id !== undefined && currentUser.user_id !== undefined) {
             if (event.user_id === currentUser.user_id) {
@@ -209,6 +234,18 @@ export default function PersistentDrawerLeft(props) {
     const handleDrawerClose = () => {
         setDrawerOpen(false);
     };
+
+    function handleClose() {
+        props.history.goBack()
+
+    }
+    function handleShareClick() {
+        setShareDialogOpen(true);
+    }
+
+    function handleShareClose() {
+        setShareDialogOpen(false);
+    }
 
     const handleAnyClick = (selectedOption) => () => {
         const defaultValues = {
@@ -237,10 +274,10 @@ export default function PersistentDrawerLeft(props) {
         timilineSelected,
         announcementSelected,
         settingsSelected,
-        editEventSelected, 
-        chatSelected, 
-        certificateSelected, 
-        submissionSelected, 
+        editEventSelected,
+        chatSelected,
+        certificateSelected,
+        submissionSelected,
         participationSelected, teamsSelected } = selected;
 
     function handleRegClick() {
@@ -273,12 +310,18 @@ export default function PersistentDrawerLeft(props) {
                     >
                         <MenuIcon />
                     </IconButton>
-                    <Typography variant="h6" noWrap>
-                        {event.name}
-                    </Typography>
+                    <Typography>{event.name}</Typography>
+                    <div className={classes.icons}>
+                        <IconButton aria-label="share" onClick={handleShareClick}>
+                            <ShareIcon />
+                        </IconButton>
+                        <IconButton aria-label="close" className={classes.closeButton} onClick={handleClose}>
+                            <CloseIcon fontSize="large" />
+                        </IconButton>
+                    </div>
                 </Toolbar>
-                {event.isTeamed && 
-                    teamAccess && 
+                {event.isTeamed &&
+                    teamAccess &&
                     participationSelected && <Paper className={classes.root2}>
                         <Tabs
                             value={subIndexValue}
@@ -336,14 +379,14 @@ export default function PersistentDrawerLeft(props) {
                     </ListItem>
                     {!adminAccess && <ListItem button onClick={handleAnyClick("participationSelected")} selected={participationSelected}>
                         <ListItemIcon>
-                        <GroupWorkIcon color="primary"></GroupWorkIcon>
+                            <GroupWorkIcon color="primary"></GroupWorkIcon>
                         </ListItemIcon>
                         <ListItemText primary="Participation" />
                     </ListItem>}
                 </List>
                 <Divider />
                 {
-                    adminAccess && <List>
+                    adminAccess  && <List>
                         <ListItem button onClick={handleAnyClick("dashBoardSelected")} selected={dashBoardSelected}>
                             <ListItemIcon >
                                 <DashboardIcon color="primary" />
@@ -382,6 +425,16 @@ export default function PersistentDrawerLeft(props) {
                         </ListItem>
                     </List>
                 }
+                {
+                    moderatorAccess && <List>
+                        <ListItem button onClick={handleAnyClick("dashBoardSelected")} selected={dashBoardSelected}>
+                            <ListItemIcon >
+                                <DashboardIcon color="primary" />
+                            </ListItemIcon>
+                            <ListItemText primary="Dashboard" />
+                        </ListItem>
+                    </List>
+                }
             </Drawer>
             <main
                 className={clsx(classes.content, {
@@ -412,13 +465,13 @@ export default function PersistentDrawerLeft(props) {
                     !adminAccess && announcementSelected && event != null && <AnnouncementPanel event={event}></AnnouncementPanel>
                 }
                 {
-                    event.isTeamed && 
-                    teamAccess && 
-                    participationSelected &&  !adminAccess &&
+                    event.isTeamed &&
+                    teamAccess &&
+                    participationSelected && !adminAccess &&
                     <EventsTeamPanel subIndexValue={subIndexValue} value={4} index={4} open={drawerOpen} event={event}></EventsTeamPanel>
                 }
                 {
-                    !event.isTeamed  && participationSelected && !adminAccess &&  <EventSubmissionPanel individual={true} event ={event}></EventSubmissionPanel>
+                    !event.isTeamed && teamAccess && participationSelected && !adminAccess && <EventSubmissionPanel individual={true} event={event}></EventSubmissionPanel>
                 }
                 {
                     adminAccess && certificateSelected && event != null && <CertificateDashboard event={event}></CertificateDashboard>
@@ -427,7 +480,6 @@ export default function PersistentDrawerLeft(props) {
                     infoSelected && event.reg_mode === "form" && <Button disabled={event.registered || adminAccess} size="small" color="primary" variant="contained" className={classes.button} onClick={handleRegClick}>
                         {event.registered ? "Registered" : "Register"}
                     </Button>
-
                 }
                 {
                     infoSelected && event.reg_mode !== "form" && <Button disabled={event.registered || adminAccess} size="small" color="primary" variant="contained" className={classes.button}>
@@ -436,7 +488,7 @@ export default function PersistentDrawerLeft(props) {
                     </Button>
                 }
                 {
-                    adminAccess && settingsSelected && <Typography>Any queries contact us at support@ellipseapp.com</Typography>
+                    adminAccess && settingsSelected && <AdminSettingsPanel event={event} setEvent={setEvent}></AdminSettingsPanel>
                 }
                 {
                     adminAccess && teamsSelected && <EventDetailsTeamPanel event={event}></EventDetailsTeamPanel>
@@ -445,6 +497,10 @@ export default function PersistentDrawerLeft(props) {
                     adminAccess && submissionSelected && <EventAdminSubmissionPanel event={event}></EventAdminSubmissionPanel>
                 }
             </main>
+            <EventShareDialog
+                event={event}
+                open={shareDialogOpen}
+                handleClose={handleShareClose}></EventShareDialog>
         </div>
     );
 }

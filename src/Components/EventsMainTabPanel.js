@@ -115,27 +115,23 @@ const useStyles = makeStyles((theme) => ({
 
 function ExplorePanel(props) {
     localStorage.setItem('tabIndex', 0)
-    // const user = React.useContext(AuthContext);
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
     const [selectedEvent, setSelectedEvent] = React.useState([]);
     const { allEvents } = React.useContext(EventsContext);
     const { activeEvents, contextLoading } = React.useContext(ActiveEvents);
     const { currentUser } = React.useContext(AuthContext);
+
     const regEvents = allEvents.filter((val) => {
         return val.registered === true;
     });
 
+   
     const [value, setValue] = React.useState(0);
-    // const user = React.useContext(AuthContext);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
-    };
-
-    // const postedEvents = allEvents.filter((val) => {
-    //     return val.user_id === user.user_id;
-    // });
+    }
 
     const pastEvents = allEvents.filter((val) => {
         const cDate = new Date();

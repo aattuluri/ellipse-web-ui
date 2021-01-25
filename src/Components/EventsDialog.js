@@ -127,11 +127,12 @@ function EventsDialog(props) {
         else {
             setChatAcess(false)
         }
-        if(props.openTeams){
+        if (props.openTeams) {
             setValue(4);
             setSubIndexValue(1);
         }
     }, [event, currentUser, props.openTeams])
+
     // console.log(chatAcess);
     const handleSubIndexChange = (event, newValue) => {
         setSubIndexValue(newValue);
@@ -222,7 +223,7 @@ function EventsDialog(props) {
                             <Tab label="Schedule" {...a11yProps(1)} />
                             <Tab label="Announcements" {...a11yProps(2)} />
                             <Tab label="Chat" {...a11yProps(3)} />
-                            {!event.isTeamed &&  <Tab label="Submission" {...a11yProps(4)}></Tab>}
+                            {!event.isTeamed && <Tab label="Submission" {...a11yProps(4)}></Tab>}
                             {event.isTeamed && <Tab label="Participation" {...a11yProps(4)}></Tab>}
                             {/* <Tab label="Submission"></Tab> */}
                         </Tabs>
@@ -230,7 +231,7 @@ function EventsDialog(props) {
                     <Divider></Divider>
                     {event.isTeamed && value === 4 && <Paper className={classes.root2}>
                         <Tabs
-                        // style={{backgroundColor: "#00bdaa"}}
+                            // style={{backgroundColor: "#00bdaa"}}
                             value={subIndexValue}
                             onChange={handleSubIndexChange}
                             indicatorColor="primary"
@@ -256,13 +257,13 @@ function EventsDialog(props) {
                     value={value}
                     index={0}
                     event={props.event}></AboutEventPanel>
-                    {/* {value === 2 && <VerticalTabBar value={value} index={1} subIndexValue={subIndexValue}  event={props.event}></VerticalTabBar>} */}
+                {/* {value === 2 && <VerticalTabBar value={value} index={1} subIndexValue={subIndexValue}  event={props.event}></VerticalTabBar>} */}
                 <EventsTimeLinePanel value={value} index={1} event={props.event}></EventsTimeLinePanel>
                 <EvenstAnnouncementsPanel value={value} index={2} event={props.event}></EvenstAnnouncementsPanel>
                 {value === 3 && chatAcess && <ChatPanel value={value} index={3} event={props.event}></ChatPanel>}
                 {value === 3 && !chatAcess && <Typography align="center" variant="h5" >Register for the event to continue</Typography>}
                 {teamAccess && event.isTeamed && !adminAccess && <EventsTeamPanel subIndexValue={subIndexValue} value={value} index={4} event={props.event}></EventsTeamPanel>}
-                {chatAcess && value ===4 && !event.isTeamed && !adminAccess &&<EventSubmissionPanel individual={true} event ={props.event}></EventSubmissionPanel>}
+                {chatAcess && value === 4 && !event.isTeamed && !adminAccess && <EventSubmissionPanel individual={true} event={props.event}></EventSubmissionPanel>}
                 {value === 4 && !teamAccess && <Typography align="center" variant="h5" >Register for the event to continue</Typography>}
             </DialogContent>
             <DialogActions className={classes.action}>

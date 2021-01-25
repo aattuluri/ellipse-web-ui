@@ -113,7 +113,7 @@ function SortLeftPanel(props) {
 
     return (
         <div>
-            <Paper className={classes.root}>
+            <Paper elevation="0" className={classes.root}>
                 <Typography index={0}>Filters</Typography>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                     <DatePicker

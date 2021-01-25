@@ -1,38 +1,21 @@
 import React from 'react';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
-// import Grid from '@material-ui/core/Grid';
-// import Box from '@material-ui/core/Box';
-// import ChatTextField from '../Components/MainChatTextField';
+import Box from '@material-ui/core/Box';
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-// import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
-// import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
-// import socketIOClient from "socket.io-client";
-// import socket from '../SocketClient';
-// import ExpandLess from '@material-ui/icons/ExpandLess';
-// import ExpandMore from '@material-ui/icons/ExpandMore';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
-// import ListItemText from '@material-ui/core/ListItemText';
-// import StarBorder from '@material-ui/icons/StarBorder';
-// import Collapse from '@material-ui/core/Collapse';
-// import Checkbox from '@material-ui/core/Checkbox';
-// import { Route } from 'react-router';
-// import ChatPanel from '../Components/ChatPanel';
-import { Paper} from '@material-ui/core';
+import { Divider, Paper } from '@material-ui/core';
 import EventsContext from '../EventsContext';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 
-// import AppBar from '@material-ui/core/AppBar';
-// import Tabs from '@material-ui/core/Tabs';
-// import Tab from '@material-ui/core/Tab';
-// import PhoneIcon from '@material-ui/icons/Phone';
-// import FavoriteIcon from '@material-ui/icons/Favorite';
-// import PersonPinIcon from '@material-ui/icons/PersonPin';
-// import EventsContext from '../EventsContext';
+
+import IconButton from '@material-ui/core/IconButton';
+import EventIcon from '@material-ui/icons/Event';
+import GroupIcon from '@material-ui/icons/Group';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -54,11 +37,13 @@ const useStyles = makeStyles((theme) => ({
     nested: {
         paddingLeft: theme.spacing(4),
     },
+    divider: {
+        backgroundColor: theme.palette.primary.main,
+
+    }
 }));
 
 function ChatPage(props) {
-    // const { children, value, url, index, ...other } = props;
-    // const user = JSON.parse(localStorage.getItem('user'));
     const token = localStorage.getItem('token');
     const theme = useTheme();
     const classes = useStyles();
@@ -66,6 +51,9 @@ function ChatPage(props) {
     const [teams, setTeams] = React.useState([]);
     // const [open, setOpen] = React.useState(false);
     const [checked, setChecked] = React.useState([0]);
+    const [chatValue,setChatValue] = React.useState(0);
+
+
     const regEvents = allEvents.filter((val) => {
         return val.registered === true;
     });
@@ -135,59 +123,43 @@ function ChatPage(props) {
     //     // history.push('/chat/1')
     // };
 
+    const handleChatChange = (value) => () => {
+        setChatValue(value)
+    }
+
 
     return (
-        // <div>
-        //     <div className={classes.root}>
-        //            {/* <Typography>Chat</Typography> */}
-        //            {/* <Typography>Chat</Typography>     */}
-        //     </div>
-
-        // </div>
         <div>
             <div className={classes.root}>
                 <Paper className={classes.root}>
-                    {/* <Box display="flex" justifyContent="center">
+                    <Box display="flex" justifyContent="center">
                         <Box paddingRight={1} paddingLeft={1}>
-                            <IconButton>
-                                <Box >
+                            <IconButton onClick={handleChatChange(0)}>
+                                <Box style={{ width: "100px" }}>
                                     <Box>
-                                        <PhoneIcon color="primary" />
+                                        <EventIcon color={chatValue === 0 ? "primary" : "default"}></EventIcon>
                                     </Box>
-                                    <Box>
-                                        <Typography color="textSecondary" variant="body2">Events</Typography>
+                                    <Box >
+                                        <Divider className={chatValue === 0 && classes.divider}></Divider>
                                     </Box>
                                 </Box>
                             </IconButton>
                         </Box>
                         <Box paddingRight={1} paddingLeft={1}>
-                            <IconButton>
-                                <Box >
+                            <IconButton onClick={handleChatChange(1)}>
+                                <Box style={{ width: "100px" }}>
                                     <Box>
-                                        <PhoneIcon color="primary" />
+                                        <GroupIcon color={chatValue === 1 ? "primary" : "default"}></GroupIcon>
                                     </Box>
                                     <Box>
-                                        <Typography color="textSecondary" variant="body2">Events</Typography>
-                                    </Box>
-                                </Box>
-                            </IconButton>
-                        </Box>
-                        <Box paddingRight={1} paddingLeft={1}>
-                            <IconButton>
-                                <Box >
-                                    <Box>
-                                        <PhoneIcon color="primary" />
-                                    </Box>
-                                    <Box>
-                                        <Typography color="textSecondary" variant="body2">Events</Typography>
+                                        <Divider className={chatValue === 1 && classes.divider}></Divider>
                                     </Box>
                                 </Box>
                             </IconButton>
                         </Box>
-                    </Box> */}
-                    {/* <ChatTextField></ChatTextField> */}
+                    </Box>
                     <List className={classes.root2}>
-                        {regEvents.map((value) => {
+                        {chatValue === 0 && regEvents.map((value) => {
                             const labelId = `checkbox-list-label-${value._id}`;
                             return (
                                 <React.Fragment>
@@ -223,7 +195,7 @@ function ChatPage(props) {
                                 </React.Fragment>
                             );
                         })}
-                        {teams.map((value) => {
+                        {chatValue === 1 &&teams.map((value) => {
                             const labelId = `checkbox-list-label-${value._id}`;
                             return (
                                 <React.Fragment>
@@ -240,7 +212,6 @@ function ChatPage(props) {
                                         </ListItemIcon>
                                         <ListItemText id={labelId} primary={value.team_name} />
                                         <ArrowForwardIosIcon></ArrowForwardIosIcon>
-                                        {/* {checked.indexOf(value._id) !== -1 ? <ExpandLess /> : <ExpandMore />} */}
                                     </ListItem>
                                 </React.Fragment>
                             );

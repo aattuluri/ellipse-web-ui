@@ -1,12 +1,14 @@
 import React from 'react';
-import { Button,  Typography, Box, } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
+import TextField from '@material-ui/core/TextField';
+import { fade, makeStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
-// import PeopleIcon from '@material-ui/icons/People';
 import Grid from '@material-ui/core/Grid';
 import WebSocketContext from '../WebSocketContext';
 import AuthContext from '../AuthContext';
-// import Autocomplete from '@material-ui/lab/Autocomplete';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 
 import TeamMemberListItem from './TeamMemberListItem';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -74,6 +76,14 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
   },
+  search: {
+    backgroundColor: fade(theme.palette.common.white, 0.15),
+    '&:hover': {
+      backgroundColor: fade(theme.palette.common.white, 0.25),
+    },
+    maxWidth: "300px",
+    padding: theme.spacing(0.5)
+  }
 
 }));
 
@@ -92,6 +102,7 @@ function AboutEventPanel(props) {
   const token = localStorage.getItem('token');
   const event = props.event;
   const [teams, setTeams] = React.useState([]);
+  const [sortedTeams, setSortedTeams] = React.useState(null);
   const [sentRequests, setSentRequests] = React.useState([]);
   const [showMembers, setShowMembers] = React.useState(false);
   const [teamIndex, setTeamIndex] = React.useState(null);
@@ -145,7 +156,6 @@ function AboutEventPanel(props) {
         method: 'GET',
       }).then(response => {
         response.json().then(value => {
-          // console.log(value[0].sent_requests)
           setSentRequests(value[0].sent_requests);
         })
       })
@@ -176,6 +186,7 @@ function AboutEventPanel(props) {
           // console.log(value);
           // getData()
           // setUpdated(true);
+          setSortedTeams(null);
           if (webSocketContext) {
             webSocketContext.send(JSON.stringify({
               action: "team_status_update_message",
@@ -212,8 +223,8 @@ function AboutEventPanel(props) {
   }
 
   const handleWithdrawButton = (id, team) => () => {
-    console.log(id);
-    console.log(team);
+    // console.log(id);
+    // console.log(team);
     var data = new FormData();
     data = JSON.stringify({
       event_id: event._id,
@@ -295,6 +306,12 @@ function AboutEventPanel(props) {
     }
   }
 
+  const handleTeamSearch = (e, value) => {
+    // console.log(value);
+    setSortedTeams(value);
+    // teams.
+  }
+
   return (
     <div
       role="tabpanel"
@@ -318,10 +335,6 @@ function AboutEventPanel(props) {
               <CircularProgress />
             </Fade>
           </div>
-          {/* <TextField variant="outlined" label="Team id" fullWidth margin="dense"></TextField>
-          <Box display="flex" justifyContent="center">
-            <Button fullWidth color="primary" className={classes.button} variant="contained">Join</Button>
-          </Box> */}
           {sentRequests.length !== 0 && <Typography variant="body2" color="textSecondary">Sent Requests</Typography>}
           {
             sentRequests.map((v) => {
@@ -363,25 +376,28 @@ function AboutEventPanel(props) {
               else {
                 return null
               }
-
             })
           }
-          {/* <Typography>No Sent Request</Typography> */}
           <Typography variant="body2" color="textSecondary">All Teams</Typography>
-          {/* <TextField label="Search(Team Name)" variant="filled" style={{height:"40px"}}></TextField> */}
-          {/* <Autocomplete
-                freeSolo
-                id="search"
-                placeholder="search.."
-                // options={allEvents}
-                // getOptionLabel={(option) => option.name}
-                // onChange={handleSearchChange}
-                renderInput={(params) => <TextField {...params} placeholder="search.."
-                  className={classes.inputInput} />}
-              /> */}
-          {/* <div style={{margin:'0px',padding:'0px',height:'350px', overflowY:'auto'}}> */}
+          <Box display="flex" justifyContent="flex-end">
+
+            <Autocomplete
+              id="search"
+              placeholder="Search.."
+              options={teams}
+              fullWidth
+              variant="filled"
+              className={classes.search}
+              getOptionLabel={(option) => option.team_name}
+              onChange={handleTeamSearch}
+
+              renderInput={(params) => <TextField {...params} placeholder="Search.."
+                className={classes.inputInput} />}
+            />
+          </Box>
+
           {!loading && teams.length === 0 && <Typography>No Teams Found Create one</Typography>}
-          <div>
+          {sortedTeams === null ? <div>
             {
               teams.map(v => {
                 if (!sentRequests.includes(v._id)) {
@@ -423,7 +439,38 @@ function AboutEventPanel(props) {
                 }
               })
             }
-          </div>
+          </div> : <div>{!sentRequests.includes(sortedTeams._id) && <Grid container component="main" className={classes.grid}>
+            <Grid item xs={12} md={6}>
+              <Box className={classes.root0}>
+                <Box className={classes.adminDetails}>
+                  <Box>
+                    <Avatar className={classes.avatar} alt={sortedTeams.team_name}>{sortedTeams.team_name[0]}</Avatar>
+                  </Box>
+                  <Box>
+                    <Box>
+                      <Typography variant="h5">{sortedTeams.team_name}</Typography>
+                    </Box>
+                    <Box>
+                      <Typography color="textSecondary" variant="body2">{sortedTeams.description}</Typography>
+                      {showMembers && sortedTeams === teamIndex && <div>
+                        {
+                          sortedTeams.members.map((value, index) => {
+                            return <TeamMemberListItem admin={false} event={props.event} id={sortedTeams} user_id={value}></TeamMemberListItem>
+                          })
+                        }
+                      </div>}
+                    </Box>
+                  </Box>
+                </Box>
+              </Box>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Box display="flex" justifyContent="flex-end">
+                <Button disabled={loading} onClick={handleViewMembersClick(sortedTeams)}>{(showMembers && sortedTeams === teamIndex) ? "Hide Members" : "View Members"}</Button>
+                <Button disabled={loading} onClick={handleRequestButton(sortedTeams._id, sortedTeams)}>Request</Button>
+              </Box>
+            </Grid>
+          </Grid>}</div>}
         </div>
       )}
     </div>
