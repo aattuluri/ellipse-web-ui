@@ -236,7 +236,6 @@ export default function Checkout({ history }) {
         throw new Error('Unknown step');
     }
   }
-console.log(rounds)
 
   const handleEventPost = (allFields) => {
     var oAllowed = false;

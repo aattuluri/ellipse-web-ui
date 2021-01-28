@@ -31,7 +31,7 @@ function ModeratorListItem(props) {
     const token = localStorage.getItem('token');
     const { currentUser } = React.useContext(AuthContext);
     //   const classes = useStyles();
-      const event = props.event;
+    const event = props.event;
     const [memberDetails, setMemberDetails] = React.useState({});
 
     React.useEffect(() => {
@@ -39,7 +39,7 @@ function ModeratorListItem(props) {
         // eslint-disable-next-line
     }, [props])
 
-    const fetchAll = () =>{
+    const fetchAll = () => {
         try {
             fetch(process.env.REACT_APP_API_URL + `/api/event/get_team_member_details?id=${props.user_id}`, {
                 headers: {
@@ -51,7 +51,7 @@ function ModeratorListItem(props) {
             }).then(response => {
                 response.json().then(value => {
                     // console.log(value);
-                    
+
                     setMemberDetails(value);
                 })
             })
@@ -60,30 +60,58 @@ function ModeratorListItem(props) {
             console.log(e);
         }
     }
-    const handleRemoveButton = () =>{
-        const d = new Date();
-        var data = new FormData();
-        data = JSON.stringify({
-            event_id: event._id,
-            moderator_id: props.user_id
-        });
-        console.log(data);
-        fetch(process.env.REACT_APP_API_URL + `/api/event/remove_moderator`, {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            method: 'POST',
-            body: data
-        }).then((response) => {
-            if(response.status === 200){
-                response.json().then(value => {
-                props.setEvent(value.event);
-                
-                })
-            }
-        })
+    const handleRemoveButton = () => {
+        if (props.type === "moderator") {
+            // const d = new Date();
+            var data = new FormData();
+            data = JSON.stringify({
+                event_id: event._id,
+                moderator_id: props.user_id
+            });
+            // console.log(data);
+            fetch(process.env.REACT_APP_API_URL + `/api/event/remove_moderator`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                method: 'POST',
+                body: data
+            }).then((response) => {
+                if (response.status === 200) {
+                    response.json().then(value => {
+                        props.setEvent(value.event);
+
+                    })
+                }
+            })
+        }
+        else {
+            // const d = new Date();
+            var data2 = new FormData();
+            data2 = JSON.stringify({
+                event_id: event._id,
+                blocked_user_id: props.user_id
+            });
+            // console.log(data);
+            fetch(process.env.REACT_APP_API_URL + `/api/event/unblock_chat_for_user`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                method: 'POST',
+                body: data2
+            }).then((response) => {
+                if (response.status === 200) {
+                    response.json().then(value => {
+                        props.setEvent(value.event);
+
+                    })
+                }
+            })
+        }
+
     }
 
     return (
@@ -98,8 +126,8 @@ function ModeratorListItem(props) {
                 secondary={memberDetails.college}
             />
             {currentUser.user_id === event.user_id && <IconButton onClick={handleRemoveButton} edge="end" aria-label="delete">
-                    <RemoveCircleIcon></RemoveCircleIcon> <Typography>Remove</Typography>
-                </IconButton>}
+                <RemoveCircleIcon></RemoveCircleIcon> <Typography>{props.type === "moderator" ? "Remove" : "UnBlock"}</Typography>
+            </IconButton>}
         </ListItem>
     );
 }

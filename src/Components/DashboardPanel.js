@@ -156,6 +156,9 @@ export default function StickyHeadTable(props) {
           })
           setLoading(false);
         }
+        else{
+          setLoading(false);
+        }
       })
     })
   }, [token, event])

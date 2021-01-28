@@ -173,7 +173,7 @@ export default function FormDialog(props) {
                             <FormLabel component="legend">Action</FormLabel>
                             <RadioGroup aria-label="address" name="address" value={action} onChange={handleActionChange} style={{ display: "inline" }}>
                                 <FormControlLabel value="form" control={<Radio color="default" />} label="Create Form" />
-                                <FormControlLabel value="hackathon_template" control={<Radio color="default" />} label="Use Hackathon Template" />
+                                {/* <FormControlLabel value="hackathon_template" control={<Radio color="default" />} label="Use Hackathon Template" /> */}
                                 <FormControlLabel value="link" control={<Radio color="default" />} label="Provide Link" />
                             </RadioGroup>
                         </Grid>
@@ -207,7 +207,6 @@ export default function FormDialog(props) {
                             </Paper>
                         </Grid>}
                         {action === "form" && <Grid item xs={12}>
-                            {/* <Typography>Fields</Typography> */}
                             <Button
                                 variant="outlined"
                                 color="default"
@@ -215,7 +214,6 @@ export default function FormDialog(props) {
                                 Add Field
                         </Button>
                         </Grid>}
-
                     </Grid>
                 </DialogContent>
                 <DialogActions>

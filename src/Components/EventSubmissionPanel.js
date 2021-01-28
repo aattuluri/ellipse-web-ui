@@ -148,7 +148,7 @@ function AboutEventPanel(props) {
         }
         
         // eslint-disable-next-line
-    }, [props])
+    }, [props.individual])
 
     const fetchAll = () => {
         setLoading(true);
@@ -284,7 +284,7 @@ function AboutEventPanel(props) {
                                     const cDate = new Date();
                                     const sDate = new Date(value.start_date);
                                     const eDate = new Date(value.end_date);
-                                    return <Accordion>
+                                    return <Accordion className={classes.accordion}>
                                         <AccordionSummary
                                             expandIcon={<ExpandMoreIcon />}
                                             aria-controls="panel1a-content"

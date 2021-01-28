@@ -16,6 +16,7 @@ import AuthContext from '../AuthContext';
 import MessageBox1 from './MessageBox1';
 import MessageBox2 from './MessageBox2';
 import MessageDeleteDialog from './MessageDeleteDialog';
+import { Typography } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -205,19 +206,25 @@ export default function JustifyContent(props) {
 
         const d = new Date();
         if (webSocketContext) {
-            webSocketContext.send(JSON.stringify({
-                action: "send_event_message",
-                event_id: event._id,
-                msg: {
-                    'id': currentUser.user_id + Date.now(),
-                    'user_id': currentUser.user_id,
-                    'user_name': currentUser.name,
-                    'user_pic': currentUser.profile_pic,
-                    'message_type': 'normal_text_message',
-                    'message': message,
-                    'date': d.toISOString()
-                }
-            }));
+            if(event.chat_blocked_users.includes(currentUser.user_id)){
+                
+            }
+            else{
+                webSocketContext.send(JSON.stringify({
+                    action: "send_event_message",
+                    event_id: event._id,
+                    msg: {
+                        'id': currentUser.user_id + Date.now(),
+                        'user_id': currentUser.user_id,
+                        'user_name': currentUser.name,
+                        'user_pic': currentUser.profile_pic,
+                        'message_type': 'normal_text_message',
+                        'message': message,
+                        'date': d.toISOString()
+                    }
+                }));
+            }
+            
         }
         
         if (reference != null) {
@@ -291,7 +298,10 @@ export default function JustifyContent(props) {
                         
                     </Box>
                     <div className={classes.textField}>
-                            <ChatTextField loading={loading} open={open} handleSend={handleSendClick}  ></ChatTextField>
+                    {
+                        event.chat_blocked_users.includes(currentUser.user_id) ? <Typography>You cannot send messages in this channel</Typography> : <ChatTextField loading={loading} open={open} handleSend={handleSendClick}  ></ChatTextField>
+                    }
+                            
                         </div>
                     <MessageDeleteDialog
                         open={openDeleteDialog}

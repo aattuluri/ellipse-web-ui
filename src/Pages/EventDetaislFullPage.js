@@ -190,8 +190,8 @@ export default function PersistentDrawerLeft(props) {
         }).then(response => {
             response.json().then(val => {
                 setEvent(val.event);
-                // console.log(event)
-                if (event.isTeamed && val.registered) {
+                console.log(val.event.isTeamed)
+                if (val.event.isTeamed && val.event.registered) {
                     setTeamAccess(true);
                 }
                 if (val.event.registered || val.event.reg_mode !== "form") {
@@ -471,7 +471,7 @@ export default function PersistentDrawerLeft(props) {
                     <EventsTeamPanel subIndexValue={subIndexValue} value={4} index={4} open={drawerOpen} event={event}></EventsTeamPanel>
                 }
                 {
-                    !event.isTeamed && teamAccess && participationSelected && !adminAccess && <EventSubmissionPanel individual={true} event={event}></EventSubmissionPanel>
+                    !event.isTeamed  && participationSelected && !adminAccess && <EventSubmissionPanel individual={true} event={event}></EventSubmissionPanel>
                 }
                 {
                     adminAccess && certificateSelected && event != null && <CertificateDashboard event={event}></CertificateDashboard>

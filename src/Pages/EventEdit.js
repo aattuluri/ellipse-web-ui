@@ -27,6 +27,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Badge from '@material-ui/core/Badge';
 import EditIcon from '@material-ui/icons/Edit';
 import IconButton from '@material-ui/core/IconButton';
+import Paper from '@material-ui/core/Paper';
+import { Typography } from '@material-ui/core';
 
 
 
@@ -56,6 +58,15 @@ const useStyles = makeStyles((theme) => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
+  },
+  root: {
+    display: 'flex',
+    justifyContent: 'flex-start',
+    flexWrap: 'wrap',
+    listStyle: 'none',
+    padding: theme.spacing(0.5),
+    margin: 0,
+    backgroundColor: theme.palette.primary.light
   },
 }));
 
@@ -397,6 +408,10 @@ const EventEdit = (props) => {
       setImageUpdated(true);
       //   setImageType(fileType.substr(fileType.indexOf('/') + 1));
     }
+
+  }
+
+  const handleRoundEdit = () => {
 
   }
 
@@ -809,6 +824,39 @@ const EventEdit = (props) => {
                 value={platformDetails || ""}
               />
             </Grid>}
+            {regMode === "form" && <Grid item xs={12}>
+              <Typography>Registration Fields</Typography>
+              <Paper component="ul" className={classes.root}>
+                {event.reg_fields.map((data) => {
+                  return (
+                    <li key={data.key}>
+                      <Chip
+                        label={data.title}
+                        className={classes.chip}
+                      />
+                    </li>
+                  );
+                })}
+              </Paper>
+            </Grid>}
+
+            {regMode === "form" && <Grid item xs={12}>
+              <Typography>Rounds</Typography>
+              <Paper component="ul" className={classes.root}>
+                {event.rounds.map((data) => {
+                  return (
+                    <li key={data.key}>
+                      <Chip
+                        label={data.title}
+                        onDelete={handleRoundEdit(data)}
+                        className={classes.chip}
+                      />
+                    </li>
+                  );
+                })}
+              </Paper>
+            </Grid>}
+
           </Grid>
           <Button
             type="submit"
