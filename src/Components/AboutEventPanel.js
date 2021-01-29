@@ -291,6 +291,18 @@ function AboutEventPanel(props) {
                                 <Box className={classes.root0}>
                                     {event.event_mode === "Online" && <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="body2">{event.platform_details}</Typography>}
                                 </Box>
+                                <Box className={classes.root0}>
+                                    {event.rounds !== undefined && event.rounds.length > 0 && <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Rounds Details</Typography>}
+                                </Box>
+                                <Box className={classes.root0}>
+                                    {event.rounds !== undefined && event.rounds.length > 0 &&  <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">
+                                        {
+                                            event.rounds.map((val,index)=>{
+                                                return <Typography>{val.title+ " - "+val.description}</Typography>
+                                            })
+                                        }
+                                    </Typography>}
+                                </Box>
                                 {!notRegistered && <Box className={classes.root0}>
                                     <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Organised By</Typography>
                                 </Box>}

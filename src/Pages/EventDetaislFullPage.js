@@ -137,9 +137,9 @@ const useStyles = makeStyles((theme) => ({
         position: 'absolute',
         right: theme.spacing(1),
         top: theme.spacing(1),
-        [theme.breakpoints.down('sm')]: {
-            display: 'none'
-        },
+        // [theme.breakpoints.down('sm')]: {
+        //     display: 'none'
+        // },
         // color: theme.palette.grey[500],
     },
 }));
@@ -190,7 +190,7 @@ export default function PersistentDrawerLeft(props) {
         }).then(response => {
             response.json().then(val => {
                 setEvent(val.event);
-                console.log(val.event.isTeamed)
+                // console.log(val.event.isTeamed)
                 if (val.event.isTeamed && val.event.registered) {
                     setTeamAccess(true);
                 }

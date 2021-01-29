@@ -66,7 +66,7 @@ export default function FormDialog(props) {
     function handleAddButton() {
         props.handleAdd({ 
             title: `Round ${props.roundsCount + 1}`, 
-            desc: desc,
+            description: desc,
             start_date: startDate,
             end_date: endDate, 
             action: action, 

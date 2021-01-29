@@ -29,9 +29,8 @@ import Logo from '../Components/Images/logo.svg';
 // import TelegramIcon from '@material-ui/icons/Telegram'
 import ChatOutlinedIcon from '@material-ui/icons/ChatOutlined';
 import Tooltip from '@material-ui/core/Tooltip';
-// import DarkLogo from '../Components/Images/dark_theme_logo.png';
-// import LightLogo from '../Components/Images/light_theme_logo.png';
-// import CuboidLogo from '../Components/Images/Cuboid logo.png'
+
+import AuthContext from '../AuthContext';
 
 
 
@@ -59,6 +58,7 @@ const NavigationBar = function ({ history }) {
   const [open, setOpen] = React.useState(false);
   const [notificationsOpen, setNotificationsOpen] = React.useState(false);
   const { allEvents } = React.useContext(EventsContext);
+  const { currentUser } = React.useContext(AuthContext);
   useEffect(() => {
     if (localStorage.getItem('tabIndex') != null) {
       const tabIndex = parseInt(localStorage.getItem('tabIndex'));
@@ -87,9 +87,14 @@ const NavigationBar = function ({ history }) {
   // }
   function handleSearchChange(event, value) {
     if (value) {
+      if (value.registered || value.user_id === currentUser.user_id) {
+        history.push(`/event/${value._id}`)
+      } else {
+        setSearchedEvent(value);
+        setOpen(true);
+      }
       // console.log(value);
-      setSearchedEvent(value);
-      setOpen(true);
+
     }
   }
 

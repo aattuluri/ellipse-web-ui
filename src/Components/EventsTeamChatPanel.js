@@ -63,11 +63,6 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: "center",
 
     },
-    // stickyHeader: {
-    //     position: "sticky",
-    //     position: "-webkit-sticky",
-    //     top: 0,
-    // },
 
     topBar: {
         // display: 'fixed'
@@ -269,13 +264,13 @@ export default function JustifyContent(props) {
     }
 
     const handleDeleteConfirmation = (mes) => () => {
-        
-            webSocketContext.send(JSON.stringify({
-                action: "delete_team_chat_message",
-                team_id: registration.team_id,
-                msg: mes
-            }));
-            setChatMessages(chatMessages.filter(m => { return m !== mes }))
+
+        webSocketContext.send(JSON.stringify({
+            action: "delete_team_chat_message",
+            team_id: registration.team_id,
+            msg: mes
+        }));
+        setChatMessages(chatMessages.filter(m => { return m !== mes }))
         setOpenDeleteDialog(false);
     }
 
@@ -343,11 +338,10 @@ export default function JustifyContent(props) {
                         <div style={{ float: "left", clear: "both", paddingBottom: '70px', }}
                             ref={(el) => { setReferenece(el) }}>
                         </div>
-                        
                     </Box>
                     <div>
-                            <ChatTextField loading={loading} open={open} handleSend={handleSendClick}  ></ChatTextField>
-                        </div>
+                        <ChatTextField loading={loading} open={open} handleSend={handleSendClick}  ></ChatTextField>
+                    </div>
                     <MessageDeleteDialog
                         open={openDeleteDialog}
                         message={messageToBeDeleted}

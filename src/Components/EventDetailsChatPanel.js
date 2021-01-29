@@ -206,10 +206,10 @@ export default function JustifyContent(props) {
 
         const d = new Date();
         if (webSocketContext) {
-            if(event.chat_blocked_users.includes(currentUser.user_id)){
-                
+            if (event.chat_blocked_users.includes(currentUser.user_id)) {
+
             }
-            else{
+            else {
                 webSocketContext.send(JSON.stringify({
                     action: "send_event_message",
                     event_id: event._id,
@@ -224,9 +224,9 @@ export default function JustifyContent(props) {
                     }
                 }));
             }
-            
+
         }
-        
+
         if (reference != null) {
             reference.scrollIntoView({ behavior: "smooth" })
         }
@@ -295,14 +295,14 @@ export default function JustifyContent(props) {
                         <div style={{ float: "left", clear: "both", paddingBottom: '80px', }}
                             ref={(el) => { setReferenece(el) }}>
                         </div>
-                        
+
                     </Box>
                     <div className={classes.textField}>
-                    {
-                        event.chat_blocked_users.includes(currentUser.user_id) ? <Typography>You cannot send messages in this channel</Typography> : <ChatTextField loading={loading} open={open} handleSend={handleSendClick}  ></ChatTextField>
-                    }
-                            
-                        </div>
+                        {
+                            event.chat_blocked_users.includes(currentUser.user_id) ? <Typography>You cannot send messages in this channel</Typography> : <ChatTextField loading={loading} open={open} handleSend={handleSendClick}  ></ChatTextField>
+                        }
+
+                    </div>
                     <MessageDeleteDialog
                         open={openDeleteDialog}
                         message={messageToBeDeleted}

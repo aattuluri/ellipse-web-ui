@@ -16,6 +16,9 @@ import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import IconButton from '@material-ui/core/IconButton';
 import EventIcon from '@material-ui/icons/Event';
 import GroupIcon from '@material-ui/icons/Group';
+import Typography from '@material-ui/core/Typography';
+
+import AuthContext from '../AuthContext';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -52,10 +55,11 @@ function ChatPage(props) {
     // const [open, setOpen] = React.useState(false);
     const [checked, setChecked] = React.useState([0]);
     const [chatValue,setChatValue] = React.useState(0);
+    const {currentUser} = React.useContext(AuthContext);
 
 
     const regEvents = allEvents.filter((val) => {
-        return val.registered === true;
+        return val.registered === true || val.user_id === currentUser.user_id;
     });
 
     React.useEffect(() => {
@@ -195,6 +199,9 @@ function ChatPage(props) {
                                 </React.Fragment>
                             );
                         })}
+                        {
+                            chatValue === 0 && regEvents.length === 0 && <Typography>No Events Found, Register or host event to join one</Typography>
+                        }
                         {chatValue === 1 &&teams.map((value) => {
                             const labelId = `checkbox-list-label-${value._id}`;
                             return (
@@ -216,6 +223,9 @@ function ChatPage(props) {
                                 </React.Fragment>
                             );
                         })}
+                        {
+                            chatValue === 1 && teams.length === 0 && <Typography>No Teams found</Typography>
+                        }
                     </List>
                 </Paper>
             </div>

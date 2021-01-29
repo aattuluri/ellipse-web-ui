@@ -15,6 +15,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Backdrop from '@material-ui/core/Backdrop';
+import SuccessPanel from '../Components/SuccessPanel';
 
 //Components imports
 import EventPostDetails1 from '../Components/EventPostDetails1';
@@ -90,6 +91,9 @@ const useStyles = makeStyles((theme) => ({
     zIndex: theme.zIndex.drawer + 1,
     color: '#fff',
   },
+  hidden: {
+    display: 'none'
+  }
 }));
 
 
@@ -139,10 +143,11 @@ export default function Checkout({ history }) {
   const [fields, setFields] = React.useState([]);
   const [platformDetails, setPlatformDetails] = React.useState('');
   const [imageName, setImageName] = React.useState(null);
-  const [isTeam,setIsTeam] = React.useState(false);
-  const [minTeamSize,setMinTeamSize] = React.useState(1);
-  const [maxTeamSize,setMaxTeamSize] = React.useState(1);
-  const [rounds,setRounds] = React.useState([]);
+  const [isTeam, setIsTeam] = React.useState(false);
+  const [minTeamSize, setMinTeamSize] = React.useState(1);
+  const [maxTeamSize, setMaxTeamSize] = React.useState(1);
+  const [rounds, setRounds] = React.useState([]);
+  const [showSuccessPanel, setShowSuccessPanel] = React.useState(false);
 
 
 
@@ -198,7 +203,7 @@ export default function Checkout({ history }) {
             participantsType={participantsType}
             platformDetails={platformDetails}
             poster={image}
-            isTeam = {isTeam}
+            isTeam={isTeam}
             minTeamSize={minTeamSize}
             maxTeamSize={maxTeamSize}
             setIsTeam={setIsTeam}
@@ -227,7 +232,7 @@ export default function Checkout({ history }) {
           <EventPostDetails3
             handleBack={handleBack}
             fields={fields}
-            setFields={setRegFields} 
+            setFields={setRegFields}
             rounds={rounds}
             setRounds={setRounds}
             handlePost={handleEventPost}>
@@ -270,7 +275,7 @@ export default function Checkout({ history }) {
         o_allowed: oAllowed,
         platform_details: platformDetails,
         isTeamed: isTeam,
-        team_size: {min_team_size:minTeamSize,max_team_size:maxTeamSize},
+        team_size: { min_team_size: minTeamSize, max_team_size: maxTeamSize },
         rounds: rounds
       };
       data = JSON.stringify(payload);
@@ -297,6 +302,7 @@ export default function Checkout({ history }) {
               if (response.status === 200) {
                 response.json().then(val => {
                   setLoading(false);
+                  setShowSuccessPanel(true)
                   setState({
                     open: true,
                     vertical: 'top',
@@ -309,6 +315,7 @@ export default function Checkout({ history }) {
               }
               else {
                 setLoading(false);
+                setShowSuccessPanel(true);
                 setState({
                   open: true,
                   vertical: 'top',
@@ -386,33 +393,38 @@ export default function Checkout({ history }) {
       </Snackbar>
       {<Backdrop open={loading} className={classes.backdrop}><CircularProgress></CircularProgress></Backdrop>}
       <main className={classes.layout}>
+
         <IconButton aria-label="close" className={classes.closeButton} onClick={handleCloseButton}>
           <CloseIcon fontSize="large" />
         </IconButton>
         <Paper className={classes.paper}>
-          <Typography component="h1" variant="h4" align="center">
-            Post your Event
+          <SuccessPanel  type="eventSuccess" showSuccessPanel={showSuccessPanel}></SuccessPanel>
+          <div className={showSuccessPanel && classes.hidden}>
+            <Typography component="h1" variant="h4" align="center">
+              Post your Event
           </Typography>
-          <Stepper activeStep={activeStep} className={classes.stepper}>
-            {steps.map((label) => (
-              <Step key={label}>
-                <StepLabel>{label}</StepLabel>
-              </Step>
-            ))}
-          </Stepper>
-          <React.Fragment>
-            {activeStep === steps.length ? (
-              <React.Fragment>
-                <Typography variant="h5" gutterBottom>
-                  Thank you.
-                </Typography>
-              </React.Fragment>
-            ) : (
+            <Stepper activeStep={activeStep} className={classes.stepper}>
+              {steps.map((label) => (
+                <Step key={label}>
+                  <StepLabel>{label}</StepLabel>
+                </Step>
+              ))}
+            </Stepper>
+
+            <React.Fragment>
+              {activeStep === steps.length ? (
                 <React.Fragment>
-                  {getStepContent(activeStep)}
+                  <Typography variant="h5" gutterBottom>
+                    Thank you.
+                </Typography>
                 </React.Fragment>
-              )}
-          </React.Fragment>
+              ) : (
+                  <React.Fragment>
+                    {getStepContent(activeStep)}
+                  </React.Fragment>
+                )}
+            </React.Fragment>
+          </div>
         </Paper>
         <Copyright />
       </main>

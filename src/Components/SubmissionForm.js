@@ -84,6 +84,7 @@ function AboutEventPanel(props) {
     const currentRound = props.round;
     const currentDate = new Date();
     const roundStartDate = new Date(currentRound.start_date);
+    const roundEndDate = new Date(currentRound.end_date);
     const [submission, setSubmission] = React.useState({});
     // const roundEndDate = new Date(currentRound.end_date);
 
@@ -96,11 +97,19 @@ function AboutEventPanel(props) {
             setAccess(false);
             setUserMessage("Round Not yet started");
         }
+        else if (roundEndDate >= currentDate) {
+            setAccess(false);
+            setUserMessage("Round Ended");
+        }
         // eslint-disable-next-line
     }, [event, currentUser])
 
     React.useEffect(() => {
         if (!props.individual && props.team) {
+            if (props.team.members.length < event.team_size.min_team_size) {
+                setAccess(false);
+                setUserMessage("Form team with minimum of two members to make submission");
+            }
             if (props.team.submissions[props.index].is_submitted) {
                 setAccess(false);
                 setUserMessage("submission Already made");

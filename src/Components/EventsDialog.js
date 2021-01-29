@@ -21,8 +21,8 @@ import AboutEventPanel from '../Components/AboutEventPanel';
 import EventsTimeLinePanel from '../Components/EventTimeLinePanel';
 import EvenstAnnouncementsPanel from '../Components/EventsAnnouncementsPanel';
 import ChatPanel from '../Components/EventsChatPanel';
-import EventsTeamPanel from '../Components/EventsTeamPanel';
-import EventSubmissionPanel from '../Components/EventSubmissionPanel';
+// import EventsTeamPanel from '../Components/EventsTeamPanel';
+// import EventSubmissionPanel from '../Components/EventSubmissionPanel';
 import { Divider, Typography } from '@material-ui/core';
 import AuthContext from '../AuthContext';
 // import VerticalTabBar from './VerticalTabBar';
@@ -112,17 +112,17 @@ function EventsDialog(props) {
     // const token = localStorage.getItem('token');
     const [shareDialogOpen, setShareDialogOpen] = React.useState(false);
     const [chatAcess, setChatAcess] = React.useState(false);
-    const [teamAccess, setTeamAccess] = React.useState(false);
-    const [adminAccess, setAdminAccess] = React.useState(false);
+    // const [teamAccess, setTeamAccess] = React.useState(false);
+    // const [adminAccess, setAdminAccess] = React.useState(false);
     const [subIndexValue, setSubIndexValue] = React.useState(0);
     React.useEffect(() => {
         // console.log(event.registered);
         if (event.registered || event.reg_mode !== "form") {
             setChatAcess(true);
-            setTeamAccess(true);
+            // setTeamAccess(true);
         } else if (event.user_id === currentUser.user_id) {
             setChatAcess(true);
-            setAdminAccess(true);
+            // setAdminAccess(true);
         }
         else {
             setChatAcess(false)
@@ -223,8 +223,8 @@ function EventsDialog(props) {
                             <Tab label="Schedule" {...a11yProps(1)} />
                             <Tab label="Announcements" {...a11yProps(2)} />
                             <Tab label="Chat" {...a11yProps(3)} />
-                            {!event.isTeamed && <Tab label="Submission" {...a11yProps(4)}></Tab>}
-                            {event.isTeamed && <Tab label="Participation" {...a11yProps(4)}></Tab>}
+                            {/* {!event.isTeamed && <Tab label="Submission" {...a11yProps(4)}></Tab>} */}
+                            {/* {event.isTeamed && <Tab label="Participation" {...a11yProps(4)}></Tab>} */}
                             {/* <Tab label="Submission"></Tab> */}
                         </Tabs>
                     </Paper>
@@ -262,9 +262,9 @@ function EventsDialog(props) {
                 <EvenstAnnouncementsPanel value={value} index={2} event={props.event}></EvenstAnnouncementsPanel>
                 {value === 3 && chatAcess && <ChatPanel value={value} index={3} event={props.event}></ChatPanel>}
                 {value === 3 && !chatAcess && <Typography align="center" variant="h5" >Register for the event to continue</Typography>}
-                {teamAccess && event.isTeamed && !adminAccess && <EventsTeamPanel subIndexValue={subIndexValue} value={value} index={4} event={props.event}></EventsTeamPanel>}
-                {chatAcess && value === 4 && !event.isTeamed && !adminAccess && <EventSubmissionPanel individual={true} event={props.event}></EventSubmissionPanel>}
-                {value === 4 && !teamAccess && <Typography align="center" variant="h5" >Register for the event to continue</Typography>}
+                {/* {teamAccess && event.isTeamed && !adminAccess && <EventsTeamPanel subIndexValue={subIndexValue} value={value} index={4} event={props.event}></EventsTeamPanel>}
+                {chatAcess && value === 4 && !event.isTeamed && !adminAccess && <EventSubmissionPanel individual={true} event={props.event}></EventSubmissionPanel>} */}
+                {/* {value === 4 && !teamAccess && <Typography align="center" variant="h5" >Register for the event to continue</Typography>} */}
             </DialogContent>
             <DialogActions className={classes.action}>
                 <Box className={classes.bottomBar} display="flex"

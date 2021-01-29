@@ -1,5 +1,5 @@
 import React from 'react';
-import Copyright from '../Components/copyright';
+// import Copyright from '../Components/copyright';
 import useStyles from '../Themes/SignupPageStyles';
 import { withRouter } from 'react-router';
 // import axios from 'axios';
@@ -13,7 +13,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 // import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
+// import Box from '@material-ui/core/Box';
 // import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
@@ -38,6 +38,7 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import TermsandConditions from '../Components/EventRegisterTermsandConditions';
 import EventsContext from '../EventsContext';
 import ActiveEventsContext from '../ActiveEventsContext';
+import SuccessPanel from '../Components/SuccessPanel';
 
 
 //function for alert
@@ -45,7 +46,7 @@ function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-const Signup = (props) => {
+const EventRegistrationForm = (props) => {
   const classes = useStyles();
   const token = localStorage.getItem('token');
   const [state, setState] = React.useState({
@@ -84,6 +85,8 @@ const Signup = (props) => {
   const { currentUser } = React.useContext(AuthContext);
   const { setAllEvents } = React.useContext(EventsContext);
   const { setActiveEvents } = React.useContext(ActiveEventsContext);
+
+  const [showSuccessPanel, setShowSuccessPanel] = React.useState(false);
 
   function handleTermsClick() {
     setTandcOpen(true);
@@ -180,7 +183,7 @@ const Signup = (props) => {
 
   function handleClose() {
     if (message === "Registration successful.Stay tunned with notifications and announcements") {
-      props.history.push('/home')
+      // props.history.push('/home')
       fetch(process.env.REACT_APP_API_URL + '/api/events', {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -332,6 +335,7 @@ const Signup = (props) => {
                           // console.log(value);
 
                           setLoading(false);
+                          setShowSuccessPanel(true);
                           setState({
                             open: true,
                             vertical: 'top',
@@ -367,8 +371,8 @@ const Signup = (props) => {
             if (response.status === 200) {
               response.json().then(value => {
                 // console.log(value);
-
                 setLoading(false);
+                setShowSuccessPanel(true);
                 setState({
                   open: true,
                   vertical: 'top',
@@ -407,7 +411,7 @@ const Signup = (props) => {
   }
 
   function handleFileSelect(event) {
-    console.log(event.target.name)
+    // console.log(event.target.name)
     if (event.target.files[0]) {
       setUploadFiles({ ...uploadFiles, [event.target.name]: event.target.files[0] });
       // setImage(event.target.files[0]);
@@ -418,6 +422,14 @@ const Signup = (props) => {
       // setImageType(fileType.substr(fileType.indexOf('/') + 1));
     }
 
+  }
+
+  const handleEventScreenButton = () => {
+    props.history.push(`/event/${event._id}`)
+  }
+
+  const handleHomeScreenButton = () => {
+    props.history.push('/home')
   }
 
 
@@ -441,14 +453,19 @@ const Signup = (props) => {
       <IconButton aria-label="close" className={classes.closeButton} onClick={handleBack}>
         <CloseIcon fontSize="large" />
       </IconButton>
+      <div className={showSuccessPanel ? classes.paper : classes.hidden}>
+      <SuccessPanel type="registrationSuccess" showSuccessPanel={showSuccessPanel} handleHomeScreenButton={handleHomeScreenButton} handleEventScreenButton={handleEventScreenButton}></SuccessPanel>
+      </div>
+      
       {event != null &&
-        <div className={classes.paper}>
+        <div  className={showSuccessPanel ? classes.hidden : classes.paper}>
           <Typography component="h1" variant="h5">
             {"Registration for " + event.name}
           </Typography>
-          <form className={classes.form} onSubmit={handleEventRegistration}>
-
-            <Grid container spacing={2}>
+          
+          <form className={classes.form} onSubmit={handleEventRegistration} >
+          
+            <Grid container spacing={2} >
               {normalFields.map((field, index) => {
                 if (field.title === "College") {
                   return (
@@ -479,7 +496,6 @@ const Signup = (props) => {
                         onChange={handleChange}
                         value={formValues[field.title]}
                         label={field.title}
-                        autoFocus
                       />
                     </Grid>)
                 }
@@ -496,7 +512,6 @@ const Signup = (props) => {
                         onChange={handleChange}
                         value={formValues[field.title]}
                         label={field.title}
-                        autoFocus
                       />
                     </Grid>)
                 }
@@ -635,7 +650,6 @@ const Signup = (props) => {
                         onChange={handleChange}
                         value={formValues[field.title]}
                         label={field.title}
-                        autoFocus
                       />
                     </Grid>)
                 })
@@ -671,12 +685,12 @@ const Signup = (props) => {
       }
 
       {/* </Grid> */}
-      <Box mt={2}>
+      {/* <Box mt={2}>
         <Copyright />
-      </Box>
+      </Box> */}
       <TermsandConditions open={tandcOpen} setOpen={setTandcOpen}></TermsandConditions>
     </Container>
   );
 }
 
-export default withRouter(Signup);
+export default withRouter(EventRegistrationForm);

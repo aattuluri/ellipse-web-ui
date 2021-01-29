@@ -197,7 +197,7 @@ function EventsTabPanel({ history }) {
     };
     const handleClick = function (event) {
         // console.log(id);
-        if (event.registered) {
+        if (event.registered || event.user_id === currentUser.user_id) {
             history.push(`/event/${event._id}`)
         } else {
             setSelectedEvent(event);
@@ -432,8 +432,13 @@ function EventsTabPanel({ history }) {
     }
 
     const handleRegisterdEventClick = (event) => () => {
-        setSelectedEvent(event);
-        setOpen(true);
+        if (event.registered || event.user_id === currentUser.user_id) {
+            history.push(`/event/${event._id}`)
+        } else {
+            setSelectedEvent(event);
+            // setSelectedImage(image);
+            setOpen(true);
+        }
 
     }
 
