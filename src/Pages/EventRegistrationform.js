@@ -346,6 +346,22 @@ const EventRegistrationForm = (props) => {
                           });
                         })
                       }
+                      else if (response.status === 201) {
+                        response.json().then(value => {
+                          // console.log(value);
+
+                          setLoading(false);
+                          setShowSuccessPanel(true);
+                          setState({
+                            open: true,
+                            vertical: 'top',
+                            horizontal: 'center',
+                            message: 'Already Registered',
+                            type: "error",
+                            autoHide: 4000
+                          });
+                        })
+                      }
 
                     })
                   }
@@ -379,6 +395,22 @@ const EventRegistrationForm = (props) => {
                   horizontal: 'center',
                   message: 'Registration successful.Stay tunned with notifications and announcements',
                   type: "success",
+                  autoHide: 4000
+                });
+              })
+            }
+            else if (response.status === 201) {
+              response.json().then(value => {
+                // console.log(value);
+
+                setLoading(false);
+                setShowSuccessPanel(true);
+                setState({
+                  open: true,
+                  vertical: 'top',
+                  horizontal: 'center',
+                  message: 'Already Registered',
+                  type: "error",
                   autoHide: 4000
                 });
               })
@@ -454,17 +486,17 @@ const EventRegistrationForm = (props) => {
         <CloseIcon fontSize="large" />
       </IconButton>
       <div className={showSuccessPanel ? classes.paper : classes.hidden}>
-      <SuccessPanel type="registrationSuccess" showSuccessPanel={showSuccessPanel} handleHomeScreenButton={handleHomeScreenButton} handleEventScreenButton={handleEventScreenButton}></SuccessPanel>
+        <SuccessPanel type="registrationSuccess" showSuccessPanel={showSuccessPanel} handleHomeScreenButton={handleHomeScreenButton} handleEventScreenButton={handleEventScreenButton}></SuccessPanel>
       </div>
-      
+
       {event != null &&
-        <div  className={showSuccessPanel ? classes.hidden : classes.paper}>
+        <div className={showSuccessPanel ? classes.hidden : classes.paper}>
           <Typography component="h1" variant="h5">
             {"Registration for " + event.name}
           </Typography>
-          
+
           <form className={classes.form} onSubmit={handleEventRegistration} >
-          
+
             <Grid container spacing={2} >
               {normalFields.map((field, index) => {
                 if (field.title === "College") {
@@ -657,7 +689,7 @@ const EventRegistrationForm = (props) => {
               {
                 fileUploadFields.map((field, index) => {
                   return <Grid item xs={12}>
-                  <Typography>{field.title}</Typography>
+                    <Typography>{field.title}</Typography>
                     <input id="contained-button-file" name={field.title} required type="file" onChange={handleFileSelect} ></input>
                   </Grid>
                 })

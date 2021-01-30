@@ -156,17 +156,30 @@ function EventAdminSubmissionPanel(props) {
         setViewSubmissionDialog(true);
     }
 
-    const handleAccessButton = (is_teamed, user_id, title) => () => {
+    const handleAccessButton = (is_teamed, user_id, title,team_id) => () => {
         setLoading(true);
         var data = new FormData()
-        const payload = {
-            is_teamed: is_teamed,
-            event_id: event._id,
-            user_id: user_id,
-            round_title: title
+        var payload ;
+        if(is_teamed){
+            payload = {
+                is_teamed: is_teamed,
+                event_id: event._id,
+                user_id: user_id,
+                round_title: title,
+                team_id: team_id
+            }
         }
+        else{
+            payload = {
+                is_teamed: is_teamed,
+                event_id: event._id,
+                user_id: user_id,
+                round_title: title
+            }
+        }
+        
         data = JSON.stringify(payload);
-        console.log(data);
+        // console.log(data);
         fetch(process.env.REACT_APP_API_URL + `/api/event/give_access_round`, {
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -225,7 +238,7 @@ function EventAdminSubmissionPanel(props) {
                                                             <Button onClick={handleRoundClickButton(value, v)} variant="outlined" className={classes.roundButton}>
                                                                 {value.title}
                                                             </Button>
-                                                            {!value.submission_access && <Button onClick={handleAccessButton(true, v.user_id, value.title)}>Give Access</Button>}
+                                                            {!value.submission_access && <Button onClick={handleAccessButton(true, v.user_id, value.title,v._id)}>Give Access</Button>}
                                                             <br></br>
                                                         </React.Fragment>
                                                     })}

@@ -208,8 +208,6 @@ function AboutEventPanel(props) {
         }
     }
 
-    // console.log(teamDetails);
-
     return (
         <div
             role="tabpanel"

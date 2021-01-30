@@ -140,7 +140,19 @@ export default function AddressForm(props) {
     };
 
     const handleRoundDelete = (chipToDelete) => () => {
-        props.setRounds(rounds => rounds.filter((chip) => chip.title !== chipToDelete.title))
+        const rr = props.rounds;
+        var uR = rr.filter((chip) => chip.title !== chipToDelete.title);
+        var fR = [];
+        uR.forEach((rou,index) => {
+            fR.push({title: `Round ${index + 1}`, 
+            description: rou.description,
+            start_date: rou.start_date,
+            end_date: rou.end_date,
+            link: rou.link, 
+            fields: rou.fields})
+        });
+        props.setRounds(fR);
+        // props.setRounds(rounds => rounds.filter((chip) => chip.title !== chipToDelete.title))
     }
 
     async function handlePostButton(e) {

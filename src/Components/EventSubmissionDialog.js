@@ -201,11 +201,11 @@ export default function ScrollDialog(props) {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} color="primary">
-                        Cancel
+                        Dismiss
                     </Button>
-                    <Button onClick={handleClose} color="primary">
+                    {/* <Button onClick={handleClose} color="primary">
                         Subscribe
-                    </Button>
+                    </Button> */}
                 </DialogActions>
             </Dialog>
         </div>

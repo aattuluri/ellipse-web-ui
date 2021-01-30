@@ -97,7 +97,7 @@ function AboutEventPanel(props) {
             setAccess(false);
             setUserMessage("Round Not yet started");
         }
-        else if (roundEndDate >= currentDate) {
+        else if (roundEndDate <= currentDate) {
             setAccess(false);
             setUserMessage("Round Ended");
         }

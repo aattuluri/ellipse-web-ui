@@ -16,15 +16,24 @@ import Paper from '@material-ui/core/Paper';
 import Chip from '@material-ui/core/Chip';
 import { Grid, Typography } from '@material-ui/core';
 import { useTheme } from '@material-ui/core/styles';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
+// import Radio from '@material-ui/core/Radio';
+// import RadioGroup from '@material-ui/core/RadioGroup';
 import FormLabel from '@material-ui/core/FormLabel';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 // import { NextWeekOutlined } from '@material-ui/icons';
+import Checkbox from '@material-ui/core/Checkbox';
+import FormGroup from '@material-ui/core/FormGroup';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 
 import AddFieldDialog from '../Components/AddFieldDialog';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, DateTimePicker, } from '@material-ui/pickers';
+
+//function for alert
+function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+  }
 
 
 const useStyles = makeStyles((theme) => ({
@@ -46,39 +55,58 @@ const useStyles = makeStyles((theme) => ({
 export default function FormDialog(props) {
     const classes = useStyles();
     const theme = useTheme();
-    const [desc, setDesc] = React.useState('');
+    const [desc, setDesc] = React.useState(null);
     const [startDate, setStartDate] = React.useState(null);
     const [endDate, setEndDate] = React.useState(null);
-    const [action, setAction] = React.useState('form');
-    const [link, setLink] = React.useState('');
+    const [linkField, setLinkField] = React.useState('');
     const [open, setOpen] = React.useState(false);
     const [selectedFields, setSelectedFields] = React.useState([]);
+    const [state, setState] = React.useState({
+        alertopen: false,
+        vertical: 'top',
+        horizontal: 'center',
+        message: 'success',
+        type: 'error',
+        autoHide: 300
+      });
+      const { vertical, horizontal, alertopen, message, type, autoHide } = state;
+
+    const [checked, setChecked] = React.useState({
+        form: true,
+        link: false,
+      });
 
     const handleClose = () => {
         setOpen(false);
     };
 
-
-    function handleActionChange(event, value) {
-        setAction(value);
-    }
-
     function handleAddButton() {
-        props.handleAdd({ 
-            title: `Round ${props.roundsCount + 1}`, 
-            description: desc,
-            start_date: startDate,
-            end_date: endDate, 
-            action: action, 
-            link: link, 
-            fields: selectedFields })
-        props.handleClose()
-        setDesc('');
-        setStartDate(null);
-        setEndDate(null);
-        setAction('form');
-        setLink('');
-        setSelectedFields([]);
+        if(desc !== null && startDate !== null && endDate !== null){
+            props.handleAdd({ 
+                title: `Round ${props.roundsCount + 1}`, 
+                description: desc,
+                start_date: startDate,
+                end_date: endDate,
+                link: linkField, 
+                fields: selectedFields })
+            props.handleClose()
+            setDesc('');
+            setStartDate(null);
+            setEndDate(null);
+            setLinkField('');
+            setSelectedFields([]);
+        }
+        else{
+            setState({
+                alertopen: true,
+                vertical: 'top',
+                horizontal: 'center',
+                message: "please fill in all fields",
+                type: "error",
+                autoHide: '5000',
+              })
+        }
+        
 
     }
 
@@ -90,8 +118,27 @@ export default function FormDialog(props) {
         setSelectedFields(selectedFields => selectedFields.filter((chip) => chip.title !== chipToDelete.title));
     };
 
+    const handleChange = (event) => {
+        setChecked({ ...checked, [event.target.name]: event.target.checked });
+      };
+
+    const {form,link} = checked;
+
+    const handleAlertClose = () => {
+        setState({ ...state, alertopen: false });
+    }
+
     return (
         <div>
+        <Snackbar
+        anchorOrigin={{ vertical, horizontal }}
+        open={alertopen}
+        autoHideDuration={autoHide}
+        onClose={handleAlertClose}
+        key={vertical + horizontal}
+      >
+        <Alert onClose={handleClose} severity={type}>{message}</Alert>
+      </Snackbar>
             <Dialog open={props.open} fullWidth={true} PaperProps={{
                 style: {
                     backgroundColor: theme.palette.secondary.main,
@@ -101,7 +148,7 @@ export default function FormDialog(props) {
                 <DialogTitle id="form-dialog-title">Add Rounds</DialogTitle>
                 <DialogContent>
                     <Grid container spacing={2} >
-                        {/* <Grid item xs={12}>
+                        <Grid item xs={12}>
                             <TextField
                                 autoFocus
                                 margin="dense"
@@ -110,11 +157,11 @@ export default function FormDialog(props) {
                                 name="name"
                                 fullWidth
                                 disabled
-                                value={name}
-                                required
-                                onChange={(e) => { setName(e.target.value) }}
+                                value={`Round ${props.roundsCount + 1}`}
+                                // required
+                                // onChange={(e) => { setName(e.target.value) }}
                             />
-                        </Grid> */}
+                        </Grid>
                         <Grid item xs={12}>
                             <TextField
                                 autoFocus
@@ -171,13 +218,23 @@ export default function FormDialog(props) {
                         </Grid>
                         <Grid item xs={12}>
                             <FormLabel component="legend">Action</FormLabel>
-                            <RadioGroup aria-label="address" name="address" value={action} onChange={handleActionChange} style={{ display: "inline" }}>
+                            <FormGroup>
+          <FormControlLabel
+            control={<Checkbox checked={form} color="default" onChange={handleChange} name="form" />}
+            label="Create Form"
+          />
+          <FormControlLabel
+            control={<Checkbox checked={link} color="default" onChange={handleChange} name="link" />}
+            label="Link"
+          />
+        </FormGroup>
+                            {/* <RadioGroup aria-label="address" name="address" value={action} onChange={handleActionChange} style={{ display: "inline" }}>
                                 <FormControlLabel value="form" control={<Radio color="default" />} label="Create Form" />
-                                {/* <FormControlLabel value="hackathon_template" control={<Radio color="default" />} label="Use Hackathon Template" /> */}
+                                <FormControlLabel value="hackathon_template" control={<Radio color="default" />} label="Use Hackathon Template" />
                                 <FormControlLabel value="link" control={<Radio color="default" />} label="Provide Link" />
-                            </RadioGroup>
+                            </RadioGroup> */}
                         </Grid>
-                        {action === "link" && <Grid item xs={12}>
+                        {link && <Grid item xs={12}>
                             <TextField
                                 autoFocus
                                 margin="dense"
@@ -185,12 +242,12 @@ export default function FormDialog(props) {
                                 label="Platform Link"
                                 name="platform_link"
                                 fullWidth
-                                value={link}
+                                value={linkField}
                                 required
-                                onChange={(e) => { setLink(e.target.value) }}
+                                onChange={(e) => { setLinkField(e.target.value) }}
                             />
                         </Grid>}
-                        {action === 'form' && <Grid item xs={12}>
+                        {form && <Grid item xs={12}>
                             <Typography>Fields</Typography>
                             <Paper component="ul" className={classes.root}>
                                 {selectedFields.map((data) => {
@@ -206,7 +263,7 @@ export default function FormDialog(props) {
                                 })}
                             </Paper>
                         </Grid>}
-                        {action === "form" && <Grid item xs={12}>
+                        {form && <Grid item xs={12}>
                             <Button
                                 variant="outlined"
                                 color="default"
