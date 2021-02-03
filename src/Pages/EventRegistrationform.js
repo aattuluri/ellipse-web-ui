@@ -293,12 +293,12 @@ const EventRegistrationForm = (props) => {
     var finalValues = formValues;
     if (count === 0) {
       try {
-        console.log('a');
+        // console.log('a');
         if (fileFormKeys.length > 0) {
-          console.log('b');
+          // console.log('b');
           fileFormKeys.forEach((key, index) => {
-            console.log(index);
-            console.log(fileFormKeys.length)
+            // console.log(index);
+            // console.log(fileFormKeys.length)
             var data1 = new FormData();
             data1.append('uploaded_file', uploadFiles[key]);
             fetch(process.env.REACT_APP_API_URL + `/api/event/register/upload_file?id=${id}`, {
@@ -310,7 +310,7 @@ const EventRegistrationForm = (props) => {
             }).then((response) => {
               if (response.status === 200) {
                 response.json().then(value => {
-                  console.log(value);
+                  // console.log(value);
                   setFormValues({ ...formValues, [key]: value.file_name })
                   finalValues[key] = value.file_name
                   uploadedFilesIds.push({ [key]: value.file_name });

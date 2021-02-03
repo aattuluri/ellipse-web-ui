@@ -30,6 +30,8 @@ import FormControl from '@material-ui/core/FormControl';
 import FormGroup from '@material-ui/core/FormGroup';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
+import IconButton from '@material-ui/core/IconButton';
+import GetAppIcon from '@material-ui/icons/GetApp'
 // import { set } from 'date-fns';
 // import AuthContext from '../AuthContext';
 // import TermsandConditions from '../Components/EventRegisterTermsandConditions';
@@ -75,7 +77,7 @@ function AboutEventPanel(props) {
     const [backDropOpen, setBackDropOpen] = React.useState(true);
     // const [event, setEvent] = React.useState({});
     const event = props.event;
-    const [checkedValues, setCheckedValues] = React.useState([]);
+    // const [checkedValues, setCheckedValues] = React.useState([]);
     const colleges = ["VIT University,Vellore", "GITAM University", "SRM University"];
     // const [tandcOpen, setTandcOpen] = React.useState(false);
 
@@ -142,9 +144,11 @@ function AboutEventPanel(props) {
                     response.json().then(value => {
                         const keys = Object.keys(value.submission);
                         setSubmission(value);
+                        console.log(value.submission)
                         keys.forEach((sub, index) => {
                             setFormValues(formValues => ({ ...formValues, [sub]: value.submission[sub] }))
                         })
+
                     })
                 }
 
@@ -208,15 +212,41 @@ function AboutEventPanel(props) {
 
     }
     const handleChange3 = (name) => (event) => {
+        // console.log(event.target.checked);
         if (event.target.checked) {
-            setCheckedValues(checkedValues => [...checkedValues, { [name]: event.target.name }]);
-            const array = [];
-            checkedValues.forEach((v, i) => {
-                if (v[name]) {
-                    array.push(v[name])
-                }
-            });
+            // setCheckedValues(checkedValues => [...checkedValues, { [name]: event.target.name }]);
+            const array = formValues[name];
             array.push(event.target.name);
+
+            // checkedValues.forEach((v, i) => {
+            //     if (v[name]) {
+            //         array.push(v[name])
+            //     }
+            // });
+            // array.push(event.target.name);
+            // console.log(array)
+            setFormValues({ ...formValues, [name]: array });
+        }
+        else{
+            // console.log(checkedValues.filter(value=> {return value[name] !== event.target.name} ));
+            // setCheckedValues(checkedValues.filter(value=> {return value[name] !== event.target.name}));
+            // const newChecked = checkedValues.filter(value=> {return value[name] !== event.target.name});
+            // // setCheckedValues(checkedValues.filter(value=> {return value[name] != event.target.name} ))
+            // console.log(checkedValues)
+            // setCheckedValues(checkedValues => [...checkedValues, { [name]: event.target.name }]);
+            // console.log(event.target.name);
+            const array = formValues[name];
+            var index = array.indexOf(event.target.name);
+            array.splice(index,1);
+            // array.pop(event.target.name);
+            // console.log(array)
+            // console.log(newChecked);
+            // newChecked.forEach((v, i) => {
+            //     if (v[name]) {
+            //         array.push(v[name])
+            //     }
+            // });
+            // array.push(event.target.name);
             setFormValues({ ...formValues, [name]: array });
         }
     }
@@ -569,9 +599,10 @@ function AboutEventPanel(props) {
             <Backdrop className={classes.backdrop} open={backDropOpen}>
                 <CircularProgress color="inherit" />
             </Backdrop>
-            <form className={classes.form} onSubmit={handleEventRegistration}>
+            {/* <TextField fullWidth></TextField> */}
+            <form style={{ margin: "20px" }} onSubmit={handleEventRegistration}>
 
-                <Grid container spacing={2}>
+                <Grid container component="main" spacing={2}>
                     {normalFields.map((field, index) => {
                         if (field.title === "College") {
                             return (
@@ -613,6 +644,7 @@ function AboutEventPanel(props) {
                                         autoComplete='off'
                                         name={field.title}
                                         // variant="outlined"
+                                        margin="dense"
                                         required
                                         fullWidth
                                         id={field.title}
@@ -633,7 +665,7 @@ function AboutEventPanel(props) {
                                     <FormGroup class={classes.formgroup}>
                                         {field.options.map((option) => {
                                             return <FormControlLabel
-                                                control={<Checkbox color="primary" onChange={handleChange3(field.title)} name={option} />}
+                                                control={<Checkbox color="primary" checked={formValues[field.title] !== null && formValues[field.title].includes(option)} onChange={handleChange3(field.title)} name={option} />}
                                                 label={option}
                                             />
                                         })}
@@ -650,6 +682,7 @@ function AboutEventPanel(props) {
                                     options={field.options.map((option) => option)}
                                     // freeSolo
                                     // onChange={handleeventTagsChange}
+                                    value={formValues[field.title]}
                                     onChange={handleChange2(field.title)}
                                     renderTags={(value, getTagProps) =>
                                         value.map((option, index) => (
@@ -694,7 +727,7 @@ function AboutEventPanel(props) {
                                             label={field.title}
                                             name={field.title}
                                             // defaultValue={Date.now()}
-                                            value={formValues[field.title] || ""}
+                                            value={formValues[field.title] || Date.now()}
                                             onChange={handleDateChange(field.title)}
                                             KeyboardButtonProps={{
                                                 'aria-label': 'change date',
@@ -750,16 +783,25 @@ function AboutEventPanel(props) {
                     }
                     {
                         fileUploadFields.map((field, index) => {
-                            return <Grid item xs={12}>
-                                <Typography>{field.title}</Typography>
-                                <input id="contained-button-file" name={field.title} required type="file" onChange={handleFileSelect} ></input>
-                            </Grid>
+                            if (editAccess) {
+                                return <Grid item xs={12}>
+                                    <Typography>{field.title}</Typography>
+                                    <IconButton download target="_blank" href={process.env.REACT_APP_API_URL + `/api/event/registration/get_file?id=${formValues[field.title]}`} size="small" color="primary"><GetAppIcon></GetAppIcon></IconButton>
+                                    <input id="contained-button-file" name={field.title} required type="file" onChange={handleFileSelect} style={{ "marginTop": "10px" }} ></input>
+                                </Grid>
+                            }
+                            else {
+                                return <Grid item xs={12}>
+                                    <Typography>{field.title}</Typography>
+                                    <input id="contained-button-file" name={field.title} required type="file" onChange={handleFileSelect} style={{ "marginTop": "10px" }} ></input>
+                                </Grid>
+                            }
+
                         })
                     }
-
-                    {/* <Grid item xs={12}>
-                        <Typography>By registering for the event.I accept the <Button onClick={handleTermsClick} color="primary">Terms and Conditions</Button></Typography>
-                    </Grid> */}
+                    {/* {
+                        editAccess && fileUploadFields.length > 0 && <IconButton download target="_blank" href={process.env.REACT_APP_API_URL + `/api/event/registration/get_file?id=${row[column.id]}`} size="small" color="primary"><GetAppIcon></GetAppIcon></IconButton>
+                    } */}
                 </Grid>
                 {access && <Button
                     type="submit"
@@ -772,7 +814,7 @@ function AboutEventPanel(props) {
                     {loading ? <CircularProgress color="primary" size={24} /> : "Submit"}
                 </Button>}
                 {
-                    !access && <Typography>{userMessage}</Typography>
+                    !access && <Typography style={{ margin: "20px 0px 10px 0px" }}>{userMessage}</Typography>
                 }
                 {editAccess && <Button
                     // type="submit"
@@ -790,4 +832,3 @@ function AboutEventPanel(props) {
     )
 }
 export default AboutEventPanel;
-

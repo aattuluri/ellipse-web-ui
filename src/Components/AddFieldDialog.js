@@ -13,7 +13,11 @@ import FormControl from '@material-ui/core/FormControl';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Chip from '@material-ui/core/Chip';
 import { Grid } from '@material-ui/core';
-import {useTheme } from '@material-ui/core/styles';
+import { useTheme } from '@material-ui/core/styles';
+// import FormControl from '@material-ui/core/FormControl';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import Radio from '@material-ui/core/Radio';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 
 
@@ -23,6 +27,8 @@ export default function FormDialog(props) {
   const theme = useTheme();
   const [name, setName] = React.useState(null);
   const [type, setType] = React.useState(null);
+  // const [variant,setVariant] = React.useState(null);
+  const [required,setRequired] = React.useState(true);
   const fieldOptions = [];
   const [selectedOptions, setSelectedOptions] = React.useState(['option1', 'option2']);
   function handleNameChange(event) {
@@ -35,13 +41,13 @@ export default function FormDialog(props) {
     setSelectedOptions(values);
   }
   function handleAddButton() {
-    if(name != null && type != null){
+    if (name != null && type != null) {
       // console.log(type)
       if (type !== "radiobuttons" && type !== "checkboxes" && type !== "dropdown") {
-        props.handleAdd({ [name]: { 'title': name, 'field': type, 'options': [] } }, name);
+        props.handleAdd({ [name]: { 'title': name, 'field': type,required: required, 'options': [] } }, name);
       }
       else {
-        props.handleAdd({ [name]: { 'title': name, 'field': type, 'options': selectedOptions } }, name);
+        props.handleAdd({ [name]: { 'title': name, 'field': type,required: required, 'options': selectedOptions } }, name);
       }
       setName(null);
       setType(null);
@@ -49,6 +55,16 @@ export default function FormDialog(props) {
       props.handleClose()
     }
   }
+
+  function handleradioChange(event, value) {
+    // setVariant(value)
+    if(value === "required"){
+      setRequired(true);
+    }
+    else{
+      setRequired(false);
+    }
+}
 
 
   return (
@@ -100,6 +116,13 @@ export default function FormDialog(props) {
                   <option value="file_upload">File Upload</option>
                 </Select>
               </FormControl>
+            </Grid>
+            <Grid item xs={12}>
+              {/* <FormLabel required component="legend">{field.title}</FormLabel> */}
+              <RadioGroup required aria-label="variant" name="variant" defaultValue="required" onChange={handleradioChange} style={{ display: "inline" }}>
+                <FormControlLabel value="required" control={<Radio color="default" />} label="Required" />
+                <FormControlLabel value="optional" control={<Radio color="default" />} label="Optional" />
+              </RadioGroup>
             </Grid>
             {(type === "radiobuttons" || type === "checkboxes" || type === "dropdown") &&
               <Grid item xs={12}>

@@ -261,7 +261,7 @@ const UserInfo = ({ history }) => {
                         </Grid>
 
                         <Grid item xs={12}>
-                            <FormControl variant="outlined" fullWidth required>
+                            <FormControl variant="outlined" fullWidth>
                                 <InputLabel htmlFor="outlined-age-native-simple">Gender</InputLabel>
                                 <Select
                                     fullWidth

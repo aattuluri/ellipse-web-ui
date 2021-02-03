@@ -136,7 +136,7 @@ const useStyles = makeStyles((theme) => ({
     icons: {
         position: 'absolute',
         right: theme.spacing(1),
-        top: theme.spacing(1),
+        top: theme.spacing(0.5),
         // [theme.breakpoints.down('sm')]: {
         //     display: 'none'
         // },
