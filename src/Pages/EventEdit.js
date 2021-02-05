@@ -30,7 +30,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Paper from '@material-ui/core/Paper';
 import { Typography } from '@material-ui/core';
 
-
+import RoundEditDialog from '../Components/EditRoundDialog';
 
 //function for alert
 function Alert(props) {
@@ -118,6 +118,10 @@ const EventEdit = (props) => {
   const [platformDetails, setPlatformDetails] = React.useState('');
   const [isTeamed, setIsTeamed] = React.useState(false);
   const [teamSize, setTeamSize] = React.useState({});
+  const [rounds,setRounds] = React.useState([]);
+  const [roundsDialogOpen, setRoundsDialogOpen] = React.useState(false);
+  const [selectedEditRound,setSelectedEditRound] = React.useState({});
+
 
 
   // const eventTypes = ["Hackathon", "Coding Contest", "Webinar"];
@@ -174,6 +178,7 @@ const EventEdit = (props) => {
     setAddressType(event.venue_type);
     setIsTeamed(event.isTeamed);
     setTeamSize(event.team_size);
+    setRounds(event.rounds);
 
     // setParticipantsType(event.o_allowed)
     if (event.o_allowed === true) {
@@ -218,10 +223,16 @@ const EventEdit = (props) => {
     setState({ ...state, open: false });
   };
 
+  const handleRoundEditDialogClose = () => {
+    // setOpen(false);
+    setRoundsDialogOpen(false);
+};
+
   async function handleEventPost(e) {
     e.preventDefault();
     setLoading(true);
     var oAllowed = false;
+    console.log(rounds);
     if (participantType === "open") {
       oAllowed = true
     }
@@ -253,7 +264,8 @@ const EventEdit = (props) => {
         venue_type: addressType,
         venue: venue,
         venue_college: venueCollege,
-        platform_details: platformDetails
+        platform_details: platformDetails,
+        rounds: rounds
       };
       data = JSON.stringify(payload);
       // console.log(data);
@@ -411,8 +423,10 @@ const EventEdit = (props) => {
 
   }
 
-  const handleRoundEdit = () => {
-
+  const handleRoundEditButton = (data) => () => {
+    console.log(data);
+    setSelectedEditRound(data);
+    setRoundsDialogOpen(true);
   }
 
 
@@ -843,14 +857,14 @@ const EventEdit = (props) => {
             {regMode === "form" && <Grid item xs={12}>
               <Typography>Rounds</Typography>
               <Paper component="ul" className={classes.root}>
-                {event.rounds.map((data) => {
+                {rounds.map((data) => {
                   return (
                     <li key={data.key}>
                       <Chip
                         label={data.title}
-                        onDelete={handleRoundEdit(data)}
                         className={classes.chip}
                       />
+                      <IconButton onClick={handleRoundEditButton(data)}><EditIcon></EditIcon></IconButton>
                     </li>
                   );
                 })}
@@ -870,7 +884,14 @@ const EventEdit = (props) => {
           </Button>
         </form>
       </div>
-
+      <RoundEditDialog
+      open={roundsDialogOpen}
+      handleClose={handleRoundEditDialogClose}
+      // handleEdit={handleRoundEdit}
+      rounds= {rounds}
+      setRounds={setRounds}
+      roundData = {selectedEditRound}
+      ></RoundEditDialog>
       {/* </Grid> */}
       {/* <Box mt={2}>
         <Copyright />

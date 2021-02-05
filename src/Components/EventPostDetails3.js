@@ -146,13 +146,15 @@ export default function AddressForm(props) {
         const rr = props.rounds;
         var uR = rr.filter((chip) => chip.title !== chipToDelete.title);
         var fR = [];
-        uR.forEach((rou,index) => {
-            fR.push({title: `Round ${index + 1}`, 
-            description: rou.description,
-            start_date: rou.start_date,
-            end_date: rou.end_date,
-            link: rou.link, 
-            fields: rou.fields})
+        uR.forEach((rou, index) => {
+            fR.push({
+                title: `Round ${index + 1}`,
+                description: rou.description,
+                start_date: rou.start_date,
+                end_date: rou.end_date,
+                link: rou.link,
+                fields: rou.fields
+            })
         });
         props.setRounds(fR);
         // props.setRounds(rounds => rounds.filter((chip) => chip.title !== chipToDelete.title))
@@ -179,13 +181,13 @@ export default function AddressForm(props) {
                     <AddFieldDialog
                         open={open}
                         handleClose={handleClose}
-                        handleAdd={handleFieldAddButton}></AddFieldDialog>
+                        handleAdd={handleFieldAddButton}>
+                    </AddFieldDialog>
                     <AddRoundsDialog
                         roundsCount={props.rounds.length}
                         open={roundsDialogOpen}
                         handleClose={handleClose}
                         handleAdd={handleAddRounds}>
-
                     </AddRoundsDialog>
                     <Grid item xs={12}>
                         <FormControl component="fieldset" className={classes.formControl}>
