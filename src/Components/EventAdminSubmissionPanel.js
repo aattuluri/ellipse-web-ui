@@ -286,7 +286,7 @@ function EventAdminSubmissionPanel(props) {
                                                 showMembers && v === teamIndex && <div>
                                                     <Typography color="textSecondary" variant="body2">Submissions</Typography>
                                                     {v.submissions.map((value, index) => {
-                                                        console.log(value);
+                                                    
                                                         return <React.Fragment>
                                                             <Button onClick={handleRoundClickButton(value, v)} variant="outlined" className={classes.roundButton}>
                                                                 {value.title}

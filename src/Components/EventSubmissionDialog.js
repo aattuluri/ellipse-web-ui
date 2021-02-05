@@ -87,7 +87,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ScrollDialog(props) {
 
-    const token = localStorage.getItem('token');
+    // const token = localStorage.getItem('token');
     const [loading,setLoading] = React.useState(false);
     const classes = useStyles();
     const theme = useTheme();
@@ -113,35 +113,38 @@ export default function ScrollDialog(props) {
         });
         if(props.submission !== null){
             if (props.submission.submission_id !== null) {
-                getData();
+                // getData();
+                setKeys(Object.keys(props.submission.submission_form));
+                setSubmission(props.submission.submission_form);
+                setLoading(false);
             }
         }
         // eslint-disable-next-line
     }, [props,event])
 
-    const getData = () => {
-        setLoading(true);
-        try {
-            fetch(process.env.REACT_APP_API_URL + `/api/event/get_submission?id=${props.submission.submission_id}`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                method: 'GET',
-            }).then(response => {
-                response.json().then(value => {
-                    // console.log(value);
-                    setKeys(Object.keys(value.submission));
-                    setSubmission(value);
-                    setLoading(false);
-                })
-            })
-        }
-        catch (e) {
-            console.log(e);
-        }
-    }
+    // const getData = () => {
+    //     setLoading(true);
+    //     try {
+    //         fetch(process.env.REACT_APP_API_URL + `/api/event/get_submission?id=${props.submission.submission_id}`, {
+    //             headers: {
+    //                 'Authorization': `Bearer ${token}`,
+    //                 'Content-Type': 'application/json',
+    //                 'Accept': 'application/json'
+    //             },
+    //             method: 'GET',
+    //         }).then(response => {
+    //             response.json().then(value => {
+    //                 // console.log(value);
+    //                 setKeys(Object.keys(value.submission));
+    //                 setSubmission(value);
+    //                 setLoading(false);
+    //             })
+    //         })
+    //     }
+    //     catch (e) {
+    //         console.log(e);
+    //     }
+    // }
 
 
     return (
@@ -182,18 +185,19 @@ export default function ScrollDialog(props) {
                                 if (currentRoundFields[index].field === "file_upload") {
                                     return <React.Fragment>
                                         <Typography>{value}</Typography>
-                                        <IconButton download target="_blank" href={process.env.REACT_APP_API_URL + `/api/event/registration/get_file?id=${submission.submission[value]}`} size="small" color="primary"><GetAppIcon></GetAppIcon></IconButton>
+                                        <IconButton download target="_blank" href={process.env.REACT_APP_API_URL + `/api/event/registration/get_file?id=${submission[value]}`} size="small" color="primary"><GetAppIcon></GetAppIcon></IconButton>
                                     </React.Fragment>
                                 }
                                 return <React.Fragment>
                                     <Typography>{value}</Typography>
-                                    <Typography variant="h4" color="primary"><Linkify
-                                componentDecorator={(decoratedHref, decoratedText, key) => (
+                                    <Typography variant="h4" color="primary">
+                                    <Linkify componentDecorator={(decoratedHref, decoratedText, key) => (
                                     <a target="blank" style={{ color: 'red', fontWeight: 'bold' }} href={decoratedHref} key={key}>
                                         {decoratedText}
                                     </a>
                                 )}
-                            >{submission.submission[value]}</Linkify></Typography>
+                            >{submission[value]}
+                            </Linkify></Typography>
                                 </React.Fragment>
                             })
                         }

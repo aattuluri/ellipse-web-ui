@@ -87,16 +87,19 @@ export default function AddressForm(props) {
         name: {
             'title': 'Name',
             'field': 'short_text',
+            'req': true,
             'options': []
         },
         email: {
             'title': 'Email',
             'field': 'short_text',
+            'req': true,
             'options': []
         },
         college: {
             'title': 'College',
             'field': 'short_text',
+            'req': true,
             'options': []
         },
 

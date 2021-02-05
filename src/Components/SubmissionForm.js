@@ -87,7 +87,7 @@ function AboutEventPanel(props) {
     const currentDate = new Date();
     const roundStartDate = new Date(currentRound.start_date);
     const roundEndDate = new Date(currentRound.end_date);
-    const [submission, setSubmission] = React.useState({});
+    // const [submission, setSubmission] = React.useState({});
     // const roundEndDate = new Date(currentRound.end_date);
 
     // function handleTermsClick() {
@@ -116,7 +116,12 @@ function AboutEventPanel(props) {
                 setAccess(false);
                 setUserMessage("submission Already made");
                 setEditAccess(true);
-                getSubmission(props.team.submissions[props.index].submission_id)
+                const submission_form = props.team.submissions[props.index].submission_form;
+                const keys = Object.keys(submission_form);
+                keys.forEach((sub, index) => {
+                    setFormValues(formValues => ({ ...formValues, [sub]: submission_form[sub] }))
+                })
+                // getSubmission(props.team.submissions[props.index].submission_id)
             }
         }
         else if (props.registration) {
@@ -124,40 +129,48 @@ function AboutEventPanel(props) {
                 setAccess(false);
                 setUserMessage("submission Already made");
                 setEditAccess(true);
-                getSubmission(props.registration.submissions[props.index].submission_id)
+                // setSubmission(props.registration.submissions[props.index].submission_form);
+                const submission_form = props.registration.submissions[props.index].submission_form;
+                const keys = Object.keys(submission_form);
+                keys.forEach((sub, index) => {
+                    setFormValues(formValues => ({ ...formValues, [sub]: submission_form[sub] }))
+                })
+                // console.log(props.registration.submissions[props.index].submission_form);
+                // console.log(formValues);
+                // getSubmission(props.registration.submissions[props.index].submission_id)
             }
         }
         // eslint-disable-next-line
     }, [props])
 
-    const getSubmission = (id) => {
-        try {
-            fetch(process.env.REACT_APP_API_URL + `/api/event/get_submission?id=${id}`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                method: 'GET',
-            }).then(response => {
-                if (response.status === 200) {
-                    response.json().then(value => {
-                        const keys = Object.keys(value.submission);
-                        setSubmission(value);
-                        console.log(value.submission)
-                        keys.forEach((sub, index) => {
-                            setFormValues(formValues => ({ ...formValues, [sub]: value.submission[sub] }))
-                        })
+    // const getSubmission = (id) => {
+    //     try {
+    //         fetch(process.env.REACT_APP_API_URL + `/api/event/get_submission?id=${id}`, {
+    //             headers: {
+    //                 'Authorization': `Bearer ${token}`,
+    //                 'Content-Type': 'application/json',
+    //                 'Accept': 'application/json'
+    //             },
+    //             method: 'GET',
+    //         }).then(response => {
+    //             if (response.status === 200) {
+    //                 response.json().then(value => {
+    //                     const keys = Object.keys(value.submission);
+    //                     setSubmission(value);
+    //                     console.log(value.submission)
+    //                     keys.forEach((sub, index) => {
+    //                         setFormValues(formValues => ({ ...formValues, [sub]: value.submission[sub] }))
+    //                     })
 
-                    })
-                }
+    //                 })
+    //             }
 
-            })
-        }
-        catch (e) {
-            console.log(e);
-        }
-    }
+    //         })
+    //     }
+    //     catch (e) {
+    //         console.log(e);
+    //     }
+    // }
 
     React.useEffect(() => {
 
@@ -212,11 +225,20 @@ function AboutEventPanel(props) {
 
     }
     const handleChange3 = (name) => (event) => {
-        // console.log(event.target.checked);
+        console.log(event.target.checked);
+        console.log(name);
+        console.log(formValues)
         if (event.target.checked) {
             // setCheckedValues(checkedValues => [...checkedValues, { [name]: event.target.name }]);
-            const array = formValues[name];
-            array.push(event.target.name);
+            var array = [];
+            if(formValues[name]){
+                array = formValues[name];
+                array.push(event.target.name);
+            }
+            else{
+                array.push(event.target.name);
+            }
+            
 
             // checkedValues.forEach((v, i) => {
             //     if (v[name]) {
@@ -227,7 +249,7 @@ function AboutEventPanel(props) {
             // console.log(array)
             setFormValues({ ...formValues, [name]: array });
         }
-        else{
+        else {
             // console.log(checkedValues.filter(value=> {return value[name] !== event.target.name} ));
             // setCheckedValues(checkedValues.filter(value=> {return value[name] !== event.target.name}));
             // const newChecked = checkedValues.filter(value=> {return value[name] !== event.target.name});
@@ -237,7 +259,7 @@ function AboutEventPanel(props) {
             // console.log(event.target.name);
             const array = formValues[name];
             var index = array.indexOf(event.target.name);
-            array.splice(index,1);
+            array.splice(index, 1);
             // array.pop(event.target.name);
             // console.log(array)
             // console.log(newChecked);
@@ -273,10 +295,14 @@ function AboutEventPanel(props) {
         // console.log(fileFormKeys);
         var count = 0;
         formkeys.forEach(v => {
-            if (formValues[v] === null) {
-                if (v.includes(fileFormKeys)) {
-
-                } else {
+            console.log(formValues[v]);
+            if (formValues[v] === null || formValues[v] === '') {
+                // console.log("aa")
+                if (fileFormKeys.includes(v)) {
+                    // console.log("ccc")
+                } 
+                else {
+                    // console.log("bbb")
                     count = count + 1;
                     setLoading(false);
                     setState({
@@ -419,7 +445,7 @@ function AboutEventPanel(props) {
     }
 
     function handleFileSelect(event) {
-        console.log(event.target.name)
+        // console.log(event.target.name)
         if (event.target.files[0]) {
             setUploadFiles({ ...uploadFiles, [event.target.name]: event.target.files[0] });
             // setImage(event.target.files[0]);
@@ -432,157 +458,157 @@ function AboutEventPanel(props) {
     }
 
 
-    const handleEditButton = () => {
-        setLoading(true);
-        var uploadedFilesIds = [];
-        const formkeys = Object.keys(formValues);
-        const fileFormKeys = Object.keys(uploadFiles);
-        // console.log(formkeys);
-        // console.log(fileFormKeys);
-        var count = 0;
-        formkeys.forEach(v => {
-            if (formValues[v] === null) {
-                if (v.includes(fileFormKeys)) {
+    // const handleEditButton = () => {
+    //     setLoading(true);
+    //     var uploadedFilesIds = [];
+    //     const formkeys = Object.keys(formValues);
+    //     const fileFormKeys = Object.keys(uploadFiles);
+    //     // console.log(formkeys);
+    //     // console.log(fileFormKeys);
+    //     var count = 0;
+    //     formkeys.forEach(v => {
+    //         if (formValues[v] === null) {
+    //             if (v.includes(fileFormKeys)) {
 
-                } else {
-                    count = count + 1;
-                    setLoading(false);
-                    setState({
-                        open: true,
-                        vertical: 'top',
-                        horizontal: 'center',
-                        message: 'Please fill in all fields',
-                        type: "error",
-                        autoHide: 4000
-                    });
-                }
+    //             } else {
+    //                 count = count + 1;
+    //                 setLoading(false);
+    //                 setState({
+    //                     open: true,
+    //                     vertical: 'top',
+    //                     horizontal: 'center',
+    //                     message: 'Please fill in all fields',
+    //                     type: "error",
+    //                     autoHide: 4000
+    //                 });
+    //             }
 
-                // break;
-            }
-        })
-        if (fileFormKeys) {
-            fileFormKeys.forEach(f => {
-                if (uploadFiles[f] === null) {
-                    count = count + 1;
-                    setLoading(false);
-                    setState({
-                        open: true,
-                        vertical: 'top',
-                        horizontal: 'center',
-                        message: 'Please fill in all fields',
-                        type: "error",
-                        autoHide: 4000
-                    });
-                    // break;
-                }
-            })
-        }
+    //             // break;
+    //         }
+    //     })
+    //     if (fileFormKeys) {
+    //         fileFormKeys.forEach(f => {
+    //             if (uploadFiles[f] === null) {
+    //                 count = count + 1;
+    //                 setLoading(false);
+    //                 setState({
+    //                     open: true,
+    //                     vertical: 'top',
+    //                     horizontal: 'center',
+    //                     message: 'Please fill in all fields',
+    //                     type: "error",
+    //                     autoHide: 4000
+    //                 });
+    //                 // break;
+    //             }
+    //         })
+    //     }
 
-        var finalValues = formValues;
-        if (count === 0) {
-            try {
-                if (fileFormKeys.length > 0) {
-                    fileFormKeys.forEach((key, index) => {
-                        var data1 = new FormData();
-                        data1.append('uploaded_file', uploadFiles[key]);
-                        fetch(process.env.REACT_APP_API_URL + `/api/event/register/upload_file?id=${event._id}`, {
-                            headers: {
-                                'Authorization': `Bearer ${token}`,
-                            },
-                            method: 'POST',
-                            body: data1
-                        }).then((response) => {
-                            if (response.status === 200) {
-                                response.json().then(value => {
-                                    setFormValues({ ...formValues, [key]: value.file_name })
-                                    finalValues[key] = value.file_name
-                                    uploadedFilesIds.push({ [key]: value.file_name });
-                                    if (uploadedFilesIds.length === fileFormKeys.length) {
-                                        // console.log(uploadedFilesIds);
-                                        // console.log(finalValues);
-                                        var data = new FormData();
-                                        const d = { sub_id: submission._id, submission: finalValues, is_teamed: true }
-                                        data = JSON.stringify(d);
-                                        fetch(process.env.REACT_APP_API_URL + `/api/event/team/edit_submission`, {
-                                            headers: {
-                                                'Authorization': `Bearer ${token}`,
-                                                'Content-Type': 'application/json',
-                                                'Accept': 'application/json'
-                                            },
-                                            method: 'POST',
-                                            body: data
-                                        }).then(response => {
-                                            // console.log(response);
-                                            if (response.status === 200) {
-                                                response.json().then(value => {
-                                                    // console.log(value);
+    //     var finalValues = formValues;
+    //     if (count === 0) {
+    //         try {
+    //             if (fileFormKeys.length > 0) {
+    //                 fileFormKeys.forEach((key, index) => {
+    //                     var data1 = new FormData();
+    //                     data1.append('uploaded_file', uploadFiles[key]);
+    //                     fetch(process.env.REACT_APP_API_URL + `/api/event/register/upload_file?id=${event._id}`, {
+    //                         headers: {
+    //                             'Authorization': `Bearer ${token}`,
+    //                         },
+    //                         method: 'POST',
+    //                         body: data1
+    //                     }).then((response) => {
+    //                         if (response.status === 200) {
+    //                             response.json().then(value => {
+    //                                 setFormValues({ ...formValues, [key]: value.file_name })
+    //                                 finalValues[key] = value.file_name
+    //                                 uploadedFilesIds.push({ [key]: value.file_name });
+    //                                 if (uploadedFilesIds.length === fileFormKeys.length) {
+    //                                     // console.log(uploadedFilesIds);
+    //                                     // console.log(finalValues);
+    //                                     var data = new FormData();
+    //                                     const d = { sub_id: submission._id, submission: finalValues, is_teamed: true }
+    //                                     data = JSON.stringify(d);
+    //                                     fetch(process.env.REACT_APP_API_URL + `/api/event/team/edit_submission`, {
+    //                                         headers: {
+    //                                             'Authorization': `Bearer ${token}`,
+    //                                             'Content-Type': 'application/json',
+    //                                             'Accept': 'application/json'
+    //                                         },
+    //                                         method: 'POST',
+    //                                         body: data
+    //                                     }).then(response => {
+    //                                         // console.log(response);
+    //                                         if (response.status === 200) {
+    //                                             response.json().then(value => {
+    //                                                 // console.log(value);
 
-                                                    setLoading(false);
-                                                    setState({
-                                                        open: true,
-                                                        vertical: 'top',
-                                                        horizontal: 'center',
-                                                        message: 'Successful.Stay tunned with notifications and announcements',
-                                                        type: "success",
-                                                        autoHide: 4000
-                                                    });
-                                                })
-                                            }
+    //                                                 setLoading(false);
+    //                                                 setState({
+    //                                                     open: true,
+    //                                                     vertical: 'top',
+    //                                                     horizontal: 'center',
+    //                                                     message: 'Successful.Stay tunned with notifications and announcements',
+    //                                                     type: "success",
+    //                                                     autoHide: 4000
+    //                                                 });
+    //                                             })
+    //                                         }
 
-                                        })
-                                    }
-                                })
-                            }
-                        })
-                    })
-                }
-                else {
-                    var data = new FormData();
-                    const d = { sub_id: submission._id, submission: finalValues, is_teamed: true }
-                    data = JSON.stringify(d);
-                    fetch(process.env.REACT_APP_API_URL + `/api/event/team/edit_submission`, {
-                        headers: {
-                            'Authorization': `Bearer ${token}`,
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json'
-                        },
-                        method: 'POST',
-                        body: data
-                    }).then(response => {
-                        // console.log(response);
-                        if (response.status === 200) {
-                            response.json().then(value => {
-                                // console.log(value);
+    //                                     })
+    //                                 }
+    //                             })
+    //                         }
+    //                     })
+    //                 })
+    //             }
+    //             else {
+    //                 var data = new FormData();
+    //                 const d = { sub_id: submission._id, submission: finalValues, is_teamed: true }
+    //                 data = JSON.stringify(d);
+    //                 fetch(process.env.REACT_APP_API_URL + `/api/event/team/edit_submission`, {
+    //                     headers: {
+    //                         'Authorization': `Bearer ${token}`,
+    //                         'Content-Type': 'application/json',
+    //                         'Accept': 'application/json'
+    //                     },
+    //                     method: 'POST',
+    //                     body: data
+    //                 }).then(response => {
+    //                     // console.log(response);
+    //                     if (response.status === 200) {
+    //                         response.json().then(value => {
+    //                             // console.log(value);
 
-                                setLoading(false);
-                                setState({
-                                    open: true,
-                                    vertical: 'top',
-                                    horizontal: 'center',
-                                    message: 'Successful.Stay tunned with notifications and announcements',
-                                    type: "success",
-                                    autoHide: 4000
-                                });
-                            })
-                        }
+    //                             setLoading(false);
+    //                             setState({
+    //                                 open: true,
+    //                                 vertical: 'top',
+    //                                 horizontal: 'center',
+    //                                 message: 'Successful.Stay tunned with notifications and announcements',
+    //                                 type: "success",
+    //                                 autoHide: 4000
+    //                             });
+    //                         })
+    //                     }
 
-                    })
-                }
-            }
-            catch (error) {
-                setLoading(false);
-                setState({
-                    open: true,
-                    vertical: 'top',
-                    horizontal: 'center',
-                    message: error.message,
-                    type: "error",
-                    autoHide: 6000
-                })
+    //                 })
+    //             }
+    //         }
+    //         catch (error) {
+    //             setLoading(false);
+    //             setState({
+    //                 open: true,
+    //                 vertical: 'top',
+    //                 horizontal: 'center',
+    //                 message: error.message,
+    //                 type: "error",
+    //                 autoHide: 6000
+    //             })
 
-            }
-        }
-    }
+    //         }
+    //     }
+    // }
 
     return (
         <div>
@@ -627,7 +653,7 @@ function AboutEventPanel(props) {
                                         name={field.title}
                                         disabled
                                         // variant="outlined"
-                                        required
+                                        // required
                                         fullWidth
                                         id={field.title}
                                         onChange={handleChange}
@@ -818,7 +844,7 @@ function AboutEventPanel(props) {
                 }
                 {editAccess && <Button
                     // type="submit"
-                    onClick={handleEditButton}
+                    onClick={handleEventRegistration}
                     fullWidth
                     variant="contained"
                     color="primary"

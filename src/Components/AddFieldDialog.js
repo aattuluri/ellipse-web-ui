@@ -44,10 +44,10 @@ export default function FormDialog(props) {
     if (name != null && type != null) {
       // console.log(type)
       if (type !== "radiobuttons" && type !== "checkboxes" && type !== "dropdown") {
-        props.handleAdd({ [name]: { 'title': name, 'field': type,required: required, 'options': [] } }, name);
+        props.handleAdd({ [name]: { 'title': name, 'field': type,req: required, 'options': [] } }, name);
       }
       else {
-        props.handleAdd({ [name]: { 'title': name, 'field': type,required: required, 'options': selectedOptions } }, name);
+        props.handleAdd({ [name]: { 'title': name, 'field': type,req: required, 'options': selectedOptions } }, name);
       }
       setName(null);
       setType(null);
