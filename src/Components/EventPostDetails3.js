@@ -2,46 +2,32 @@ import React from 'react';
 
 
 //MaterialUI imports
+import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
 import Chip from '@material-ui/core/Chip';
 import FormLabel from '@material-ui/core/FormLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormGroup from '@material-ui/core/FormGroup';
-
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import { makeStyles } from '@material-ui/core/styles';
-import { Typography } from '@material-ui/core';
+import IconButton from '@material-ui/core/IconButton';
+import Typography from '@material-ui/core/Typography';
+import TextField from '@material-ui/core/TextField';
+import Box from '@material-ui/core/Box';
 
+//other component imports
 import AddFieldDialog from '../Components/AddFieldDialog';
 import AddRoundsDialog from '../Components/AddRoundsDialog';
 import TermsandConditions from '../Components/EventPostTermsandConditions';
 
 
-
+//css styles
 const useStyles = makeStyles((theme) => ({
-    paper: {
-        marginTop: theme.spacing(5),
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        // backgroundColor: theme.palette.secondary.main,
-        padding: theme.spacing(3),
-        borderRadius: 30,
-
-    },
-    avatar: {
-        margin: theme.spacing(1),
-        backgroundColor: theme.palette.primary.main,
-    },
     form: {
         width: '100%', // Fix IE 11 issue.
         marginTop: theme.spacing(0),
-    },
-    submit: {
-        margin: theme.spacing(3, 0, 2),
     },
     buttons: {
         display: 'flex',
@@ -50,9 +36,6 @@ const useStyles = makeStyles((theme) => ({
     button: {
         marginTop: theme.spacing(3),
         marginLeft: theme.spacing(1),
-    },
-    formControl: {
-        // marginTop: theme.spacing(3),
     },
     formgroup: {
         marginTop: theme.spacing(1),
@@ -70,14 +53,22 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function AddressForm(props) {
 
-
+export default function EventPostForm(props) {
     const classes = useStyles();
-    // const [loading, setLoading] = React.useState(false);
+
     const [open, setOpen] = React.useState(false);
     const [roundsDialogOpen, setRoundsDialogOpen] = React.useState(false);
     const [tandcOpen, setTandcOpen] = React.useState(false);
+    const [prizeTitle, setPrizeTitle] = React.useState(null);
+    const [prizeDesc, setPrizeDesc] = React.useState(null);
+    const [prizes, setPrizes] = React.useState([]);
+
+    React.useEffect(() => {
+        setPrizes(props.prizes);
+    }, [props.prizes])
+
+
     const handleClose = () => {
         setOpen(false);
         setRoundsDialogOpen(false);
@@ -110,6 +101,7 @@ export default function AddressForm(props) {
         email: true,
         college: false,
     });
+
     const handleChange = (event) => {
         setState({ ...state, [event.target.name]: event.target.checked });
         const sName = event.target.name;
@@ -122,15 +114,14 @@ export default function AddressForm(props) {
 
     };
     const { name, email, college } = state;
-    // console.log(selectedFields);
-    function handleAddMoreButton() {
+
+    const handleAddMoreButton = () => {
         setOpen(true);
     }
     function handleFieldAddButton(addingField, fName) {
         setSelectedFields(selectedFields => [...selectedFields, addingField[fName]]);
     }
     const handleDelete = (chipToDelete) => () => {
-        // console.log(chipToDelete.title)
         if (chipToDelete.title === 'College') {
             setState({ ...state, college: false })
             setSelectedFields(selectedFields => selectedFields.filter((chip) => chip.title !== chipToDelete.title));
@@ -157,21 +148,41 @@ export default function AddressForm(props) {
             })
         });
         props.setRounds(fR);
-        // props.setRounds(rounds => rounds.filter((chip) => chip.title !== chipToDelete.title))
     }
 
-    async function handlePostButton(e) {
+    const handlePostButton = async (e) => {
         e.preventDefault();
         await props.setFields(selectedFields);
         props.handlePost(selectedFields);
     }
 
-    function handleTermsClick() {
+    const handleTermsClick = () => {
         setTandcOpen(true);
     }
 
     const handleAddRounds = (r) => {
         props.setRounds(rounds => [...rounds, r]);
+    }
+
+    const handlePrizeAddButton = () => {
+        props.setPrizes(prizes => [...prizes, { title: prizeTitle, desc: prizeDesc }]);
+        setPrizeTitle(null);
+        setPrizeDesc(null);
+    }
+
+    const handlePrizeDeleteButton = (index, data) => () => {
+        var currentPrizes = props.prizes;
+        currentPrizes.splice(index);
+        props.setPrizes(currentPrizes);
+    }
+
+    const handlePrizeFieldChange = (title) => (event) => {
+        if (title === "title") {
+            setPrizeTitle(event.target.value)
+        }
+        else {
+            setPrizeDesc(event.target.value);
+        }
     }
 
     return (
@@ -190,6 +201,68 @@ export default function AddressForm(props) {
                         handleAdd={handleAddRounds}>
                     </AddRoundsDialog>
                     <Grid item xs={12}>
+                        <TextField
+                            multiline={true}
+                            helperText="Enter all rules and regulation including eligibility for participation"
+                            rows="5"
+                            variant='outlined'
+                            placeholder="Enter all rules and regulation including eligibility for participation"
+                            autoComplete='off'
+                            onChange={(e) => { props.setRules(e.target.value) }}
+                            value={props.rules}
+                            id="rules"
+                            name="rules"
+                            label="Rules"
+                            fullWidth
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <FormControl component="fieldset" className={classes.formControl}>
+                            <FormLabel component="legend">Prizes</FormLabel>
+                            <Box display="flex" style={{ marginTop: "10px" }}>
+                                <Box>
+                                    <TextField onChange={handlePrizeFieldChange("title")} value={prizeTitle || ""} label="Prize Title" variant="outlined" style={{ marginRight: "5px" }}></TextField>
+                                </Box>
+                                <Box>
+                                    <TextField onChange={handlePrizeFieldChange("desc")} value={prizeDesc || ""} label="Prize Description" variant="outlined"></TextField>
+                                </Box>
+                                <Box>
+                                    <IconButton onClick={handlePrizeAddButton}>Add</IconButton>
+                                </Box>
+                            </Box>
+                        </FormControl>
+                    </Grid>
+                    <Grid>
+                        <Paper component="ul" className={classes.root}>
+                            {prizes.map((data, index) => {
+                                return (
+                                    <li key={data.key}>
+                                        <Chip
+                                            label={data.title}
+                                            onDelete={handlePrizeDeleteButton(index, data)}
+                                            className={classes.chip}
+                                        />
+                                    </li>
+                                );
+                            })}
+                        </Paper>
+                    </Grid>
+                    <Grid>
+                        <Paper component="ul" className={classes.root}>
+                            {props.rounds.map((data) => {
+                                return (
+                                    <li key={data.key}>
+                                        <Chip
+                                            label={data.title}
+                                            onDelete={handleRoundDelete(data)}
+                                            className={classes.chip}
+                                        />
+                                    </li>
+                                );
+                            })}
+                        </Paper>
+                    </Grid>
+                    <Grid item xs={12}>
                         <FormControl component="fieldset" className={classes.formControl}>
                             <FormLabel component="legend">Fields for your Registration Form</FormLabel>
                             <FormGroup className={classes.formgroup}>
@@ -205,14 +278,6 @@ export default function AddressForm(props) {
                                     control={<Checkbox color="primary" checked={college} onChange={handleChange} name="college" />}
                                     label="College"
                                 />
-                                {/* <FormControlLabel
-                                    control={<Checkbox color="primary" checked={phno} onChange={handleChange} name="phno" />}
-                                    label="Phone No"
-                                />
-                                <FormControlLabel
-                                    control={<Checkbox color="primary" checked={github} onChange={handleChange} name="github" />}
-                                    label="Github"
-                                /> */}
                             </FormGroup>
                         </FormControl>
                     </Grid>
@@ -242,7 +307,6 @@ export default function AddressForm(props) {
                     <Grid item xs={12}>
                         <FormControl component="fieldset" className={classes.formControl}>
                             <FormLabel component="legend">Rounds(Optional)</FormLabel>
-
                         </FormControl>
                     </Grid>
                     <Grid item xs={12}>

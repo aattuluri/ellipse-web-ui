@@ -147,6 +147,8 @@ export default function Checkout({ history }) {
   const [minTeamSize, setMinTeamSize] = React.useState(1);
   const [maxTeamSize, setMaxTeamSize] = React.useState(1);
   const [rounds, setRounds] = React.useState([]);
+  const [rules,setRules] = React.useState(null);
+  const [prizes,setPrizes] = React.useState([]);
   const [showSuccessPanel, setShowSuccessPanel] = React.useState(false);
 
 
@@ -235,6 +237,10 @@ export default function Checkout({ history }) {
             setFields={setRegFields}
             rounds={rounds}
             setRounds={setRounds}
+            rules={rules}
+            setRules={setRules}
+            prizes={prizes}
+            setPrizes={setPrizes}
             handlePost={handleEventPost}>
           </EventPostDetails3>);
       default:
@@ -276,7 +282,9 @@ export default function Checkout({ history }) {
         platform_details: platformDetails,
         isTeamed: isTeam,
         team_size: { min_team_size: minTeamSize, max_team_size: maxTeamSize },
-        rounds: rounds
+        rounds: rounds,
+        rules: rules,
+        prizes: prizes
       };
       data = JSON.stringify(payload);
       fetch(process.env.REACT_APP_API_URL + '/api/events', {

@@ -1,14 +1,15 @@
 import React from 'react';
 
 
-//Materail imports
+//Materialui imports
+import { useTheme } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { Grid } from '@material-ui/core';
+import Grid from '@material-ui/core/Grid';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormLabel from '@material-ui/core/FormLabel';
@@ -16,7 +17,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { useTheme } from '@material-ui/core/styles';
+
 
 
 function Alert(props) {
@@ -40,20 +41,19 @@ export default function AnnouncementForm(props) {
   });
   const [loading, setLoading] = React.useState(false);
   const { vertical, horizontal, open, message, type, autoHide } = state;
-  function handleTitleChange(event) {
+
+  const handleTitleChange = (event) => {
     setTitle(event.target.value);
   }
-  function handleDescChange(event) {
+  const handleDescChange = (event) => {
     setDesc(event.target.value);
   }
 
 
   function handleVisibilityChange(event, value) {
-    console.log(value);
     setVisibility(value);
   }
   function handleAddButton() {
-    // console.log(visibility);
     var visible_all = true;
     if (visibility !== "All") {
       visible_all = false;
@@ -62,8 +62,7 @@ export default function AnnouncementForm(props) {
       var data = new FormData();
       const d = { event_id: props.id, title: title, description: desc, visible_all: visible_all }
       data = JSON.stringify(d);
-      // console.log(data);
-      fetch(process.env.REACT_APP_API_URL+`/api/event/add_announcement`, {
+      fetch(process.env.REACT_APP_API_URL + `/api/event/add_announcement`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -72,9 +71,7 @@ export default function AnnouncementForm(props) {
         method: 'POST',
         body: data
       }).then(response => {
-        // console.log(response);
         response.json().then(value => {
-          // console.log(value);
           setLoading(false);
           setState({
             open: true,

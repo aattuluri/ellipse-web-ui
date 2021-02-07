@@ -1,6 +1,6 @@
 import React from 'react';
 
-//Materail impports
+//Materialui impports
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -8,19 +8,12 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-// import Select from '@material-ui/core/Select';
-// import InputLabel from '@material-ui/core/InputLabel';
-// import FormControl from '@material-ui/core/FormControl';
-// import Autocomplete from '@material-ui/lab/Autocomplete';
 import Paper from '@material-ui/core/Paper';
 import Chip from '@material-ui/core/Chip';
 import { Grid, Typography } from '@material-ui/core';
 import { useTheme } from '@material-ui/core/styles';
-// import Radio from '@material-ui/core/Radio';
-// import RadioGroup from '@material-ui/core/RadioGroup';
 import FormLabel from '@material-ui/core/FormLabel';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-// import { NextWeekOutlined } from '@material-ui/icons';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormGroup from '@material-ui/core/FormGroup';
 import Snackbar from '@material-ui/core/Snackbar';
@@ -33,7 +26,7 @@ import { MuiPickersUtilsProvider, DateTimePicker, } from '@material-ui/pickers';
 //function for alert
 function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
-  }
+}
 
 
 const useStyles = makeStyles((theme) => ({
@@ -68,27 +61,28 @@ export default function FormDialog(props) {
         message: 'success',
         type: 'error',
         autoHide: 300
-      });
-      const { vertical, horizontal, alertopen, message, type, autoHide } = state;
+    });
+    const { vertical, horizontal, alertopen, message, type, autoHide } = state;
 
     const [checked, setChecked] = React.useState({
         form: true,
         link: false,
-      });
+    });
 
     const handleClose = () => {
         setOpen(false);
     };
 
     function handleAddButton() {
-        if(desc !== null && startDate !== null && endDate !== null){
-            props.handleAdd({ 
-                title: `Round ${props.roundsCount + 1}`, 
+        if (desc !== null && startDate !== null && endDate !== null) {
+            props.handleAdd({
+                title: `Round ${props.roundsCount + 1}`,
                 description: desc,
                 start_date: startDate,
                 end_date: endDate,
-                link: linkField, 
-                fields: selectedFields })
+                link: linkField,
+                fields: selectedFields
+            })
             props.handleClose()
             setDesc('');
             setStartDate(null);
@@ -96,7 +90,7 @@ export default function FormDialog(props) {
             setLinkField('');
             setSelectedFields([]);
         }
-        else{
+        else {
             setState({
                 alertopen: true,
                 vertical: 'top',
@@ -104,9 +98,9 @@ export default function FormDialog(props) {
                 message: "please fill in all fields",
                 type: "error",
                 autoHide: '5000',
-              })
+            })
         }
-        
+
 
     }
 
@@ -120,9 +114,9 @@ export default function FormDialog(props) {
 
     const handleChange = (event) => {
         setChecked({ ...checked, [event.target.name]: event.target.checked });
-      };
+    };
 
-    const {form,link} = checked;
+    const { form, link } = checked;
 
     const handleAlertClose = () => {
         setState({ ...state, alertopen: false });
@@ -130,15 +124,15 @@ export default function FormDialog(props) {
 
     return (
         <div>
-        <Snackbar
-        anchorOrigin={{ vertical, horizontal }}
-        open={alertopen}
-        autoHideDuration={autoHide}
-        onClose={handleAlertClose}
-        key={vertical + horizontal}
-      >
-        <Alert onClose={handleClose} severity={type}>{message}</Alert>
-      </Snackbar>
+            <Snackbar
+                anchorOrigin={{ vertical, horizontal }}
+                open={alertopen}
+                autoHideDuration={autoHide}
+                onClose={handleAlertClose}
+                key={vertical + horizontal}
+            >
+                <Alert onClose={handleClose} severity={type}>{message}</Alert>
+            </Snackbar>
             <Dialog open={props.open} fullWidth={true} PaperProps={{
                 style: {
                     backgroundColor: theme.palette.secondary.main,
@@ -158,8 +152,8 @@ export default function FormDialog(props) {
                                 fullWidth
                                 disabled
                                 value={`Round ${props.roundsCount + 1}`}
-                                // required
-                                // onChange={(e) => { setName(e.target.value) }}
+                            // required
+                            // onChange={(e) => { setName(e.target.value) }}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -175,7 +169,7 @@ export default function FormDialog(props) {
                                 onChange={(e) => { setDesc(e.target.value) }}
                             />
                         </Grid>
-                        
+
                         <Grid item xs={12}>
                             <MuiPickersUtilsProvider utils={DateFnsUtils} required >
                                 <DateTimePicker
@@ -219,15 +213,15 @@ export default function FormDialog(props) {
                         <Grid item xs={12}>
                             <FormLabel component="legend">Action</FormLabel>
                             <FormGroup>
-          <FormControlLabel
-            control={<Checkbox checked={form} color="default" onChange={handleChange} name="form" />}
-            label="Create Form"
-          />
-          <FormControlLabel
-            control={<Checkbox checked={link} color="default" onChange={handleChange} name="link" />}
-            label="Link"
-          />
-        </FormGroup>
+                                <FormControlLabel
+                                    control={<Checkbox checked={form} color="default" onChange={handleChange} name="form" />}
+                                    label="Create Form"
+                                />
+                                <FormControlLabel
+                                    control={<Checkbox checked={link} color="default" onChange={handleChange} name="link" />}
+                                    label="Link"
+                                />
+                            </FormGroup>
                             {/* <RadioGroup aria-label="address" name="address" value={action} onChange={handleActionChange} style={{ display: "inline" }}>
                                 <FormControlLabel value="form" control={<Radio color="default" />} label="Create Form" />
                                 <FormControlLabel value="hackathon_template" control={<Radio color="default" />} label="Use Hackathon Template" />

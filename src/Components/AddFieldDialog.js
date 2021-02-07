@@ -14,12 +14,9 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import Chip from '@material-ui/core/Chip';
 import { Grid } from '@material-ui/core';
 import { useTheme } from '@material-ui/core/styles';
-// import FormControl from '@material-ui/core/FormControl';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import Radio from '@material-ui/core/Radio';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-
-
 
 
 
@@ -27,27 +24,28 @@ export default function FormDialog(props) {
   const theme = useTheme();
   const [name, setName] = React.useState(null);
   const [type, setType] = React.useState(null);
-  // const [variant,setVariant] = React.useState(null);
-  const [required,setRequired] = React.useState(true);
+  const [required, setRequired] = React.useState(true);
   const fieldOptions = [];
   const [selectedOptions, setSelectedOptions] = React.useState(['option1', 'option2']);
-  function handleNameChange(event) {
+
+
+  const handleNameChange = (event) => {
     setName(event.target.value);
   }
-  function handleTypeChange(event) {
+  const handleTypeChange = (event) => {
     setType(event.target.value);
   }
-  function handleOptionsChange(event, values) {
+  const handleOptionsChange = (event, values) => {
     setSelectedOptions(values);
   }
-  function handleAddButton() {
+
+  const handleAddButton = () => {
     if (name != null && type != null) {
-      // console.log(type)
       if (type !== "radiobuttons" && type !== "checkboxes" && type !== "dropdown") {
-        props.handleAdd({ [name]: { 'title': name, 'field': type,req: required, 'options': [] } }, name);
+        props.handleAdd({ [name]: { 'title': name, 'field': type, req: required, 'options': [] } }, name);
       }
       else {
-        props.handleAdd({ [name]: { 'title': name, 'field': type,req: required, 'options': selectedOptions } }, name);
+        props.handleAdd({ [name]: { 'title': name, 'field': type, req: required, 'options': selectedOptions } }, name);
       }
       setName(null);
       setType(null);
@@ -56,15 +54,14 @@ export default function FormDialog(props) {
     }
   }
 
-  function handleradioChange(event, value) {
-    // setVariant(value)
-    if(value === "required"){
+  const handleradioChange = (event, value) => {
+    if (value === "required") {
       setRequired(true);
     }
-    else{
+    else {
       setRequired(false);
     }
-}
+  }
 
 
   return (
@@ -93,14 +90,14 @@ export default function FormDialog(props) {
             </Grid>
             <Grid item xs={12}>
               <FormControl fullWidth required>
-                <InputLabel htmlFor="outlined-age-native-simple">Type</InputLabel>
+                <InputLabel htmlFor="type">Type</InputLabel>
                 <Select
                   fullWidth
                   native
                   label="Type"
                   inputProps={{
                     name: 'type',
-                    id: 'outlined-age-native-simple',
+                    id: 'type',
                   }}
                   value={type}
                   onChange={handleTypeChange}
@@ -118,8 +115,7 @@ export default function FormDialog(props) {
               </FormControl>
             </Grid>
             <Grid item xs={12}>
-              {/* <FormLabel required component="legend">{field.title}</FormLabel> */}
-              <RadioGroup required aria-label="variant" name="variant" defaultValue="required" onChange={handleradioChange} style={{ display: "inline" }}>
+              <RadioGroup required name="variant" defaultValue="required" onChange={handleradioChange} style={{ display: "inline" }}>
                 <FormControlLabel value="required" control={<Radio color="default" />} label="Required" />
                 <FormControlLabel value="optional" control={<Radio color="default" />} label="Optional" />
               </RadioGroup>

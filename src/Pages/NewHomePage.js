@@ -1,22 +1,24 @@
 import React from 'react';
+import { withRouter, Redirect } from "react-router";
+
+//material ui imports
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import NewHomePageCarousel from '../Pages/NewHomePageCarousel';
 import Box from '@material-ui/core/Box';
-// import FavoriteIcon from '@material-ui/icons/Favorite';
 import Link from '@material-ui/core/Link';
-import Copyright from "../Components/copyright";
 import Grid from '@material-ui/core/Grid';
-// import Paper from '@material-ui/core/Paper';
-// import DeviceDesign from '../Components/Images/un.svg';
+
+//Other component Imports
+import NewHomePageCarousel from '../Pages/NewHomePageCarousel';
+import Copyright from "../Components/copyright";
 import HomePageEventCard from '../Components/HomePageEventCard';
-import GoogleBadge from '../Components/Images/google-play-badge.png'
+import GoogleBadge from '../Components/Images/google-play-badge.png';
 
 
-
+//styles
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
@@ -50,13 +52,10 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         alignItems: 'center',
         minHeight: 200,
-        // paddingLeft: theme.spacing(0),
         backgroundColor: theme.palette.secondary.main,
         margin: theme.spacing(10),
         borderRadius: theme.spacing(2),
         boxShadow: "3",
-        // height: 450,
-        // padding: theme.spacing(10),
     },
     button: {
         margin: theme.spacing(1),
@@ -70,12 +69,13 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function UnregisteredPage(props) {
-    // const token = localStorage.getItem('token');
+function UnregisteredPage(props) {
+    const token = localStorage.getItem('token');
     const classes = useStyles();
     const [activeEvents, setActiveEvents] = React.useState([])
 
     React.useEffect(() => {
+        //function to get events
         fetch(process.env.REACT_APP_API_URL + '/api/get_events', {
             headers: {
                 'Content-Type': 'application/json',
@@ -83,10 +83,8 @@ export default function UnregisteredPage(props) {
             },
             method: 'GET'
         }).then(response => {
-            // console.log(response)
             if (response.status === 200) {
                 response.json().then(value => {
-                    // console.log(value);
                     value.sort((a, b) => {
                         return new Date(a.start_time) - new Date(b.start_time);
                     })
@@ -101,11 +99,18 @@ export default function UnregisteredPage(props) {
         })
     }, [])
 
+    //if token is already present redirect to home page
+    if (token) {
+        return <Redirect to="/home" />;
+    }
 
-    function handleSigninClick() {
+    //function to navigate to home page
+    const handleSigninClick = () => {
         props.history.push("/signin")
     }
-    function handleSignupClick() {
+
+    //function to navigate to signup page
+    const handleSignupClick = () => {
         props.history.push('/signup');
     }
 
@@ -132,12 +137,8 @@ export default function UnregisteredPage(props) {
                         })
                     }
                 </Grid>
-
             </Grid>
             <Box className={classes.footer} height="200px" display="flex" flexDirection="column" justifyContent="center">
-                {/* <Box display="flex" justifyContent="center">
-                    <Typography>Made with <FavoriteIcon fontSize="inherit" color="primary"></FavoriteIcon> for Students and Organizations</Typography><br></br>
-                </Box> */}
                 <Box display="flex" justifyContent="center">
                     <Typography>Contact us at <Link href="mailto:support@ellipseapp.com" variant="body2">
                         {"support@ellipseapp.com"}
@@ -157,7 +158,8 @@ export default function UnregisteredPage(props) {
                     </a>
                 </Box>
             </Box>
-
         </div>
     );
 }
+
+export default withRouter(UnregisteredPage);

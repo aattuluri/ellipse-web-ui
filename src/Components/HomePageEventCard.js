@@ -154,7 +154,7 @@ function Eventcard(props) {
           </div>
         }
         title={
-          <Typography noWrap variant="h5" color="textPrimary" component="p">
+          <Typography variant="h5" color="textPrimary" component="p">
             {event.name}
           </Typography>
         }
