@@ -329,7 +329,7 @@ function AboutEventPanel(props) {
                                 </Grid>}
 
 
-                                {event.prizes !== undefined && event.prizes.length > 0 && <Grid container component="main" className={classes.gridMain}>
+                                {event.prizes !== undefined && event.prizes !== null && event.prizes.length > 0 && <Grid container component="main" className={classes.gridMain}>
                                     <Grid item xs={12}>
                                         <Box display="flex" justifyContent="flex-start">
                                             <Box className={classes.boxItem} margin={2}>
@@ -353,7 +353,7 @@ function AboutEventPanel(props) {
 
                                     </Grid>
                                 </Grid>}
-                                {event.rules !== undefined && event.rules !== null && <Grid container component="main" className={classes.gridMain} >
+                                {event.rules !== undefined && event.rules !== null && event.rules !== "" && <Grid container component="main" className={classes.gridMain} >
                                     <Grid item xs={12} className={classes.gridItem}>
                                         <Box className={classes.boxItem}>
                                             <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h4">Rules</Typography>

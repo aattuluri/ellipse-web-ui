@@ -13,6 +13,7 @@ import EventShareDialog from '../Components/EventShareDialog';
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.secondary.main,
+    height: "100%"
   }
 }));
 
@@ -41,7 +42,7 @@ export default function ImgMediaCard(props) {
         height="180"
         image={process.env.REACT_APP_API_URL + `/api/image?id=${event.poster_url}`}
       />
-      <CardContent>
+      <CardContent style={{minHeight:"100px"}}>
         <Typography gutterBottom variant="h5" component="h2">
           {props.name}
         </Typography>

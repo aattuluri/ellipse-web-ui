@@ -229,9 +229,10 @@ function ExplorePanel(props) {
                         regEvents.length === 0 && <Typography align="center">No Registered Events</Typography>
                     }
                     {regEvents.map((event, index) => {
-                        return (<Grid item xs={12} sm={12} md={4} key={index}>
+                        return (<Grid item xs={12} sm={12} md={4} key={index} >
+                        
                             <ProfileEventCard event={event} handleViewClick={handleEventClick(event)} name={event.name} ></ProfileEventCard>
-                        </Grid>)
+                            </Grid>)
                     })}
 
                 </Grid>}

@@ -112,7 +112,7 @@ export default function ScrollDialog(props) {
             }
         });
         if(props.submission !== null){
-            if (props.submission.submission_id !== null) {
+            if (props.submission.submission_form !== null) {
                 // getData();
                 setKeys(Object.keys(props.submission.submission_form));
                 setSubmission(props.submission.submission_form);

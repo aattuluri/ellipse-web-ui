@@ -295,7 +295,7 @@ function AboutEventPanel(props) {
         // console.log(fileFormKeys);
         var count = 0;
         formkeys.forEach(v => {
-            console.log(formValues[v]);
+            // console.log(formValues[v]);
             if (formValues[v] === null || formValues[v] === '') {
                 // console.log("aa")
                 if (fileFormKeys.includes(v)) {
@@ -723,7 +723,6 @@ function AboutEventPanel(props) {
                         )
                     })}
                     {radioFields.map((field, index) => {
-                        console.log(field.options[0])
                         return (
                             <Grid item xs={12}>
                                 <FormLabel required component="legend">{field.title}</FormLabel>

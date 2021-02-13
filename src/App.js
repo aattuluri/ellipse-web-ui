@@ -20,6 +20,7 @@ import NetworkDetector from './NetworkDetector';
 import VerifyCertificate from './Pages/VerifyCertificate';
 import NewHomePage from './Pages/NewHomePage';
 import EventDetails from './Pages/EventDetaislFullPage';
+import ViewSubmissionPage from './Pages/ViewSubmission';
 // import { loadReCaptcha } from 'react-recaptcha-google'
 
 function App() {
@@ -44,6 +45,7 @@ function App() {
             <Route exact path="/userinfo" component={UserInfo}></Route>
             <Route exact path="/otpverification" component={OTPVer}></Route>
             <Route exact path="/un/event/:eventId" component={UnregisteredPage}></Route>
+            <Route exact path="/submission/:sub_id" component={ViewSubmissionPage}></Route>
             {/* <Route exact path="/event/:eventId" component={EventDetails} /> */}
             {/* <Route exact path="/resetforgotpassword" component ={ForgotPassword2}></Route> */}
             

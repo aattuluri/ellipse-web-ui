@@ -91,7 +91,7 @@ export default function EditDialog(props) {
         if (data.fields) {
             setSelectedFields(data.fields);
         }
-        if (data.link !== "" || data.link !== null) {
+        if (data.link !== undefined && data.link !== "" && data.link !== null) {
             setChecked({ ...checked, link: true });
         }
         // eslint-disable-next-line
@@ -155,9 +155,9 @@ export default function EditDialog(props) {
         setSelectedFields(selectedFields => [...selectedFields, addingField[fName]]);
     }
 
-    const handleDelete = (chipToDelete) => () => {
-        setSelectedFields(selectedFields => selectedFields.filter((chip) => chip.title !== chipToDelete.title));
-    };
+    // const handleDelete = (chipToDelete) => () => {
+    //     setSelectedFields(selectedFields => selectedFields.filter((chip) => chip.title !== chipToDelete.title));
+    // };
 
     const handleChange = (event) => {
         setChecked({ ...checked, [event.target.name]: event.target.checked });
@@ -296,7 +296,7 @@ export default function EditDialog(props) {
                                         <li key={data.key}>
                                             <Chip
                                                 label={data.title}
-                                                onDelete={handleDelete(data)}
+                                                // onDelete={handleDelete(data)}
                                                 className={classes.chip}
                                             />
                                         </li>
@@ -304,14 +304,14 @@ export default function EditDialog(props) {
                                 })}
                             </Paper>
                         </Grid>}
-                        {form && <Grid item xs={12}>
+                        {/* {form && <Grid item xs={12}>
                             <Button
                                 variant="outlined"
                                 color="default"
                                 onClick={() => { setOpen(true) }}>
                                 Add Field
                         </Button>
-                        </Grid>}
+                        </Grid>} */}
                     </Grid>
                 </DialogContent>
                 <DialogActions>

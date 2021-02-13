@@ -47,6 +47,9 @@ import EventDetailsTeamPanel from '../Components/EventDetailsTeamPanel';
 import EventAdminSubmissionPanel from '../Components/EventAdminSubmissionPanel';
 import EventShareDialog from '../Components/EventShareDialog';
 import AdminSettingsPanel from '../Components/AdminSettingsPanel';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Fade from '@material-ui/core/Fade';
+// import { setLogLevel } from 'firebase';
 
 const drawerWidth = 240;
 
@@ -142,6 +145,11 @@ const useStyles = makeStyles((theme) => ({
         // },
         // color: theme.palette.grey[500],
     },
+    progress: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+    },
 }));
 
 export default function PersistentDrawerLeft(props) {
@@ -151,11 +159,12 @@ export default function PersistentDrawerLeft(props) {
     const token = localStorage.getItem('token');
     const id = props.match.params.eventId;
     const t = localStorage.getItem('theme');
+    const [loading, setLoading] = React.useState(false);
 
     const [drawerOpen, setDrawerOpen] = React.useState(true);
     const [event, setEvent] = React.useState({});
     const [adminAccess, setAdminAccess] = React.useState(false);
-    const [moderatorAccess,setModeratorAcces] = React.useState(false);
+    const [moderatorAccess, setModeratorAcces] = React.useState(false);
     const [chatAcess, setChatAcess] = React.useState(false);
     const [teamAccess, setTeamAccess] = React.useState(false);
     const { currentUser } = React.useContext(AuthContext);
@@ -180,6 +189,7 @@ export default function PersistentDrawerLeft(props) {
 
 
     React.useEffect(() => {
+        setLoading(true);
         fetch(process.env.REACT_APP_API_URL + `/api/event?id=${id}`, {
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -188,28 +198,35 @@ export default function PersistentDrawerLeft(props) {
             },
             method: 'GET',
         }).then(response => {
-            response.json().then(val => {
-                setEvent(val.event);
-                // console.log(val.event.isTeamed)
-                if (val.event.isTeamed && val.event.registered) {
-                    setTeamAccess(true);
-                }
-                if (val.event.registered || val.event.reg_mode !== "form") {
-                    setChatAcess(true);
+            if (response.status === 200) {
+                response.json().then(val => {
+                    setEvent(val.event);
+                    // console.log(val.event.isTeamed)
+                    if (val.event.isTeamed && val.event.registered) {
+                        setTeamAccess(true);
+                    }
+                    if (val.event.registered || val.event.reg_mode !== "form") {
+                        setChatAcess(true);
 
-                } else if (val.event.user_id === currentUser.user_id) {
-                    setChatAcess(true);
-                    setTeamAccess(false);
-                }
-                else {
-                    setChatAcess(false)
-                }
-                if(val.event.moderators.includes(currentUser.user_id)){
-                    setModeratorAcces(true);
-                    setChatAcess(true);
-                }
+                    } else if (val.event.user_id === currentUser.user_id) {
+                        setChatAcess(true);
+                        setTeamAccess(false);
+                    }
+                    else {
+                        setChatAcess(false)
+                    }
+                    if (val.event.moderators.includes(currentUser.user_id)) {
+                        setModeratorAcces(true);
+                        setChatAcess(true);
+                    }
+                    setLoading(false);
 
-            })
+                })
+            }
+            else {
+
+            }
+
         })
         // eslint-disable-next-line
     }, [token, id, currentUser])
@@ -291,7 +308,8 @@ export default function PersistentDrawerLeft(props) {
     };
 
     return (
-        <div >
+        <div>
+
             <CssBaseline />
             <AppBar
                 position="fixed"
@@ -386,7 +404,7 @@ export default function PersistentDrawerLeft(props) {
                 </List>
                 <Divider />
                 {
-                    adminAccess  && <List>
+                    adminAccess && <List>
                         <ListItem button onClick={handleAnyClick("dashBoardSelected")} selected={dashBoardSelected}>
                             <ListItemIcon >
                                 <DashboardIcon color="primary" />
@@ -441,10 +459,17 @@ export default function PersistentDrawerLeft(props) {
                     [classes.contentShift]: drawerOpen,
                 })}
             >
+                <div className={classes.progress}>
+                    <Fade
+                        in={loading}
+                        unmountOnExit>
+                        <CircularProgress />
+                    </Fade>
+                </div>
                 {/* <div className={classes.drawerHeader} /> */}
                 {/* <Typography className={classes.eventName} align='center' variant="h4" style={{ paddingBottom: "20px", paddingTop: "10px" }}>{event.name}</Typography> */}
                 {
-                    infoSelected && event != null && <AboutPanel event={event}></AboutPanel>
+                    infoSelected && !loading && event != null && <AboutPanel event={event}></AboutPanel>
                 }
                 {
                     editEventSelected && event != null && <EventPost event={event} ></EventPost>
@@ -471,7 +496,7 @@ export default function PersistentDrawerLeft(props) {
                     <EventsTeamPanel subIndexValue={subIndexValue} value={4} index={4} open={drawerOpen} event={event}></EventsTeamPanel>
                 }
                 {
-                    !event.isTeamed  && participationSelected && !adminAccess && <EventSubmissionPanel individual={true} event={event}></EventSubmissionPanel>
+                    !event.isTeamed && participationSelected && !adminAccess && <EventSubmissionPanel individual={true} event={event}></EventSubmissionPanel>
                 }
                 {
                     adminAccess && certificateSelected && event != null && <CertificateDashboard event={event}></CertificateDashboard>

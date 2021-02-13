@@ -18,6 +18,8 @@ import { Typography } from '@material-ui/core';
 import WebSocketContext from '../WebSocketContext';
 import AuthContext from '../AuthContext';
 import WebSocketDataContext from '../WebSocketDataContext';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Fade from '@material-ui/core/Fade';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -71,12 +73,18 @@ const useStyles = makeStyles((theme) => ({
         // padding: theme.spacing(1)
 
     },
+    progress: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+    },
 }));
 
 function AboutEventPanel(props) {
     const classes = useStyles();
     const { children, value, url, index, ...other } = props;
     const { currentUser } = React.useContext(AuthContext);
+    const [loading, setLoading] = React.useState(false);
     // const user = JSON.parse(localStorage.getItem('user'));
     const token = localStorage.getItem('token');
     const event = props.event;
@@ -120,6 +128,7 @@ function AboutEventPanel(props) {
 
 
     const getData = () => {
+        setLoading(true);
         try {
             fetch(process.env.REACT_APP_API_URL + `/api/event/get_user_registration?id=${event._id}`, {
                 headers: {
@@ -131,13 +140,13 @@ function AboutEventPanel(props) {
             }).then(response => {
                 if (response.status === 200) {
                     response.json().then(value => {
-                        // console.log(value[0]);
                         setRegistration(value[0]);
-                        // if(value[0].teamed_up){
                         setTeamedUp(value[0].teamed_up);
-                        // }
-
+                        setLoading(false);
                     })
+                }
+                else {
+
                 }
 
             })
@@ -155,6 +164,13 @@ function AboutEventPanel(props) {
             {...other}>
             {value === index && (
                 <div className={classes.root}>
+                    <div className={classes.progress}>
+                        <Fade
+                            in={loading}
+                            unmountOnExit>
+                            <CircularProgress />
+                        </Fade>
+                    </div>
                     {/* <Paper className={classes.root2}>
                         <Tabs
                             value={subIndexValue}
@@ -171,15 +187,15 @@ function AboutEventPanel(props) {
                             <Tab label="Join Team" />
                         </Tabs>
                     </Paper> */}
-                    {teamedUp && <SubmissionPanel getData={getData} individual={false} value={subIndexValue} registration={registration} index={0} event={props.event}></SubmissionPanel>}
-                    {teamedUp && <SubPanel1 getData={getData} value={subIndexValue} registration={registration} index={1} event={props.event}></SubPanel1>}
-                    {teamedUp && subIndexValue === 2 &&  <EventsTeamChatPanel open={props.open} value={subIndexValue} registration={registration} index={2} event={props.event}></EventsTeamChatPanel>}
+                    {teamedUp && !loading && <SubmissionPanel getData={getData} individual={false} value={subIndexValue} registration={registration} index={0} event={props.event}></SubmissionPanel>}
+                    {teamedUp && !loading && <SubPanel1 getData={getData} value={subIndexValue} registration={registration} index={1} event={props.event}></SubPanel1>}
+                    {teamedUp && !loading && subIndexValue === 2 && <EventsTeamChatPanel open={props.open} value={subIndexValue} registration={registration} index={2} event={props.event}></EventsTeamChatPanel>}
                     {!teamedUp && subIndexValue === 0 && <Typography>Join team or create a team</Typography>}
                     {/* {!teamedUp && subIndexValue === 1 && <Typography>Join team or create a team</Typography>} */}
                     {!teamedUp && subIndexValue === 2 && <Typography>Join team or create a team</Typography>}
                     {!teamedUp && <SubPanel2 value={subIndexValue} index={1} event={props.event} getData={getData}></SubPanel2>}
                     {/* {teamedUp && subIndexValue === 3 && <Typography>Team already created</Typography>} */}
-                    {!teamedUp && <SubPanel3 value={subIndexValue} index={1} event={props.event}></SubPanel3>}
+                    {!teamedUp && !loading && <SubPanel3 value={subIndexValue} index={1} event={props.event}></SubPanel3>}
                     {teamedUp && subIndexValue === 4 && <Typography>Team created or joined, delete to join other teams</Typography>}
                 </div>
             )}

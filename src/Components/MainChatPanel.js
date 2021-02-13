@@ -481,7 +481,6 @@ function MainChatPanel(props) {
                     </div>
                     <div className={classes.progress}>
                         <Fade
-
                             in={loading}
                             unmountOnExit>
                             <CircularProgress />

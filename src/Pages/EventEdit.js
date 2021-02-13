@@ -5,6 +5,7 @@ import { withRouter } from 'react-router';
 
 //MaterialUI imports
 import Button from '@material-ui/core/Button';
+import Box from '@material-ui/core/Box';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -118,9 +119,13 @@ const EventEdit = (props) => {
   const [platformDetails, setPlatformDetails] = React.useState('');
   const [isTeamed, setIsTeamed] = React.useState(false);
   const [teamSize, setTeamSize] = React.useState({});
-  const [rounds,setRounds] = React.useState([]);
+  const [rounds, setRounds] = React.useState([]);
+  const [rules, setRules] = React.useState(null);
+  const [prizes, setPrizes] = React.useState([]);
+  const [prizeTitle, setPrizeTitle] = React.useState(null);
+    const [prizeDesc, setPrizeDesc] = React.useState(null);
   const [roundsDialogOpen, setRoundsDialogOpen] = React.useState(false);
-  const [selectedEditRound,setSelectedEditRound] = React.useState({});
+  const [selectedEditRound, setSelectedEditRound] = React.useState({});
 
 
 
@@ -179,6 +184,8 @@ const EventEdit = (props) => {
     setIsTeamed(event.isTeamed);
     setTeamSize(event.team_size);
     setRounds(event.rounds);
+    setRules(event.rules);
+    setPrizes(event.prizes);
 
     // setParticipantsType(event.o_allowed)
     if (event.o_allowed === true) {
@@ -226,7 +233,7 @@ const EventEdit = (props) => {
   const handleRoundEditDialogClose = () => {
     // setOpen(false);
     setRoundsDialogOpen(false);
-};
+  };
 
   async function handleEventPost(e) {
     e.preventDefault();
@@ -265,7 +272,9 @@ const EventEdit = (props) => {
         venue: venue,
         venue_college: venueCollege,
         platform_details: platformDetails,
-        rounds: rounds
+        rounds: rounds,
+        rules: rules,
+        prizes: prizes
       };
       data = JSON.stringify(payload);
       // console.log(data);
@@ -424,10 +433,34 @@ const EventEdit = (props) => {
   }
 
   const handleRoundEditButton = (data) => () => {
-    console.log(data);
+    // console.log(data);
     setSelectedEditRound(data);
     setRoundsDialogOpen(true);
   }
+
+  const handlePrizeAddButton = () => {
+    setPrizes(prizes => [...prizes, { title: prizeTitle, desc: prizeDesc }]);
+    setPrizeTitle(null);
+    setPrizeDesc(null);
+}
+
+const handlePrizeDeleteButton = (index, data) => () => {
+  // console.log(index);
+  // console.log(data);
+  // console.log(prizes)
+    var currentPrizes = prizes;
+    currentPrizes.splice(index);
+    setPrizes(currentPrizes);
+}
+
+const handlePrizeFieldChange = (title) => (event) => {
+    if (title === "title") {
+        setPrizeTitle(event.target.value)
+    }
+    else {
+        setPrizeDesc(event.target.value);
+    }
+}
 
 
 
@@ -870,6 +903,53 @@ const EventEdit = (props) => {
                 })}
               </Paper>
             </Grid>}
+            <Grid item xs={12}>
+              <TextField
+                multiline={true}
+                helperText="Enter all rules and regulation including eligibility for participation"
+                rows="5"
+                variant='outlined'
+                placeholder="Enter all rules and regulation including eligibility for participation"
+                autoComplete='off'
+                onChange={(e) => { setRules(e.target.value) }}
+                value={rules}
+                id="rules"
+                name="rules"
+                label="Rules"
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <FormControl component="fieldset" className={classes.root}>
+                <FormLabel component="legend">Prizes</FormLabel>
+                <Box display="flex" style={{ marginTop: "10px" }}>
+                  <Box>
+                    <TextField onChange={handlePrizeFieldChange("title")} value={prizeTitle || ""} label="Prize Title" variant="outlined" style={{ marginRight: "5px" }}></TextField>
+                  </Box>
+                  <Box>
+                    <TextField onChange={handlePrizeFieldChange("desc")} value={prizeDesc || ""} label="Prize Description" variant="outlined"></TextField>
+                  </Box>
+                  <Box>
+                    <IconButton onClick={handlePrizeAddButton}>Add</IconButton>
+                  </Box>
+                </Box>
+              </FormControl>
+            </Grid>
+            <Grid>
+              <Paper component="ul" className={classes.root}>
+                {prizes.map((data, index) => {
+                  return (
+                    <li key={data.key}>
+                      <Chip
+                        label={data.title}
+                        onDelete={handlePrizeDeleteButton(index, data)}
+                        className={classes.chip}
+                      />
+                    </li>
+                  );
+                })}
+              </Paper>
+            </Grid>
 
           </Grid>
           <Button
@@ -885,12 +965,12 @@ const EventEdit = (props) => {
         </form>
       </div>
       <RoundEditDialog
-      open={roundsDialogOpen}
-      handleClose={handleRoundEditDialogClose}
-      // handleEdit={handleRoundEdit}
-      rounds= {rounds}
-      setRounds={setRounds}
-      roundData = {selectedEditRound}
+        open={roundsDialogOpen}
+        handleClose={handleRoundEditDialogClose}
+        // handleEdit={handleRoundEdit}
+        rounds={rounds}
+        setRounds={setRounds}
+        roundData={selectedEditRound}
       ></RoundEditDialog>
       {/* </Grid> */}
       {/* <Box mt={2}>
