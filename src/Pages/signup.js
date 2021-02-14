@@ -1,9 +1,12 @@
 import React from 'react';
-import Copyright from '../Components/copyright';
 import useStyles from '../Themes/SignupPageStyles';
 import { withRouter, Redirect } from "react-router";
+import { detect } from 'detect-browser';
 
 //MaterialUI imports
+import Select from '@material-ui/core/Select';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormControl from '@material-ui/core/FormControl';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -19,8 +22,9 @@ import Container from '@material-ui/core/Container';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { detect } from 'detect-browser';
+
 import SupportDialog from '../Components/SupportDialog';
+import Copyright from '../Components/copyright';
 // import { ReCaptcha } from 'react-recaptcha-google';
 
 //function for alert
@@ -75,7 +79,7 @@ const Signup = ({ history }) => {
         window.grecaptcha.execute('6LcEVOoZAAAAAOjNV_wZFJ7YQMBs4IwKyH-LdU2P', { action: 'submit' }).then(recaptcha_token => {
           // Add your logic to submit to your backend server here.
           // console.log(recaptcha_token);
-          fetch(process.env.REACT_APP_API_URL +'/api/verify_recaptcha', {
+          fetch(process.env.REACT_APP_API_URL + '/api/verify_recaptcha', {
             method: 'POST',
             headers: {
               "Content-Type": "application/json"
@@ -87,7 +91,7 @@ const Signup = ({ history }) => {
             })
           }).then(res => {
             // console.log(res);
-            if(res.status === 200){
+            if (res.status === 200) {
               res.json().then(result => {
                 // console.log(result)
                 if (result.success) {
@@ -97,7 +101,7 @@ const Signup = ({ history }) => {
                 }
               })
             }
-            
+
           });
         });
       });
@@ -161,13 +165,14 @@ const Signup = ({ history }) => {
     // });
     event.preventDefault();
     setLoading(true);
-    const { fullName, email, password, username, terms } = event.target.elements;
+    const { fullName, email,designation , password, username, terms } = event.target.elements;
     try {
       if (terms.checked) {
         var data = new FormData()
         const payload = {
           name: fullName.value,
           email: email.value,
+          designation: designation.value,
           password: password.value,
           username: username.value,
           type: 'browser',
@@ -369,6 +374,27 @@ const Signup = ({ history }) => {
                 type="email"
                 autoComplete="email"
               />
+            </Grid>
+            <Grid item xs={12}>
+              <FormControl variant="outlined" fullWidth required>
+                <InputLabel htmlFor="designation">You are</InputLabel>
+                <Select
+                  fullWidth
+                  native
+                  label="You are"
+                  inputProps={{
+                    name: 'designation',
+                    id: 'designation',
+                  }}
+                >
+                  <option aria-label="None" value="" />
+                  <option value="Student">Student</option>
+                  <option value="Faculty">Faculty</option>
+                  <option value="Club/Organisation">Club/Organisation</option>
+                  <option value="Institution">Institution</option>
+                  <option value="Others">Others</option>
+                </Select>
+              </FormControl>
             </Grid>
             <Grid item xs={12}>
               <TextField

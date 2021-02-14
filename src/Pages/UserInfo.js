@@ -119,30 +119,24 @@ const UserInfo = ({ history }) => {
     function handleChange(event) {
         if (event.target.files[0]) {
             setImage(event.target.files[0]);
-            // setImageAsFile(imageFile => (image))
             const url = URL.createObjectURL(event.target.files[0]);
-            // const fileType = event.target.files[0].type;
             setImageurl(url);
-            // setImageType(fileType.substr(fileType.indexOf('/') + 1));
         }
-
     }
     async function handleSignUp(event) {
         event.preventDefault();
         setLoading(true);
-        const { gender, designation, collegeId, bio } = event.target.elements;
+        const { gender, collegeId, bio } = event.target.elements;
 
         try {
             var data = new FormData()
             const payload = {
                 gender: gender.value,
-                designation: designation.value,
+                // designation: designation.value,
                 college_id: collegeId.value,
                 bio: bio.value,
             };
             data = JSON.stringify(payload);
-            // console.log(data);
-            // http://139.59.16.53:4000/api
             fetch(process.env.REACT_APP_API_URL+'/api/users/userdetails', {
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -154,7 +148,6 @@ const UserInfo = ({ history }) => {
             }).then(response => {
                 if (response.status === 200) {
                     response.json().then(val => {
-                        // console.log(val.message)
                         if (image != null) {
                             var data2 = new FormData()
                             data2.append("image", image);
@@ -279,7 +272,7 @@ const UserInfo = ({ history }) => {
                                 </Select>
                             </FormControl>
                         </Grid>
-                        <Grid item xs={12}>
+                        {/* <Grid item xs={12}>
                             <FormControl variant="outlined" fullWidth required>
                                 <InputLabel htmlFor="outlined-age-native-simple">You are</InputLabel>
                                 <Select
@@ -299,7 +292,7 @@ const UserInfo = ({ history }) => {
                                     <option value="Others">Others</option>
                                 </Select>
                             </FormControl>
-                        </Grid>
+                        </Grid> */}
                         <Grid item xs={12}>
                         
                             <FormControl variant="outlined" fullWidth required>
@@ -334,7 +327,6 @@ const UserInfo = ({ history }) => {
                     >
                         {loading ? <CircularProgress color="primary" size={24} /> : "Continue"}
                     </Button>
-
                 </form>
             </div>
 
@@ -347,5 +339,3 @@ const UserInfo = ({ history }) => {
 }
 
 export default withRouter(UserInfo);
-
-

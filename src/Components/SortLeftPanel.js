@@ -49,7 +49,6 @@ const useStyles = makeStyles((theme) => ({
         position: 'sticky',
         // top: theme.spacing(10),
         marginLeft: theme.spacing(1),
-
         [theme.breakpoints.down('sm')]: {
             display: 'none',
             // top: theme.spacing(20)
@@ -232,7 +231,7 @@ function SortLeftPanel(props) {
                         {["All", `${currentUser.college_name}`].map((value) => {
 
                             return (
-                                <ListItem key={value} role={undefined} dense button >
+                                <ListItem key={value} role={undefined} dense button wrap>
                                     <ListItemIcon>
                                         <FormControlLabel value={value} control={<Radio color="default" />} label={value} />
                                     </ListItemIcon>
