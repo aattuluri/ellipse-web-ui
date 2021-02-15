@@ -79,7 +79,7 @@ const UserInfo = ({ history }) => {
     });
     const [loading, setLoading] = React.useState(false);
     const { vertical, horizontal, open, message, type,autoHide } = state;
-    const [colleges,setColleges] = React.useState([]);
+    // const [colleges,setColleges] = React.useState([]);
     const handleClose = async (event, reason) => {
 
         if (message === "successful") {
@@ -95,22 +95,22 @@ const UserInfo = ({ history }) => {
 
         setState({ ...state, open: false });
     };
-    React.useEffect(()=>{
-        fetch(process.env.REACT_APP_API_URL+'/api/colleges', {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    method: 'GET',
-                }).then(response =>{
-                  // console.log(response);
-                  response.json().then(value =>{
-                    // console.log(value);
-                    setColleges(value);
-                  })
-                })
-      },[token])
+    // React.useEffect(()=>{
+    //     fetch(process.env.REACT_APP_API_URL+'/api/colleges', {
+    //                 headers: {
+    //                     'Authorization': `Bearer ${token}`,
+    //                     'Content-Type': 'application/json',
+    //                     'Accept': 'application/json'
+    //                 },
+    //                 method: 'GET',
+    //             }).then(response =>{
+    //               // console.log(response);
+    //               response.json().then(value =>{
+    //                 // console.log(value);
+    //                 setColleges(value);
+    //               })
+    //             })
+    //   },[token])
 
       if (!token) {
         return <Redirect to="/"></Redirect>

@@ -121,6 +121,7 @@ const EventEdit = (props) => {
   const [teamSize, setTeamSize] = React.useState({});
   const [rounds, setRounds] = React.useState([]);
   const [rules, setRules] = React.useState(null);
+  const [themes,setThemes] = React.useState(null);
   const [prizes, setPrizes] = React.useState([]);
   const [prizeTitle, setPrizeTitle] = React.useState(null);
     const [prizeDesc, setPrizeDesc] = React.useState(null);
@@ -186,6 +187,7 @@ const EventEdit = (props) => {
     setRounds(event.rounds);
     setRules(event.rules);
     setPrizes(event.prizes);
+    setThemes(event.themes);
 
     // setParticipantsType(event.o_allowed)
     if (event.o_allowed === true) {
@@ -274,7 +276,8 @@ const EventEdit = (props) => {
         platform_details: platformDetails,
         rounds: rounds,
         rules: rules,
-        prizes: prizes
+        prizes: prizes,
+        themes: themes
       };
       data = JSON.stringify(payload);
       // console.log(data);
@@ -916,6 +919,23 @@ const handlePrizeFieldChange = (title) => (event) => {
                 id="rules"
                 name="rules"
                 label="Rules"
+                fullWidth
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <TextField
+                multiline={true}
+                helperText="Enter your event themes like healthcare, fintech"
+                rows="5"
+                variant='outlined'
+                placeholder="Enter your event themes like healthcare, fintech"
+                autoComplete='off'
+                onChange={(e) => { setThemes(e.target.value) }}
+                value={themes}
+                id="themes"
+                name="themes"
+                label="Themes"
                 fullWidth
               />
             </Grid>

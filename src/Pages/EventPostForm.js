@@ -242,6 +242,8 @@ export default function Checkout({ history }) {
             setRules={setRules}
             prizes={prizes}
             setPrizes={setPrizes}
+            themes={themes}
+            setThemes={setThemes}
             handlePost={handleEventPost}>
           </EventPostDetails3>);
       default:
@@ -254,6 +256,7 @@ export default function Checkout({ history }) {
     if (participantsType === "open") {
       oAllowed = true
     }
+    // console.log(themes)
     setLoading(true);
     try {
       var data = new FormData();
@@ -285,7 +288,8 @@ export default function Checkout({ history }) {
         team_size: { min_team_size: minTeamSize, max_team_size: maxTeamSize },
         rounds: rounds,
         rules: rules,
-        prizes: prizes
+        prizes: prizes,
+        themes: themes
       };
       data = JSON.stringify(payload);
       fetch(process.env.REACT_APP_API_URL + '/api/events', {
@@ -331,7 +335,7 @@ export default function Checkout({ history }) {
                   horizontal: 'center',
                   message: "Poster upload is not successfull try again in edit event in your events",
                   type: "error",
-                  autoHide: '5000',
+                  autoHide: '3000',
                 })
               }
             })
@@ -340,7 +344,16 @@ export default function Checkout({ history }) {
         }
         else {
           result.json().then(value => {
+            setLoading(false);
             // console.log(value);
+            setState({
+              open: true,
+              vertical: 'top',
+              horizontal: 'center',
+              message: "Something went wrong try again",
+              type: "errors",
+              autoHide: "4000"
+            })
           })
         }
       })
@@ -359,7 +372,7 @@ export default function Checkout({ history }) {
       })
     }
   }
-
+  // setLoading(false);
   function setRegFields(f) {
     setFields(f);
   }

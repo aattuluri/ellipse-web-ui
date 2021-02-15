@@ -163,12 +163,14 @@ export default function EventPostForm(props) {
 
     const handleAddRounds = (r) => {
         props.setRounds(rounds => [...rounds, r]);
+        // console.log(prizes);
     }
 
     const handlePrizeAddButton = () => {
         props.setPrizes(prizes => [...prizes, { title: prizeTitle,prize: prize, desc: prizeDesc }]);
         setPrizeTitle(null);
         setPrizeDesc(null);
+        setPrize(null);
     }
 
     const handlePrizeDeleteButton = (index, data) => () => {
@@ -221,6 +223,22 @@ export default function EventPostForm(props) {
                         />
                     </Grid>
                     <Grid item xs={12}>
+                        <TextField
+                            multiline={true}
+                            helperText="Enter your event themes like healthcare fintech"
+                            rows="5"
+                            variant='outlined'
+                            placeholder="Enter your event themes like healthcare fintech"
+                            autoComplete='off'
+                            onChange={(e) => { props.setThemes(e.target.value) }}
+                            value={props.themes}
+                            id="themes"
+                            name="themes"
+                            label="Themes"
+                            fullWidth
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
                         <FormControl component="fieldset" className={classes.formControl}>
                             <FormLabel component="legend">Prizes</FormLabel>
                             <Box display="flex" style={{ marginTop: "10px" }}>
@@ -254,21 +272,7 @@ export default function EventPostForm(props) {
                             })}
                         </Paper>
                     </Grid>
-                    <Grid>
-                        <Paper component="ul" className={classes.root}>
-                            {props.rounds.map((data) => {
-                                return (
-                                    <li key={data.key}>
-                                        <Chip
-                                            label={data.title}
-                                            onDelete={handleRoundDelete(data)}
-                                            className={classes.chip}
-                                        />
-                                    </li>
-                                );
-                            })}
-                        </Paper>
-                    </Grid>
+                
                     <Grid item xs={12}>
                         <FormControl component="fieldset" className={classes.formControl}>
                             <FormLabel component="legend">Fields for your Registration Form</FormLabel>
