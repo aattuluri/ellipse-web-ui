@@ -919,6 +919,7 @@ const handlePrizeFieldChange = (title) => (event) => {
                 fullWidth
               />
             </Grid>
+            
             <Grid item xs={12}>
               <FormControl component="fieldset" className={classes.root}>
                 <FormLabel component="legend">Prizes</FormLabel>

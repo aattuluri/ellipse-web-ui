@@ -15,12 +15,12 @@ import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Backdrop from '@material-ui/core/Backdrop';
-import SuccessPanel from '../Components/SuccessPanel';
 
 //Components imports
 import EventPostDetails1 from '../Components/EventPostDetails1';
 import EventPostDetails2 from '../Components/EventPostDetails2';
 import EventPostDetails3 from '../Components/EventPostDetails3';
+import SuccessPanel from '../Components/SuccessPanel';
 import AuthContext from '../AuthContext';
 
 //function for alert
@@ -149,6 +149,7 @@ export default function Checkout({ history }) {
   const [rounds, setRounds] = React.useState([]);
   const [rules,setRules] = React.useState(null);
   const [prizes,setPrizes] = React.useState([]);
+  const [themes,setThemes] = React.useState(null);
   const [showSuccessPanel, setShowSuccessPanel] = React.useState(false);
 
 

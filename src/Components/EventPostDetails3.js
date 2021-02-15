@@ -62,6 +62,7 @@ export default function EventPostForm(props) {
     const [tandcOpen, setTandcOpen] = React.useState(false);
     const [prizeTitle, setPrizeTitle] = React.useState(null);
     const [prizeDesc, setPrizeDesc] = React.useState(null);
+    const [prize,setPrize] = React.useState(null);
     const [prizes, setPrizes] = React.useState([]);
 
     React.useEffect(() => {
@@ -165,7 +166,7 @@ export default function EventPostForm(props) {
     }
 
     const handlePrizeAddButton = () => {
-        props.setPrizes(prizes => [...prizes, { title: prizeTitle, desc: prizeDesc }]);
+        props.setPrizes(prizes => [...prizes, { title: prizeTitle,prize: prize, desc: prizeDesc }]);
         setPrizeTitle(null);
         setPrizeDesc(null);
     }
@@ -180,8 +181,11 @@ export default function EventPostForm(props) {
         if (title === "title") {
             setPrizeTitle(event.target.value)
         }
-        else {
+        else if(title === "desc") {
             setPrizeDesc(event.target.value);
+        }
+        else{
+            setPrize(event.target.value);
         }
     }
 
@@ -222,6 +226,9 @@ export default function EventPostForm(props) {
                             <Box display="flex" style={{ marginTop: "10px" }}>
                                 <Box>
                                     <TextField onChange={handlePrizeFieldChange("title")} value={prizeTitle || ""} label="Prize Title" variant="outlined" style={{ marginRight: "5px" }}></TextField>
+                                </Box>
+                                <Box>
+                                    <TextField onChange={handlePrizeFieldChange("prize")} value={prize || ""} label="Prize" variant="outlined"></TextField>
                                 </Box>
                                 <Box>
                                     <TextField onChange={handlePrizeFieldChange("desc")} value={prizeDesc || ""} label="Prize Description" variant="outlined"></TextField>

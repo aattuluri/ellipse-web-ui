@@ -36,28 +36,28 @@ const OTPver = ({ history }) => {
         autoHide: 300
     });
     const [loading, setLoading] = React.useState(false);
-    const { vertical, horizontal, open, message, type,autoHide} = state;
-    const [seconds,setSeconds] = React.useState(30);
-    const [resendEnabled,setresetEnabled] = React.useState(false)
+    const { vertical, horizontal, open, message, type, autoHide } = state;
+    const [seconds, setSeconds] = React.useState(30);
+    const [resendEnabled, setresetEnabled] = React.useState(false)
 
     React.useEffect(() => {
         if (seconds > 0) {
-          setTimeout(() => setSeconds(seconds - 1), 1000);
+            setTimeout(() => setSeconds(seconds - 1), 1000);
         } else {
-          setresetEnabled(true)
+            setresetEnabled(true)
         }
         // eslint-disable-next-line
-      },[seconds]);
+    }, [seconds]);
 
     function handleClose() {
         // console.log("message")
         if (message === "Success! redirecting to Ellipse Home") {
-            history.replace("/userinfo")
+            history.replace("/home")
         }
         setState({ ...state, open: false });
     }
 
-    if(!token){
+    if (!token) {
         return <Redirect to="/"></Redirect>
     }
 
@@ -73,7 +73,7 @@ const OTPver = ({ history }) => {
             // data.append(JSON.stringify(payload));
             data = JSON.stringify(payload);
 
-            fetch(process.env.REACT_APP_API_URL+'/api/users/verifyotp', {
+            fetch(process.env.REACT_APP_API_URL + '/api/users/verifyotp', {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
@@ -139,37 +139,37 @@ const OTPver = ({ history }) => {
     }
 
 
-    function handleResendOTP(){
+    function handleResendOTP() {
         try {
             var data2 = new FormData();
             const payload2 = {
-            //   email: value[0].email
+                //   email: value[0].email
             };
             data2 = JSON.stringify(payload2)
             fetch(process.env.REACT_APP_API_URL + '/api/users/sendverificationemailwithauth', {
-              headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-              },
-              method: 'POST',
-              body: data2
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                method: 'POST',
+                body: data2
             }).then((result) => {
-              // console.log(result);
-              result.json().then((res) => {
-                if (res.message === "success") {
-                    setState({
-                        open: true,
-                        vertical: 'top',
-                        horizontal: 'center',
-                        message: "Password sent succcessfully",
-                        type: 'success',
-                        autoHide: 300
-                    })
-                }
-              })
+                // console.log(result);
+                result.json().then((res) => {
+                    if (res.message === "success") {
+                        setState({
+                            open: true,
+                            vertical: 'top',
+                            horizontal: 'center',
+                            message: "Password sent succcessfully",
+                            type: 'success',
+                            autoHide: 300
+                        })
+                    }
+                })
 
             })
-          } catch (error) {
+        } catch (error) {
             setLoading(false);
             setState({
                 open: true,
@@ -178,10 +178,10 @@ const OTPver = ({ history }) => {
                 message: error.message,
                 type: 'error'
             })
-          }
+        }
     }
 
-    function handlesigninButton(){
+    function handlesigninButton() {
         history.push('/signin')
         localStorage.removeItem('token');
     }
@@ -228,13 +228,13 @@ const OTPver = ({ history }) => {
                     </Button>
                     <Grid container>
 
-              <Grid item>
-              <Button disabled={!resendEnabled} onClick={handleResendOTP}>Resend OTP in {seconds}</Button>
-              </Grid>
-              <Grid item>
-              <Button  onClick={handlesigninButton}>Signin to Different account</Button>
-              </Grid>
-            </Grid>
+                        <Grid item>
+                            <Button disabled={!resendEnabled} onClick={handleResendOTP}>Resend OTP in {seconds}</Button>
+                        </Grid>
+                        <Grid item>
+                            <Button onClick={handlesigninButton}>Signin to Different account</Button>
+                        </Grid>
+                    </Grid>
                 </form>
             </div>
 

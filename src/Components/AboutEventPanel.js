@@ -11,6 +11,7 @@ import Box from '@material-ui/core/Box';
 import GroupIcon from '@material-ui/icons/Group';
 import PersonIcon from '@material-ui/icons/Person';
 import Divider from '@material-ui/core/Divider';
+import EmojiEventsIcon from '@material-ui/icons/EmojiEvents';
 
 //other component imports
 import ImageDialog from '../Components/ImageDialog';
@@ -38,6 +39,7 @@ const useStyles = makeStyles((theme) => ({
     boxItem: {
         display: "flex",
         justifyContent: "center",
+        minWidth: "20%"
     },
     gridMain: {
         borderRadius: theme.spacing(2),
@@ -331,28 +333,28 @@ function AboutEventPanel(props) {
 
                                 {event.prizes !== undefined && event.prizes !== null && event.prizes.length > 0 && <Grid container component="main" className={classes.gridMain}>
                                     <Grid item xs={12}>
-                                        <Box display="flex" justifyContent="flex-start">
-                                            <Box className={classes.boxItem} margin={2}>
+                                        <Box display="flex" justifyContent="center">
+                                            <Box className={classes.boxItem}>
                                                 {event.prizes !== undefined && event.prizes.length > 0 && <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Prizes</Typography>}
                                             </Box>
-                                            <Box>
-                                                <Divider orientation="vertical"></Divider>
-                                            </Box>
-                                            <Box flexGrow={1}></Box>
-                                            <Box className={classes.boxItem} margin={2}>
-                                                {event.prizes !== undefined && event.prizes.length > 0 && <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">
-                                                    {
-                                                        event.prizes.map((val, index) => {
-                                                            return <Typography>{val.title + " - " + val.desc}</Typography>
-                                                        })
-                                                    }
-                                                </Typography>}
-                                            </Box>
-                                            <Box flexGrow={1}></Box>
-                                        </Box>
 
+                                        </Box>
+                                        {event.prizes !== undefined && event.prizes.length > 0 && <Box display="flex" justifyContent="center" flexWrap="wrap" style={{ marginTop: "20px", marginBottom: '20' }}>
+                                            {
+                                                event.prizes.map((val, index) => {
+                                                    return <Box padding={1} justifyContent="center" style={{ maxWidth: "500px" }}>
+                                                        <Box display="flex" justifyContent="center"><EmojiEventsIcon color="primary"></EmojiEventsIcon></Box>
+                                                        <Box display="flex" justifyContent="center"><Typography>{val.title}</Typography></Box>
+                                                        <Box display="flex" justifyContent="center"><Typography>{val.prize}</Typography></Box>
+                                                        <Box display="flex" justifyContent="center"><Typography color="textSecondary">{val.desc}</Typography></Box>
+                                                    </Box>
+                                                })
+                                            }
+                                        </Box>}
                                     </Grid>
                                 </Grid>}
+
+
                                 {event.rules !== undefined && event.rules !== null && event.rules !== "" && <Grid container component="main" className={classes.gridMain} >
                                     <Grid item xs={12} className={classes.gridItem}>
                                         <Box className={classes.boxItem}>

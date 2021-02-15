@@ -293,7 +293,7 @@ const UserInfo = ({ history }) => {
                                 </Select>
                             </FormControl>
                         </Grid> */}
-                        <Grid item xs={12}>
+                        {/* <Grid item xs={12}>
                         
                             <FormControl variant="outlined" fullWidth required>
                                 <InputLabel htmlFor="outlined-age-native-simple">Your College</InputLabel>
@@ -311,11 +311,9 @@ const UserInfo = ({ history }) => {
                                         return <option key={index} value={coll._id}>{coll.name}</option>
                                     })}
                                     
-                                    {/* <option value="GITAM University">GITAM University</option>
-                                    <option value="SRM University">SRM University</option> */}
                                 </Select>
                             </FormControl>
-                        </Grid>
+                        </Grid> */}
                     </Grid>
                     <Button
                         type="submit"
