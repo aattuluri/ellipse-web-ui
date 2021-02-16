@@ -7,7 +7,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
-//Components impoprts
+//Components imports
 import NavigationBar from './NavigationBar';
 import EventsContext from '../EventsContext';
 import AuthContext from '../AuthContext';
@@ -16,9 +16,6 @@ import WebSocketContext from '../WebSocketContext';
 import WebSocketDataContext from '../WebSocketDataContext';
 // import dot from 'dote'
 // import {detect}  from 'detect-browser';
-
-
-
 // import OS from 'os';
 
 const useStyles = makeStyles((theme) => ({
@@ -68,15 +65,10 @@ function Layout(props) {
     const webConnect = () => {
         const ws = new WebSocket(process.env.REACT_APP_WESOCKET_URL);
         ws.onopen = () => {
-            // console.log("connected");
-            // console.log(ws);
-            // // setWebSocket(ws);
             setWebSocketContext(ws);
         }
         ws.onmessage = (message) => {
             const mes = JSON.parse(message.data);
-            // const cMes = mes.msg;
-            // console.log(mes);
             if(mes.action === "receive_event_chat_message"){
                 setEventChatMessages(chatMessages => [...chatMessages, mes]);
             }
@@ -87,25 +79,19 @@ function Layout(props) {
                 setTeamUpdateStatus(chatMessages=>[...chatMessages, mes]);
             }
             else if(mes.action === "delete_event_chat_message"){
-                // console.log(mes);
                 setDeletedEventChatMessages(chatMessages=>[...chatMessages, mes]);
             }
             else if(mes.action === "delete_team_chat_message"){
                 setDeletedTeamChatMessages(chatMessages=>[...chatMessages, mes]);
             }
-            
-            // setEventChatMessages(mes);
         }
         ws.onclose = () => {
-
             check();
-            // console.log("closed");
         }
     }
 
     const check = () => {
         if (!webSocketContext || webSocketContext.readyState === WebSocket.readyState) {
-            // console.log("checking");
             webConnect();
         }
     }
@@ -123,9 +109,7 @@ function Layout(props) {
         }).then(response => {
             if (response.status === 200) {
                 response.json().then(value => {
-                    // console.log(value);
                     if (value[0].verified === false) {
-                        // setUserDetailsDone(false);
                         try {
                             var data2 = new FormData();
                             const payload2 = {
@@ -140,14 +124,14 @@ function Layout(props) {
                                 method: 'POST',
                                 body: data2
                             }).then((result) => {
-                                // console.log(result);
-                                result.json().then((res) => {
-                                    if (res.message === "success") {
-                                        setOpen(false);
-                                        props.history.push("/otpverification")
-                                    }
-                                })
-
+                                if(result.status === 200){
+                                    result.json().then((res) => {
+                                        if (res.message === "success") {
+                                            setOpen(false);
+                                            props.history.push("/otpverification")
+                                        }
+                                    })
+                                }
                             })
                         } catch (error) {
 
@@ -162,8 +146,6 @@ function Layout(props) {
                         setUserDetailsDone(true);
                         setCurrentUser(value[0]);
                     }
-
-
                 })
             }
             else if (response.status === 401) {
@@ -206,20 +188,19 @@ function Layout(props) {
         })
         // eslint-disable-next-line
     }, [token])
-    // if(!currentUser.verified){
 
-    // }
     if (!token) {
         return <Redirect to="/"></Redirect>
     }
+
     if (!authorized) {
         return <Redirect to="/"></Redirect>
     }
+
     if (!userDetailsDone) {
         if (currentUser.verified) {
             return <Redirect to="/userinfo"></Redirect>
         } else {
-            // console.log("xyz")
             try {
                 var data2 = new FormData();
                 const payload2 = {
@@ -234,7 +215,6 @@ function Layout(props) {
                     method: 'POST',
                     body: data2
                 }).then((result) => {
-                    // console.log(result);
                     result.json().then((res) => {
                         if (res.message === "success") {
                             return <Redirect to="/otpverification"></Redirect>

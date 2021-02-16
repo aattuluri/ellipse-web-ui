@@ -64,9 +64,8 @@ function AboutEventPanel(props) {
     const token = localStorage.getItem('token');
     const { children, value, url, index, ...other } = props;
     const event = props.event;
-
-
     const tags = event.tags;
+
     const [requirements, setRequirements] = React.useState([])
     const [timeLabel, setTimeLabel] = React.useState("Registration Ends in");
     const [adminDetails, setAdminDetails] = React.useState({});
@@ -333,8 +332,8 @@ function AboutEventPanel(props) {
 
                                 {event.prizes !== undefined && event.prizes !== null && event.prizes.length > 0 && <Grid container component="main" className={classes.gridMain}>
                                     <Grid item xs={12}>
-                                        <Box display="flex" justifyContent="center">
-                                            <Box className={classes.boxItem}>
+                                        <Box display="flex" justifyContent="flex-start">
+                                            <Box style={{marginLeft:"30px"}}>
                                                 {event.prizes !== undefined && event.prizes.length > 0 && <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Prizes</Typography>}
                                             </Box>
 
@@ -342,10 +341,10 @@ function AboutEventPanel(props) {
                                         {event.prizes !== undefined && event.prizes.length > 0 && <Box display="flex" justifyContent="center" flexWrap="wrap" style={{ marginTop: "20px", marginBottom: '20' }}>
                                             {
                                                 event.prizes.map((val, index) => {
-                                                    return <Box padding={1} justifyContent="center" style={{ maxWidth: "500px" }}>
-                                                        <Box display="flex" justifyContent="center"><EmojiEventsIcon color="primary"></EmojiEventsIcon></Box>
+                                                    return <Box padding={1} justifyContent="center" style={{ maxWidth: "500px"}}>
+                                                        <Box display="flex" justifyContent="center"><EmojiEventsIcon fontSize="large" color="primary"></EmojiEventsIcon></Box>
                                                         <Box display="flex" justifyContent="center"><Typography>{val.title}</Typography></Box>
-                                                        <Box display="flex" justifyContent="center"><Typography>{val.prize}</Typography></Box>
+                                                        <Box display="flex" justifyContent="center"><Typography variant="h5">{val.prize}</Typography></Box>
                                                         <Box display="flex" justifyContent="center"><Typography color="textSecondary">{val.desc}</Typography></Box>
                                                     </Box>
                                                 })
@@ -353,22 +352,35 @@ function AboutEventPanel(props) {
                                         </Box>}
                                     </Grid>
                                 </Grid>}
-
-
-                                {event.rules !== undefined && event.rules !== null && event.rules !== "" && <Grid container component="main" className={classes.gridMain} >
-                                    <Grid item xs={12} className={classes.gridItem}>
-                                        <Box className={classes.boxItem}>
-                                            <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h4">Rules</Typography>
+                                <Grid container component="main" className={classes.gridMain} >
+                                {event.rules !== undefined && event.rules !== null && event.rules !== "" &&
+                                    <Grid item xs={12} md={6} className={classes.gridItem}>
+                                        <Box style={{marginLeft:"30px"}}>
+                                            <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Rules</Typography>
                                         </Box>
                                         {event.rules.split("\n").map((val, index) => {
-                                            return <Box className={classes.boxItem} whiteSpace="normal">
+                                            return <Box style={{marginLeft:"45px"}} whiteSpace="normal">
                                                 <Typography color="textSecondary" variant="body2" whiteSpace="normal">
                                                     {val}
                                                 </Typography>
                                             </Box>
                                         })}
-                                    </Grid>
-                                </Grid>}
+                                    </Grid>}
+                                
+                                {event.themes !== undefined && event.themes !== null && event.themes !== "" &&
+                                    <Grid item xs={12} md={6} className={classes.gridItem}>
+                                        <Box style={{marginLeft:"30px"}}>
+                                            <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Themes</Typography>
+                                        </Box>
+                                        {event.themes.split("\n").map((val, index) => {
+                                            return <Box style={{marginLeft:"45px"}} whiteSpace="normal">
+                                                <Typography color="textSecondary" variant="body2" whiteSpace="normal">
+                                                    {val}
+                                                </Typography>
+                                            </Box>
+                                        })}
+                                    </Grid>}
+                                </Grid>
 
                                 {!notRegistered && <Box className={classes.boxItem}>
                                     <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Organised By</Typography>

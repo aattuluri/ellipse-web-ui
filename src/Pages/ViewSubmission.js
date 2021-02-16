@@ -86,7 +86,7 @@ export default function ViewSubmissionPage(props) {
         }).then(response => {
             if (response.status === 200) {
                 response.json().then(value => {
-                    if (value.team_id) {
+                    if (value.event.isTeamed) {
                         setIsTeamed(true);
                     }
                     setUsers(value.users);
@@ -102,7 +102,7 @@ export default function ViewSubmissionPage(props) {
                 setLoading(false);
             }
         })
-    }, [])
+    }, [id])
 
     function handleSigninClick() {
         props.history.push("/")
@@ -167,36 +167,45 @@ export default function ViewSubmissionPage(props) {
                 })
                 }
                 {
-                    userFound && roundInfo && submission && <Box className={classes.root2}>
+                    userFound && roundInfo && submission && submission !== null && <Box className={classes.root2}>
                         <Typography variant="h5" style={{ marginBottom: "5px" }}>Submissions</Typography>
                         {
                             submission.map(value => {
-                                const ks = Object.keys(value.submission_form);
-                                return <React.Fragment>
-                                    <Typography>{value.title}</Typography>
-                                    {
-                                        ks.map((val, index) => {
-                                            if (roundInfo[0].fields[index].field === "file_upload") {
+                                if (value.submission_form) {
+                                    const ks = Object.keys(value.submission_form);
+                                    return <React.Fragment>
+                                        <Typography>{value.title}</Typography>
+                                        {
+                                            ks.map((val, index) => {
+                                                if (roundInfo[0].fields[index].field === "file_upload") {
+                                                    return <React.Fragment>
+                                                        <Typography>{val}</Typography>
+                                                        <IconButton download target="_blank" href={process.env.REACT_APP_API_URL + `/api/event/registration/get_file?id=${value[val]}`} size="small" color="primary"><GetAppIcon></GetAppIcon></IconButton>
+                                                    </React.Fragment>
+                                                }
                                                 return <React.Fragment>
                                                     <Typography>{val}</Typography>
-                                                    <IconButton download target="_blank" href={process.env.REACT_APP_API_URL + `/api/event/registration/get_file?id=${value[val]}`} size="small" color="primary"><GetAppIcon></GetAppIcon></IconButton>
+                                                    <Typography variant="h4" color="primary">
+                                                        <Linkify componentDecorator={(decoratedHref, decoratedText, key) => (
+                                                            <a target="blank" style={{ color: 'red', fontWeight: 'bold' }} href={decoratedHref} key={key}>
+                                                                {decoratedText}
+                                                            </a>
+                                                        )}
+                                                        >{value.submission_form[val]}
+                                                        </Linkify>
+                                                    </Typography>
                                                 </React.Fragment>
-                                            }
-                                            return <React.Fragment>
-                                                <Typography>{val}</Typography>
-                                                <Typography variant="h4" color="primary">
-                                                    <Linkify componentDecorator={(decoratedHref, decoratedText, key) => (
-                                                        <a target="blank" style={{ color: 'red', fontWeight: 'bold' }} href={decoratedHref} key={key}>
-                                                            {decoratedText}
-                                                        </a>
-                                                    )}
-                                                    >{value.submission_form[val]}
-                                                    </Linkify>
-                                                </Typography>
-                                            </React.Fragment>
-                                        })
-                                    }
-                                </React.Fragment>
+                                            })
+                                        }
+                                    </React.Fragment>
+                                }
+                                else {
+                                    return <React.Fragment>
+                                        <Typography>{value.title}</Typography>
+                                        <Typography color="textSecondary">Team has no submissions</Typography>
+                                    </React.Fragment>
+                                }
+
                             })
                         }
                     </Box>

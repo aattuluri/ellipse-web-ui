@@ -49,6 +49,7 @@ export default function FormDialog(props) {
       }
       setName(null);
       setType(null);
+      setRequired(true);
       setSelectedOptions(['option1', 'option2']);
       props.handleClose()
     }

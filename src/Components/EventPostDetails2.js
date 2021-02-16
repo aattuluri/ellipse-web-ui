@@ -305,14 +305,14 @@ export default function AddressForm(props) {
           </Grid>
           <Grid item xs={12}>
             <FormLabel component="legend">Participation</FormLabel>
-            <RadioGroup aria-label="address" name="address" defaultValue="open" onChange={handleParticipantsTypeChange} style={{ display: "inline" }}>
+            <RadioGroup aria-label="participation" name="participation" value={props.participantsType} onChange={handleParticipantsTypeChange} style={{ display: "inline" }}>
               <FormControlLabel value="open" control={<Radio color="default" />} label="Open for all" />
               <FormControlLabel value="onlycollege" control={<Radio color="default" />} label={`Only ${props.college}`} />
             </RadioGroup>
           </Grid>
           <Grid item xs={12}>
             <FormLabel required component="legend">Participation Type</FormLabel>
-            <RadioGroup required aria-label="address" name="teamed" defaultValue="individual" onChange={handleTeamChange} style={{ display: "inline" }}>
+            <RadioGroup required aria-label="participation_type" name="participation_type" value={props.isTeam ? "team" : "individual"} onChange={handleTeamChange} style={{ display: "inline" }}>
               <FormControlLabel value="individual" control={<Radio color="default" />} label="Individual" />
               <FormControlLabel value="team" control={<Radio color="default" />} label="Team" />
             </RadioGroup>

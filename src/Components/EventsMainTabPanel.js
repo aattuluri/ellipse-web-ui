@@ -9,13 +9,6 @@ import ProfileEventCard from '../Components/ProfileEventCard';
 // import Fab from '@material-ui/core/Fab';
 // import AddIcon from '@material-ui/icons/Add';
 import Paper from '@material-ui/core/Paper';
-// import Button from '@material-ui/core/Button';
-// import ListItem from '@material-ui/core/ListItem';
-// import ListItemText from '@material-ui/core/ListItemText';
-// import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-// import Avatar from '@material-ui/core/Avatar';
-// import Divider from '@material-ui/core/Divider';
-// import List from '@material-ui/core/List';
 import ActiveEvents from '../ActiveEventsContext';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -109,7 +102,8 @@ const useStyles = makeStyles((theme) => ({
         },
     },
     content: {
-        marginTop: theme.spacing(3)
+        marginTop: theme.spacing(3),
+        
     },
 }));
 
@@ -224,19 +218,19 @@ function ExplorePanel(props) {
                         })}
                     </div>}
                 </React.Fragment>}
-                {value === 1 && <Grid container component="main" alignItems="center" spacing={1}>
+                {value === 1 && <Grid container component="main" alignItems="center">
                     {
                         regEvents.length === 0 && <Typography align="center">No Registered Events</Typography>
                     }
                     {regEvents.map((event, index) => {
-                        return (<Grid item xs={12} sm={12} md={4} key={index} >
+                        return (<Grid item xs={12} sm={12} md={4} key={index} style={{margin:"5px"}}>
                         
                             <ProfileEventCard event={event} handleViewClick={handleEventClick(event)} name={event.name} ></ProfileEventCard>
                             </Grid>)
                     })}
 
                 </Grid>}
-                {value === 2 && <Grid container component="main" alignItems="center" spacing={1}>
+                {value === 2 && <Grid container component="main" alignItems="center">
                     {
                         pastEvents.length === 0 && <Typography align="center">No Past Events at this time</Typography>
                     }

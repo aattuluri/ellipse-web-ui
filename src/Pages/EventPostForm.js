@@ -147,9 +147,9 @@ export default function Checkout({ history }) {
   const [minTeamSize, setMinTeamSize] = React.useState(1);
   const [maxTeamSize, setMaxTeamSize] = React.useState(1);
   const [rounds, setRounds] = React.useState([]);
-  const [rules,setRules] = React.useState(null);
-  const [prizes,setPrizes] = React.useState([]);
-  const [themes,setThemes] = React.useState(null);
+  const [rules, setRules] = React.useState(null);
+  const [prizes, setPrizes] = React.useState([]);
+  const [themes, setThemes] = React.useState(null);
   const [showSuccessPanel, setShowSuccessPanel] = React.useState(false);
 
 
@@ -387,7 +387,7 @@ export default function Checkout({ history }) {
 
   const handleBack = () => {
     setActiveStep(activeStep - 1);
-    setIsTeam(false)
+    // setIsTeam(false)
   };
 
   function handleCloseButton() {
@@ -420,7 +420,7 @@ export default function Checkout({ history }) {
           <CloseIcon fontSize="large" />
         </IconButton>
         <Paper className={classes.paper}>
-          <SuccessPanel  type="eventSuccess" showSuccessPanel={showSuccessPanel}></SuccessPanel>
+          <SuccessPanel type="eventSuccess" showSuccessPanel={showSuccessPanel}></SuccessPanel>
           <div className={showSuccessPanel && classes.hidden}>
             <Typography component="h1" variant="h4" align="center">
               Post your Event

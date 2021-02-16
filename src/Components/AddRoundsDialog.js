@@ -138,7 +138,7 @@ export default function FormDialog(props) {
                     backgroundColor: theme.palette.secondary.main,
                     boxShadow: 'none',
                 },
-            }} onClose={props.handleClose} aria-labelledby="form-dialog-title">
+            }} onClose={props.handleClose} aria-labelledby="form-dialog">
                 <DialogTitle id="form-dialog-title">Add Rounds</DialogTitle>
                 <DialogContent>
                     <Grid container spacing={2} >

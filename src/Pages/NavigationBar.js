@@ -1,5 +1,8 @@
 import React, { useEffect } from 'react';
 import { withRouter } from "react-router";
+import useStyles from '../Themes/MainHomeStyles';
+
+//materialui imports
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import PersonPinIcon from '@material-ui/icons/PersonPin';
@@ -14,23 +17,20 @@ import Menu from '@material-ui/core/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import EventIcon from '@material-ui/icons/Event';
-import useStyles from '../Themes/MainHomeStyles';
-// import ExploreIcon from '@material-ui/icons/Explore';
 import SettingsIcon from '@material-ui/icons/Settings';
 import HomeIcon from '@material-ui/icons/Home';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
-import EventsDialog from '../Components/EventsDialog';
-import EventsContext from '../EventsContext';
-import NotificationsDialog from '../Components/NotficationsDialog';
 import Switch from '@material-ui/core/Switch';
-import { Button } from '@material-ui/core';
-import Logo from '../Components/Images/logo.svg';
-// import TelegramIcon from '@material-ui/icons/Telegram'
+import Button from '@material-ui/core/Button';
 import ChatOutlinedIcon from '@material-ui/icons/ChatOutlined';
 import Tooltip from '@material-ui/core/Tooltip';
 
 import AuthContext from '../AuthContext';
+import EventsDialog from '../Components/EventsDialog';
+import EventsContext from '../EventsContext';
+import NotificationsDialog from '../Components/NotficationsDialog';
+import Logo from '../Components/Images/logo.svg';
 
 
 

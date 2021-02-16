@@ -1,42 +1,34 @@
 import React from 'react';
+import DateFnsUtils from '@date-io/date-fns';
 import useStyles from '../Themes/SignupPageStyles';
 
 //MaterialUI imports
-// import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-// import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
-// import Box from '@material-ui/core/Box';
-// import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
-// import Container from '@material-ui/core/Container';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Chip from '@material-ui/core/Chip';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Backdrop from '@material-ui/core/Backdrop';
-import AuthContext from '../AuthContext';
-// import IconButton from '@material-ui/core/IconButton';
-// import CloseIcon from '@material-ui/icons/Close';
 import FormLabel from '@material-ui/core/FormLabel';
 import { MuiPickersUtilsProvider, DateTimePicker } from '@material-ui/pickers';
-import DateFnsUtils from '@date-io/date-fns';
 import FormControl from '@material-ui/core/FormControl';
 import FormGroup from '@material-ui/core/FormGroup';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import IconButton from '@material-ui/core/IconButton';
 import GetAppIcon from '@material-ui/icons/GetApp'
-// import { set } from 'date-fns';
-// import AuthContext from '../AuthContext';
-// import TermsandConditions from '../Components/EventRegisterTermsandConditions';
-// import EventsContext from '../EventsContext';
-// import ActiveEventsContext from '../ActiveEventsContext';
+
+
+//other components imports
+import AuthContext from '../AuthContext';
+
 
 //function for alert
 function Alert(props) {
@@ -44,7 +36,7 @@ function Alert(props) {
 }
 
 
-function AboutEventPanel(props) {
+function SubmissionForm(props) {
     const classes = useStyles();
     const token = localStorage.getItem('token');
     const [state, setState] = React.useState({
@@ -63,7 +55,6 @@ function AboutEventPanel(props) {
     const [formValues, setFormValues] = React.useState(null);
     const [uploadFiles, setUploadFiles] = React.useState([]);
     const [loading, setLoading] = React.useState(false);
-    // const [fields, setFields] = React.useState([]);
     const [normalFields, setNormalFields] = React.useState([]);
     const [dropDownFields, setDropDownFields] = React.useState([]);
     const [checkboxFields, setCheckBoxFields] = React.useState([]);
@@ -75,11 +66,8 @@ function AboutEventPanel(props) {
 
     const { vertical, horizontal, open, message, type, autoHide } = state;
     const [backDropOpen, setBackDropOpen] = React.useState(true);
-    // const [event, setEvent] = React.useState({});
     const event = props.event;
-    // const [checkedValues, setCheckedValues] = React.useState([]);
-    const colleges = ["VIT University,Vellore", "GITAM University", "SRM University"];
-    // const [tandcOpen, setTandcOpen] = React.useState(false);
+    const colleges = ["VIT University,Vellore", "GITAM University, Bengaluru", "SRM University"];
 
     const { currentUser } = React.useContext(AuthContext);
 
@@ -87,12 +75,6 @@ function AboutEventPanel(props) {
     const currentDate = new Date();
     const roundStartDate = new Date(currentRound.start_date);
     const roundEndDate = new Date(currentRound.end_date);
-    // const [submission, setSubmission] = React.useState({});
-    // const roundEndDate = new Date(currentRound.end_date);
-
-    // function handleTermsClick() {
-    //     setTandcOpen(true);
-    // }
 
     React.useEffect(() => {
         if (roundStartDate >= currentDate) {
@@ -121,7 +103,6 @@ function AboutEventPanel(props) {
                 keys.forEach((sub, index) => {
                     setFormValues(formValues => ({ ...formValues, [sub]: submission_form[sub] }))
                 })
-                // getSubmission(props.team.submissions[props.index].submission_id)
             }
         }
         else if (props.registration) {
@@ -129,53 +110,19 @@ function AboutEventPanel(props) {
                 setAccess(false);
                 setUserMessage("submission Already made");
                 setEditAccess(true);
-                // setSubmission(props.registration.submissions[props.index].submission_form);
                 const submission_form = props.registration.submissions[props.index].submission_form;
                 const keys = Object.keys(submission_form);
                 keys.forEach((sub, index) => {
                     setFormValues(formValues => ({ ...formValues, [sub]: submission_form[sub] }))
                 })
-                // console.log(props.registration.submissions[props.index].submission_form);
-                // console.log(formValues);
-                // getSubmission(props.registration.submissions[props.index].submission_id)
             }
         }
         // eslint-disable-next-line
     }, [props])
 
-    // const getSubmission = (id) => {
-    //     try {
-    //         fetch(process.env.REACT_APP_API_URL + `/api/event/get_submission?id=${id}`, {
-    //             headers: {
-    //                 'Authorization': `Bearer ${token}`,
-    //                 'Content-Type': 'application/json',
-    //                 'Accept': 'application/json'
-    //             },
-    //             method: 'GET',
-    //         }).then(response => {
-    //             if (response.status === 200) {
-    //                 response.json().then(value => {
-    //                     const keys = Object.keys(value.submission);
-    //                     setSubmission(value);
-    //                     console.log(value.submission)
-    //                     keys.forEach((sub, index) => {
-    //                         setFormValues(formValues => ({ ...formValues, [sub]: value.submission[sub] }))
-    //                     })
-
-    //                 })
-    //             }
-
-    //         })
-    //     }
-    //     catch (e) {
-    //         console.log(e);
-    //     }
-    // }
 
     React.useEffect(() => {
-
         const allFields = props.fields;
-        // console.log(allFields);
         if (allFields != null) {
             allFields.forEach(f => {
                 if (f.title === "Name") {
@@ -201,7 +148,6 @@ function AboutEventPanel(props) {
             setCheckBoxFields(allFields.filter((f) => f.field === "checkboxes"));
             setRadioFields(allFields.filter(f => f.field === "radiobuttons"));
             setDateFields(allFields.filter((f) => f.field === "date"));
-            // setLongDescFields(allFields.filter((f) => f.field === "long_desc"));
             setDropDownFields(allFields.filter(f => f.field === "dropdown"));
             setLinkFields(allFields.filter(f => f.field === "link"));
             setFileUploadFields(allFields.filter(f => f.field === "file_upload"));
@@ -225,50 +171,22 @@ function AboutEventPanel(props) {
 
     }
     const handleChange3 = (name) => (event) => {
-        console.log(event.target.checked);
-        console.log(name);
-        console.log(formValues)
+
         if (event.target.checked) {
-            // setCheckedValues(checkedValues => [...checkedValues, { [name]: event.target.name }]);
             var array = [];
-            if(formValues[name]){
+            if (formValues[name]) {
                 array = formValues[name];
                 array.push(event.target.name);
             }
-            else{
+            else {
                 array.push(event.target.name);
             }
-            
-
-            // checkedValues.forEach((v, i) => {
-            //     if (v[name]) {
-            //         array.push(v[name])
-            //     }
-            // });
-            // array.push(event.target.name);
-            // console.log(array)
             setFormValues({ ...formValues, [name]: array });
         }
         else {
-            // console.log(checkedValues.filter(value=> {return value[name] !== event.target.name} ));
-            // setCheckedValues(checkedValues.filter(value=> {return value[name] !== event.target.name}));
-            // const newChecked = checkedValues.filter(value=> {return value[name] !== event.target.name});
-            // // setCheckedValues(checkedValues.filter(value=> {return value[name] != event.target.name} ))
-            // console.log(checkedValues)
-            // setCheckedValues(checkedValues => [...checkedValues, { [name]: event.target.name }]);
-            // console.log(event.target.name);
             const array = formValues[name];
             var index = array.indexOf(event.target.name);
             array.splice(index, 1);
-            // array.pop(event.target.name);
-            // console.log(array)
-            // console.log(newChecked);
-            // newChecked.forEach((v, i) => {
-            //     if (v[name]) {
-            //         array.push(v[name])
-            //     }
-            // });
-            // array.push(event.target.name);
             setFormValues({ ...formValues, [name]: array });
         }
     }
@@ -291,47 +209,45 @@ function AboutEventPanel(props) {
         var uploadedFilesIds = [];
         const formkeys = Object.keys(formValues);
         const fileFormKeys = Object.keys(uploadFiles);
-        // console.log(formkeys);
-        // console.log(fileFormKeys);
         var count = 0;
-        formkeys.forEach(v => {
-            // console.log(formValues[v]);
+        formkeys.forEach((v, index) => {
+            const cField = props.fields.filter((value) => { return value.title === v });
             if (formValues[v] === null || formValues[v] === '') {
-                // console.log("aa")
                 if (fileFormKeys.includes(v)) {
-                    // console.log("ccc")
-                } 
-                else {
-                    // console.log("bbb")
-                    count = count + 1;
-                    setLoading(false);
-                    setState({
-                        open: true,
-                        vertical: 'top',
-                        horizontal: 'center',
-                        message: 'Please fill in all fields',
-                        type: "error",
-                        autoHide: 4000
-                    });
-                }
 
-                // break;
+                }
+                else {
+                    if (cField[0].req) {
+                        count = count + 1;
+                        setLoading(false);
+                        setState({
+                            open: true,
+                            vertical: 'top',
+                            horizontal: 'center',
+                            message: 'Please fill in all required fields',
+                            type: "error",
+                            autoHide: 4000
+                        });
+                    }
+                }
             }
         })
         if (fileFormKeys) {
             fileFormKeys.forEach(f => {
+                const cField = props.fields.filter((value) => { return value.title === f });
                 if (uploadFiles[f] === null) {
-                    count = count + 1;
-                    setLoading(false);
-                    setState({
-                        open: true,
-                        vertical: 'top',
-                        horizontal: 'center',
-                        message: 'Please fill in all fields',
-                        type: "error",
-                        autoHide: 4000
-                    });
-                    // break;
+                    if (cField[0].req) {
+                        count = count + 1;
+                        setLoading(false);
+                        setState({
+                            open: true,
+                            vertical: 'top',
+                            horizontal: 'center',
+                            message: 'Please fill in all fields',
+                            type: "error",
+                            autoHide: 4000
+                        });
+                    }
                 }
             })
         }
@@ -356,8 +272,6 @@ function AboutEventPanel(props) {
                                     finalValues[key] = value.file_name
                                     uploadedFilesIds.push({ [key]: value.file_name });
                                     if (uploadedFilesIds.length === fileFormKeys.length) {
-                                        // console.log(uploadedFilesIds);
-                                        // console.log(finalValues);
                                         var data = new FormData();
                                         const d = props.individual ? { event_id: event._id, reg_id: props.registration._id, submission: finalValues, is_teamed: false, event_round: currentRound.title } : { event_id: event._id, submission: finalValues, team_id: props.team_id, is_teamed: true, event_round: currentRound.title }
                                         data = JSON.stringify(d);
@@ -370,11 +284,8 @@ function AboutEventPanel(props) {
                                             method: 'POST',
                                             body: data
                                         }).then(response => {
-                                            // console.log(response);
                                             if (response.status === 200) {
                                                 response.json().then(value => {
-                                                    // console.log(value);
-
                                                     setLoading(false);
                                                     setState({
                                                         open: true,
@@ -386,7 +297,6 @@ function AboutEventPanel(props) {
                                                     });
                                                 })
                                             }
-
                                         })
                                     }
                                 })
@@ -407,11 +317,8 @@ function AboutEventPanel(props) {
                         method: 'POST',
                         body: data
                     }).then(response => {
-                        // console.log(response);
                         if (response.status === 200) {
                             response.json().then(value => {
-                                // console.log(value);
-
                                 setLoading(false);
                                 setState({
                                     open: true,
@@ -421,6 +328,17 @@ function AboutEventPanel(props) {
                                     type: "success",
                                     autoHide: 4000
                                 });
+                            })
+                        }
+                        else {
+                            setLoading(false);
+                            setState({
+                                open: true,
+                                vertical: 'top',
+                                horizontal: 'center',
+                                message: "something went wrong try again",
+                                type: "error",
+                                autoHide: 5000
                             })
                         }
 
@@ -437,178 +355,15 @@ function AboutEventPanel(props) {
                     type: "error",
                     autoHide: 6000
                 })
-
             }
         }
-
-
     }
 
     function handleFileSelect(event) {
-        // console.log(event.target.name)
         if (event.target.files[0]) {
             setUploadFiles({ ...uploadFiles, [event.target.name]: event.target.files[0] });
-            // setImage(event.target.files[0]);
-            // setImageAsFile(imageFile => (image))
-            // const url = URL.createObjectURL(event.target.files[0]);
-            // const fileType = event.target.files[0].type;
-            // setImageurl(url);
-            // setImageType(fileType.substr(fileType.indexOf('/') + 1));
         }
     }
-
-
-    // const handleEditButton = () => {
-    //     setLoading(true);
-    //     var uploadedFilesIds = [];
-    //     const formkeys = Object.keys(formValues);
-    //     const fileFormKeys = Object.keys(uploadFiles);
-    //     // console.log(formkeys);
-    //     // console.log(fileFormKeys);
-    //     var count = 0;
-    //     formkeys.forEach(v => {
-    //         if (formValues[v] === null) {
-    //             if (v.includes(fileFormKeys)) {
-
-    //             } else {
-    //                 count = count + 1;
-    //                 setLoading(false);
-    //                 setState({
-    //                     open: true,
-    //                     vertical: 'top',
-    //                     horizontal: 'center',
-    //                     message: 'Please fill in all fields',
-    //                     type: "error",
-    //                     autoHide: 4000
-    //                 });
-    //             }
-
-    //             // break;
-    //         }
-    //     })
-    //     if (fileFormKeys) {
-    //         fileFormKeys.forEach(f => {
-    //             if (uploadFiles[f] === null) {
-    //                 count = count + 1;
-    //                 setLoading(false);
-    //                 setState({
-    //                     open: true,
-    //                     vertical: 'top',
-    //                     horizontal: 'center',
-    //                     message: 'Please fill in all fields',
-    //                     type: "error",
-    //                     autoHide: 4000
-    //                 });
-    //                 // break;
-    //             }
-    //         })
-    //     }
-
-    //     var finalValues = formValues;
-    //     if (count === 0) {
-    //         try {
-    //             if (fileFormKeys.length > 0) {
-    //                 fileFormKeys.forEach((key, index) => {
-    //                     var data1 = new FormData();
-    //                     data1.append('uploaded_file', uploadFiles[key]);
-    //                     fetch(process.env.REACT_APP_API_URL + `/api/event/register/upload_file?id=${event._id}`, {
-    //                         headers: {
-    //                             'Authorization': `Bearer ${token}`,
-    //                         },
-    //                         method: 'POST',
-    //                         body: data1
-    //                     }).then((response) => {
-    //                         if (response.status === 200) {
-    //                             response.json().then(value => {
-    //                                 setFormValues({ ...formValues, [key]: value.file_name })
-    //                                 finalValues[key] = value.file_name
-    //                                 uploadedFilesIds.push({ [key]: value.file_name });
-    //                                 if (uploadedFilesIds.length === fileFormKeys.length) {
-    //                                     // console.log(uploadedFilesIds);
-    //                                     // console.log(finalValues);
-    //                                     var data = new FormData();
-    //                                     const d = { sub_id: submission._id, submission: finalValues, is_teamed: true }
-    //                                     data = JSON.stringify(d);
-    //                                     fetch(process.env.REACT_APP_API_URL + `/api/event/team/edit_submission`, {
-    //                                         headers: {
-    //                                             'Authorization': `Bearer ${token}`,
-    //                                             'Content-Type': 'application/json',
-    //                                             'Accept': 'application/json'
-    //                                         },
-    //                                         method: 'POST',
-    //                                         body: data
-    //                                     }).then(response => {
-    //                                         // console.log(response);
-    //                                         if (response.status === 200) {
-    //                                             response.json().then(value => {
-    //                                                 // console.log(value);
-
-    //                                                 setLoading(false);
-    //                                                 setState({
-    //                                                     open: true,
-    //                                                     vertical: 'top',
-    //                                                     horizontal: 'center',
-    //                                                     message: 'Successful.Stay tunned with notifications and announcements',
-    //                                                     type: "success",
-    //                                                     autoHide: 4000
-    //                                                 });
-    //                                             })
-    //                                         }
-
-    //                                     })
-    //                                 }
-    //                             })
-    //                         }
-    //                     })
-    //                 })
-    //             }
-    //             else {
-    //                 var data = new FormData();
-    //                 const d = { sub_id: submission._id, submission: finalValues, is_teamed: true }
-    //                 data = JSON.stringify(d);
-    //                 fetch(process.env.REACT_APP_API_URL + `/api/event/team/edit_submission`, {
-    //                     headers: {
-    //                         'Authorization': `Bearer ${token}`,
-    //                         'Content-Type': 'application/json',
-    //                         'Accept': 'application/json'
-    //                     },
-    //                     method: 'POST',
-    //                     body: data
-    //                 }).then(response => {
-    //                     // console.log(response);
-    //                     if (response.status === 200) {
-    //                         response.json().then(value => {
-    //                             // console.log(value);
-
-    //                             setLoading(false);
-    //                             setState({
-    //                                 open: true,
-    //                                 vertical: 'top',
-    //                                 horizontal: 'center',
-    //                                 message: 'Successful.Stay tunned with notifications and announcements',
-    //                                 type: "success",
-    //                                 autoHide: 4000
-    //                             });
-    //                         })
-    //                     }
-
-    //                 })
-    //             }
-    //         }
-    //         catch (error) {
-    //             setLoading(false);
-    //             setState({
-    //                 open: true,
-    //                 vertical: 'top',
-    //                 horizontal: 'center',
-    //                 message: error.message,
-    //                 type: "error",
-    //                 autoHide: 6000
-    //             })
-
-    //         }
-    //     }
-    // }
 
     return (
         <div>
@@ -625,8 +380,7 @@ function AboutEventPanel(props) {
             <Backdrop className={classes.backdrop} open={backDropOpen}>
                 <CircularProgress color="inherit" />
             </Backdrop>
-            {/* <TextField fullWidth></TextField> */}
-            <form style={{ margin: "20px" }} onSubmit={handleEventRegistration}>
+            <form style={{ margin: "20px" }}>
 
                 <Grid container component="main" spacing={2}>
                     {normalFields.map((field, index) => {
@@ -671,7 +425,7 @@ function AboutEventPanel(props) {
                                         name={field.title}
                                         // variant="outlined"
                                         margin="dense"
-                                        required
+                                        required={field.req}
                                         fullWidth
                                         id={field.title}
                                         onChange={handleChange}
@@ -683,11 +437,33 @@ function AboutEventPanel(props) {
                         }
 
                     })}
+                    {
+                        longDescFields.map((field, index) => {
+                            return (
+                                <Grid item xs={12}>
+                                    <TextField
+                                        multiline={true}
+                                        rows="5"
+                                        variant='outlined'
+                                        placeholder={field.title}
+                                        autoComplete='off'
+                                        required={field.req}
+                                        id={field.title}
+                                        name={field.title}
+                                        label={field.title}
+                                        fullWidth
+                                        onChange={handleLondDescChange}
+                                        value={formValues[field.title] || ""}
+                                    />
+                                </Grid>
+                            )
+                        })
+                    }
                     {checkboxFields.map((field, index) => {
                         return (
                             <Grid item xs={12}>
                                 <FormControl component="fieldset" className={classes.formControl}>
-                                    <FormLabel component="legend">{field.title}</FormLabel>
+                                    <FormLabel required={field.req} component="legend">{field.title}</FormLabel>
                                     <FormGroup class={classes.formgroup}>
                                         {field.options.map((option) => {
                                             return <FormControlLabel
@@ -706,8 +482,6 @@ function AboutEventPanel(props) {
                                 <Autocomplete
                                     id={field.title}
                                     options={field.options.map((option) => option)}
-                                    // freeSolo
-                                    // onChange={handleeventTagsChange}
                                     value={formValues[field.title]}
                                     onChange={handleChange2(field.title)}
                                     renderTags={(value, getTagProps) =>
@@ -716,7 +490,7 @@ function AboutEventPanel(props) {
                                         ))
                                     }
                                     renderInput={(params) => (
-                                        <TextField required {...params} name={field.name} label={field.title} placeholder={field.name} />
+                                        <TextField required={field.req} {...params} name={field.name} label={field.title} placeholder={field.name} />
                                     )}
                                 />
                             </Grid>
@@ -725,13 +499,11 @@ function AboutEventPanel(props) {
                     {radioFields.map((field, index) => {
                         return (
                             <Grid item xs={12}>
-                                <FormLabel required component="legend">{field.title}</FormLabel>
-                                <RadioGroup required aria-label="address" name={field.title} defaultValue={field.options[0]} value={formValues[field.title]} onChange={handleradioChange} style={{ display: "inline" }}>
+                                <FormLabel required={field.req} component="legend">{field.title}</FormLabel>
+                                <RadioGroup required={field.req} aria-label="address" name={field.title} defaultValue={field.options[0]} value={formValues[field.title]} onChange={handleradioChange} style={{ display: "inline" }}>
                                     {field.options.map((option) => {
-                                        return <FormControlLabel required value={option} control={<Radio color="default" />} label={option} />
+                                        return <FormControlLabel required={field.req} value={option} control={<Radio color="default" />} label={option} />
                                     })}
-
-                                    {/* <FormControlLabel value="Paid" control={<Radio color="default" />} label="Paid" /> */}
                                 </RadioGroup>
                             </Grid>
                         )
@@ -744,15 +516,15 @@ function AboutEventPanel(props) {
                                         <DateTimePicker
                                             // minDate={Date.now()}
                                             fullWidth
-                                            required
-                                            variant="inline"
+                                            required={field.req}
+                                            variant="dialog"
                                             format="dd MMM yyyy hh:mm a zzz"
                                             margin="normal"
                                             id={field.title}
                                             label={field.title}
                                             name={field.title}
                                             // defaultValue={Date.now()}
-                                            value={formValues[field.title] || Date.now()}
+                                            value={formValues[field.title]}
                                             onChange={handleDateChange(field.title)}
                                             KeyboardButtonProps={{
                                                 'aria-label': 'change date',
@@ -764,29 +536,7 @@ function AboutEventPanel(props) {
                             )
                         })
                     }
-                    {
-                        longDescFields.map((field, index) => {
-                            return (
-                                <Grid item xs={12}>
-                                    <TextField
-                                        multiline={true}
-                                        rows="5"
-                                        variant='outlined'
-                                        placeholder={field.title}
-                                        autoComplete='off'
-                                        required
-                                        id={field.title}
-                                        name={field.title}
-                                        label={field.title}
-                                        fullWidth
-                                        onChange={handleLondDescChange}
-                                        value={formValues[field.title] || ""}
-                                    // value={props.about}
-                                    />
-                                </Grid>
-                            )
-                        })
-                    }
+                    
                     {
                         linkFields.map((field, index) => {
                             return (
@@ -794,8 +544,7 @@ function AboutEventPanel(props) {
                                     <TextField
                                         autoComplete='off'
                                         name={field.title}
-                                        // variant="outlined"
-                                        required
+                                        required={field.req}
                                         fullWidth
                                         id={field.title}
                                         onChange={handleChange}
@@ -812,21 +561,17 @@ function AboutEventPanel(props) {
                                 return <Grid item xs={12}>
                                     <Typography>{field.title}</Typography>
                                     <IconButton download target="_blank" href={process.env.REACT_APP_API_URL + `/api/event/registration/get_file?id=${formValues[field.title]}`} size="small" color="primary"><GetAppIcon></GetAppIcon></IconButton>
-                                    <input id="contained-button-file" name={field.title} required type="file" onChange={handleFileSelect} style={{ "marginTop": "10px" }} ></input>
+                                    <input id={index} name={field.title} required={field.req} type="file" onChange={handleFileSelect} style={{ "marginTop": "10px" }} ></input>
                                 </Grid>
                             }
                             else {
                                 return <Grid item xs={12}>
                                     <Typography>{field.title}</Typography>
-                                    <input id="contained-button-file" name={field.title} required type="file" onChange={handleFileSelect} style={{ "marginTop": "10px" }} ></input>
+                                    <input id={index} name={field.title} required={field.req} type="file" onChange={handleFileSelect} style={{ "marginTop": "10px" }} ></input>
                                 </Grid>
                             }
-
                         })
                     }
-                    {/* {
-                        editAccess && fileUploadFields.length > 0 && <IconButton download target="_blank" href={process.env.REACT_APP_API_URL + `/api/event/registration/get_file?id=${row[column.id]}`} size="small" color="primary"><GetAppIcon></GetAppIcon></IconButton>
-                    } */}
                 </Grid>
                 {access && <Button
                     type="submit"
@@ -835,6 +580,7 @@ function AboutEventPanel(props) {
                     color="primary"
                     disabled={loading}
                     className={classes.submit}
+                    onClick={handleEventRegistration}
                 >
                     {loading ? <CircularProgress color="primary" size={24} /> : "Submit"}
                 </Button>}
@@ -842,7 +588,6 @@ function AboutEventPanel(props) {
                     !access && <Typography style={{ margin: "20px 0px 10px 0px" }}>{userMessage}</Typography>
                 }
                 {editAccess && <Button
-                    // type="submit"
                     onClick={handleEventRegistration}
                     fullWidth
                     variant="contained"
@@ -856,4 +601,4 @@ function AboutEventPanel(props) {
         </div>
     )
 }
-export default AboutEventPanel;
+export default SubmissionForm;

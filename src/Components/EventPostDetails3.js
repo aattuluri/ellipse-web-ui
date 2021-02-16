@@ -62,7 +62,7 @@ export default function EventPostForm(props) {
     const [tandcOpen, setTandcOpen] = React.useState(false);
     const [prizeTitle, setPrizeTitle] = React.useState(null);
     const [prizeDesc, setPrizeDesc] = React.useState(null);
-    const [prize,setPrize] = React.useState(null);
+    const [prize, setPrize] = React.useState(null);
     const [prizes, setPrizes] = React.useState([]);
 
     React.useEffect(() => {
@@ -94,14 +94,26 @@ export default function EventPostForm(props) {
             'req': true,
             'options': []
         },
-
     }
+
     const [selectedFields, setSelectedFields] = React.useState([fields['name'], fields['email']]);
+
     const [state, setState] = React.useState({
         name: true,
         email: true,
         college: false,
     });
+
+    React.useEffect(() => {
+        if (props.fields.length > 2) {
+            const arr = props.fields.filter(val=>{return val.title === "College"});
+            if(arr.length > 0){
+                setState({...state,college:true})
+            }
+            setSelectedFields(props.fields);
+        }
+        // eslint-disable-next-line
+    }, [props.fields])
 
     const handleChange = (event) => {
         setState({ ...state, [event.target.name]: event.target.checked });
@@ -112,13 +124,14 @@ export default function EventPostForm(props) {
         else if (!event.target.checked) {
             setSelectedFields(selectedFields => selectedFields.filter((chip) => chip.title !== sName));
         }
-
     };
+
     const { name, email, college } = state;
 
     const handleAddMoreButton = () => {
         setOpen(true);
     }
+
     function handleFieldAddButton(addingField, fName) {
         setSelectedFields(selectedFields => [...selectedFields, addingField[fName]]);
     }
@@ -131,7 +144,6 @@ export default function EventPostForm(props) {
             setState({ ...state, [chipToDelete.title.toLowercase]: false })
             setSelectedFields(selectedFields => selectedFields.filter((chip) => chip.title !== chipToDelete.title));
         }
-
     };
 
     const handleRoundDelete = (chipToDelete) => () => {
@@ -163,11 +175,10 @@ export default function EventPostForm(props) {
 
     const handleAddRounds = (r) => {
         props.setRounds(rounds => [...rounds, r]);
-        // console.log(prizes);
     }
 
     const handlePrizeAddButton = () => {
-        props.setPrizes(prizes => [...prizes, { title: prizeTitle,prize: prize, desc: prizeDesc }]);
+        props.setPrizes(prizes => [...prizes, { title: prizeTitle, prize: prize, desc: prizeDesc }]);
         setPrizeTitle(null);
         setPrizeDesc(null);
         setPrize(null);
@@ -183,29 +194,37 @@ export default function EventPostForm(props) {
         if (title === "title") {
             setPrizeTitle(event.target.value)
         }
-        else if(title === "desc") {
+        else if (title === "desc") {
             setPrizeDesc(event.target.value);
         }
-        else{
+        else {
             setPrize(event.target.value);
         }
+    }
+
+    const handleBack = () => {
+        props.setFields(selectedFields);
+        props.handleBack()
     }
 
     return (
         <React.Fragment>
             <form className={classes.form} onSubmit={handlePostButton}>
                 <Grid container spacing={3}>
+
                     <AddFieldDialog
                         open={open}
                         handleClose={handleClose}
                         handleAdd={handleFieldAddButton}>
                     </AddFieldDialog>
+
                     <AddRoundsDialog
                         roundsCount={props.rounds.length}
                         open={roundsDialogOpen}
                         handleClose={handleClose}
                         handleAdd={handleAddRounds}>
                     </AddRoundsDialog>
+
                     <Grid item xs={12}>
                         <TextField
                             multiline={true}
@@ -222,6 +241,7 @@ export default function EventPostForm(props) {
                             fullWidth
                         />
                     </Grid>
+
                     <Grid item xs={12}>
                         <TextField
                             multiline={true}
@@ -238,6 +258,7 @@ export default function EventPostForm(props) {
                             fullWidth
                         />
                     </Grid>
+
                     <Grid item xs={12}>
                         <FormControl component="fieldset" className={classes.formControl}>
                             <FormLabel component="legend">Prizes</FormLabel>
@@ -257,6 +278,7 @@ export default function EventPostForm(props) {
                             </Box>
                         </FormControl>
                     </Grid>
+
                     <Grid>
                         <Paper component="ul" className={classes.root}>
                             {prizes.map((data, index) => {
@@ -272,7 +294,7 @@ export default function EventPostForm(props) {
                             })}
                         </Paper>
                     </Grid>
-                
+
                     <Grid item xs={12}>
                         <FormControl component="fieldset" className={classes.formControl}>
                             <FormLabel component="legend">Fields for your Registration Form</FormLabel>
@@ -292,6 +314,7 @@ export default function EventPostForm(props) {
                             </FormGroup>
                         </FormControl>
                     </Grid>
+
                     <Grid item xs={12}>
                         <Button
                             variant="outlined"
@@ -300,6 +323,7 @@ export default function EventPostForm(props) {
                             Add More
                         </Button>
                     </Grid>
+
                     <Grid>
                         <Paper component="ul" className={classes.root}>
                             {selectedFields.map((data) => {
@@ -315,11 +339,13 @@ export default function EventPostForm(props) {
                             })}
                         </Paper>
                     </Grid>
+
                     <Grid item xs={12}>
                         <FormControl component="fieldset" className={classes.formControl}>
                             <FormLabel component="legend">Rounds(Optional)</FormLabel>
                         </FormControl>
                     </Grid>
+
                     <Grid item xs={12}>
                         <Button
                             variant="outlined"
@@ -328,6 +354,7 @@ export default function EventPostForm(props) {
                             Add Rounds
                         </Button>
                     </Grid>
+
                     <Grid>
                         <Paper component="ul" className={classes.root}>
                             {props.rounds.map((data) => {
@@ -343,6 +370,7 @@ export default function EventPostForm(props) {
                             })}
                         </Paper>
                     </Grid>
+
                     <Grid item xs={12}>
                         <Typography>By posting the event.I accept the
                         <Button color="primary" onClick={handleTermsClick}>
@@ -351,8 +379,9 @@ export default function EventPostForm(props) {
                         </Typography>
                     </Grid>
                 </Grid>
+
                 <div className={classes.buttons}>
-                    <Button onClick={props.handleBack} className={classes.button}>
+                    <Button onClick={handleBack} className={classes.button}>
                         Back
                     </Button>
                     <Button

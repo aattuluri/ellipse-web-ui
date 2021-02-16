@@ -1,20 +1,15 @@
 import React from 'react';
-// import Copyright from '../Components/copyright';
 import useStyles from '../Themes/SignupPageStyles';
 import { withRouter } from 'react-router';
-// import axios from 'axios';
+import DateFnsUtils from '@date-io/date-fns';
 
 //MaterialUI imports
-// import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-// import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
-// import Box from '@material-ui/core/Box';
-// import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import Snackbar from '@material-ui/core/Snackbar';
@@ -28,13 +23,12 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import FormLabel from '@material-ui/core/FormLabel';
 import { MuiPickersUtilsProvider, DateTimePicker } from '@material-ui/pickers';
-import DateFnsUtils from '@date-io/date-fns';
 import FormControl from '@material-ui/core/FormControl';
 import FormGroup from '@material-ui/core/FormGroup';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
-// import { set } from 'date-fns';
-// import AuthContext from '../AuthContext';
+
+//other component imports
 import TermsandConditions from '../Components/EventRegisterTermsandConditions';
 import EventsContext from '../EventsContext';
 import ActiveEventsContext from '../ActiveEventsContext';
@@ -64,7 +58,6 @@ const EventRegistrationForm = (props) => {
   const [formValues, setFormValues] = React.useState(null);
   const [uploadFiles, setUploadFiles] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
-  // const [fields, setFields] = React.useState([]);
   const [normalFields, setNormalFields] = React.useState([]);
   const [dropDownFields, setDropDownFields] = React.useState([]);
   const [checkboxFields, setCheckBoxFields] = React.useState([]);
@@ -81,12 +74,12 @@ const EventRegistrationForm = (props) => {
   const [checkedValues, setCheckedValues] = React.useState([]);
   const colleges = ["VIT University,Vellore", "GITAM University", "SRM University"];
   const [tandcOpen, setTandcOpen] = React.useState(false);
+  const [showSuccessPanel, setShowSuccessPanel] = React.useState(false);
 
   const { currentUser } = React.useContext(AuthContext);
   const { setAllEvents } = React.useContext(EventsContext);
   const { setActiveEvents } = React.useContext(ActiveEventsContext);
 
-  const [showSuccessPanel, setShowSuccessPanel] = React.useState(false);
 
   function handleTermsClick() {
     setTandcOpen(true);
@@ -114,10 +107,9 @@ const EventRegistrationForm = (props) => {
       setCanRegister(false)
       setUserMessage("Registration is closed for this event")
     }
-    // console.log(event.o_allowed)
+
     if (event.o_allowed !== undefined) {
       if (!event.o_allowed) {
-        console.log(event.o_allowed)
         if (event.college_name === currentUser.college_name) {
 
         } else {
@@ -139,12 +131,9 @@ const EventRegistrationForm = (props) => {
       },
       method: 'GET',
     }).then(response => {
-      // console.log(response);
       response.json().then(value => {
         setEvent(value.event);
-        // setFields(value.event.regFields);
         const allFields = value.event.reg_fields;
-        // console.log(allFields);
         if (allFields != null) {
           allFields.forEach(f => {
             if (f.title === "Name") {
@@ -164,17 +153,14 @@ const EventRegistrationForm = (props) => {
             }
 
           })
-          // const filteredFields = allFields.filter(f => f.field !== "checkbox")
           setNormalFields(allFields.filter(f => f.field === "short_text"));
           setLongDescFields(allFields.filter((f) => f.field === "paragraph"));
           setCheckBoxFields(allFields.filter((f) => f.field === "checkboxes"));
           setRadioFields(allFields.filter(f => f.field === "radiobuttons"));
           setDateFields(allFields.filter((f) => f.field === "date"));
-          // setLongDescFields(allFields.filter((f) => f.field === "long_desc"));
           setDropDownFields(allFields.filter(f => f.field === "dropdown"));
           setLinkFields(allFields.filter(f => f.field === "link"));
           setFileUploadFields(allFields.filter(f => f.field === "file_upload"));
-
         }
         setBackDropOpen(false);
       })
@@ -183,7 +169,6 @@ const EventRegistrationForm = (props) => {
 
   function handleClose() {
     if (message === "Registration successful.Stay tunned with notifications and announcements") {
-      // props.history.push('/home')
       fetch(process.env.REACT_APP_API_URL + '/api/events', {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -194,7 +179,6 @@ const EventRegistrationForm = (props) => {
       }).then(response => {
         if (response.status === 200) {
           response.json().then(value => {
-            // console.log(value)
             value.sort((a, b) => {
               return new Date(a.start_time) - new Date(b.start_time);
             })
@@ -255,37 +239,42 @@ const EventRegistrationForm = (props) => {
     const fileFormKeys = Object.keys(uploadFiles);
     var count = 0;
     formkeys.forEach(v => {
+      const cField = event.reg_fields.filter((value) => { return value.title === v });
       if (formValues[v] === null) {
         if (v.includes(fileFormKeys)) {
 
         } else {
-          count = count + 1;
-          setState({
-            open: true,
-            vertical: 'top',
-            horizontal: 'center',
-            message: 'Please fill in all fields',
-            type: "error",
-            autoHide: 4000
-          });
-        }
+          if (cField[0].req) {
+            count = count + 1;
+            setState({
+              open: true,
+              vertical: 'top',
+              horizontal: 'center',
+              message: 'Please fill in all required fields',
+              type: "error",
+              autoHide: 4000
+            });
+          }
 
-        // break;
+        }
       }
     })
     if (fileFormKeys) {
       fileFormKeys.forEach(f => {
+        const cField = event.reg_fields.filter((value) => { return value.title === f });
         if (uploadFiles[f] === null) {
-          count = count + 1;
-          setState({
-            open: true,
-            vertical: 'top',
-            horizontal: 'center',
-            message: 'Please fill in all fields',
-            type: "error",
-            autoHide: 4000
-          });
-          // break;
+          if (cField[0].req) {
+            count = count + 1;
+            setState({
+              open: true,
+              vertical: 'top',
+              horizontal: 'center',
+              message: 'Please fill in all required fields',
+              type: "error",
+              autoHide: 4000
+            });
+          }
+
         }
       })
     }
@@ -293,12 +282,8 @@ const EventRegistrationForm = (props) => {
     var finalValues = formValues;
     if (count === 0) {
       try {
-        // console.log('a');
         if (fileFormKeys.length > 0) {
-          // console.log('b');
           fileFormKeys.forEach((key, index) => {
-            // console.log(index);
-            // console.log(fileFormKeys.length)
             var data1 = new FormData();
             data1.append('uploaded_file', uploadFiles[key]);
             fetch(process.env.REACT_APP_API_URL + `/api/event/register/upload_file?id=${id}`, {
@@ -310,13 +295,10 @@ const EventRegistrationForm = (props) => {
             }).then((response) => {
               if (response.status === 200) {
                 response.json().then(value => {
-                  // console.log(value);
                   setFormValues({ ...formValues, [key]: value.file_name })
                   finalValues[key] = value.file_name
                   uploadedFilesIds.push({ [key]: value.file_name });
                   if (uploadedFilesIds.length === fileFormKeys.length) {
-                    // console.log(uploadedFilesIds);
-                    // console.log(finalValues);
                     var data = new FormData();
                     const d = { data: finalValues }
                     data = JSON.stringify(d);
@@ -329,11 +311,8 @@ const EventRegistrationForm = (props) => {
                       method: 'POST',
                       body: data
                     }).then(response => {
-                      // console.log(response);
                       if (response.status === 200) {
                         response.json().then(value => {
-                          // console.log(value);
-
                           setLoading(false);
                           setShowSuccessPanel(true);
                           setState({
@@ -348,8 +327,6 @@ const EventRegistrationForm = (props) => {
                       }
                       else if (response.status === 201) {
                         response.json().then(value => {
-                          // console.log(value);
-
                           setLoading(false);
                           setShowSuccessPanel(true);
                           setState({
@@ -383,10 +360,8 @@ const EventRegistrationForm = (props) => {
             method: 'POST',
             body: data
           }).then(response => {
-            // console.log(response);
             if (response.status === 200) {
               response.json().then(value => {
-                // console.log(value);
                 setLoading(false);
                 setShowSuccessPanel(true);
                 setState({
@@ -401,8 +376,6 @@ const EventRegistrationForm = (props) => {
             }
             else if (response.status === 201) {
               response.json().then(value => {
-                // console.log(value);
-
                 setLoading(false);
                 setShowSuccessPanel(true);
                 setState({
@@ -443,15 +416,8 @@ const EventRegistrationForm = (props) => {
   }
 
   function handleFileSelect(event) {
-    // console.log(event.target.name)
     if (event.target.files[0]) {
       setUploadFiles({ ...uploadFiles, [event.target.name]: event.target.files[0] });
-      // setImage(event.target.files[0]);
-      // setImageAsFile(imageFile => (image))
-      // const url = URL.createObjectURL(event.target.files[0]);
-      // const fileType = event.target.files[0].type;
-      // setImageurl(url);
-      // setImageType(fileType.substr(fileType.indexOf('/') + 1));
     }
 
   }
@@ -467,7 +433,6 @@ const EventRegistrationForm = (props) => {
 
 
   return (
-
     <Container component="main" maxWidth="sm">
       <CssBaseline />
       <Snackbar
@@ -475,8 +440,7 @@ const EventRegistrationForm = (props) => {
         open={open}
         autoHideDuration={autoHide}
         onClose={handleClose}
-        key={vertical + horizontal}
-      >
+        key={vertical + horizontal}>
         <Alert onClose={handleClose} severity={type}>{message}</Alert>
       </Snackbar>
       <Backdrop className={classes.backdrop} open={backDropOpen}>
@@ -488,7 +452,6 @@ const EventRegistrationForm = (props) => {
       <div className={showSuccessPanel ? classes.paper : classes.hidden}>
         <SuccessPanel type="registrationSuccess" showSuccessPanel={showSuccessPanel} handleHomeScreenButton={handleHomeScreenButton} handleEventScreenButton={handleEventScreenButton}></SuccessPanel>
       </div>
-
       {event != null &&
         <div className={showSuccessPanel ? classes.hidden : classes.paper}>
           <Typography component="h1" variant="h5">
@@ -521,7 +484,6 @@ const EventRegistrationForm = (props) => {
                         autoComplete='off'
                         name={field.title}
                         disabled
-                        // variant="outlined"
                         required
                         fullWidth
                         id={field.title}
@@ -537,8 +499,7 @@ const EventRegistrationForm = (props) => {
                       <TextField
                         autoComplete='off'
                         name={field.title}
-                        // variant="outlined"
-                        required
+                        required={field.req}
                         fullWidth
                         id={field.title}
                         onChange={handleChange}
@@ -563,22 +524,6 @@ const EventRegistrationForm = (props) => {
                         })}
                       </FormGroup>
                     </FormControl>
-                    {/* <Autocomplete
-                      id={field.name}
-                      multiple
-                      // value={}
-                      onChange={handleChange2(field.name)}
-                      options={field.options.map((option) => option)}
-                      getOptionLabel={(option) => option}
-                      renderTags={(value, getTagProps) =>
-                        value.map((option, index) => (
-                          <Chip variant="outlined" label={option} {...getTagProps({ index })} />
-                        ))
-                      }
-                      renderInput={(params) => (
-                        <TextField {...params} name={field.name} label={field.name} placeholder={field.name} />
-                      )}
-                    /> */}
                   </Grid>
                 )
               })}
@@ -588,8 +533,6 @@ const EventRegistrationForm = (props) => {
                     <Autocomplete
                       id={field.title}
                       options={field.options.map((option) => option)}
-                      // freeSolo
-                      // onChange={handleeventTagsChange}
                       onChange={handleChange2(field.title)}
                       renderTags={(value, getTagProps) =>
                         value.map((option, index) => (
@@ -597,7 +540,7 @@ const EventRegistrationForm = (props) => {
                         ))
                       }
                       renderInput={(params) => (
-                        <TextField required {...params} name={field.name} label={field.title} placeholder={field.name} />
+                        <TextField required={field.req} {...params} name={field.name} label={field.title} placeholder={field.name} />
                       )}
                     />
                   </Grid>
@@ -607,13 +550,11 @@ const EventRegistrationForm = (props) => {
                 console.log(field.options[0])
                 return (
                   <Grid item xs={12}>
-                    <FormLabel required component="legend">{field.title}</FormLabel>
-                    <RadioGroup required aria-label="address" name={field.title} defaultValue={field.options[0]} value={formValues[field.title]} onChange={handleradioChange} style={{ display: "inline" }}>
+                    <FormLabel required={field.req} component="legend">{field.title}</FormLabel>
+                    <RadioGroup required={field.req} aria-label="address" name={field.title} defaultValue={field.options[0]} value={formValues[field.title]} onChange={handleradioChange} style={{ display: "inline" }}>
                       {field.options.map((option) => {
-                        return <FormControlLabel required value={option} control={<Radio color="default" />} label={option} />
+                        return <FormControlLabel required={field.req} value={option} control={<Radio color="default" />} label={option} />
                       })}
-
-                      {/* <FormControlLabel value="Paid" control={<Radio color="default" />} label="Paid" /> */}
                     </RadioGroup>
                   </Grid>
                 )
@@ -624,16 +565,14 @@ const EventRegistrationForm = (props) => {
                     <Grid item xs={12}>
                       <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <DateTimePicker
-                          // minDate={Date.now()}
                           fullWidth
-                          required
+                          required={field.req}
                           variant="inline"
                           format="dd MMM yyyy hh:mm a zzz"
                           margin="normal"
                           id={field.title}
                           label={field.title}
                           name={field.title}
-                          // defaultValue={Date.now()}
                           value={formValues[field.title]}
                           onChange={handleDateChange(field.title)}
                           KeyboardButtonProps={{
@@ -656,13 +595,12 @@ const EventRegistrationForm = (props) => {
                         variant='outlined'
                         placeholder={field.title}
                         autoComplete='off'
-                        required
+                        required={field.req}
                         id={field.title}
                         name={field.title}
                         label={field.title}
                         fullWidth
                         onChange={handleLondDescChange}
-                      // value={props.about}
                       />
                     </Grid>
                   )
@@ -675,8 +613,7 @@ const EventRegistrationForm = (props) => {
                       <TextField
                         autoComplete='off'
                         name={field.title}
-                        // variant="outlined"
-                        required
+                        required={field.req}
                         fullWidth
                         id={field.title}
                         onChange={handleChange}
@@ -690,7 +627,7 @@ const EventRegistrationForm = (props) => {
                 fileUploadFields.map((field, index) => {
                   return <Grid item xs={12}>
                     <Typography>{field.title}</Typography>
-                    <input id="contained-button-file" name={field.title} required type="file" onChange={handleFileSelect} ></input>
+                    <input id="contained-button-file" name={field.title} required={field.req} type="file" onChange={handleFileSelect} ></input>
                   </Grid>
                 })
               }
@@ -699,7 +636,7 @@ const EventRegistrationForm = (props) => {
                 <Typography>By registering for the event.I accept the <Button onClick={handleTermsClick} color="primary">Terms and Conditions</Button></Typography>
               </Grid>
             </Grid>
-            {canRegister && <Button
+            {canRegister && !backDropOpen && <Button
               type="submit"
               fullWidth
               variant="contained"
@@ -715,11 +652,6 @@ const EventRegistrationForm = (props) => {
           </form>
         </div>
       }
-
-      {/* </Grid> */}
-      {/* <Box mt={2}>
-        <Copyright />
-      </Box> */}
       <TermsandConditions open={tandcOpen} setOpen={setTandcOpen}></TermsandConditions>
     </Container>
   );

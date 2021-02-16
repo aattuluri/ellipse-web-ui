@@ -8,6 +8,7 @@ import Fade from '@material-ui/core/Fade';
 
 import TeamMemberListItem from './TeamMemberListItem';
 import EventSubmissionDialog from './EventSubmissionDialog';
+import SubmissionShareDialog from './SubmissionShareDialog';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -70,6 +71,7 @@ function EventAdminSubmissionPanel(props) {
     const [viewSubmissionDialog, setViewSubmissionDialog] = React.useState(false);
     const [selectedSubmission, setSelectedSubmission] = React.useState(null);
     const [selectedTeam, setSelectedTeam] = React.useState(null);
+    const [shareDialogOpen,setShareDialogOpen] = React.useState(false);
 
     React.useEffect(() => {
         if (event.isTeamed) {
@@ -205,6 +207,11 @@ function EventAdminSubmissionPanel(props) {
         })
     }
 
+    const handleShareButtonClick = (v) => () => {
+        setSelectedTeam(v);
+        setShareDialogOpen(true)
+    }
+
     return (
         <div>
             <div className={classes.progress}>
@@ -251,7 +258,8 @@ function EventAdminSubmissionPanel(props) {
                         </Grid>
                         <Grid item xs={12} md={6}>
                             <Box display="flex" justifyContent="flex-end">
-                                <Button disabled={loading} onClick={handleViewMembersClick(v)}>{(showMembers && v === teamIndex) ? "Hide" : "View"}</Button>
+                            <Button disabled={loading} onClick={handleViewMembersClick(v)}>{(showMembers && v === teamIndex) ? "Hide" : "View"}</Button>
+                                <Button disabled={loading} onClick={handleShareButtonClick(v)}>Share</Button>
                             </Box>
                             <Box>
                                 {showMembers && v === teamIndex && <div>
@@ -305,6 +313,7 @@ function EventAdminSubmissionPanel(props) {
                         <Grid item xs={12} md={6}>
                             <Box display="flex" justifyContent="flex-end">
                                 <Button disabled={loading} onClick={handleViewMembersClick(v)}>{(showMembers && v === teamIndex) ? "Hide" : "View"}</Button>
+                                <Button disabled={loading} onClick={handleShareButtonClick(v)}>Share</Button>
                             </Box>
                         </Grid>
                     </Grid>
@@ -327,6 +336,9 @@ function EventAdminSubmissionPanel(props) {
                 setOpen={setViewSubmissionDialog}>
 
             </EventSubmissionDialog>}
+            {
+                <SubmissionShareDialog open={shareDialogOpen} setOpen={setShareDialogOpen} reg={selectedTeam}></SubmissionShareDialog>
+            }
         </div>
     );
 }

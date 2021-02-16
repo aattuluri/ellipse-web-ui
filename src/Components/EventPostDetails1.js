@@ -278,7 +278,7 @@ export default function AddressForm(props) {
         </Grid>
         <Grid item xs={12}>
           <FormLabel component="legend">Entry Fee</FormLabel>
-          <RadioGroup aria-label="address" name="address" defaultValue="Free" onChange={handleFeeTypeChange} style={{ display: "inline" }}>
+          <RadioGroup aria-label="address" name="address" value={props.feeType} onChange={handleFeeTypeChange} style={{ display: "inline" }}>
             <FormControlLabel value="Free" control={<Radio color="default" />} label="Free" />
             <FormControlLabel value="Paid" control={<Radio color="default" />} label="Paid" />
           </RadioGroup>
