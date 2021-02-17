@@ -15,6 +15,7 @@ import EmojiEventsIcon from '@material-ui/icons/EmojiEvents';
 
 //other component imports
 import ImageDialog from '../Components/ImageDialog';
+import { Button } from '@material-ui/core';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -56,6 +57,11 @@ const useStyles = makeStyles((theme) => ({
         height: "1px",
         margin: theme.spacing(1),
         opacity: "0.2"
+    },
+    overFlowText: {
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        height: "100px"
     }
 }));
 
@@ -71,6 +77,7 @@ function AboutEventPanel(props) {
     const [adminDetails, setAdminDetails] = React.useState({});
     const [imageDialogOpen, setImageDialogOpen] = React.useState(false);
     const [notRegistered, setNotRegistered] = React.useState(false);
+    const [rulesHeight, setRulesHeight] = React.useState(true);
 
 
     React.useEffect(() => {
@@ -175,6 +182,11 @@ function AboutEventPanel(props) {
     const handleImageDialogOpen = () => {
         setImageDialogOpen(true);
     }
+
+    const handleRulesViewMoreButton = () => {
+        setRulesHeight((height) => { return !height })
+    }
+
     return (
         <div
             role="tabpanel"
@@ -253,7 +265,7 @@ function AboutEventPanel(props) {
                                             <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h4">About</Typography>
                                         </Box>
                                         <Box className={classes.boxItem}>
-                                            <Typography color="textSecondary" variant="body2">
+                                            <Typography color="textSecondary" variant="body1">
                                                 {
                                                     event.about
                                                 }
@@ -293,7 +305,7 @@ function AboutEventPanel(props) {
                                             {event.fee_type === "Paid" && <Typography color="textSecondary" variant="body2">{"Rs " + event.fee}</Typography>}
                                         </Box>
                                     </Grid>}
-                                    {event.event_mode === "Online" && <Grid itam xs={12} md={6} className={classes.gridItem}>
+                                    {event.event_mode === "Online" && event.platform_details !== null && event.platform_details !== "" && <Grid itam xs={12} md={6} className={classes.gridItem}>
                                         <Box className={classes.boxItem}>
                                             {event.event_mode === "Online" && <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Platform Details</Typography>}
                                         </Box>
@@ -333,7 +345,7 @@ function AboutEventPanel(props) {
                                 {event.prizes !== undefined && event.prizes !== null && event.prizes.length > 0 && <Grid container component="main" className={classes.gridMain}>
                                     <Grid item xs={12}>
                                         <Box display="flex" justifyContent="flex-start">
-                                            <Box style={{marginLeft:"30px"}}>
+                                            <Box style={{ marginLeft: "30px" }}>
                                                 {event.prizes !== undefined && event.prizes.length > 0 && <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Prizes</Typography>}
                                             </Box>
 
@@ -341,7 +353,7 @@ function AboutEventPanel(props) {
                                         {event.prizes !== undefined && event.prizes.length > 0 && <Box display="flex" justifyContent="center" flexWrap="wrap" style={{ marginTop: "20px", marginBottom: '20' }}>
                                             {
                                                 event.prizes.map((val, index) => {
-                                                    return <Box padding={1} justifyContent="center" style={{ maxWidth: "500px"}}>
+                                                    return <Box padding={1} justifyContent="center" style={{ maxWidth: "500px" }}>
                                                         <Box display="flex" justifyContent="center"><EmojiEventsIcon fontSize="large" color="primary"></EmojiEventsIcon></Box>
                                                         <Box display="flex" justifyContent="center"><Typography>{val.title}</Typography></Box>
                                                         <Box display="flex" justifyContent="center"><Typography variant="h5">{val.prize}</Typography></Box>
@@ -353,33 +365,47 @@ function AboutEventPanel(props) {
                                     </Grid>
                                 </Grid>}
                                 <Grid container component="main" className={classes.gridMain} >
-                                {event.rules !== undefined && event.rules !== null && event.rules !== "" &&
-                                    <Grid item xs={12} md={6} className={classes.gridItem}>
-                                        <Box style={{marginLeft:"30px"}}>
-                                            <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Rules</Typography>
-                                        </Box>
-                                        {event.rules.split("\n").map((val, index) => {
-                                            return <Box style={{marginLeft:"45px"}} whiteSpace="normal">
-                                                <Typography color="textSecondary" variant="body2" whiteSpace="normal">
-                                                    {val}
-                                                </Typography>
+
+
+                                    {event.themes !== undefined && event.themes !== null && event.themes !== "" &&
+                                        <Grid item xs={12} md={6} className={classes.gridItem}>
+                                            <Box style={{ marginLeft: "30px" }}>
+                                                <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Themes</Typography>
                                             </Box>
-                                        })}
-                                    </Grid>}
-                                
-                                {event.themes !== undefined && event.themes !== null && event.themes !== "" &&
-                                    <Grid item xs={12} md={6} className={classes.gridItem}>
-                                        <Box style={{marginLeft:"30px"}}>
-                                            <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Themes</Typography>
-                                        </Box>
-                                        {event.themes.split("\n").map((val, index) => {
-                                            return <Box style={{marginLeft:"45px"}} whiteSpace="normal">
-                                                <Typography color="textSecondary" variant="body2" whiteSpace="normal">
-                                                    {val}
-                                                </Typography>
+                                            <div style={{marginTop:"5px"}} whiteSpace="normal">
+                                            {event.themes.split("\n").map((val, index) => {
+                                                if (val === "") {
+                                                    return <br></br>
+                                                }
+                                                return <Box style={{ marginLeft: "45px" }} whiteSpace="normal">
+                                                    <Typography color="textSecondary" variant="body2" whiteSpace="normal">
+                                                        {val}
+                                                    </Typography>
+                                                </Box>
+                                            })}
+                                            </div>
+                                        </Grid>}
+                                    {event.rules !== undefined && event.rules !== null && event.rules !== "" &&
+                                        <Grid item xs={12} md={6} className={classes.gridItem} >
+                                            <Box style={{ marginLeft: "30px" }}>
+                                                <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Rules</Typography>
                                             </Box>
-                                        })}
-                                    </Grid>}
+                                            <div className={rulesHeight && classes.overFlowText} style={{marginTop:"5px"}} whiteSpace="normal">
+                                                {event.rules.split("\n").map((val, index) => {
+                                                    if (val === "") {
+                                                        return <br></br>
+                                                    }
+                                                    return <Box style={{ marginLeft: "45px" }} whiteSpace="normal">
+                                                        <Typography color="textSecondary" variant="body2" whiteSpace="normal">
+                                                            {val}
+                                                        </Typography>
+                                                    </Box>
+                                                })}
+
+                                            </div>
+                                            <Button onClick={handleRulesViewMoreButton} style={{ marginLeft: "45px" }} color="primary">{rulesHeight ? "View More" : "hide"}</Button>
+
+                                        </Grid>}
                                 </Grid>
 
                                 {!notRegistered && <Box className={classes.boxItem}>

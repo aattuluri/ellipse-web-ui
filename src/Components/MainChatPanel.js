@@ -1,32 +1,17 @@
 import React from 'react';
 import { withRouter, } from "react-router";
-// import ChatMessage from '../Components/ChatMessage';
-import AuthContext from '../AuthContext';
-import WebSocketContext from '../WebSocketContext';
-import WebSocketDataContext from '../WebSocketDataContext';
-import ChatTextField from './MainChatTextField';
-import { cleanup } from '@testing-library/react';
-// import EventsContext from '../EventsContext';
 
+//Material Ui imports
 import Box from '@material-ui/core/Box';
 import { makeStyles } from '@material-ui/core/styles';
-// import Avatar from '@material-ui/core/Avatar';
-import { IconButton, Typography } from '@material-ui/core';
-// import ListItem from '@material-ui/core/ListItem';
-// import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-// import ListItemText from '@material-ui/core/ListItemText';
-// import Dialog from '@material-ui/core/Dialog';
-// import DeleteIcon from '@material-ui/icons/Delete';
-// import ReplyIcon from '@material-ui/icons/Reply';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import IconButton from '@material-ui/core/IconButton';
+import Typography from '@material-ui/core/Typography';
 import Fade from '@material-ui/core/Fade';
 import InfoIcon from '@material-ui/icons/Info';
-// import EventsDialog from '../Components/EventsDialog';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
-// import { Divider, IconButton } from '@material-ui/core';
-// import { TextField } from '@material-ui/core';
 
-
+//other component imports
 import MessageBox1 from './MessageBox1';
 import MessageBox2 from './MessageBox2';
 import MessageBox3 from './MessageBox3';
@@ -34,15 +19,11 @@ import MessageBox4 from './MessageBox4';
 import MessageBox5 from './MessageBox5';
 import MessageDeleteDialog from './MessageDeleteDialog';
 import MessageReplyDialog from './MessageReplyDialog';
-
-
-// import socketIOClient from "socket.io-client";
-// const socket = socketIOClient("https://staging.ellipseapp.com",{
-//     path: '/ws',
-//     // transports: ['websocket']
-// });
-
-
+import AuthContext from '../AuthContext';
+import WebSocketContext from '../WebSocketContext';
+import WebSocketDataContext from '../WebSocketDataContext';
+import ChatTextField from './MainChatTextField';
+import { cleanup } from '@testing-library/react';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -155,22 +136,18 @@ const useStyles = makeStyles((theme) => ({
 function MainChatPanel(props) {
     const { children, value, url, index, ...other } = props;
     const { currentUser } = React.useContext(AuthContext);
-    // const { allEvents } = React.useContext(EventsContext);
-    // const [open, setOpen] = React.useState(false);
-    // const [selectedEvent, setSelectedEvent] = React.useState([]);
     const user = props.user
     const token = localStorage.getItem('token');
     const event = props.event;
     const team = props.event;
+    
     const [loading, setLoading] = React.useState(false);
-
     const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
     const [openReplyDialog, setOpenReplyDialog] = React.useState(false);
     const [messageToBeDeleted, setMessageToBeDeleted] = React.useState({});
     const [messageToBeReplied, setMessagesToBeReplied] = React.useState({});
 
     const [reference, setReferenece] = React.useState(null);
-    // const [currentReference,setCurrenmtReference] = React.useState(null);
     const [chatMessages, setChatMessages] = React.useState([]);
     const classes = useStyles();
     var counterDate = null;
@@ -190,10 +167,6 @@ function MainChatPanel(props) {
     React.useEffect(() => {
 
     }, [])
-
-    // const handleClose = () => {
-    //     setOpen(false);
-    // };
 
 
 
