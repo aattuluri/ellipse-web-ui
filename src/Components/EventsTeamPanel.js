@@ -110,6 +110,23 @@ function AboutEventPanel(props) {
         // eslint-disable-next-line
     }, [event, token])
 
+    const closeWebSocket = () => {
+        if (registration !== {}) {
+            // console.log("xxxxx")
+            webSocketContext.send(JSON.stringify({
+                action: "close_team_update_status_socket",
+                team_id: registration.team_id,
+                msg: {
+                    'user_id': currentUser.user_id,
+                }
+            }));
+        }
+    }
+
+    window.onbeforeunload = () => {
+        closeWebSocket()
+    }
+
 
     React.useEffect(() => {
         if (webSocketContext) {
@@ -123,6 +140,9 @@ function AboutEventPanel(props) {
                     }
                 }));
             }
+        }
+        return () => {
+            closeWebSocket();
         }
     }, [registration, currentUser, webSocketContext])
 

@@ -140,6 +140,23 @@ export default function JustifyContent(props) {
     const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
     const [messageToBeDeleted, setMessageToBeDeleted] = React.useState({});
 
+    const closeWebSocket = () => {
+        if (webSocketContext) {
+            webSocketContext.send(JSON.stringify({
+                action: "close_event_socket",
+                event_id: event._id,
+                msg: {
+                    'user_id': currentUser.user_id,
+                }
+            }));
+        }
+    }
+
+    window.onbeforeunload = () => {
+        closeWebSocket()
+    }
+
+
     React.useEffect(() => {
         if (webSocketContext) {
             webSocketContext.send(JSON.stringify({
@@ -150,6 +167,11 @@ export default function JustifyContent(props) {
                 }
             }));
         }
+
+        return ()=>{
+            closeWebSocket();
+        }
+        // eslint-disable-next-line
     }, [webSocketContext, currentUser, event])
 
     React.useEffect(() => {

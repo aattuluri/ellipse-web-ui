@@ -142,6 +142,18 @@ export default function JustifyContent(props) {
                 }
             }));
         }
+
+        return ()=>{
+            if (webSocketContext) {
+                webSocketContext.send(JSON.stringify({
+                    action: "close_event_socket",
+                    event_id: event._id,
+                    msg: {
+                        'user_id': currentUser.user_id,
+                    }
+                }));
+            }
+        }
     }, [webSocketContext, currentUser, event])
 
     React.useEffect(() => {

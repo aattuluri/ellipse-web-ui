@@ -146,6 +146,22 @@ export default function JustifyContent(props) {
     const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
     const [messageToBeDeleted, setMessageToBeDeleted] = React.useState({});
 
+    const closeWebSocket = () => {
+        if (webSocketContext) {
+            webSocketContext.send(JSON.stringify({
+                action: "close_team_socket",
+                team_id: registration.team_id,
+                msg: {
+                    'user_id': currentUser.user_id,
+                }
+            }));
+        }
+    }
+
+    window.onbeforeunload = () => {
+        closeWebSocket()
+    }
+
 
     React.useEffect(() => {
         if (webSocketContext) {
@@ -157,14 +173,16 @@ export default function JustifyContent(props) {
                 }
             }));
         }
+        return () => {
+            closeWebSocket();
+        }
+        // eslint-disable-next-line
     }, [currentUser, registration, webSocketContext])
 
     React.useEffect(() => {
         teamChatMessages.forEach(mes => {
             const cMes = mes.msg;
-            //         // console.log(mes);
             if (mes.team_id === registration.team_id) {
-                // console.log(cMes);
                 setChatMessages(chatMessages => [...chatMessages, cMes]);
                 setTeamChatMessages(teamChatMessages.filter(m => { return m !== mes }));
             }

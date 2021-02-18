@@ -50,6 +50,7 @@ const useStyles = makeStyles((theme) => ({
     },
     gridItem: {
         padding: theme.spacing(1),
+        elevation: "5"
 
     },
     divider: {

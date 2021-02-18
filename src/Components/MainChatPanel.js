@@ -140,7 +140,7 @@ function MainChatPanel(props) {
     const token = localStorage.getItem('token');
     const event = props.event;
     const team = props.event;
-    
+
     const [loading, setLoading] = React.useState(false);
     const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
     const [openReplyDialog, setOpenReplyDialog] = React.useState(false);
@@ -165,10 +165,35 @@ function MainChatPanel(props) {
 
 
     React.useEffect(() => {
-
     }, [])
 
+    const closeWebSocket = () => {
+        if (webSocketContext) {
+            if (props.chatType === "event") {
+                webSocketContext.send(JSON.stringify({
+                    action: "close_event_socket",
+                    event_id: event._id,
+                    msg: {
+                        'user_id': currentUser.user_id,
+                    }
+                }));
+            }
+            else {
+                webSocketContext.send(JSON.stringify({
+                    action: "close_team_socket",
+                    team_id: event._id,
+                    msg: {
+                        'user_id': currentUser.user_id,
+                    }
+                }));
+            }
+        }
+    }
 
+    window.onbeforeunload = () => {
+        closeWebSocket()
+
+    }
 
     React.useEffect(() => {
         if (webSocketContext) {
@@ -191,6 +216,10 @@ function MainChatPanel(props) {
                 }));
             }
         }
+        return () => {
+            closeWebSocket()
+        }
+        // eslint-disable-next-line
     }, [webSocketContext, currentUser, event, props])
 
     React.useEffect(() => {
@@ -438,7 +467,7 @@ function MainChatPanel(props) {
                     <div className={classes.header}>
                         <Box display="flex">
                             <Box >
-                                { props.mobile && <IconButton style={{ marginTop: '0px', padding: '0px' }} onClick={handleBackButton}>
+                                {props.mobile && <IconButton style={{ marginTop: '0px', padding: '0px' }} onClick={handleBackButton}>
                                     <ArrowBackIosIcon></ArrowBackIosIcon>
                                 </IconButton>}
                             </Box>
@@ -566,7 +595,7 @@ function MainChatPanel(props) {
                         message={messageToBeReplied}
                         setOpen={setOpenReplyDialog}
                         handleReplyConfirmation={handleReplyConfirmation}></MessageReplyDialog>
-                    
+
                 </div>
             )}
         </div>
