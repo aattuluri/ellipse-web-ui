@@ -144,6 +144,7 @@ function AboutEventPanel(props) {
         return () => {
             closeWebSocket();
         }
+        // eslint-disable-next-line
     }, [registration, currentUser, webSocketContext])
 
 

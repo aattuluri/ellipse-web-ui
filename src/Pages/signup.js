@@ -58,7 +58,7 @@ const Signup = ({ history }) => {
   const browser = detect();
   const [supportOpen, setSupportOpen] = React.useState(false);
 
-  React.useEffect(()=>{
+  React.useEffect(() => {
     fetch(process.env.REACT_APP_API_URL + '/api/colleges', {
       headers: {
         'Content-Type': 'application/json',
@@ -73,7 +73,7 @@ const Signup = ({ history }) => {
         })
       })
     })
-  },[])
+  }, [])
 
 
   React.useEffect(() => {

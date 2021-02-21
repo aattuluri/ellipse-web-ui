@@ -31,6 +31,7 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: 800,
     background: theme.palette.secondary.main,
     alignItems: 'center',
+    elevation: "0"
   },
   grow: {
     flexGrow: 1,

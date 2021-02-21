@@ -1,42 +1,33 @@
 import React from 'react';
-import Button from '@material-ui/core/Button';
-// import EventCard from '../Components/EventCard';
+import { withRouter } from "react-router";
+
+
 import { makeStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Grid from '@material-ui/core/Grid';
-import { Typography } from '@material-ui/core';
+import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
-import { withRouter } from "react-router";
 import List from '@material-ui/core/List';
-import EventsDialog from '../Components/EventsDialog';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
-import SortLeftPanel from '../Components/SortLeftPanel';
-import MobileSortPanel from '../Components/MobileSortPanel';
-import ImageDialog from '../Components/ImageDialog';
-// import EventsContext from '../EventsContext';
-// import Skeleton from '@material-ui/lab/Skeleton';
-// import { Link } from 'react-router-dom';
-import AuthContext from '../AuthContext';
-// import GridListEvents from '../Components/GridListEvents';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import Divider from '@material-ui/core/Divider';
-import ActiveEventsContext from '../ActiveEventsContext';
 
+//component imports
+import EventsDialog from '../Components/EventsDialog';
+import SortLeftPanel from '../Components/SortLeftPanel';
+import MobileSortPanel from '../Components/MobileSortPanel';
+import ImageDialog from '../Components/ImageDialog';
 import FeedBackDialog from '../Components/FeedBackDialog';
 import ExplorePanel from '../Components/EventsMainTabPanel';
-// function a11yProps(index) {
-//     return {
-//         id: `scrollable-auto-tab-${index}`,
-//         'aria-controls': `scrollable-auto-tabpanel-${index}`,
-//     };
-// }
-
+import AuthContext from '../AuthContext';
+import ActiveEventsContext from '../ActiveEventsContext';
 
 const useStyles = makeStyles((theme) => ({
     backdrop: {
@@ -47,8 +38,6 @@ const useStyles = makeStyles((theme) => ({
         position: 'absolute',
         right: theme.spacing(1),
         top: theme.spacing(1),
-        // color: theme.palette.grey[500],
-
     },
 
     rpaper: {
@@ -63,8 +52,6 @@ const useStyles = makeStyles((theme) => ({
             display: 'none',
         },
         top: theme.spacing(10),
-        // zIndex: 3,
-        // borderRadius: theme.spacing(50)
     },
     subRpaper: {
         backgroundColor: theme.palette.primary.light,
@@ -78,7 +65,6 @@ const useStyles = makeStyles((theme) => ({
         [theme.breakpoints.down('md')]: {
             display: 'none',
         },
-        // color: theme.palette.primary.main
         backgroundColor: theme.palette.primary.main
     },
     root: {
@@ -86,12 +72,9 @@ const useStyles = makeStyles((theme) => ({
         position: 'sticky',
         top: theme.spacing(10),
         marginLeft: theme.spacing(1),
-        // height: '89vh',
         [theme.breakpoints.down('sm')]: {
             display: 'none',
         },
-        // bottom: 0,
-        // zIndex: 3,
     },
     leftSubPaper: {
         backgroundColor: theme.palette.primary.light,
@@ -156,39 +139,30 @@ const useStyles = makeStyles((theme) => ({
 
 function EventsTabPanel({ history }) {
     localStorage.setItem('tabIndex', 0);
-    // const { children, value, url, index, ...other } = props;
-    // const user = JSON.parse(localStorage.getItem('user'));
-    // const url = user.imageUrl;
     const token = localStorage.getItem('token');
     const { currentUser } = React.useContext(AuthContext);
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
     const [imageDialogOpen, setImageDialogOpen] = React.useState(false);
-    // const [allEvents, setAllEvents] = React.useState([]);
     const [selectedEvent, setSelectedEvent] = React.useState("");
     const [sortStartDate, setSortStartDate] = React.useState(null);
     const [sortEndDate, setSortEndDate] = React.useState(null);
-    // const [sortType, setSortType] = React.useState(null);
-    // const [sortEventMode, setSortEventMode] = React.useState(null);
     const [sortCollegeType, setSortCollegeType] = React.useState("All");
     const [sortedEventsArray, setSortedEventsArray] = React.useState([]);
     const [isFiltered, setIsFiltered] = React.useState(false);
     const [feeSortChecked, setFeeSortChecked] = React.useState([0]);
     const [modeSortChecked, setModeSortChecked] = React.useState([0]);
     const [filterDialogOpen, setFilterDialogOpen] = React.useState(false);
-    // const [selectedImage, setSelectedImage] = React.useState(null);
     const { activeEvents } = React.useContext(ActiveEventsContext);
     const [registerdEvents, setRegisteredEvents] = React.useState([]);
     const [feedBackOpen, setFeedBackOpen] = React.useState(false);
 
 
     React.useEffect(() => {
-        // console.log(allEvents);
         setRegisteredEvents(activeEvents.filter((value) => value.registered === true))
     }, [activeEvents])
-    // console.log(registerdEvents);
+
     if (!token) {
-        // return <Redirect to="/" />;
         history.replace("/")
     }
 
@@ -196,21 +170,19 @@ function EventsTabPanel({ history }) {
         setOpen(false);
     };
     const handleClick = function (event) {
-        // console.log(id);
         if (event.registered || event.user_id === currentUser.user_id) {
             history.push(`/event/${event._id}`)
         } else {
             setSelectedEvent(event);
-            // setSelectedImage(image);
             setOpen(true);
         }
     }
+
     const handlePostButtonClick = () => {
         history.push('/post')
     }
 
     const handleSortDateChange = (date) => {
-        console.log(date);
         setSortStartDate(date);
     };
     const handleEndSortDateChange = (date) => {
@@ -225,20 +197,10 @@ function EventsTabPanel({ history }) {
         setFeedBackOpen(false);
     }
 
-    // function handleSortEventModeChamge(event, value) {
-    //     console.log(event);
-    //     console.log(value);
-    // }
-    // console.log(allEvents);
     function handleSortCollegeChange(event, value) {
         setSortCollegeType(value);
     }
     async function handleSortApplyButton() {
-        // console.log(sortStartDate);
-        // console.log(modeSortChecked);
-        // console.log(sortCollegeType);
-        // console.log(sortCollegeType);
-        //     console.log(user);
         setFilterDialogOpen(false);
         if (sortStartDate != null && sortEndDate != null) {
             const dateRangeSortedEvents = sortByDateRange(sortStartDate, sortEndDate, activeEvents);
@@ -314,8 +276,6 @@ function EventsTabPanel({ history }) {
         }
         else if (modeSortChecked.length > 1) {
             const typeSortedEvents = sortByMode(activeEvents);
-            // console.log(sortByMode(activeEvents));
-
             setSortedEventsArray(typeSortedEvents);
             setIsFiltered(true);
             if (feeSortChecked.length > 1) {
@@ -330,8 +290,6 @@ function EventsTabPanel({ history }) {
             setIsFiltered(true);
         }
         else if (sortCollegeType === currentUser.college_name) {
-            // console.log(sortCollegeType);
-            // console.log(currentUser.college_name);
             const collegeSortedEvents = sortByCollege(activeEvents);
             setSortedEventsArray(collegeSortedEvents);
             setIsFiltered(true);
@@ -340,8 +298,6 @@ function EventsTabPanel({ history }) {
 
     function sortByDateRange(date1, date2, sEvents) {
         var sortedEvents = [];
-        // console.log(typeof (date1));
-        // console.log(typeof (date1));
         sEvents.forEach(sEvent => {
             const d = new Date(sEvent.start_time);
             if (date1.getTime() <= d.getTime() && d.getTime() <= date2.getTime()) {
@@ -362,9 +318,7 @@ function EventsTabPanel({ history }) {
                 console.log(sevent);
                 sDEvents.push(sevent);
             }
-            // console.log(sortedEventsArray);
         })
-        // console.log(sDEvents);
         return sDEvents;
     }
     function sortByMode(sEvents) {
@@ -375,7 +329,6 @@ function EventsTabPanel({ history }) {
                 sortedEvents.push(sevent);
             }
         })
-        // console.log(sortedEvents);
         return sortedEvents;
     }
 
@@ -409,7 +362,6 @@ function EventsTabPanel({ history }) {
         setIsFiltered(false);
         setFilterDialogOpen(false);
         setSortCollegeType("All")
-        // setChecked(null);
     }
     function handlefilterButtonClicked() {
         setFilterDialogOpen(true);
@@ -421,7 +373,6 @@ function EventsTabPanel({ history }) {
         setImageDialogOpen(false);
     }
     function handleImageDialogOpen(event) {
-        // console.log(image);
         setSelectedEvent(event);
         setImageDialogOpen(true);
     }
@@ -436,7 +387,6 @@ function EventsTabPanel({ history }) {
             history.push(`/event/${event._id}`)
         } else {
             setSelectedEvent(event);
-            // setSelectedImage(image);
             setOpen(true);
         }
 
@@ -473,26 +423,11 @@ function EventsTabPanel({ history }) {
                         sortedEventsArray={sortedEventsArray}
                         handleClick={handleClick}
                         handleImageDialogOpen={handleImageDialogOpen}
-                        handleRegistrationButton={handleRegistrationButton}></ExplorePanel>
-                    {/* <Typography variant="h5" style={{ paddingTop: '5px' }}>
-                        Your College Events
-                    </Typography>
-                    <GridListEvents click={handleClick} events={allEvents.filter((event) => event.college_name === user.college_name)} ></GridListEvents> */}
-                    <Typography variant="h5" style={{ paddingTop: '5px', paddingBottom: '7px' }}>
-                        {/* Active Events */}
-                    </Typography>
-                    {/* {activeEvents.length === 0 && <div>
-                        <Skeleton variant="rect" animation="wave" height={118} />
-                        <Skeleton animation="wave" />
-                        <Skeleton animation="wave" />
-                        <Skeleton animation="wave" />
-                        <br></br><br></br>
-                        <Skeleton variant="rect" animation="wave" height={118} />
-                        <Skeleton animation="wave" />
-                        <Skeleton animation="wave" />
-                        <Skeleton animation="wave" />
-                    </div>} */}
+                        handleRegistrationButton={handleRegistrationButton}>
+                    </ExplorePanel>
 
+                    <Typography variant="h5" style={{ paddingTop: '5px', paddingBottom: '7px' }}>
+                    </Typography>
                 </Grid>
                 <Grid item xs={12} sm={12} md={4} lg={2} >
                     <Fab color="primary" aria-label="add" className={classes.fab} onClick={handlePostButtonClick}>
@@ -553,7 +488,6 @@ function EventsTabPanel({ history }) {
                 >
                 </EventsDialog>}
                 <ImageDialog
-                    // image={selectedImage}
                     event={selectedEvent}
                     open={imageDialogOpen}
                     handleClose={handleImageDialogClose}>

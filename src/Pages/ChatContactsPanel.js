@@ -1,24 +1,25 @@
 import React from 'react';
+
+//materialui imports
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
-
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
-import { Divider, Paper } from '@material-ui/core';
-import EventsContext from '../EventsContext';
+import Divider from '@material-ui/core/Divider';
+import Paper from '@material-ui/core/Paper';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
-
-
 import IconButton from '@material-ui/core/IconButton';
 import EventIcon from '@material-ui/icons/Event';
 import GroupIcon from '@material-ui/icons/Group';
 import Typography from '@material-ui/core/Typography';
 
+//other component imports
 import AuthContext from '../AuthContext';
+import EventsContext from '../EventsContext';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -31,14 +32,11 @@ const useStyles = makeStyles((theme) => ({
             height: '86%'
         },
     },
-    root2: {
+    subRoot: {
         position: 'relative',
         overflow: 'auto',
         maxHeight: '100%',
         width: '100%',
-    },
-    nested: {
-        paddingLeft: theme.spacing(4),
     },
     divider: {
         backgroundColor: theme.palette.primary.main,
@@ -46,16 +44,17 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function ChatPage(props) {
+const ChatContactsPanel = (props) => {
     const token = localStorage.getItem('token');
     const theme = useTheme();
     const classes = useStyles();
-    const { allEvents } = React.useContext(EventsContext);
+
     const [teams, setTeams] = React.useState([]);
-    // const [open, setOpen] = React.useState(false);
     const [checked, setChecked] = React.useState([0]);
-    const [chatValue,setChatValue] = React.useState(0);
-    const {currentUser} = React.useContext(AuthContext);
+    const [chatValue, setChatValue] = React.useState(0);
+
+    const { currentUser } = React.useContext(AuthContext);
+    const { allEvents } = React.useContext(EventsContext);
 
 
     const regEvents = allEvents.filter((val) => {
@@ -71,21 +70,17 @@ function ChatPage(props) {
             },
             method: 'GET'
         }).then(response => {
-            // console.log(response);
             if (response.status === 200) {
                 response.json().then(value => {
-
                     setTeams(value);
-                    // console.log(value);
                 })
             }
             else if (response.status === 401) {
                 localStorage.removeItem('token');
-                // setAuthorized(false);
             }
-
         })
     }, [token])
+
     const handleToggle = (value, userid) => () => {
         const currentIndex = checked.indexOf(value);
         const newChecked = [];
@@ -94,7 +89,6 @@ function ChatPage(props) {
         } else {
             newChecked.splice(currentIndex, 1);
         }
-        // setOpen(!open);
         props.setChatType('event')
         props.setChatId(value);
         props.setAdminId(userid);
@@ -112,7 +106,6 @@ function ChatPage(props) {
         } else {
             newChecked.splice(currentIndex, 1);
         }
-        // setOpen(!open);
         props.setChatType('team')
         props.setChatId(value);
         props.setAdminId(userid);
@@ -121,11 +114,6 @@ function ChatPage(props) {
             props.openDialog(true);
         }
     };
-
-    // const handleClick = (v) => () => {
-    //     console.log(v);
-    //     // history.push('/chat/1')
-    // };
 
     const handleChatChange = (value) => () => {
         setChatValue(value)
@@ -162,7 +150,7 @@ function ChatPage(props) {
                             </IconButton>
                         </Box>
                     </Box>
-                    <List className={classes.root2}>
+                    <List className={classes.subRoot}>
                         {chatValue === 0 && regEvents.map((value) => {
                             const labelId = `checkbox-list-label-${value._id}`;
                             return (
@@ -173,36 +161,21 @@ function ChatPage(props) {
                                         <ListItemIcon>
                                             <ListItemAvatar>
                                                 <Avatar
-                                                    alt={`Avatar n°${value + 1}`}
+                                                    alt={`user avatar n°${value + 1}`}
                                                     src={process.env.REACT_APP_API_URL + `/api/image?id=${value.poster_url}`}
                                                 />
                                             </ListItemAvatar>
                                         </ListItemIcon>
                                         <ListItemText id={labelId} primary={value.name} />
                                         <ArrowForwardIosIcon></ArrowForwardIosIcon>
-                                        {/* {checked.indexOf(value._id) !== -1 ? <ExpandLess /> : <ExpandMore />} */}
                                     </ListItem>
-                                    {/* <Collapse in={checked.indexOf(value._id) !== -1} timeout="auto" unmountOnExit> */}
-                                    {/* <List component="div" disablePadding>
-                                            <ListItem key={value} className={classes.nested} button onClick={handleClick(value)}>
-                                                <ListItemText primary="Not Registered" />
-                                                <KeyboardArrowRightIcon></KeyboardArrowRightIcon>
-                                            </ListItem>
-                                        </List>
-                                        <List component="div" disablePadding>
-                                            <ListItem button className={classes.nested}>
-                                                <ListItemText primary="Registered" />
-                                                <KeyboardArrowRightIcon></KeyboardArrowRightIcon>
-                                            </ListItem>
-                                        </List> */}
-                                    {/* </Collapse> */}
                                 </React.Fragment>
                             );
                         })}
                         {
                             chatValue === 0 && regEvents.length === 0 && <Typography>No Events Found, Register or host event to join one</Typography>
                         }
-                        {chatValue === 1 &&teams.map((value) => {
+                        {chatValue === 1 && teams.map((value) => {
                             const labelId = `checkbox-list-label-${value._id}`;
                             return (
                                 <React.Fragment>
@@ -233,4 +206,4 @@ function ChatPage(props) {
     );
 }
 
-export default ChatPage;
+export default ChatContactsPanel

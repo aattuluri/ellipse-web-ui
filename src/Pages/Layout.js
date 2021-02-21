@@ -163,7 +163,6 @@ function Layout(props) {
         }).then(response => {
             if (response.status === 200) {
                 response.json().then(value => {
-                    // console.log(value)
                     value.sort((a, b) => {
                         return new Date(a.start_time) - new Date(b.start_time);
                     })

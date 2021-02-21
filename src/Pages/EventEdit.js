@@ -1,7 +1,7 @@
 import React from 'react';
 // import Copyright from '../Components/copyright';
-// import useStyles from '../Themes/SignupPageStyles';
 import { withRouter } from 'react-router';
+import DateFnsUtils from '@date-io/date-fns';
 
 //MaterialUI imports
 import Button from '@material-ui/core/Button';
@@ -17,7 +17,6 @@ import FormControl from '@material-ui/core/FormControl';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import DateFnsUtils from '@date-io/date-fns';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Chip from '@material-ui/core/Chip';
 import { MuiPickersUtilsProvider, DateTimePicker, } from '@material-ui/pickers';
@@ -29,7 +28,7 @@ import Badge from '@material-ui/core/Badge';
 import EditIcon from '@material-ui/icons/Edit';
 import IconButton from '@material-ui/core/IconButton';
 import Paper from '@material-ui/core/Paper';
-import { Typography } from '@material-ui/core';
+import Typography from '@material-ui/core/Typography';
 
 import RoundEditDialog from '../Components/EditRoundDialog';
 
@@ -121,10 +120,10 @@ const EventEdit = (props) => {
   const [teamSize, setTeamSize] = React.useState({});
   const [rounds, setRounds] = React.useState([]);
   const [rules, setRules] = React.useState(null);
-  const [themes,setThemes] = React.useState(null);
+  const [themes, setThemes] = React.useState(null);
   const [prizes, setPrizes] = React.useState([]);
   const [prizeTitle, setPrizeTitle] = React.useState(null);
-    const [prizeDesc, setPrizeDesc] = React.useState(null);
+  const [prizeDesc, setPrizeDesc] = React.useState(null);
   const [roundsDialogOpen, setRoundsDialogOpen] = React.useState(false);
   const [selectedEditRound, setSelectedEditRound] = React.useState({});
 
@@ -188,8 +187,6 @@ const EventEdit = (props) => {
     setRules(event.rules);
     setPrizes(event.prizes);
     setThemes(event.themes);
-
-    // setParticipantsType(event.o_allowed)
     if (event.o_allowed === true) {
       setParticipantsType("open")
     }
@@ -205,7 +202,6 @@ const EventEdit = (props) => {
       method: 'GET',
     }).then(response => {
       response.json().then(value => {
-        // setColleges(value);
         value.forEach((v) => {
           if (v.type === "EventTags") {
             setEventTags((eventTags) => [...eventTags, v.title]);
@@ -225,15 +221,12 @@ const EventEdit = (props) => {
 
   const handleClose = async (event, reason) => {
     if (message === "Saved changes successfully") {
-      // history.replace()
-      // history.replace("/otpverification")
       window.location.reload(false);
     }
     setState({ ...state, open: false });
   };
 
   const handleRoundEditDialogClose = () => {
-    // setOpen(false);
     setRoundsDialogOpen(false);
   };
 
@@ -245,10 +238,7 @@ const EventEdit = (props) => {
     if (participantType === "open") {
       oAllowed = true
     }
-    // console
     try {
-      // console.log("started");
-      // getBase64(image, (result) => {
       var data = new FormData();
       const payload = {
         eventId: event._id,
@@ -260,7 +250,6 @@ const EventEdit = (props) => {
         event_mode: eventMode,
         event_type: eventType,
         tags: eventThemes,
-        // poster: result,
         reg_link: regLink,
         fee: regFees,
         about: about,
@@ -280,7 +269,6 @@ const EventEdit = (props) => {
         themes: themes
       };
       data = JSON.stringify(payload);
-      // console.log(data);
       fetch(process.env.REACT_APP_API_URL + '/api/updateevent', {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -292,7 +280,6 @@ const EventEdit = (props) => {
       }).then(result => {
         if (result.status === 200) {
           result.json().then(value => {
-            // console.log(value);
             event = value.event;
             if (imageUpdated) {
               var data2 = new FormData()
@@ -327,8 +314,6 @@ const EventEdit = (props) => {
                 type: "success"
               })
             }
-            // history.replace("/home")
-
           })
         }
         else {
@@ -345,8 +330,6 @@ const EventEdit = (props) => {
           })
         }
       })
-
-      // })
     }
     catch (error) {
       setLoading(false);
@@ -371,14 +354,6 @@ const EventEdit = (props) => {
     setSelectedRequirements(values);
   }
 
-  // function handleChange(event) {
-  //   if (event.target.files[0]) {
-  //     setImage(event.target.files[0]);
-  //     const fileName = event.target.files[0].name;
-  //     setImageName(fileName);
-  //   }
-
-  // }
 
   function handleAddressTypeChange(evemt, value) {
     setAddressType(value);
@@ -390,12 +365,10 @@ const EventEdit = (props) => {
     setDesc(event.target.value);
   }
   function handleFeeTypeChange(event, value) {
-    // props.setFeeType(value)
     setFeeType(value);
   }
 
   function handleCollegeChange(event, value) {
-    // props.setCollegeName(value);
     setCollegeName(value);
   }
   function handleEventMode(event) {
@@ -425,18 +398,14 @@ const EventEdit = (props) => {
   function handleChange(event) {
     if (event.target.files[0]) {
       setImage(event.target.files[0]);
-      //   setImageAsFile(imageFile => (image))
       const url = URL.createObjectURL(event.target.files[0]);
-      //   const fileType = event.target.files[0].type;
       setImageurl(url)
       setImageUpdated(true);
-      //   setImageType(fileType.substr(fileType.indexOf('/') + 1));
     }
 
   }
 
   const handleRoundEditButton = (data) => () => {
-    // console.log(data);
     setSelectedEditRound(data);
     setRoundsDialogOpen(true);
   }
@@ -445,25 +414,22 @@ const EventEdit = (props) => {
     setPrizes(prizes => [...prizes, { title: prizeTitle, desc: prizeDesc }]);
     setPrizeTitle(null);
     setPrizeDesc(null);
-}
+  }
 
-const handlePrizeDeleteButton = (index, data) => () => {
-  // console.log(index);
-  // console.log(data);
-  // console.log(prizes)
+  const handlePrizeDeleteButton = (index, data) => () => {
     var currentPrizes = prizes;
     currentPrizes.splice(index);
     setPrizes(currentPrizes);
-}
+  }
 
-const handlePrizeFieldChange = (title) => (event) => {
+  const handlePrizeFieldChange = (title) => (event) => {
     if (title === "title") {
-        setPrizeTitle(event.target.value)
+      setPrizeTitle(event.target.value)
     }
     else {
-        setPrizeDesc(event.target.value);
+      setPrizeDesc(event.target.value);
     }
-}
+  }
 
 
 
@@ -633,41 +599,6 @@ const handlePrizeFieldChange = (title) => (event) => {
                 )}
               />
             </Grid>
-            {/* <Grid item xs={12} lg={6}>
-              <input
-                id="contained-button-file"
-                required
-                type="file"
-                accept="image/*"
-                onChange={handleChange}
-                style={{ display: "none" }}>
-
-              </input>
-
-              <TextField
-                autoComplete='off'
-                // required
-                id="eventposter"
-                name="eventposter"
-                label="Event Poster"
-                component="span"
-                value={imageName}
-                fullWidth
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="start">
-                      <label htmlFor="contained-button-file">
-                        <IconButton component="span" >
-                          <CameraAltIcon></CameraAltIcon>
-                        </IconButton>
-                      </label>
-
-                    </InputAdornment>
-                  ),
-                }}
-              />
-
-            </Grid> */}
             <Grid item xs={12}>
               <FormLabel component="legend">Entry Fee</FormLabel>
               <RadioGroup aria-label="address" name="address" value={feeType || ""} onChange={handleFeeTypeChange} style={{ display: "inline" }}>
@@ -734,18 +665,6 @@ const handlePrizeFieldChange = (title) => (event) => {
                 </Select>
               </FormControl>
             </Grid>
-            {/* <Grid item xs={12} lg={6}>
-              <TextField
-                disabled
-                autoComplete='off'
-                required
-                id="organizer"
-                name="organizer"
-                label="Organizer"
-                fullWidth
-                value={organizer || ""}
-              />
-            </Grid> */}
             <Grid item xs={12} lg={6}>
               <Autocomplete
                 multiple
@@ -831,17 +750,6 @@ const handlePrizeFieldChange = (title) => (event) => {
                 />
               </Grid>
             }
-            {/* {eventMode === "Offline" && <Grid item xs={12} sm={6}>
-              <Autocomplete
-                fullWidth
-                id="combo-box-demo"
-                options={collegesNames}
-                value={venueCollege}
-                getOptionLabel={(option) => option}
-                onChange={handleVenueCollegeChange}
-                renderInput={(params) => <TextField fullWidth required {...params} label="Venue College" />}
-              />
-            </Grid>} */}
             <Grid item xs={12}>
               <TextField
                 multiline={true}
@@ -939,7 +847,7 @@ const handlePrizeFieldChange = (title) => (event) => {
                 fullWidth
               />
             </Grid>
-            
+
             <Grid item xs={12}>
               <FormControl component="fieldset" className={classes.root}>
                 <FormLabel component="legend">Prizes</FormLabel>
@@ -988,15 +896,10 @@ const handlePrizeFieldChange = (title) => (event) => {
       <RoundEditDialog
         open={roundsDialogOpen}
         handleClose={handleRoundEditDialogClose}
-        // handleEdit={handleRoundEdit}
         rounds={rounds}
         setRounds={setRounds}
         roundData={selectedEditRound}
       ></RoundEditDialog>
-      {/* </Grid> */}
-      {/* <Box mt={2}>
-        <Copyright />
-      </Box> */}
     </Container>
   );
 }

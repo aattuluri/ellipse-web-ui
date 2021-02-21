@@ -12,7 +12,7 @@ import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 
 //Other component Imports
-import NewHomePageCarousel from '../Pages/NewHomePageCarousel';
+import NewHomePageCarousel from './HomePageCarousel';
 import Copyright from "../Components/copyright";
 import HomePageEventCard from '../Components/HomePageEventCard';
 import GoogleBadge from '../Components/Images/google-play-badge.png';

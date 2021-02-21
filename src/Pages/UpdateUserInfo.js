@@ -1,6 +1,5 @@
 import React from 'react';
 import Copyright from '../Components/copyright';
-// import useStyles from '../Themes/SignupPageStyles';
 import { withRouter, Redirect } from "react-router";
 
 //MaterialUI imports
@@ -66,7 +65,6 @@ function Alert(props) {
 const UserInfo = ({ history }) => {
     const token = localStorage.getItem('token');
     const classes = useStyles();
-    // const [currentUser, setCurrentUser] = React.useState(null);
     const [imageUrl, setImageurl] = React.useState("");
     const [image, setImage] = React.useState(null);
     const [state, setState] = React.useState({
@@ -78,44 +76,27 @@ const UserInfo = ({ history }) => {
         autoHide: 300
     });
     const [loading, setLoading] = React.useState(false);
-    const { vertical, horizontal, open, message, type,autoHide } = state;
-    // const [colleges,setColleges] = React.useState([]);
+    const { vertical, horizontal, open, message, type, autoHide } = state;
     const handleClose = async (event, reason) => {
 
         if (message === "successful") {
             const eventId = localStorage.getItem('eventid');
-        if(eventId){
-          history.push(`/event/${eventId}`)
-        }
-        else{
-            history.replace("/home")
-        }
-            
+            if (eventId) {
+                history.push(`/event/${eventId}`)
+            }
+            else {
+                history.replace("/home")
+            }
+
         }
 
         setState({ ...state, open: false });
     };
-    // React.useEffect(()=>{
-    //     fetch(process.env.REACT_APP_API_URL+'/api/colleges', {
-    //                 headers: {
-    //                     'Authorization': `Bearer ${token}`,
-    //                     'Content-Type': 'application/json',
-    //                     'Accept': 'application/json'
-    //                 },
-    //                 method: 'GET',
-    //             }).then(response =>{
-    //               // console.log(response);
-    //               response.json().then(value =>{
-    //                 // console.log(value);
-    //                 setColleges(value);
-    //               })
-    //             })
-    //   },[token])
 
-      if (!token) {
+    if (!token) {
         return <Redirect to="/"></Redirect>
     }
-  
+
     function handleChange(event) {
         if (event.target.files[0]) {
             setImage(event.target.files[0]);
@@ -132,12 +113,11 @@ const UserInfo = ({ history }) => {
             var data = new FormData()
             const payload = {
                 gender: gender.value,
-                // designation: designation.value,
                 college_id: collegeId.value,
                 bio: bio.value,
             };
             data = JSON.stringify(payload);
-            fetch(process.env.REACT_APP_API_URL+'/api/users/userdetails', {
+            fetch(process.env.REACT_APP_API_URL + '/api/users/userdetails', {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
@@ -151,7 +131,7 @@ const UserInfo = ({ history }) => {
                         if (image != null) {
                             var data2 = new FormData()
                             data2.append("image", image);
-                            fetch(process.env.REACT_APP_API_URL+'/api/users/uploadImage', {
+                            fetch(process.env.REACT_APP_API_URL + '/api/users/uploadImage', {
                                 headers: {
                                     'Authorization': `Bearer ${token}`,
                                 },
@@ -188,8 +168,6 @@ const UserInfo = ({ history }) => {
 
                 }
             })
-
-
         } catch (error) {
             setLoading(false);
             setState({
@@ -248,8 +226,6 @@ const UserInfo = ({ history }) => {
                                 name="bio"
                                 label="Bio"
                                 fullWidth
-                            // onChange={handleAboutChange}
-                            // value={props.about}
                             />
                         </Grid>
 
@@ -272,48 +248,6 @@ const UserInfo = ({ history }) => {
                                 </Select>
                             </FormControl>
                         </Grid>
-                        {/* <Grid item xs={12}>
-                            <FormControl variant="outlined" fullWidth required>
-                                <InputLabel htmlFor="outlined-age-native-simple">You are</InputLabel>
-                                <Select
-                                    fullWidth
-                                    native
-                                    label="You are"
-                                    inputProps={{
-                                        name: 'designation',
-                                        id: 'outlined-age-native-simple',
-                                    }}
-                                >
-                                    <option aria-label="None" value="" />
-                                    <option value="Student">Student</option>
-                                    <option value="Faculty">Faculty</option>
-                                    <option value="Club/Organisation">Club/Organisation</option>
-                                    <option value="Institution">Institution</option>
-                                    <option value="Others">Others</option>
-                                </Select>
-                            </FormControl>
-                        </Grid> */}
-                        {/* <Grid item xs={12}>
-                        
-                            <FormControl variant="outlined" fullWidth required>
-                                <InputLabel htmlFor="outlined-age-native-simple">Your College</InputLabel>
-                                <Select
-                                    fullWidth
-                                    native
-                                    label="College"
-                                    inputProps={{
-                                        name: 'collegeId',
-                                        id: 'outlined-age-native-simple',
-                                    }}
-                                >
-                                    <option aria-label="None" value="" />
-                                    {colleges.map((coll,index) =>{
-                                        return <option key={index} value={coll._id}>{coll.name}</option>
-                                    })}
-                                    
-                                </Select>
-                            </FormControl>
-                        </Grid> */}
                     </Grid>
                     <Button
                         type="submit"
@@ -327,8 +261,6 @@ const UserInfo = ({ history }) => {
                     </Button>
                 </form>
             </div>
-
-            {/* </Grid> */}
             <Box mt={2}>
                 <Copyright />
             </Box>

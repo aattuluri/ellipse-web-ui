@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { withRouter } from "react-router";
-import useStyles from '../Themes/MainHomeStyles';
 
 //materialui imports
+import useStyles from '../Themes/MainHomeStyles';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import PersonPinIcon from '@material-ui/icons/PersonPin';
@@ -44,21 +44,16 @@ const NavigationBar = function ({ history }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const t = localStorage.getItem('theme');
   const [darkThemeSelected, setDarkThemeSelected] = React.useState(t === 'light' ? false : true);
-  // const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const [value, setValue] = React.useState(0);
-  // const [allEvents, setAllEvents] = React.useState([]);
   const [searchedEvent, setSearchedEvent] = React.useState([]);
   const [notificationsCount, setNotificationCount] = React.useState(0);
 
   const isMenuOpen = Boolean(anchorEl);
-  // const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-  // const [calenderValue, setCalenderValue] = useState(new Date());
-  // const [loading, setLoading] = React.useState(false);
-  // const eventypes = ["Hackathon", "Coding Contest", "Webinar"];
   const [open, setOpen] = React.useState(false);
   const [notificationsOpen, setNotificationsOpen] = React.useState(false);
   const { allEvents } = React.useContext(EventsContext);
   const { currentUser } = React.useContext(AuthContext);
+
   useEffect(() => {
     if (localStorage.getItem('tabIndex') != null) {
       const tabIndex = parseInt(localStorage.getItem('tabIndex'));
@@ -74,17 +69,12 @@ const NavigationBar = function ({ history }) {
       method: 'GET'
     }).then((result) => {
       result.json().then((data) => {
-        // console.log(data);
         setNotificationCount(data);
       })
     })
   }, [token])
 
 
-  // function handleMorebuttonClick(event) {
-  //   event.preventDefault();
-  //   // history.push("/event/1")
-  // }
   function handleSearchChange(event, value) {
     if (value) {
       if (value.registered || value.user_id === currentUser.user_id) {
@@ -93,8 +83,6 @@ const NavigationBar = function ({ history }) {
         setSearchedEvent(value);
         setOpen(true);
       }
-      // console.log(value);
-
     }
   }
 
@@ -118,7 +106,7 @@ const NavigationBar = function ({ history }) {
   };
 
   const handleMobileMenuClose = () => {
-    // setMobileMoreAnchorEl(null);
+
   };
 
   const handleMenuClose = () => {
@@ -132,7 +120,6 @@ const NavigationBar = function ({ history }) {
   }
 
   function handleThemeChange(event) {
-    // console.log(event.target.checked);
     setDarkThemeSelected(event.target.checked);
     if (event.target.checked) {
       localStorage.setItem('theme', 'dark');
@@ -163,8 +150,6 @@ const NavigationBar = function ({ history }) {
         }
       })
     })
-
-
   }
 
   const menuId = 'primary-search-account-menu';
@@ -178,8 +163,6 @@ const NavigationBar = function ({ history }) {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      {/* <MenuItem onClick={handleMenuClose}>Profile</MenuItem> */}
-      {/* <MenuItem onClick={handleMenuClose}>My account</MenuItem> */}
       <MenuItem> Dark Theme <Switch
         checked={darkThemeSelected}
         onChange={handleThemeChange}
@@ -195,18 +178,14 @@ const NavigationBar = function ({ history }) {
   function handleeventClick(event) {
     event.preventDefault();
     history.push("/events")
-    // localStorage.setItem('tabIndex',1);
   }
   function handleHomeClick() {
     history.push("/home")
-    // localStorage.setItem('tabIndex',2);
   }
   function handleProfileClick() {
     history.push("/profile")
   }
-  // function handleExploreClick() {
-  //   history.push("/yourevents")
-  // }
+
   function handleChatClick() {
     history.push('/chat')
   }
@@ -280,7 +259,6 @@ const NavigationBar = function ({ history }) {
                   <Tooltip title="Home"><Tab onClick={handleHomeClick} icon={<HomeIcon />} aria-label="home" /></Tooltip>
                   <Tooltip title="Calender View"><Tab onClick={handleeventClick} icon={<EventIcon />} aria-label="event" /></Tooltip>
                   <Tooltip title="Chat"><Tab onClick={handleChatClick} icon={<ChatOutlinedIcon />} aria-label="favorite" /></Tooltip>
-                  {/* <Tab onClick={handleExploreClick} icon={<ExploreIcon />} aria-label="person" /> */}
                   <Tooltip title="Profile"><Tab onClick={handleProfileClick} icon={<PersonPinIcon />} aria-label="person" /></Tooltip>
                 </Tabs>
               </Paper>
@@ -316,11 +294,9 @@ const NavigationBar = function ({ history }) {
                 variant="fullWidth"
                 indicatorColor="primary"
                 textColor="primary"
-              // aria-label="icon tabs example"
               >
                 <Tooltip title="Notifications"><Tab onClick={handleHomeClick} icon={< HomeIcon />} aria-label="home" /></Tooltip>
                 <Tooltip title="Notifications"><Tab onClick={handleeventClick} icon={<EventIcon />} aria-label="event" /></Tooltip>
-                {/* <Tab onClick={handleChatClick} icon={<TelegramIcon />} aria-label="messages" /> */}
                 <Tooltip title="Notifications"><Tab onClick={handleChatClick} icon={<ChatOutlinedIcon></ChatOutlinedIcon>} aria-label="favorite" /></Tooltip>
                 <Tooltip title="Notifications"><Tab onClick={handleProfileClick} icon={<PersonPinIcon />} aria-label="person" /></Tooltip>
               </Tabs>

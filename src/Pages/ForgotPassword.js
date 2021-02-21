@@ -27,7 +27,6 @@ function Alert(props) {
 
 const ForgotPassword = ({ history }) => {
   const classes = useStyles();
-  // const token = localStorage.getItem('token');
   const [email, setEmail] = React.useState(null);
   const [otp, setOtp] = React.useState(null);
   const [password, setPassword] = React.useState(null);
@@ -42,60 +41,6 @@ const ForgotPassword = ({ history }) => {
   const [loading, setLoading] = React.useState(false);
   const [loading2, setLoading2] = React.useState(false);
   const { vertical, horizontal, open, message, type, autoHide } = state;
-  // const [sendOTPButtonDisabled, setSendOTPButtonDisabled] = React.useState(false);
-
-  // React.useEffect(() => {
-  //   const loadScriptByURL = (id, url, callback) => {
-  //     const isScriptExist = document.getElementById(id);
-
-  //     if (!isScriptExist) {
-  //       var script = document.createElement("script");
-  //       script.type = "text/javascript";
-  //       script.src = url;
-  //       script.id = id;
-  //       script.onload = function () {
-  //         if (callback) callback();
-  //       };
-  //       document.body.appendChild(script);
-  //     }
-
-  //     if (isScriptExist && callback) callback();
-  //   }
-
-  //   // load the script by passing the URL
-  //   loadScriptByURL("recaptcha-key", `https://www.google.com/recaptcha/api.js?render=${process.env.REACT_APP_SITE_KEY}`, function () {
-  //     console.log("Script loaded!");
-  //     window.grecaptcha.ready(function () {
-  //       window.grecaptcha.execute('6LcEVOoZAAAAAOjNV_wZFJ7YQMBs4IwKyH-LdU2P', { action: 'submit' }).then(recaptcha_token => {
-  //         // Add your logic to submit to your backend server here.
-  //         // console.log(recaptcha_token);
-  //         fetch(process.env.REACT_APP_API_URL +'/api/verify_recaptcha', {
-  //           method: 'POST',
-  //           headers: {
-  //             "Content-Type": "application/json"
-  //           },
-  //           body: JSON.stringify({
-  //             // "name": name,
-  //             // "email": email,
-  //             "recaptcha_token": recaptcha_token
-  //           })
-  //         }).then(res => {
-  //           if(res.status === 200){
-  //             res.json().then(result => {
-  //               // console.log(result)
-  //               if (result.success) {
-  //                 if (result.score < 0.5) {
-  //                   setSendOTPButtonDisabled(true);
-  //                 }
-  //               }
-  //             })
-  //           }
-            
-  //         });
-  //       });
-  //     });
-  //   });
-  // }, []);
 
 
   async function handlePasswordReset(event) {
@@ -109,7 +54,6 @@ const ForgotPassword = ({ history }) => {
       data2 = JSON.stringify(payload2)
       fetch(process.env.REACT_APP_API_URL + '/api/users/sendverificationemail', {
         headers: {
-          // 'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
         method: 'POST',
@@ -119,7 +63,6 @@ const ForgotPassword = ({ history }) => {
         result.json().then((res) => {
           if (res.message === "success") {
             setLoading(false)
-            // history.push('/resetforgotpassword')
             setState({
               open: true,
               vertical: 'top',
@@ -150,7 +93,6 @@ const ForgotPassword = ({ history }) => {
   async function handleForgotPassword(event) {
     event.preventDefault();
     setLoading2(true);
-    // const { email,} = event.target.elements;
     try {
       var data2 = new FormData();
       const payload2 = {
@@ -161,7 +103,6 @@ const ForgotPassword = ({ history }) => {
       data2 = JSON.stringify(payload2)
       fetch(process.env.REACT_APP_API_URL + '/api/users/forgotpassword', {
         headers: {
-          // 'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
         method: 'POST',
@@ -170,8 +111,6 @@ const ForgotPassword = ({ history }) => {
         console.log(result);
         result.json().then((res) => {
           if (res.message === "success") {
-
-            // history.push('/resetforgotpassword')
             setLoading2(false);
             setState({
               open: true,
@@ -307,8 +246,6 @@ const ForgotPassword = ({ history }) => {
           </Grid>
         </Grid>
       </div>
-
-      {/* </Grid> */}
       <Box mt={2}>
         <Copyright />
       </Box>

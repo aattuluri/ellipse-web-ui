@@ -1,13 +1,13 @@
-import React, { useEffect } from 'react';
+import React from 'react';
+
+//calender view imports
+import '../Themes/main.scss'
+import FullCalendar from '@fullcalendar/react';
+import dayGridPlugin from '@fullcalendar/daygrid';
+
+//materialui imports
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-// import { Typography } from '@material-ui/core';
-import FullCalendar from '@fullcalendar/react';
-import dayGridPlugin from '@fullcalendar/daygrid'
-import '../Themes/main.scss'
-import EventsDialog from '../Components/EventsDialog';
-// import EventsContext from '../EventsContext';
-import AuthContext from '../AuthContext';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import Paper from '@material-ui/core/Paper';
@@ -18,8 +18,12 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import Divider from '@material-ui/core/Divider';
 import List from '@material-ui/core/List';
-import ActiveEventsContext from '../ActiveEventsContext';
 import Typography from '@material-ui/core/Typography';
+
+//other componnets
+import EventsDialog from '../Components/EventsDialog';
+import AuthContext from '../AuthContext';
+import ActiveEventsContext from '../ActiveEventsContext';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -29,8 +33,6 @@ const useStyles = makeStyles((theme) => ({
         position: 'absolute',
         right: theme.spacing(1),
         top: theme.spacing(1),
-        // color: theme.palette.grey[500],
-
     },
     rpaper: {
         padding: theme.spacing(1),
@@ -44,8 +46,6 @@ const useStyles = makeStyles((theme) => ({
             display: 'none',
         },
         top: theme.spacing(10),
-        // zIndex: 3,
-        // borderRadius: theme.spacing(50)
     },
     subRpaper: {
         backgroundColor: theme.palette.primary.light,
@@ -90,32 +90,27 @@ const useStyles = makeStyles((theme) => ({
 
 function CalenderPanel({ history }) {
     localStorage.setItem('tabIndex', 1)
-    // const { children, value, url, index, ...other } = props;
     const { currentUser } = React.useContext(AuthContext);
-    // const token = localStorage.getItem('token');
     const classes = useStyles();
-    // const [allEvents, setAllEvents] = React.useState([]);
     const [events, setEvents] = React.useState([]);
     const [open, setOpen] = React.useState(false);
     const [selectedEvent, setSelectedEvent] = React.useState([]);
     const [registeredEvents, setRegisteredEvents] = React.useState([]);
-    // const [image, setImage] = React.useState(null);
     const { activeEvents } = React.useContext(ActiveEventsContext);
 
-    useEffect(() => {
+    React.useEffect(() => {
         activeEvents.forEach(y => {
-            // console.log(y.start_time);
             setEvents(events =>
                 [...events, { id: JSON.stringify(y), title: y.name, start: y.start_time, end: y.finish_time }]
             )
         })
         setRegisteredEvents(activeEvents.filter((value) => value.registered === true))
-
     }, [activeEvents])
 
     const handleClose = () => {
         setOpen(false);
-    };
+    }
+
     const handlePostButtonClick = () => {
         history.push('/post')
     }
@@ -125,21 +120,17 @@ function CalenderPanel({ history }) {
             history.push(`/event/${event._id}`)
         } else {
             setSelectedEvent(event);
-            // setSelectedImage(image);
             setOpen(true);
         }
-
     }
 
-    function handleRegistrationButton(event) {
-        
+    const handleRegistrationButton = (event) => {
         setOpen(false);
-        // setSelectedEvent(event);
         history.push('/event/register/' + event._id);
     }
 
 
-    function handleEventClick(info) {
+    const handleEventClick = (info) => {
         if (JSON.parse(info.event.id).registered || JSON.parse(info.event.id).user_id === currentUser.user_id) {
             history.push(`/event/${JSON.parse(info.event.id)._id}`)
         } else {
@@ -150,13 +141,10 @@ function CalenderPanel({ history }) {
 
     return (
         <div>
-            {/* {value === index && ( */}
             <div className={classes.root}>
                 <Grid container component="main" >
 
                     <Grid item xs={12} sm={12} md={3} lg={2} >
-                        {/* <Typography index={0}>Filters</Typography> */}
-                        {/* <Calendar onChange={setCalenderValue} value={calenderValue} ></Calendar> */}
 
                     </Grid>
                     <Grid item xs={12} sm={12} md={9} lg={8} >
@@ -182,7 +170,7 @@ function CalenderPanel({ history }) {
                                     size="large"
                                     className={classes.postButton} >
                                     Post Event
-                        </Button>
+                                </Button>
                                 <List className={classes.sideList}>
                                     <Typography variant="body2">Registered Events</Typography>
                                     {

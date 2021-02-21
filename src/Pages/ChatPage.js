@@ -1,43 +1,21 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-
 
 import ChatPanel from '../Components/MainChatPanel';
 import ChatContactsPanel from '../Pages/ChatContactsPanel';
 import AuthContext from '../AuthContext';
-// import MobileChatPanel from '../Components/MobileChatPanel';
-// import { Typography, Paper } from '@material-ui/core';
-// import socket from '../SocketClient';
 
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-        // height: '300px'
-        [theme.breakpoints.down('sm')]: {
-            display: 'none',
-        },
-        backgroundColor: theme.palette.primary.light
-
-    },
     mobile: {
         backgroundColor: theme.palette.primary.light
-    },
-    icons: {
-        position: 'absolute',
-        right: theme.spacing(1),
-        top: theme.spacing(1),
-        // color: theme.palette.grey[500],
-
-    },
-    nested: {
-        paddingLeft: theme.spacing(4),
     },
 }));
 
 function ChatPage({ history }) {
-    // const token = localStorage.getItem('token');
     const { currentUser } = React.useContext(AuthContext);
     const classes = useStyles();
     const [selectedChat, setSelectedChat] = React.useState(null);
