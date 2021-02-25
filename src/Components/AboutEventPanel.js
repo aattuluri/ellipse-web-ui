@@ -40,18 +40,19 @@ const useStyles = makeStyles((theme) => ({
     boxItem: {
         display: "flex",
         justifyContent: "center",
-        minWidth: "20%"
+        minWidth: "20%",
+        
     },
     gridMain: {
         borderRadius: theme.spacing(2),
         backgroundColor: theme.palette.secondary.main,
-        marginTop: theme.spacing(1)
-
+        marginTop: theme.spacing(1),
+        border: `2px solid #00bdaa1A`,
+        elevation: 5
     },
     gridItem: {
         padding: theme.spacing(1),
         elevation: "5"
-
     },
     divider: {
         backgroundColor: theme.palette.primary.main,

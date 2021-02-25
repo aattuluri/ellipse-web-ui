@@ -111,7 +111,7 @@ export default function FormDialog(props) {
                   <option value="radiobuttons">Radio Button</option>
                   <option value="checkboxes">Check Box</option>
                   <option value="link">Link</option>
-                  <option value="file_upload">File Upload</option>
+                  <option value="file">File Upload</option>
                 </Select>
               </FormControl>
             </Grid>

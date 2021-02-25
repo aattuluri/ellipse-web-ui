@@ -27,6 +27,7 @@ import FormControl from '@material-ui/core/FormControl';
 import FormGroup from '@material-ui/core/FormGroup';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
+import Box from '@material-ui/core/Box';
 
 //other component imports
 import TermsandConditions from '../Components/EventRegisterTermsandConditions';
@@ -160,7 +161,7 @@ const EventRegistrationForm = (props) => {
           setDateFields(allFields.filter((f) => f.field === "date"));
           setDropDownFields(allFields.filter(f => f.field === "dropdown"));
           setLinkFields(allFields.filter(f => f.field === "link"));
-          setFileUploadFields(allFields.filter(f => f.field === "file_upload"));
+          setFileUploadFields(allFields.filter(f => f.field === "file"));
         }
         setBackDropOpen(false);
       })
@@ -475,6 +476,9 @@ const EventRegistrationForm = (props) => {
                         disabled
                         renderInput={(params) => <TextField name={field.title} fullWidth required {...params} label={field.title} />}
                       />
+                      <Box display="flex" justifyContent="flex-end">
+                        <Typography color="textSecondary" variant="body2">{field.req && "*required"}</Typography>
+                      </Box>
                     </Grid>)
                 }
                 else if (field.title === "Email") {
@@ -491,6 +495,9 @@ const EventRegistrationForm = (props) => {
                         value={formValues[field.title]}
                         label={field.title}
                       />
+                      <Box display="flex" justifyContent="flex-end">
+                        <Typography color="textSecondary" variant="body2">{field.req && "*required"}</Typography>
+                      </Box>
                     </Grid>)
                 }
                 else {
@@ -506,6 +513,9 @@ const EventRegistrationForm = (props) => {
                         value={formValues[field.title]}
                         label={field.title}
                       />
+                      <Box display="flex" justifyContent="flex-end">
+                        <Typography color="textSecondary" variant="body2">{field.req && "*required"}</Typography>
+                      </Box>
                     </Grid>)
                 }
 
@@ -524,6 +534,9 @@ const EventRegistrationForm = (props) => {
                         })}
                       </FormGroup>
                     </FormControl>
+                    <Box display="flex" justifyContent="flex-end">
+                      <Typography color="textSecondary" variant="body2">{field.req && "*required"}</Typography>
+                    </Box>
                   </Grid>
                 )
               })}
@@ -543,11 +556,13 @@ const EventRegistrationForm = (props) => {
                         <TextField required={field.req} {...params} name={field.name} label={field.title} placeholder={field.name} />
                       )}
                     />
+                    <Box display="flex" justifyContent="flex-end">
+                      <Typography color="textSecondary" variant="body2">{field.req && "*required"}</Typography>
+                    </Box>
                   </Grid>
                 )
               })}
               {radioFields.map((field, index) => {
-                console.log(field.options[0])
                 return (
                   <Grid item xs={12}>
                     <FormLabel required={field.req} component="legend">{field.title}</FormLabel>
@@ -556,6 +571,9 @@ const EventRegistrationForm = (props) => {
                         return <FormControlLabel required={field.req} value={option} control={<Radio color="default" />} label={option} />
                       })}
                     </RadioGroup>
+                    <Box display="flex" justifyContent="flex-end">
+                      <Typography color="textSecondary" variant="body2">{field.req && "*required"}</Typography>
+                    </Box>
                   </Grid>
                 )
               })}
@@ -580,7 +598,9 @@ const EventRegistrationForm = (props) => {
                           }}
                         />
                       </MuiPickersUtilsProvider>
-
+                      <Box display="flex" justifyContent="flex-end">
+                        <Typography color="textSecondary" variant="body2">{field.req && "*required"}</Typography>
+                      </Box>
                     </Grid>
                   )
                 })
@@ -602,6 +622,9 @@ const EventRegistrationForm = (props) => {
                         fullWidth
                         onChange={handleLondDescChange}
                       />
+                      <Box display="flex" justifyContent="flex-end">
+                        <Typography color="textSecondary" variant="body2">{field.req && "*required"}</Typography>
+                      </Box>
                     </Grid>
                   )
                 })
@@ -620,6 +643,9 @@ const EventRegistrationForm = (props) => {
                         value={formValues[field.title]}
                         label={field.title}
                       />
+                      <Box display="flex" justifyContent="flex-end">
+                        <Typography color="textSecondary" variant="body2">{field.req && "*required"}</Typography>
+                      </Box>
                     </Grid>)
                 })
               }
@@ -628,6 +654,9 @@ const EventRegistrationForm = (props) => {
                   return <Grid item xs={12}>
                     <Typography>{field.title}</Typography>
                     <input id="contained-button-file" name={field.title} required={field.req} type="file" onChange={handleFileSelect} ></input>
+                    <Box display="flex" justifyContent="flex-end">
+                      <Typography color="textSecondary" variant="body2">{field.req && "*required"}</Typography>
+                    </Box>
                   </Grid>
                 })
               }

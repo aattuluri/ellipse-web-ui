@@ -84,7 +84,7 @@ export default function StickyHeadTable(props) {
 
   React.useEffect(() => {
     event.reg_fields.forEach(v => {
-      if (v.field === "file_upload") {
+      if (v.field === "file") {
         setFileColumns([...fileColumns, v.title]);
       }
     })

@@ -23,7 +23,8 @@ import FormGroup from '@material-ui/core/FormGroup';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import IconButton from '@material-ui/core/IconButton';
-import GetAppIcon from '@material-ui/icons/GetApp'
+import GetAppIcon from '@material-ui/icons/GetApp';
+import Box from '@material-ui/core/Box';
 
 
 //other components imports
@@ -150,7 +151,7 @@ function SubmissionForm(props) {
             setDateFields(allFields.filter((f) => f.field === "date"));
             setDropDownFields(allFields.filter(f => f.field === "dropdown"));
             setLinkFields(allFields.filter(f => f.field === "link"));
-            setFileUploadFields(allFields.filter(f => f.field === "file_upload"));
+            setFileUploadFields(allFields.filter(f => f.field === "file"));
 
         }
         setBackDropOpen(false);
@@ -397,6 +398,9 @@ function SubmissionForm(props) {
                                         disabled
                                         renderInput={(params) => <TextField name={field.title} fullWidth required {...params} label={field.title} />}
                                     />
+                                    <Box display="flex" justifyContent="flex-end">
+                                        <Typography color="textSecondary" variant="body2">{field.req && "*required"}</Typography>
+                                    </Box>
                                 </Grid>)
                         }
                         else if (field.title === "Email") {
@@ -415,6 +419,9 @@ function SubmissionForm(props) {
                                         label={field.title}
                                         autoFocus
                                     />
+                                    <Box display="flex" justifyContent="flex-end">
+                                        <Typography color="textSecondary" variant="body2">{field.req && "*required"}</Typography>
+                                    </Box>
                                 </Grid>)
                         }
                         else {
@@ -433,6 +440,9 @@ function SubmissionForm(props) {
                                         label={field.title}
                                         autoFocus
                                     />
+                                    <Box display="flex" justifyContent="flex-end">
+                                        <Typography color="textSecondary" variant="body2">{field.req && "*required"}</Typography>
+                                    </Box>
                                 </Grid>)
                         }
 
@@ -455,6 +465,9 @@ function SubmissionForm(props) {
                                         onChange={handleLondDescChange}
                                         value={formValues[field.title] || ""}
                                     />
+                                    <Box display="flex" justifyContent="flex-end">
+                                        <Typography color="textSecondary" variant="body2">{field.req && "*required"}</Typography>
+                                    </Box>
                                 </Grid>
                             )
                         })
@@ -473,6 +486,9 @@ function SubmissionForm(props) {
                                         })}
                                     </FormGroup>
                                 </FormControl>
+                                <Box display="flex" justifyContent="flex-end">
+                                    <Typography color="textSecondary" variant="body2">{field.req && "*required"}</Typography>
+                                </Box>
                             </Grid>
                         )
                     })}
@@ -493,6 +509,9 @@ function SubmissionForm(props) {
                                         <TextField required={field.req} {...params} name={field.name} label={field.title} placeholder={field.name} />
                                     )}
                                 />
+                                <Box display="flex" justifyContent="flex-end">
+                                    <Typography color="textSecondary" variant="body2">{field.req && "*required"}</Typography>
+                                </Box>
                             </Grid>
                         )
                     })}
@@ -505,6 +524,9 @@ function SubmissionForm(props) {
                                         return <FormControlLabel required={field.req} value={option} control={<Radio color="default" />} label={option} />
                                     })}
                                 </RadioGroup>
+                                <Box display="flex" justifyContent="flex-end">
+                                    <Typography color="textSecondary" variant="body2">{field.req && "*required"}</Typography>
+                                </Box>
                             </Grid>
                         )
                     })}
@@ -531,12 +553,14 @@ function SubmissionForm(props) {
                                             }}
                                         />
                                     </MuiPickersUtilsProvider>
-
+                                    <Box display="flex" justifyContent="flex-end">
+                                        <Typography color="textSecondary" variant="body2">{field.req && "*required"}</Typography>
+                                    </Box>
                                 </Grid>
                             )
                         })
                     }
-                    
+
                     {
                         linkFields.map((field, index) => {
                             return (
@@ -552,6 +576,9 @@ function SubmissionForm(props) {
                                         label={field.title}
                                         autoFocus
                                     />
+                                    <Box display="flex" justifyContent="flex-end">
+                                        <Typography color="textSecondary" variant="body2">{field.req && "*required"}</Typography>
+                                    </Box>
                                 </Grid>)
                         })
                     }
@@ -562,12 +589,18 @@ function SubmissionForm(props) {
                                     <Typography>{field.title}</Typography>
                                     <IconButton download target="_blank" href={process.env.REACT_APP_API_URL + `/api/event/registration/get_file?id=${formValues[field.title]}`} size="small" color="primary"><GetAppIcon></GetAppIcon></IconButton>
                                     <input id={index} name={field.title} required={field.req} type="file" onChange={handleFileSelect} style={{ "marginTop": "10px" }} ></input>
+                                    <Box display="flex" justifyContent="flex-end">
+                                        <Typography color="textSecondary" variant="body2">{field.req && "*required"}</Typography>
+                                    </Box>
                                 </Grid>
                             }
                             else {
                                 return <Grid item xs={12}>
                                     <Typography>{field.title}</Typography>
                                     <input id={index} name={field.title} required={field.req} type="file" onChange={handleFileSelect} style={{ "marginTop": "10px" }} ></input>
+                                    <Box display="flex" justifyContent="flex-end">
+                                        <Typography color="textSecondary" variant="body2">{field.req && "*required"}</Typography>
+                                    </Box>
                                 </Grid>
                             }
                         })

@@ -56,7 +56,6 @@ function Eventcard(props) {
                 method: 'GET',
             }).then(response => {
                 response.json().then(value => {
-                    // console.log(value);
                     setMemberDetails(value);
                 })
             })
@@ -104,7 +103,7 @@ function Eventcard(props) {
                         webSocketContext.send(JSON.stringify({
                             action: "team_status_update_status",
                             team_id: props.id._id,
-                            users: [value.updated_user_id],
+                            users: props.id.members.concat([value.updated_user_id]),
                             msg: {
                                 'id': currentUser.user_id + Date.now(),
                                 'user_id': currentUser.user_id,
