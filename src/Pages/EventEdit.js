@@ -412,7 +412,7 @@ const EventEdit = (props) => {
   }
 
   const handlePrizeAddButton = () => {
-    setPrizes(prizes => [...prizes, { title: prizeTitle, desc: prizeDesc }]);
+    setPrizes(prizes => [...prizes, { title: prizeTitle,prize: prize, desc: prizeDesc }]);
     setPrizeTitle(null);
     setPrizeDesc(null);
   }
@@ -423,14 +423,18 @@ const EventEdit = (props) => {
     setPrizes(currentPrizes);
   }
 
+
   const handlePrizeFieldChange = (title) => (event) => {
     if (title === "title") {
-      setPrizeTitle(event.target.value)
+        setPrizeTitle(event.target.value)
+    }
+    else if (title === "desc") {
+        setPrizeDesc(event.target.value);
     }
     else {
-      setPrizeDesc(event.target.value);
+        setPrize(event.target.value);
     }
-  }
+}
 
 
 
@@ -855,6 +859,9 @@ const EventEdit = (props) => {
                 <Box display="flex" style={{ marginTop: "10px" }}>
                   <Box>
                     <TextField onChange={handlePrizeFieldChange("title")} value={prizeTitle || ""} label="Prize Title" variant="outlined" style={{ marginRight: "5px" }}></TextField>
+                  </Box>
+                  <Box>
+                  <TextField onChange={handlePrizeFieldChange("prize")} value={prize || ""} label="Prize" variant="outlined"></TextField>
                   </Box>
                   <Box>
                     <TextField onChange={handlePrizeFieldChange("desc")} value={prizeDesc || ""} label="Prize Description" variant="outlined"></TextField>
