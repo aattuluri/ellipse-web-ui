@@ -116,6 +116,19 @@ function ExplorePanel(props) {
     const { activeEvents, contextLoading } = React.useContext(ActiveEvents);
     const { currentUser } = React.useContext(AuthContext);
 
+    const upComingEvents = activeEvents.filter((e)=>{
+        const cDate = new Date();
+        const sDate = new Date(e.start_time);
+        return cDate <= sDate && e.status !== "pending"
+    })
+
+    const onGoingEvents = activeEvents.filter((e)=>{
+        const cDate = new Date();
+        const eDate = new Date(e.finish_time);
+        const sDate = new Date(e.start_time)
+        return cDate <= eDate && cDate >= sDate
+    })
+
     const regEvents = allEvents.filter((val) => {
         return val.registered === true;
     });
@@ -155,7 +168,8 @@ function ExplorePanel(props) {
                     textColor="primary"
                     variant="scrollable"
                     scrollButtons="on">
-                    <Tab label="Active Events" />
+                    <Tab label="Upcoming Events" />
+                    <Tab label="Ongoing Events" />
                     <Tab label="Registered Events" />
                     <Tab label="Past Events" />
                 </Tabs>
@@ -176,7 +190,7 @@ function ExplorePanel(props) {
                         <Skeleton animation="wave" />
                         <Skeleton animation="wave" />
                     </div>}
-                    {activeEvents !== null && <div>{
+                    {upComingEvents !== null && <div>{
                         props.isFiltered ? props.sortedEventsArray.map((event, index) => {
                             return (
                                 <EventCard
@@ -196,7 +210,7 @@ function ExplorePanel(props) {
                                     eventId={event}
                                 >
                                 </EventCard>)
-                        }) : activeEvents.map((event, index) => {
+                        }) : upComingEvents.map((event, index) => {
                             return (
                                 <EventCard
                                     key={index}
@@ -218,7 +232,64 @@ function ExplorePanel(props) {
                         })}
                     </div>}
                 </React.Fragment>}
-                {value === 1 && <Grid container component="main" alignItems="center">
+                {value === 1 && <React.Fragment>
+                    {
+                        !contextLoading && activeEvents !== null && activeEvents.length === 0 && <Typography align="center">No events, check back later</Typography>
+                    }
+                    {contextLoading && <div>
+                        <Skeleton variant="rect" animation="wave" height={118} />
+                        <Skeleton animation="wave" />
+                        <Skeleton animation="wave" />
+                        <Skeleton animation="wave" />
+                        <br></br><br></br>
+                        <Skeleton variant="rect" animation="wave" height={118} />
+                        <Skeleton animation="wave" />
+                        <Skeleton animation="wave" />
+                        <Skeleton animation="wave" />
+                    </div>}
+                    {onGoingEvents !== null && <div>{
+                        props.isFiltered ? props.sortedEventsArray.map((event, index) => {
+                            return (
+                                <EventCard
+                                    key={index}
+                                    click={props.handleClick}
+                                    url={currentUser.imageUrl}
+                                    name={event.name}
+                                    startTime={event.start_time}
+                                    endTime={event.finish_time}
+                                    eventMode={event.eventMode}
+                                    eventType={event.eventType}
+                                    regEndTime={event.registrationEndTime}
+                                    event={event}
+                                    feeType={event.feesType}
+                                    imageDialog={props.handleImageDialogOpen}
+                                    handleReg={props.handleRegistrationButton}
+                                    eventId={event}
+                                >
+                                </EventCard>)
+                        }) : onGoingEvents.map((event, index) => {
+                            return (
+                                <EventCard
+                                    key={index}
+                                    click={props.handleClick}
+                                    url={currentUser.imageUrl}
+                                    name={event.name}
+                                    startTime={event.start_time}
+                                    endTime={event.finish_time}
+                                    eventMode={event.eventMode}
+                                    eventType={event.eventType}
+                                    regEndTime={event.registrationEndTime}
+                                    eventId={event}
+                                    feeType={event.feesType}
+                                    imageDialog={props.handleImageDialogOpen}
+                                    handleReg={props.handleRegistrationButton}
+                                    event={event}
+                                >
+                                </EventCard>)
+                        })}
+                    </div>}
+                </React.Fragment>}
+                {value === 2 && <Grid container component="main" alignItems="center">
                     {
                         regEvents.length === 0 && <Typography align="center">No Registered Events</Typography>
                     }
@@ -230,7 +301,7 @@ function ExplorePanel(props) {
                     })}
 
                 </Grid>}
-                {value === 2 && <Grid container component="main" alignItems="center">
+                {value === 3 && <Grid container component="main" alignItems="center">
                     {
                         pastEvents.length === 0 && <Typography align="center">No Past Events at this time</Typography>
                     }

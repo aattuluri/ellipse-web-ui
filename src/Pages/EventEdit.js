@@ -123,6 +123,7 @@ const EventEdit = (props) => {
   const [themes, setThemes] = React.useState(null);
   const [prizes, setPrizes] = React.useState([]);
   const [prizeTitle, setPrizeTitle] = React.useState(null);
+  const [prize, setPrize] = React.useState(null);
   const [prizeDesc, setPrizeDesc] = React.useState(null);
   const [roundsDialogOpen, setRoundsDialogOpen] = React.useState(false);
   const [selectedEditRound, setSelectedEditRound] = React.useState({});

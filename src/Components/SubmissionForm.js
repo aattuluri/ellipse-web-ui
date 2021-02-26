@@ -91,9 +91,10 @@ function SubmissionForm(props) {
 
     React.useEffect(() => {
         if (!props.individual && props.team) {
+
             if (props.team.members.length < event.team_size.min_team_size) {
                 setAccess(false);
-                setUserMessage("Form team with minimum of two members to make submission");
+                setUserMessage(`Form team with minimum of ${event.team_size.min_team_size} members to make submission`);
             }
             if (props.team.submissions[props.index].is_submitted) {
                 setAccess(false);

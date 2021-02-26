@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme) => ({
     overFlowText: {
         overflow: "hidden",
         textOverflow: "ellipsis",
-        height: "100px"
+        maxHeight: "100px"
     }
 }));
 
