@@ -12,6 +12,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 
 import AboutEventsPanel from '../Components/AboutEventPanel';
+import LoadingIndicator from '../Components/LoadingIndicator';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -35,6 +36,8 @@ export default function UnregisteredPage(props) {
     const id = props.match.params.eventId;
     const [event, setEvent] = React.useState({});
     const [open, setOpen] = React.useState(false);
+    const [loading,setLoading] = React.useState(true);
+    const [found,setFound] = React.useState(true);
     if (token) {
         props.history.replace(`/event/${id}`)
     }
@@ -48,6 +51,7 @@ export default function UnregisteredPage(props) {
         setOpen(false);
     };
     React.useEffect(() => {
+        setLoading(true)
         fetch(process.env.REACT_APP_API_URL + `/api/unregistered/event?id=${id}`, {
             headers: {
                 'Content-Type': 'application/json',
@@ -55,9 +59,18 @@ export default function UnregisteredPage(props) {
             },
             method: 'GET',
         }).then(response => {
-            response.json().then(value => {
-                setEvent(value.event);
-            })
+            if(response.status === 200){
+                response.json().then(value => {
+                    setEvent(value.event);
+                    setFound(true);
+                    setLoading(false)
+                })
+            }
+            else{
+                setFound(false);
+                setLoading(false)
+            }
+            
         })
     }, [id])
 
@@ -81,7 +94,8 @@ export default function UnregisteredPage(props) {
                     <Button size="large" color="primary" onClick={handleSignupClick}>Signup</Button>
                 </Toolbar>
             </AppBar>
-            <div className={classes.body}>
+            <LoadingIndicator loading={loading}></LoadingIndicator>
+            {!loading && found && <div className={classes.body}>
                 <Typography
                     align='center'
                     variant="h4"
@@ -90,7 +104,12 @@ export default function UnregisteredPage(props) {
                 </Typography>
                 <AboutEventsPanel notRegistered={true} event={event}></AboutEventsPanel>
                 <Button variant="contained" color="primary" onClick={handleClickOpen}>Register</Button>
-            </div>
+            </div>}
+            {
+                !loading && !found && <div className={classes.body}>
+                <Typography>Not Found</Typography>
+                </div>
+            }
             <Dialog
                 open={open}
                 maxWidth="md"
