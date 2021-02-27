@@ -86,7 +86,7 @@ export default function UnregisteredPage(props) {
                     align='center'
                     variant="h4"
                     style={{ paddingBottom: "20px", paddingTop: "10px" }}>
-                    {event.name + "(Login to Register and Know More Info)"}
+                    {event.name}
                 </Typography>
                 <AboutEventsPanel notRegistered={true} event={event}></AboutEventsPanel>
                 <Button variant="contained" color="primary" onClick={handleClickOpen}>Register</Button>
