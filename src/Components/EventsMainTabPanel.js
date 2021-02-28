@@ -100,8 +100,11 @@ const useStyles = makeStyles((theme) => ({
     },
     content: {
         marginTop: theme.spacing(3),
-        
+
     },
+    mainGrid: {
+        padding: theme.spacing(0.5)
+    }
 }));
 
 function ExplorePanel(props) {
@@ -113,13 +116,13 @@ function ExplorePanel(props) {
     const { activeEvents, contextLoading } = React.useContext(ActiveEvents);
     const { currentUser } = React.useContext(AuthContext);
 
-    const upComingEvents = activeEvents.filter((e)=>{
+    const upComingEvents = activeEvents.filter((e) => {
         const cDate = new Date();
         const sDate = new Date(e.start_time);
         return cDate <= sDate && e.status !== "pending"
     })
 
-    const onGoingEvents = activeEvents.filter((e)=>{
+    const onGoingEvents = activeEvents.filter((e) => {
         const cDate = new Date();
         const eDate = new Date(e.finish_time);
         const sDate = new Date(e.start_time)
@@ -130,7 +133,7 @@ function ExplorePanel(props) {
         return val.registered === true;
     });
 
-   
+
     const [value, setValue] = React.useState(0);
 
     const handleChange = (event, newValue) => {
@@ -291,10 +294,10 @@ function ExplorePanel(props) {
                         regEvents.length === 0 && <Typography align="center">No Registered Events</Typography>
                     }
                     {regEvents.map((event, index) => {
-                        return (<Grid item xs={12} sm={12} md={4} key={index} style={{margin:"5px"}}>
-                        
+                        return (<Grid item xs={12} sm={12} md={4} key={index} className={classes.mainGrid}>
+
                             <ProfileEventCard event={event} handleViewClick={handleEventClick(event)} name={event.name} ></ProfileEventCard>
-                            </Grid>)
+                        </Grid>)
                     })}
 
                 </Grid>}
@@ -303,7 +306,7 @@ function ExplorePanel(props) {
                         pastEvents.length === 0 && <Typography align="center">No Past Events at this time</Typography>
                     }
                     {pastEvents.map((event, index) => {
-                        return (<Grid item xs={12} sm={12} md={4} alignItems="center" key={index}>
+                        return (<Grid item xs={12} sm={12} md={4} key={index} className={classes.mainGrid}>
                             <ProfileEventCard event={event} handleViewClick={handleEventClick(event)} name={event.name} ></ProfileEventCard>
                         </Grid>)
                     })}

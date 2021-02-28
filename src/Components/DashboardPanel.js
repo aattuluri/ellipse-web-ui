@@ -83,11 +83,14 @@ export default function StickyHeadTable(props) {
   const event = props.event;
 
   React.useEffect(() => {
-    event.reg_fields.forEach(v => {
-      if (v.field === "file") {
-        setFileColumns([...fileColumns, v.title]);
-      }
-    })
+    if(event.reg_mode === "form"){
+      event.reg_fields.forEach(v => {
+        if (v.field === "file") {
+          setFileColumns([...fileColumns, v.title]);
+        }
+      })
+    }
+    
     // eslint-disable-next-line
   }, [event])
 

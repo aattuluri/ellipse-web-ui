@@ -127,12 +127,12 @@ export default function AddressForm(props) {
     props.setFeeType(value)
   }
   function handleRegistrationModeChange(event) {
-    if (event.target.value === "form") {
-      props.setSteps((steps) => [...steps, "Registration Form"])
-    }
-    else if (event.target.value === "link") {
-      props.setSteps(['About', 'More Details']);
-    }
+    // if (event.target.value === "form") {
+    //   props.setSteps((steps) => [...steps, "Registration Form"])
+    // }
+    // else if (event.target.value === "link") {
+    //   props.setSteps(['About', 'More Details']);
+    // }
     props.setRegistrationMode(event.target.value);
   }
 

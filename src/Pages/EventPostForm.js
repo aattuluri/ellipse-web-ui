@@ -103,7 +103,7 @@ export default function Checkout({ history }) {
   const token = localStorage.getItem('token');
   const { currentUser } = React.useContext(AuthContext);
   const [activeStep, setActiveStep] = React.useState(0);
-  const [steps, setSteps] = React.useState(['About', 'More Details']);
+  const [steps, setSteps] = React.useState(['About','Event Details', 'More Details']);
   const [state, setState] = React.useState({
     open: false,
     vertical: 'top',
@@ -228,7 +228,7 @@ export default function Checkout({ history }) {
             setVenueCollege={setVenueCollege}
             setAbout={setAbout}
             setParticipantsType={setParticipantsType}
-            handleNext={registrationMode === "form" ? handleNext : handlePostwithoutregFileds} />
+            handleNext={handleNext} />
         );
       case 2:
         return (
@@ -244,6 +244,7 @@ export default function Checkout({ history }) {
             setPrizes={setPrizes}
             themes={themes}
             setThemes={setThemes}
+            regMode={registrationMode}
             handlePost={handleEventPost}>
           </EventPostDetails3>);
       default:

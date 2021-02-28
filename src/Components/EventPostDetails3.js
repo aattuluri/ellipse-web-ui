@@ -106,9 +106,9 @@ export default function EventPostForm(props) {
 
     React.useEffect(() => {
         if (props.fields.length > 2) {
-            const arr = props.fields.filter(val=>{return val.title === "College"});
-            if(arr.length > 0){
-                setState({...state,college:true})
+            const arr = props.fields.filter(val => { return val.title === "College" });
+            if (arr.length > 0) {
+                setState({ ...state, college: true })
             }
             setSelectedFields(props.fields);
         }
@@ -165,8 +165,14 @@ export default function EventPostForm(props) {
 
     const handlePostButton = async (e) => {
         e.preventDefault();
-        await props.setFields(selectedFields);
+        if(props.regMode === "form"){
+            await props.setFields(selectedFields);
         props.handlePost(selectedFields);
+        }
+        else{
+            props.handlePost(null);
+        }
+        
     }
 
     const handleTermsClick = () => {
@@ -295,81 +301,83 @@ export default function EventPostForm(props) {
                         </Paper>
                     </Grid>
 
-                    <Grid item xs={12}>
-                        <FormControl component="fieldset" className={classes.formControl}>
-                            <FormLabel component="legend">Fields for your Registration Form</FormLabel>
-                            <FormGroup className={classes.formgroup}>
-                                <FormControlLabel
-                                    control={<Checkbox disabled color="primary" checked={name} onChange={handleChange} name="name" />}
-                                    label="Name"
-                                />
-                                <FormControlLabel
-                                    control={<Checkbox disabled color="primary" checked={email} onChange={handleChange} name="email" />}
-                                    label="Email"
-                                />
-                                <FormControlLabel
-                                    control={<Checkbox color="primary" checked={college} onChange={handleChange} name="college" />}
-                                    label="College"
-                                />
-                            </FormGroup>
-                        </FormControl>
-                    </Grid>
+                    {props.regMode === "form" && <React.Fragment>
+                        <Grid item xs={12}>
+                            <FormControl component="fieldset" className={classes.formControl}>
+                                <FormLabel component="legend">Fields for your Registration Form</FormLabel>
+                                <FormGroup className={classes.formgroup}>
+                                    <FormControlLabel
+                                        control={<Checkbox disabled color="primary" checked={name} onChange={handleChange} name="name" />}
+                                        label="Name"
+                                    />
+                                    <FormControlLabel
+                                        control={<Checkbox disabled color="primary" checked={email} onChange={handleChange} name="email" />}
+                                        label="Email"
+                                    />
+                                    <FormControlLabel
+                                        control={<Checkbox color="primary" checked={college} onChange={handleChange} name="college" />}
+                                        label="College"
+                                    />
+                                </FormGroup>
+                            </FormControl>
+                        </Grid>
 
-                    <Grid item xs={12}>
-                        <Button
-                            variant="outlined"
-                            color="default"
-                            onClick={handleAddMoreButton}>
-                            Add More
+                        <Grid item xs={12}>
+                            <Button
+                                variant="outlined"
+                                color="default"
+                                onClick={handleAddMoreButton}>
+                                Add More
                         </Button>
-                    </Grid>
+                        </Grid>
 
-                    <Grid>
-                        <Paper component="ul" className={classes.root}>
-                            {selectedFields.map((data) => {
-                                return (
-                                    <li key={data.key}>
-                                        <Chip
-                                            label={data.title}
-                                            onDelete={handleDelete(data)}
-                                            className={classes.chip}
-                                        />
-                                    </li>
-                                );
-                            })}
-                        </Paper>
-                    </Grid>
+                        <Grid>
+                            <Paper component="ul" className={classes.root}>
+                                {selectedFields.map((data) => {
+                                    return (
+                                        <li key={data.key}>
+                                            <Chip
+                                                label={data.title}
+                                                onDelete={handleDelete(data)}
+                                                className={classes.chip}
+                                            />
+                                        </li>
+                                    );
+                                })}
+                            </Paper>
+                        </Grid>
 
-                    <Grid item xs={12}>
-                        <FormControl component="fieldset" className={classes.formControl}>
-                            <FormLabel component="legend">Rounds(Optional)</FormLabel>
-                        </FormControl>
-                    </Grid>
+                        <Grid item xs={12}>
+                            <FormControl component="fieldset" className={classes.formControl}>
+                                <FormLabel component="legend">Rounds(Optional)</FormLabel>
+                            </FormControl>
+                        </Grid>
 
-                    <Grid item xs={12}>
-                        <Button
-                            variant="outlined"
-                            color="default"
-                            onClick={() => { setRoundsDialogOpen(true) }}>
-                            Add Rounds
+                        <Grid item xs={12}>
+                            <Button
+                                variant="outlined"
+                                color="default"
+                                onClick={() => { setRoundsDialogOpen(true) }}>
+                                Add Rounds
                         </Button>
-                    </Grid>
+                        </Grid>
 
-                    <Grid>
-                        <Paper component="ul" className={classes.root}>
-                            {props.rounds.map((data) => {
-                                return (
-                                    <li key={data.key}>
-                                        <Chip
-                                            label={data.title}
-                                            onDelete={handleRoundDelete(data)}
-                                            className={classes.chip}
-                                        />
-                                    </li>
-                                );
-                            })}
-                        </Paper>
-                    </Grid>
+                        <Grid>
+                            <Paper component="ul" className={classes.root}>
+                                {props.rounds.map((data) => {
+                                    return (
+                                        <li key={data.key}>
+                                            <Chip
+                                                label={data.title}
+                                                onDelete={handleRoundDelete(data)}
+                                                className={classes.chip}
+                                            />
+                                        </li>
+                                    );
+                                })}
+                            </Paper>
+                        </Grid>
+                    </React.Fragment>}
 
                     <Grid item xs={12}>
                         <Typography>By posting the event.I accept the

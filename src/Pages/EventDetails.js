@@ -307,6 +307,7 @@ export default function PersistentDrawerLeft(props) {
         setSubIndexValue(newValue);
     };
 
+    // console.log(event.rounds.length)
     return (
         <div>
 
@@ -494,6 +495,10 @@ export default function PersistentDrawerLeft(props) {
                     teamAccess &&
                     participationSelected && !adminAccess &&
                     <EventsTeamPanel subIndexValue={subIndexValue} value={4} index={4} open={drawerOpen} event={event}></EventsTeamPanel>
+                }
+                {!event.isTeamed && event.rounds && event.rounds.length === 0 &&
+                    participationSelected && !adminAccess && <Typography>This event don't have participation in this platform. Contact Event organizer through chat for more details</Typography>
+
                 }
                 {
                     !event.isTeamed && participationSelected && !adminAccess && <EventSubmissionPanel individual={true} event={event}></EventSubmissionPanel>

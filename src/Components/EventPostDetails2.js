@@ -421,7 +421,7 @@ export default function AddressForm(props) {
             variant="contained"
             color="primary"
             className={classes.button}
-          >{props.registrationMode !== "form" ? "POST" : "NEXT"}
+          >{"NEXT"}
           </Button>
         </div>
       </form>
