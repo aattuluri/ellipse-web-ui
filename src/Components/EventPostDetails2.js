@@ -3,12 +3,8 @@ import React from 'react';
 
 //MaterialUI imports
 import Button from '@material-ui/core/Button';
-// import Checkbox from '@material-ui/core/Checkbox';
-import IconButton from '@material-ui/core/IconButton';
-import InputAdornment from '@material-ui/core/InputAdornment';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Chip from '@material-ui/core/Chip';
-import CameraAltIcon from '@material-ui/icons/CameraAlt';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormLabel from '@material-ui/core/FormLabel';
@@ -16,9 +12,6 @@ import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { makeStyles } from '@material-ui/core/styles';
-import { Typography } from '@material-ui/core';
-
-import TermsandConditions from '../Components/EventPostTermsandConditions';
 
 
 
@@ -62,14 +55,14 @@ export default function AddressForm(props) {
   // const requirements = ["Laptop", "Basic HTML", "C++", "Machine Learning"];
   const [colleges, setColleges] = React.useState([]);
   const [collegesNames, setCollegesName] = React.useState([]);
-  const [eventTags,setEventTags] = React.useState([]);
-  const [requirements,setRequirements] = React.useState([]);
+  const [eventTags, setEventTags] = React.useState([]);
+  const [requirements, setRequirements] = React.useState([]);
   // const colleges = ["VIT University,Vellore", "GITAM University", "SRM University"];
-  const [tandcOpen,setTandcOpen] = React.useState(false);
+
 
 
   React.useEffect(() => {
-    fetch(process.env.REACT_APP_API_URL+'/api/colleges', {
+    fetch(process.env.REACT_APP_API_URL + '/api/colleges', {
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json',
@@ -84,7 +77,7 @@ export default function AddressForm(props) {
         })
       })
     })
-    fetch(process.env.REACT_APP_API_URL+'/api/event/get_event_keywords', {
+    fetch(process.env.REACT_APP_API_URL + '/api/event/get_event_keywords', {
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json',
@@ -95,11 +88,11 @@ export default function AddressForm(props) {
       response.json().then(value => {
         // setColleges(value);
         value.forEach((v) => {
-          if(v.type === "EventTags"){
-            setEventTags((eventTags)=> [...eventTags,v.title]);
+          if (v.type === "EventTags") {
+            setEventTags((eventTags) => [...eventTags, v.title]);
           }
-          else if(v.type === "EventRequirements"){
-            setRequirements((r)=>[...r,v.title]);
+          else if (v.type === "EventRequirements") {
+            setRequirements((r) => [...r, v.title]);
           }
         })
       })
@@ -114,27 +107,15 @@ export default function AddressForm(props) {
     props.setRequirements(values);
   }
 
-  function handleChange(event) {
-    if (event.target.files[0]) {
-      props.setPoster(event.target.files[0]);
-      const fileName = event.target.files[0].name;
-      props.setImageName(fileName);
-    }
-  }
   function handleAddressTypeChange(evemt, value) {
     props.setAddressType(value);
   }
 
-  function handleRegLinkChange(event) {
-    props.setRegLink(event.target.value);
-  }
+  
 
-  function handleRegFees(event) {
-    props.setFees(event.target.value);
-  }
+  
 
   function handleCollegeChange(event, value) {
-    // console.log(value);
     props.setCollegeName(value);
     colleges.forEach(c => {
       if (c.name === value) {
@@ -155,7 +136,7 @@ export default function AddressForm(props) {
   function handleBuildingChange(event) {
     props.setBuilding(event.target.value);
   }
-  function handlePlatformChange(event){
+  function handlePlatformChange(event) {
     props.setPlatformDetails(event.target.value)
   }
   function handleNext(event) {
@@ -163,15 +144,11 @@ export default function AddressForm(props) {
     props.handleNext();
   }
 
-  function handleTermsClick(){
-    setTandcOpen(true);
-  }
-
-  function handleTeamChange(event,value){
-    if(value === "team"){
+  function handleTeamChange(event, value) {
+    if (value === "team") {
       props.setIsTeam(true);
     }
-    else{
+    else {
       props.setIsTeam(false);
     }
   }
@@ -196,7 +173,7 @@ export default function AddressForm(props) {
               value={props.about || ""}
             />
           </Grid>
-          <Grid item xs={12} lg={6}>
+          <Grid item xs={12}>
             <Autocomplete
               multiple
               id="themes"
@@ -214,42 +191,7 @@ export default function AddressForm(props) {
               )}
             />
           </Grid>
-          <Grid item xs={12} lg={6}>
-            <input
-              id="contained-button-file"
-              // required
-              type="file"
-              // value={props.poster}
-              accept="image/*"
-              onChange={handleChange}
-              style={{ display: "none" }}>
-            </input>
-
-            <TextField
-              autoComplete='off'
-              required
-              id="eventposter"
-              name="eventposter"
-              label="Event Poster"
-              component="span"
-              value={props.imageName || ''}
-              fullWidth
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="start">
-                    <label htmlFor="contained-button-file">
-                      <IconButton component="span" >
-                        <CameraAltIcon></CameraAltIcon>
-                      </IconButton>
-                    </label>
-
-                  </InputAdornment>
-                ),
-              }}
-            />
-
-          </Grid>
-          {props.registrationMode !== "form" && <Grid item xs={12} lg={6}>
+          {/* {props.registrationMode !== "form" && <Grid item xs={12} lg={6}>
             <TextField
               autoComplete='off'
               required
@@ -260,9 +202,9 @@ export default function AddressForm(props) {
               value={props.regLink || ""}
               onChange={handleRegLinkChange}
             />
-          </Grid>}
+          </Grid>} */}
 
-          {props.feeType === "Paid" && <Grid item xs={12} lg={6}>
+          {/* {props.feeType === "Paid" && <Grid item xs={12} lg={6}>
             <TextField
               autoComplete='off'
               required
@@ -273,7 +215,7 @@ export default function AddressForm(props) {
               value={props.regFees || ""}
               onChange={handleRegFees}
             />
-          </Grid>}
+          </Grid>} */}
           <Grid item xs={12}>
             <Autocomplete
               multiple
@@ -327,7 +269,7 @@ export default function AddressForm(props) {
               label="Minimum Team Members"
               fullWidth
               value={props.minTeamSize || ""}
-              onChange={(e)=>{props.setMinTeamSize(e.target.value)}}
+              onChange={(e) => { props.setMinTeamSize(e.target.value) }}
             />
           </Grid>}
           {props.isTeam && <Grid item xs={12} lg={6}>
@@ -340,7 +282,7 @@ export default function AddressForm(props) {
               label="Maximum Team Members"
               fullWidth
               value={props.maxTeamSize || ""}
-              onChange={(e)=>{props.setMaxTeamSize(e.target.value)}}
+              onChange={(e) => { props.setMaxTeamSize(e.target.value) }}
             />
           </Grid>}
           {props.eventMode === "Online" && <Grid item xs={12}>
@@ -365,11 +307,11 @@ export default function AddressForm(props) {
               <FormLabel component="legend">Venue</FormLabel>
               <RadioGroup aria-label="address" aria-disabled name="address" defaultValue="college" onChange={handleAddressTypeChange} style={{ display: "inline" }}>
                 <FormControlLabel value="College" control={<Radio color="default" />} label="College/University" />
-                <FormControlLabel  value="Other" control={<Radio color="default" />} label="Others" />
+                <FormControlLabel value="Other" control={<Radio color="default" />} label="Others" />
               </RadioGroup>
             </Grid>
             <Grid item xs={12}>
-            <TextField
+              <TextField
                 multiline={true}
                 helperText="Enter links of your and you can also add or edit later in event edit"
                 rows="5"
@@ -383,7 +325,7 @@ export default function AddressForm(props) {
                 label="Venue"
                 fullWidth
               />
-          </Grid>
+            </Grid>
             {/* <Grid item xs={12} lg={6}>
               <TextField
                 autoComplete='off'
@@ -407,10 +349,6 @@ export default function AddressForm(props) {
               />
             </Grid> */}
           </React.Fragment>}
-          {props.registrationMode !== "form" && <Grid item xs={12}>
-          <Typography>By posting the event.I accept the <Button onClick={handleTermsClick} color="primary">Terms and Conditions</Button></Typography>
-          </Grid>
-          }
         </Grid>
         <div className={classes.buttons}>
           <Button onClick={props.handleBack} className={classes.button}>
@@ -425,7 +363,6 @@ export default function AddressForm(props) {
           </Button>
         </div>
       </form>
-      <TermsandConditions open={tandcOpen} setOpen={setTandcOpen}></TermsandConditions>
     </React.Fragment>
   );
 }

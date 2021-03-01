@@ -16,6 +16,11 @@ import { MuiPickersUtilsProvider, DateTimePicker, } from '@material-ui/pickers';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormLabel from '@material-ui/core/FormLabel';
+import Badge from '@material-ui/core/Badge';
+import EditIcon from '@material-ui/icons/Edit';
+import IconButton from '@material-ui/core/IconButton';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import CameraAltIcon from '@material-ui/icons/CameraAlt';
 
 
 
@@ -55,13 +60,14 @@ export default function AddressForm(props) {
 
   const token = localStorage.getItem('token');
   const classes = useStyles();
-  const [startDateError,setStartDateError] = React.useState(false);
-  const [endDateError,setEndDateError] = React.useState(false);
-  const [regEndDateError,setRegEndDateError] = React.useState(false);
-  // const eventTypes = ["Hackathon", "Coding Contest", "Webinar"];
-  const [eventTypes,setEventTypes] = React.useState([]);
-  React.useEffect(()=>{
-    fetch(process.env.REACT_APP_API_URL+'/api/event/get_event_types', {
+  const [startDateError, setStartDateError] = React.useState(false);
+  const [endDateError, setEndDateError] = React.useState(false);
+  const [regEndDateError, setRegEndDateError] = React.useState(false);
+  const [eventTypes, setEventTypes] = React.useState([]);
+
+
+  React.useEffect(() => {
+    fetch(process.env.REACT_APP_API_URL + '/api/event/get_event_types', {
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json',
@@ -71,18 +77,27 @@ export default function AddressForm(props) {
     }).then(response => {
       response.json().then(value => {
         value.forEach((v) => {
-          setEventTypes((eventTypes)=>[...eventTypes,v.title]);
+          setEventTypes((eventTypes) => [...eventTypes, v.title]);
         })
       })
     })
-  },[token])
+  }, [token])
 
+  const handleChange = (event) => {
+    if (event.target.files[0]) {
+      props.setPoster(event.target.files[0]);
+      const url = URL.createObjectURL(event.target.files[0]);
+      props.setImageUrl(url)
+      const fileName = event.target.files[0].name;
+      props.setImageName(fileName);
+    }
+  }
 
-  function handleEventNameChange(event) {
+  const handleEventNameChange = (event) => {
     props.setName(event.target.value)
   }
 
-  function handleDescChange(event) {
+  const handleDescChange = (event) => {
     props.setDesc(event.target.value);
   }
 
@@ -99,47 +114,78 @@ export default function AddressForm(props) {
     props.setRegEndDate(date);
   };
 
-  function handleEventModeChange(event) {
+  const handleEventModeChange = (event) => {
     props.setEventMode(event.target.value);
   }
-  function handleeventTypsChange(event, value) {
+  const handleeventTypsChange = (event, value) => {
     props.setEventType(value);
   }
 
-
-  function handleNext(event) {
+  const handleNext = (event) => {
     event.preventDefault();
-    if(props.startDate === null){
+    if (props.startDate === null) {
       setStartDateError(true)
     }
-    else if(props.endDate === null){
+    else if (props.endDate === null) {
       setEndDateError(true);
     }
-    else if(props.regEndDate === null){
+    else if (props.regEndDate === null) {
       setRegEndDateError(true)
     }
-    else{
+    else {
       props.handleNext();
     }
-    
   }
-  function handleFeeTypeChange(event, value) {
+  const handleFeeTypeChange = (event, value) => {
     props.setFeeType(value)
   }
-  function handleRegistrationModeChange(event) {
-    // if (event.target.value === "form") {
-    //   props.setSteps((steps) => [...steps, "Registration Form"])
-    // }
-    // else if (event.target.value === "link") {
-    //   props.setSteps(['About', 'More Details']);
-    // }
-    props.setRegistrationMode(event.target.value);
-  }
 
+  const handleRegFees = (event) => {
+    props.setFees(event.target.value);
+  }
 
   return (
     <form className={classes.form} onSubmit={handleNext}>
       <Grid container spacing={3}>
+        <Grid item xs={12} >
+          <input id="poster-file" type="file" accept="image/*" onChange={handleChange} style={{ display: "none" }}></input>
+          <Badge
+            overlap="circle"
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'right',
+            }}
+            badgeContent={<label htmlFor="poster-file">
+              <IconButton style={{ backgroundColor: "black" }} color="primary" aria-label="upload picture" component="span">
+                <EditIcon></EditIcon>
+              </IconButton>
+            </label>}>
+            <img height="140" width="150" alt="poster" src={props.imageUrl} ></img>
+
+          </Badge>
+          <TextField
+            autoComplete='off'
+            required
+            id="eventposter"
+            name="eventposter"
+            label="Event Poster"
+            component="span"
+            value={props.imageName || ''}
+            fullWidth
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="start">
+                  <label htmlFor="poster-file">
+                    <IconButton component="span" >
+                      <CameraAltIcon></CameraAltIcon>
+                    </IconButton>
+                  </label>
+
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Grid>
         <Grid item xs={12}>
           <TextField
             autoComplete='off'
@@ -167,7 +213,7 @@ export default function AddressForm(props) {
         <Grid item xs={12} sm={6} lg={6}>
           <MuiPickersUtilsProvider utils={DateFnsUtils} required >
             <DateTimePicker
-            inputProps={{required: true}}            
+              inputProps={{ required: true }}
               minDate={Date.now()}
               fullWidth
               required
@@ -183,7 +229,6 @@ export default function AddressForm(props) {
               helperText={startDateError && "Fill this field"}
             />
           </MuiPickersUtilsProvider>
-
         </Grid>
         <Grid item xs={12} sm={6} lg={6}>
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -254,9 +299,7 @@ export default function AddressForm(props) {
             renderInput={(params) => <TextField fullWidth required {...params} label="Type" />}
           />
         </Grid>
-
-
-        <Grid item xs={12}>
+        {/* <Grid item xs={12}>
           <FormControl fullWidth required>
             <InputLabel htmlFor="outlined-age-native-simple">Registration</InputLabel>
             <Select
@@ -275,7 +318,7 @@ export default function AddressForm(props) {
               <option value="link">Other</option>
             </Select>
           </FormControl>
-        </Grid>
+        </Grid> */}
         <Grid item xs={12}>
           <FormLabel component="legend">Entry Fee</FormLabel>
           <RadioGroup aria-label="address" name="address" value={props.feeType} onChange={handleFeeTypeChange} style={{ display: "inline" }}>
@@ -283,6 +326,18 @@ export default function AddressForm(props) {
             <FormControlLabel value="Paid" control={<Radio color="default" />} label="Paid" />
           </RadioGroup>
         </Grid>
+        {props.feeType === "Paid" && <Grid item xs={12} lg={6}>
+          <TextField
+            autoComplete='off'
+            required
+            id="regFees"
+            name="regFees"
+            label="Registration Fees"
+            fullWidth
+            value={props.regFees || ""}
+            onChange={handleRegFees}
+          />
+        </Grid>}
       </Grid>
 
       <div className={classes.buttons}>

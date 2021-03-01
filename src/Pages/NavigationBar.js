@@ -51,8 +51,9 @@ const NavigationBar = function ({ history }) {
   const isMenuOpen = Boolean(anchorEl);
   const [open, setOpen] = React.useState(false);
   const [notificationsOpen, setNotificationsOpen] = React.useState(false);
-  const { allEvents } = React.useContext(EventsContext);
+  var { allEvents } = React.useContext(EventsContext);
   const { currentUser } = React.useContext(AuthContext);
+  allEvents = allEvents.filter(value => { return value.status !== "pending" || value.user_id === currentUser.user_id })
 
   useEffect(() => {
     if (localStorage.getItem('tabIndex') != null) {
@@ -284,10 +285,10 @@ const NavigationBar = function ({ history }) {
           </Toolbar>
         </AppBar>
         {renderMenu}
-        <AppBar position="sticky" color="secondary">
+        <AppBar position="sticky" color="secondary" elevation={0}>
           <div className={classes.mobiletab}>
 
-            <Paper square className={classes.root} position="sticky">
+            <Paper square className={classes.root} position="sticky" elevation={0}>
               <Tabs
                 value={value}
                 onChange={handleChange}

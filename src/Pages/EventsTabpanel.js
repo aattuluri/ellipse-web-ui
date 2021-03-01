@@ -2,7 +2,7 @@ import React from 'react';
 import { withRouter } from "react-router";
 
 
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -142,6 +142,7 @@ function EventsTabPanel({ history }) {
     const token = localStorage.getItem('token');
     const { currentUser } = React.useContext(AuthContext);
     const classes = useStyles();
+    const theme = useTheme();
     const [open, setOpen] = React.useState(false);
     const [imageDialogOpen, setImageDialogOpen] = React.useState(false);
     const [selectedEvent, setSelectedEvent] = React.useState("");
@@ -497,11 +498,11 @@ function EventsTabPanel({ history }) {
                     onClose={handleFilterClose}
                     fullWidth={true}
                     scroll="paper"
-                    aria-labelledby="scroll-dialog-title"
-                    aria-describedby="scroll-dialog-description"
+                    aria-labelledby="sort-dialog"
+                    aria-describedby="sort-dialog"
                     maxWidth="sm" PaperProps={{
                         style: {
-                            backgroundColor: "#1C1C1E",
+                            backgroundColor: theme.palette.secondary.main,
                             boxShadow: 'none',
                         },
                     }}>
@@ -528,4 +529,3 @@ function EventsTabPanel({ history }) {
 }
 
 export default withRouter(EventsTabPanel);
-

@@ -318,6 +318,7 @@ export default function PersistentDrawerLeft(props) {
                 className={clsx(classes.appBar, {
                     [classes.appBarShift]: drawerOpen,
                 })}
+                elevation={0}
             >
                 <Toolbar>
                     <IconButton

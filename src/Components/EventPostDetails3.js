@@ -16,6 +16,9 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Box from '@material-ui/core/Box';
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
+
 
 //other component imports
 import AddFieldDialog from '../Components/AddFieldDialog';
@@ -165,14 +168,14 @@ export default function EventPostForm(props) {
 
     const handlePostButton = async (e) => {
         e.preventDefault();
-        if(props.regMode === "form"){
+        if (props.regMode === "form") {
             await props.setFields(selectedFields);
-        props.handlePost(selectedFields);
+            props.handlePost(selectedFields);
         }
-        else{
+        else {
             props.handlePost(null);
         }
-        
+
     }
 
     const handleTermsClick = () => {
@@ -211,6 +214,14 @@ export default function EventPostForm(props) {
     const handleBack = () => {
         props.setFields(selectedFields);
         props.handleBack()
+    }
+
+    const handleRegistrationModeChange = (event) => {
+        props.setRegMode(event.target.value);
+    }
+
+    function handleRegLinkChange(event) {
+        props.setRegLink(event.target.value);
     }
 
     return (
@@ -300,6 +311,40 @@ export default function EventPostForm(props) {
                             })}
                         </Paper>
                     </Grid>
+
+                    <Grid item xs={12}>
+                        <FormControl fullWidth required>
+                            <InputLabel htmlFor="outlined-age-native-simple">Registration</InputLabel>
+                            <Select
+                                fullWidth
+                                native
+                                label="Registration"
+                                inputProps={{
+                                    name: 'registrationMode',
+                                    id: 'registaration mode',
+                                }}
+                                value={props.regMode || ""}
+                                onChange={handleRegistrationModeChange}
+                            >
+                                <option aria-label="None" value="" />
+                                <option value="form">Our Platform(Ellipse)</option>
+                                <option value="link">Other</option>
+                            </Select>
+                        </FormControl>
+                    </Grid>
+
+                    {props.regMode === "link" && <Grid item xs={12}>
+                        <TextField
+                            autoComplete='off'
+                            required
+                            id="regLink"
+                            name="regLink"
+                            label="Registration Link"
+                            fullWidth
+                            value={props.regLink || ""}
+                            onChange={handleRegLinkChange}
+                        />
+                    </Grid>}
 
                     {props.regMode === "form" && <React.Fragment>
                         <Grid item xs={12}>

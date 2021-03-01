@@ -143,7 +143,7 @@ function ExplorePanel(props) {
     const pastEvents = allEvents.filter((val) => {
         const cDate = new Date();
         const eDate = new Date(val.finish_time);
-        return cDate > eDate
+        return cDate > eDate && val.status !== "pending"
     })
 
     const handleClose = () => {

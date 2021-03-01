@@ -133,6 +133,7 @@ export default function Checkout({ history }) {
   const [eventThemes, setEventThemes] = React.useState([]);
   const [selectedrequirements, setSelectedRequirements] = React.useState([]);
   const [image, setImage] = React.useState(null);
+  const [imageUrl,setImageUrl] = React.useState(null);
   const [addressType, setAddressType] = React.useState(null);
   const [collegeName, setCollegeName] = React.useState(currentUser.college_name);
   const [collegeId, setCollegeId] = React.useState(currentUser.college_id)
@@ -183,6 +184,14 @@ export default function Checkout({ history }) {
             setAbout={setAbout}
             handleNext={handleNext}
             setFeeType={setFeeType}
+            poster={image}
+            imageName={imageName}
+            setImageName={setImageName}
+            setPoster={setImage}
+            imageUrl = {imageUrl}
+            setImageUrl={setImageUrl}
+            regFees={fees}
+            setFees={setFees}
             steps={steps}
             setSteps={setSteps} />);
       case 1:
@@ -245,6 +254,9 @@ export default function Checkout({ history }) {
             themes={themes}
             setThemes={setThemes}
             regMode={registrationMode}
+            setRegMode={setRegistrationMode}
+            setRegLink={setRegLink}
+            regLink={regLink}
             handlePost={handleEventPost}>
           </EventPostDetails3>);
       default:
@@ -378,9 +390,9 @@ export default function Checkout({ history }) {
     setFields(f);
   }
 
-  function handlePostwithoutregFileds() {
-    handleEventPost(null);
-  }
+  // function handlePostwithoutregFileds() {
+  //   handleEventPost(null);
+  // }
 
   const handleNext = () => {
     setActiveStep(activeStep + 1);
