@@ -207,6 +207,56 @@ function EventAdminSubmissionPanel(props) {
         })
     }
 
+
+    const handleRemoveAccessButton = (is_teamed, user_id, title,team_id) => () => {
+        setLoading(true);
+        var data = new FormData()
+        var payload ;
+        if(is_teamed){
+            payload = {
+                is_teamed: is_teamed,
+                event_id: event._id,
+                user_id: user_id,
+                round_title: title,
+                team_id: team_id
+            }
+        }
+        else{
+            payload = {
+                is_teamed: is_teamed,
+                event_id: event._id,
+                user_id: user_id,
+                round_title: title
+            }
+        }
+        
+        data = JSON.stringify(payload);
+        // console.log(data);
+        fetch(process.env.REACT_APP_API_URL + `/api/event/remove_access_round`, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            method: 'POST',
+            body: data
+        }).then(res => {
+            if (res.status === 200) {
+                res.json().then(value => {
+                    setLoading(false);
+                    if (event.isTeamed) {
+                        getTeamData();
+                    }
+                    else {
+                        getIndividualsData();
+                    }
+
+                })
+
+            }
+        })
+    }
+
     const handleShareButtonClick = (v) => () => {
         setSelectedTeam(v);
         setShareDialogOpen(true)
@@ -245,7 +295,8 @@ function EventAdminSubmissionPanel(props) {
                                                             <Button onClick={handleRoundClickButton(value, v)} variant="outlined" className={classes.roundButton}>
                                                                 {value.title}
                                                             </Button>
-                                                            {!value.submission_access && <Button onClick={handleAccessButton(true, v.user_id, value.title,v._id)}>Give Access</Button>}
+                                                            {!value.submission_access && <Button disabled={loading} onClick={handleAccessButton(true, v.user_id, value.title,v._id)}>Give Access</Button>}
+                                                            {value.submission_access && <Button disabled={loading} onClick={handleRemoveAccessButton(true, v.user_id, value.title,v._id)}>Remove Access</Button>}
                                                             <br></br>
                                                         </React.Fragment>
                                                     })}

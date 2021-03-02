@@ -93,12 +93,10 @@ export default function ScrollDialog(props) {
     const theme = useTheme();
     const [submission, setSubmission] = React.useState(null);
     const [keys, setKeys] = React.useState([]);
-    // const reg = props.reg;
     const event = props.event;
     const [currentRoundFields, setCurrentRoundFields] = React.useState([]);
 
     const handleClose = () => {
-        // props.reset();
         props.setOpen(false);
         setSubmission(null);
         setKeys([]);
@@ -107,13 +105,11 @@ export default function ScrollDialog(props) {
     React.useEffect(() => {
         event.rounds.forEach(round => {
             if (round.title === props.submission.title) {
-                // console.log(round.fields);
                 setCurrentRoundFields(round.fields);
             }
         });
         if(props.submission !== null){
             if (props.submission.submission_form !== null) {
-                // getData();
                 setKeys(Object.keys(props.submission.submission_form));
                 setSubmission(props.submission.submission_form);
                 setLoading(false);
@@ -121,30 +117,6 @@ export default function ScrollDialog(props) {
         }
         // eslint-disable-next-line
     }, [props,event])
-
-    // const getData = () => {
-    //     setLoading(true);
-    //     try {
-    //         fetch(process.env.REACT_APP_API_URL + `/api/event/get_submission?id=${props.submission.submission_id}`, {
-    //             headers: {
-    //                 'Authorization': `Bearer ${token}`,
-    //                 'Content-Type': 'application/json',
-    //                 'Accept': 'application/json'
-    //             },
-    //             method: 'GET',
-    //         }).then(response => {
-    //             response.json().then(value => {
-    //                 // console.log(value);
-    //                 setKeys(Object.keys(value.submission));
-    //                 setSubmission(value);
-    //                 setLoading(false);
-    //             })
-    //         })
-    //     }
-    //     catch (e) {
-    //         console.log(e);
-    //     }
-    // }
 
 
     return (
@@ -182,7 +154,7 @@ export default function ScrollDialog(props) {
                     >
                         {
                             keys.map((value, index) => {
-                                if (currentRoundFields[index].field === "file_upload") {
+                                if (currentRoundFields[index].field === "file") {
                                     return <React.Fragment>
                                         <Typography>{value}</Typography>
                                         <IconButton download target="_blank" href={process.env.REACT_APP_API_URL + `/api/event/registration/get_file?id=${submission[value]}`} size="small" color="primary"><GetAppIcon></GetAppIcon></IconButton>
@@ -207,9 +179,6 @@ export default function ScrollDialog(props) {
                     <Button onClick={handleClose} color="primary">
                         Dismiss
                     </Button>
-                    {/* <Button onClick={handleClose} color="primary">
-                        Subscribe
-                    </Button> */}
                 </DialogActions>
             </Dialog>
         </div>

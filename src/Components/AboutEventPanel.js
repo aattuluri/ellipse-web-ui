@@ -12,10 +12,10 @@ import GroupIcon from '@material-ui/icons/Group';
 import PersonIcon from '@material-ui/icons/Person';
 import Divider from '@material-ui/core/Divider';
 import EmojiEventsIcon from '@material-ui/icons/EmojiEvents';
+import Button from '@material-ui/core/Button';
 
 //other component imports
 import ImageDialog from '../Components/ImageDialog';
-import { Button } from '@material-ui/core';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
         display: "flex",
         justifyContent: "center",
         minWidth: "20%",
-        
+
     },
     gridMain: {
         borderRadius: theme.spacing(2),
@@ -80,6 +80,7 @@ function AboutEventPanel(props) {
     const [imageDialogOpen, setImageDialogOpen] = React.useState(false);
     const [notRegistered, setNotRegistered] = React.useState(false);
     const [rulesHeight, setRulesHeight] = React.useState(true);
+    const [themesHeight, setThemesHeight] = React.useState(true);
 
 
     React.useEffect(() => {
@@ -187,6 +188,10 @@ function AboutEventPanel(props) {
 
     const handleRulesViewMoreButton = () => {
         setRulesHeight((height) => { return !height })
+    }
+
+    const handleThemesViewMoreButton = () => {
+        setThemesHeight((height) => { return !height })
     }
 
     return (
@@ -374,25 +379,26 @@ function AboutEventPanel(props) {
                                             <Box style={{ marginLeft: "30px" }}>
                                                 <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Themes</Typography>
                                             </Box>
-                                            <div style={{marginTop:"5px"}} whiteSpace="normal">
-                                            {event.themes.split("\n").map((val, index) => {
-                                                if (val === "") {
-                                                    return <br></br>
-                                                }
-                                                return <Box style={{ marginLeft: "45px" }} whiteSpace="normal">
-                                                    <Typography color="textSecondary" variant="body2" whiteSpace="normal">
-                                                        {val}
-                                                    </Typography>
-                                                </Box>
-                                            })}
+                                            <div className={themesHeight && classes.overFlowText} style={{ marginTop: "5px" }} whiteSpace="normal">
+                                                {event.themes.split("\n").map((val, index) => {
+                                                    if (val === "") {
+                                                        return <br></br>
+                                                    }
+                                                    return <Box style={{ marginLeft: "45px" }} whiteSpace="normal">
+                                                        <Typography color="textSecondary" variant="body2" whiteSpace="normal">
+                                                            {val}
+                                                        </Typography>
+                                                    </Box>
+                                                })}
                                             </div>
+                                            <Button onClick={handleThemesViewMoreButton} style={{ marginLeft: "45px" }} color="primary">{themesHeight ? "View More" : "hide"}</Button>
                                         </Grid>}
                                     {event.rules !== undefined && event.rules !== null && event.rules !== "" &&
                                         <Grid item xs={12} md={6} className={classes.gridItem} >
                                             <Box style={{ marginLeft: "30px" }}>
                                                 <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Rules</Typography>
                                             </Box>
-                                            <div className={rulesHeight && classes.overFlowText} style={{marginTop:"5px"}} whiteSpace="normal">
+                                            <div className={rulesHeight && classes.overFlowText} style={{ marginTop: "5px" }} whiteSpace="normal">
                                                 {event.rules.split("\n").map((val, index) => {
                                                     if (val === "") {
                                                         return <br></br>
