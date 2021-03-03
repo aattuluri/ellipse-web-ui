@@ -208,7 +208,6 @@ function EventsTabPanel({ history }) {
             setSortedEventsArray(dateRangeSortedEvents);
             setIsFiltered(true);
             if (modeSortChecked.length > 1) {
-                console.log(sortByMode(dateRangeSortedEvents));
                 const typeSortedEvents = sortByMode(dateRangeSortedEvents);
                 setSortedEventsArray(typeSortedEvents);
                 setIsFiltered(true);
@@ -244,7 +243,6 @@ function EventsTabPanel({ history }) {
             setSortedEventsArray(dateSortedEvents);
             setIsFiltered(true);
             if (modeSortChecked.length > 1) {
-                console.log(sortByMode(dateSortedEvents));
                 const typeSortedEvents = sortByMode(dateSortedEvents);
                 setSortedEventsArray(typeSortedEvents);
                 setIsFiltered(true);
@@ -314,9 +312,7 @@ function EventsTabPanel({ history }) {
             const x = `${date.getDate()}` + date.getMonth() + date.getFullYear();
             const d = new Date(sevent.start_time);
             const y = `${d.getDate()}` + d.getMonth() + d.getFullYear();
-            console.log(y);
             if (x === y) {
-                console.log(sevent);
                 sDEvents.push(sevent);
             }
         })
@@ -326,7 +322,6 @@ function EventsTabPanel({ history }) {
         var sortedEvents = [];
         sEvents.forEach(sevent => {
             if (modeSortChecked.includes(sevent.event_mode)) {
-                console.log("ddd");
                 sortedEvents.push(sevent);
             }
         })

@@ -163,7 +163,7 @@ function UpdateInfoTabPanel(props) {
         setEmail(value);
     }
     function handleGender(event, value) {
-        console.log(event.target.value);
+        // console.log(event.target.value);
         setGender(event.target.value);
     }
     function handleDesig(event, value) {

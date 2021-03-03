@@ -51,7 +51,7 @@ export default function SendEmailForm(props) {
                 content: content,
                 emails: props.emails}
             data = JSON.stringify(d);
-            console.log(data);
+            // console.log(data);
             fetch(process.env.REACT_APP_API_URL+`/api/event/sendemail`, {
                 headers: {
                     'Authorization': `Bearer ${token}`,

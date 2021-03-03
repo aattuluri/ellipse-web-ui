@@ -69,7 +69,7 @@ export default function StickyHeadTable(props) {
 
 
   const handleClick = (event, name) => {
-    console.log(name);
+    // console.log(name);
     const selectedIndex = selected.indexOf(name);
     let newSelected = [];
 
