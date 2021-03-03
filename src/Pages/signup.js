@@ -1,9 +1,13 @@
 import React from 'react';
-import Copyright from '../Components/copyright';
 import useStyles from '../Themes/SignupPageStyles';
 import { withRouter, Redirect } from "react-router";
+import { detect } from 'detect-browser';
 
 //MaterialUI imports
+import Select from '@material-ui/core/Select';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormControl from '@material-ui/core/FormControl';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -19,8 +23,9 @@ import Container from '@material-ui/core/Container';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { detect } from 'detect-browser';
+
 import SupportDialog from '../Components/SupportDialog';
+import Copyright from '../Components/copyright';
 // import { ReCaptcha } from 'react-recaptcha-google';
 
 //function for alert
@@ -45,9 +50,30 @@ const Signup = ({ history }) => {
   const [nameError, setNameError] = React.useState(false);
   const [usernameError, setUserNameError] = React.useState(false);
   const [passwordError, setPasswordError] = React.useState(false);
+  const [colleges, setColleges] = React.useState([]);
+  const [collegeName, setCollegeName] = React.useState(null);
+  const [collegeId, setCollegeId] = React.useState(null);
+  const [collegesName, setCollegesName] = React.useState([]);
   const [signupButtonDisabled, setSignupButtonDisabled] = React.useState(false);
   const browser = detect();
   const [supportOpen, setSupportOpen] = React.useState(false);
+
+  React.useEffect(() => {
+    fetch(process.env.REACT_APP_API_URL + '/api/colleges', {
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      method: 'GET',
+    }).then(response => {
+      response.json().then(value => {
+        setColleges(value);
+        value.forEach((v) => {
+          setCollegesName((collegesNames) => [...collegesNames, v.name])
+        })
+      })
+    })
+  }, [])
 
 
   React.useEffect(() => {
@@ -70,12 +96,9 @@ const Signup = ({ history }) => {
 
     // load the script by passing the URL
     loadScriptByURL("recaptcha-key", `https://www.google.com/recaptcha/api.js?render=${process.env.REACT_APP_SITE_KEY}`, function () {
-      // console.log("Script loaded!");
       window.grecaptcha.ready(function () {
         window.grecaptcha.execute('6LcEVOoZAAAAAOjNV_wZFJ7YQMBs4IwKyH-LdU2P', { action: 'submit' }).then(recaptcha_token => {
-          // Add your logic to submit to your backend server here.
-          // console.log(recaptcha_token);
-          fetch(process.env.REACT_APP_API_URL +'/api/verify_recaptcha', {
+          fetch(process.env.REACT_APP_API_URL + '/api/verify_recaptcha', {
             method: 'POST',
             headers: {
               "Content-Type": "application/json"
@@ -86,10 +109,8 @@ const Signup = ({ history }) => {
               "recaptcha_token": recaptcha_token
             })
           }).then(res => {
-            // console.log(res);
-            if(res.status === 200){
+            if (res.status === 200) {
               res.json().then(result => {
-                // console.log(result)
                 if (result.success) {
                   if (result.score < 0.5) {
                     setSignupButtonDisabled(true)
@@ -97,23 +118,12 @@ const Signup = ({ history }) => {
                 }
               })
             }
-            
+
           });
         });
       });
     });
   }, []);
-
-  // const [cDemo,setCDemo] = React.useState(null);
-  // // const inputEl = useRef(null);
-
-  // React.useEffect(()=>{
-  //   // if (cDemo) {
-  //     console.log("started, just a second...")
-  //     // this.captchaDemo.reset();
-  //     // this.captchaDemo.execute();
-  // // }
-  // },[])
 
   //timeout function
   function timeout(ms, promise) {
@@ -151,6 +161,19 @@ const Signup = ({ history }) => {
 
     setState({ ...state, open: false });
   };
+
+
+  function handleCollege(event, value) {
+    setCollegeName(value);
+    colleges.forEach(c => {
+      if (c.name === value) {
+        //   props.collegeId(c._id)
+        setCollegeId(c._id);
+      }
+    })
+  }
+
+
   async function handleSignUp(event) {
     // grecaptcha.ready(function() {
     //   grecaptcha.execute('reCAPTCHA_site_key', {action: 'submit'}).then(function(token) {
@@ -161,13 +184,15 @@ const Signup = ({ history }) => {
     // });
     event.preventDefault();
     setLoading(true);
-    const { fullName, email, password, username, terms } = event.target.elements;
+    const { fullName, email, designation, password, username, terms } = event.target.elements;
     try {
       if (terms.checked) {
         var data = new FormData()
         const payload = {
           name: fullName.value,
           email: email.value,
+          designation: designation.value,
+          college_id: collegeId,
           password: password.value,
           username: username.value,
           type: 'browser',
@@ -384,6 +409,38 @@ const Signup = ({ history }) => {
               />
             </Grid>
             <Grid item xs={12}>
+              <FormControl variant="outlined" fullWidth required>
+                <InputLabel htmlFor="designation">You are</InputLabel>
+                <Select
+                  fullWidth
+                  native
+                  label="You are"
+                  inputProps={{
+                    name: 'designation',
+                    id: 'designation',
+                  }}
+                >
+                  <option aria-label="None" value="" />
+                  <option value="Student">Student</option>
+                  <option value="Faculty">Faculty</option>
+                  <option value="Club/Organisation">Club/Organisation</option>
+                  <option value="Institution">Institution</option>
+                  <option value="Others">Others</option>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12}>
+              <Autocomplete
+                fullWidth
+                id="college"
+                options={collegesName}
+                getOptionLabel={(option) => option}
+                value={collegeName}
+                onChange={handleCollege}
+                renderInput={(params) => <TextField name="college" variant="outlined" fullWidth required {...params} label="College" />}
+              />
+            </Grid>
+            <Grid item xs={12}>
               <TextField
                 variant="outlined"
                 required
@@ -403,7 +460,7 @@ const Signup = ({ history }) => {
 
             <Grid item xs={12}>
               <FormControlLabel
-                control={<Checkbox color="primary" name="terms" />}
+                control={<Checkbox color="primary" name="terms" checked disabled />}
                 label={<Typography>By signing up I accept the <Link href='/Privacy_Policy.pdf'>Pivacy Policy and Terms of Service</Link></Typography>}
               />
             </Grid>

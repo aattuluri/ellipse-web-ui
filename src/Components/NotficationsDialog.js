@@ -12,6 +12,8 @@ import Typography from '@material-ui/core/Typography';
 // import Card from '@material-ui/core/Card';
 import Box from '@material-ui/core/Box';
 import { useTheme } from '@material-ui/core/styles';
+import CloseIcon from '@material-ui/icons/Close';
+import IconButton from '@material-ui/core/IconButton';
 // import { Redirect } from 'react-router';
 
 
@@ -33,6 +35,12 @@ const useStyles = makeStyles((theme) => ({
       secondaryTail: {
         backgroundColor: theme.palette.secondary.main,
       },
+      icons: {
+        position: 'absolute',
+        right: theme.spacing(1),
+        top: theme.spacing(1),
+    },
+      
 }));
 
 
@@ -62,6 +70,10 @@ export default function FormDialog(props) {
         props.handleClick(n.event_id)
     }
 
+    function handleClose() {
+        props.handleClose();
+    }
+
 
     return (
         <div>
@@ -72,6 +84,11 @@ export default function FormDialog(props) {
                 },
             }} onClose={props.handleClose} aria-labelledby="form-dialog-title" classes={{ paper: classes.dialog }}>
                 <DialogTitle id="form-dialog-title">Notifications</DialogTitle>
+                <div className={classes.icons}>
+                    <IconButton aria-label="close" className={classes.closeButton} onClick={handleClose}>
+                        <CloseIcon fontSize="large" />
+                    </IconButton>
+                    </div>
                 <Divider></Divider>
                 <DialogContent>
                 {

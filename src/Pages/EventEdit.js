@@ -1,10 +1,11 @@
 import React from 'react';
 // import Copyright from '../Components/copyright';
-// import useStyles from '../Themes/SignupPageStyles';
 import { withRouter } from 'react-router';
+import DateFnsUtils from '@date-io/date-fns';
 
 //MaterialUI imports
 import Button from '@material-ui/core/Button';
+import Box from '@material-ui/core/Box';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -16,7 +17,6 @@ import FormControl from '@material-ui/core/FormControl';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import DateFnsUtils from '@date-io/date-fns';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Chip from '@material-ui/core/Chip';
 import { MuiPickersUtilsProvider, DateTimePicker, } from '@material-ui/pickers';
@@ -27,8 +27,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import Badge from '@material-ui/core/Badge';
 import EditIcon from '@material-ui/icons/Edit';
 import IconButton from '@material-ui/core/IconButton';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
 
-
+import RoundEditDialog from '../Components/EditRoundDialog';
 
 //function for alert
 function Alert(props) {
@@ -56,6 +58,15 @@ const useStyles = makeStyles((theme) => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
+  },
+  root: {
+    display: 'flex',
+    justifyContent: 'flex-start',
+    flexWrap: 'wrap',
+    listStyle: 'none',
+    padding: theme.spacing(0.5),
+    margin: 0,
+    backgroundColor: theme.palette.primary.light
   },
 }));
 
@@ -85,7 +96,7 @@ const EventEdit = (props) => {
   const [selectedrequirements, setSelectedRequirements] = React.useState([]);
   // const [image, setImage] = React.useState(null);
   // const [imageName, setImageName] = React.useState("");
-  const [addressType,setAddressType] = React.useState("");
+  const [addressType, setAddressType] = React.useState("");
   const [feeType, setFeeType] = React.useState("Free");
   const [collegeName, setCollegeName] = React.useState(null);
   const [regMode, setRegMode] = React.useState(null);
@@ -101,10 +112,22 @@ const EventEdit = (props) => {
   // const [collegesNames, setCollegesName] = React.useState([]);
 
   const token = localStorage.getItem('token');
-  const [eventTags,setEventTags] = React.useState([]);
-  const [requirements,setRequirements] = React.useState([]);
-  const [eventTypes,setEventTypes] = React.useState([]);
-  const [platformDetails,setPlatformDetails] = React.useState('');
+  const [eventTags, setEventTags] = React.useState([]);
+  const [requirements, setRequirements] = React.useState([]);
+  const [eventTypes, setEventTypes] = React.useState([]);
+  const [platformDetails, setPlatformDetails] = React.useState('');
+  const [isTeamed, setIsTeamed] = React.useState(false);
+  const [teamSize, setTeamSize] = React.useState({});
+  const [rounds, setRounds] = React.useState([]);
+  const [rules, setRules] = React.useState(null);
+  const [themes, setThemes] = React.useState(null);
+  const [prizes, setPrizes] = React.useState([]);
+  const [prizeTitle, setPrizeTitle] = React.useState(null);
+  const [prize, setPrize] = React.useState(null);
+  const [prizeDesc, setPrizeDesc] = React.useState(null);
+  const [roundsDialogOpen, setRoundsDialogOpen] = React.useState(false);
+  const [selectedEditRound, setSelectedEditRound] = React.useState({});
+
 
 
   // const eventTypes = ["Hackathon", "Coding Contest", "Webinar"];
@@ -159,14 +182,19 @@ const EventEdit = (props) => {
     setVenueCollege(event.venue_college);
     setPlatformDetails(event.platform_details);
     setAddressType(event.venue_type);
-    // setParticipantsType(event.o_allowed)
+    setIsTeamed(event.isTeamed);
+    setTeamSize(event.team_size);
+    setRounds(event.rounds);
+    setRules(event.rules);
+    setPrizes(event.prizes);
+    setThemes(event.themes);
     if (event.o_allowed === true) {
       setParticipantsType("open")
     }
     else {
       setParticipantsType("onlycollege")
     }
-    fetch(process.env.REACT_APP_API_URL+'/api/event/get_event_keywords', {
+    fetch(process.env.REACT_APP_API_URL + '/api/event/get_event_keywords', {
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json',
@@ -175,16 +203,15 @@ const EventEdit = (props) => {
       method: 'GET',
     }).then(response => {
       response.json().then(value => {
-        // setColleges(value);
         value.forEach((v) => {
-          if(v.type === "EventTags"){
-            setEventTags((eventTags)=> [...eventTags,v.title]);
+          if (v.type === "EventTags") {
+            setEventTags((eventTags) => [...eventTags, v.title]);
           }
-          else if(v.type === "EventRequirements"){
-            setRequirements((r)=>[...r,v.title]);
+          else if (v.type === "EventRequirements") {
+            setRequirements((r) => [...r, v.title]);
           }
-          else{
-            setEventTypes((r)=>[...r,v.title]);
+          else {
+            setEventTypes((r) => [...r, v.title]);
           }
         })
       })
@@ -195,24 +222,24 @@ const EventEdit = (props) => {
 
   const handleClose = async (event, reason) => {
     if (message === "Saved changes successfully") {
-      // history.replace()
-      // history.replace("/otpverification")
       window.location.reload(false);
     }
     setState({ ...state, open: false });
+  };
+
+  const handleRoundEditDialogClose = () => {
+    setRoundsDialogOpen(false);
   };
 
   async function handleEventPost(e) {
     e.preventDefault();
     setLoading(true);
     var oAllowed = false;
+    console.log(rounds);
     if (participantType === "open") {
       oAllowed = true
     }
-    // console
     try {
-      // console.log("started");
-      // getBase64(image, (result) => {
       var data = new FormData();
       const payload = {
         eventId: event._id,
@@ -224,7 +251,6 @@ const EventEdit = (props) => {
         event_mode: eventMode,
         event_type: eventType,
         tags: eventThemes,
-        // poster: result,
         reg_link: regLink,
         fee: regFees,
         about: about,
@@ -237,10 +263,13 @@ const EventEdit = (props) => {
         venue_type: addressType,
         venue: venue,
         venue_college: venueCollege,
-        platform_details: platformDetails
+        platform_details: platformDetails,
+        rounds: rounds,
+        rules: rules,
+        prizes: prizes,
+        themes: themes
       };
       data = JSON.stringify(payload);
-      // console.log(data);
       fetch(process.env.REACT_APP_API_URL + '/api/updateevent', {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -252,7 +281,6 @@ const EventEdit = (props) => {
       }).then(result => {
         if (result.status === 200) {
           result.json().then(value => {
-            // console.log(value);
             event = value.event;
             if (imageUpdated) {
               var data2 = new FormData()
@@ -287,8 +315,6 @@ const EventEdit = (props) => {
                 type: "success"
               })
             }
-            // history.replace("/home")
-
           })
         }
         else {
@@ -305,8 +331,6 @@ const EventEdit = (props) => {
           })
         }
       })
-
-      // })
     }
     catch (error) {
       setLoading(false);
@@ -331,14 +355,6 @@ const EventEdit = (props) => {
     setSelectedRequirements(values);
   }
 
-  // function handleChange(event) {
-  //   if (event.target.files[0]) {
-  //     setImage(event.target.files[0]);
-  //     const fileName = event.target.files[0].name;
-  //     setImageName(fileName);
-  //   }
-
-  // }
 
   function handleAddressTypeChange(evemt, value) {
     setAddressType(value);
@@ -350,12 +366,10 @@ const EventEdit = (props) => {
     setDesc(event.target.value);
   }
   function handleFeeTypeChange(event, value) {
-    // props.setFeeType(value)
     setFeeType(value);
   }
 
   function handleCollegeChange(event, value) {
-    // props.setCollegeName(value);
     setCollegeName(value);
   }
   function handleEventMode(event) {
@@ -378,22 +392,49 @@ const EventEdit = (props) => {
   //   setVenueCollege(value);
   // }
 
-  function handlePlatformChange(event){
+  function handlePlatformChange(event) {
     setPlatformDetails(event.target.value);
   }
 
   function handleChange(event) {
     if (event.target.files[0]) {
       setImage(event.target.files[0]);
-      //   setImageAsFile(imageFile => (image))
       const url = URL.createObjectURL(event.target.files[0]);
-      //   const fileType = event.target.files[0].type;
       setImageurl(url)
       setImageUpdated(true);
-      //   setImageType(fileType.substr(fileType.indexOf('/') + 1));
     }
 
   }
+
+  const handleRoundEditButton = (data) => () => {
+    setSelectedEditRound(data);
+    setRoundsDialogOpen(true);
+  }
+
+  const handlePrizeAddButton = () => {
+    setPrizes(prizes => [...prizes, { title: prizeTitle,prize: prize, desc: prizeDesc }]);
+    setPrizeTitle(null);
+    setPrizeDesc(null);
+  }
+
+  const handlePrizeDeleteButton = (index, data) => () => {
+    var currentPrizes = prizes;
+    currentPrizes.splice(index);
+    setPrizes(currentPrizes);
+  }
+
+
+  const handlePrizeFieldChange = (title) => (event) => {
+    if (title === "title") {
+        setPrizeTitle(event.target.value)
+    }
+    else if (title === "desc") {
+        setPrizeDesc(event.target.value);
+    }
+    else {
+        setPrize(event.target.value);
+    }
+}
 
 
 
@@ -563,41 +604,6 @@ const EventEdit = (props) => {
                 )}
               />
             </Grid>
-            {/* <Grid item xs={12} lg={6}>
-              <input
-                id="contained-button-file"
-                required
-                type="file"
-                accept="image/*"
-                onChange={handleChange}
-                style={{ display: "none" }}>
-
-              </input>
-
-              <TextField
-                autoComplete='off'
-                // required
-                id="eventposter"
-                name="eventposter"
-                label="Event Poster"
-                component="span"
-                value={imageName}
-                fullWidth
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="start">
-                      <label htmlFor="contained-button-file">
-                        <IconButton component="span" >
-                          <CameraAltIcon></CameraAltIcon>
-                        </IconButton>
-                      </label>
-
-                    </InputAdornment>
-                  ),
-                }}
-              />
-
-            </Grid> */}
             <Grid item xs={12}>
               <FormLabel component="legend">Entry Fee</FormLabel>
               <RadioGroup aria-label="address" name="address" value={feeType || ""} onChange={handleFeeTypeChange} style={{ display: "inline" }}>
@@ -664,18 +670,6 @@ const EventEdit = (props) => {
                 </Select>
               </FormControl>
             </Grid>
-            {/* <Grid item xs={12} lg={6}>
-              <TextField
-                disabled
-                autoComplete='off'
-                required
-                id="organizer"
-                name="organizer"
-                label="Organizer"
-                fullWidth
-                value={organizer || ""}
-              />
-            </Grid> */}
             <Grid item xs={12} lg={6}>
               <Autocomplete
                 multiple
@@ -690,7 +684,7 @@ const EventEdit = (props) => {
                   ))
                 }
                 renderInput={(params) => (
-                  <TextField {...params} label="Requirements" placeholder="Requirements" />
+                  <TextField {...params} label="Prerequisites" placeholder="Requirements" />
                 )}
               />
             </Grid>
@@ -705,8 +699,43 @@ const EventEdit = (props) => {
               <FormLabel component="legend">Address</FormLabel>
               <RadioGroup aria-label="address" name="address" value={addressType} onChange={handleAddressTypeChange} style={{ display: "inline" }}>
                 <FormControlLabel value="College/University" control={<Radio color="default" />} label="College/University" />
-                <FormControlLabel  value="Other" control={<Radio color="default" />} label="Others" />
+                <FormControlLabel value="Other" control={<Radio color="default" />} label="Others" />
               </RadioGroup>
+            </Grid>}
+            <Grid item xs={12}>
+              <FormLabel required component="legend">Participation Type</FormLabel>
+              <RadioGroup required aria-label="address" name="teamed" value={isTeamed ? "team" : "individual"} style={{ display: "inline" }}>
+                <FormControlLabel disabled value="individual" control={<Radio color="default" />} label="Individual" />
+                <FormControlLabel disabled value="team" control={<Radio color="default" />} label="Team" />
+              </RadioGroup>
+            </Grid>
+            {isTeamed && <Grid item xs={12} lg={6}>
+              <TextField
+                disabled
+                autoComplete='off'
+                required
+                type="number"
+                id="maxTeam"
+                name="minTeam"
+                label="Minimum Team Members"
+                fullWidth
+                value={teamSize.min_team_size || ""}
+              // onChange={(e)=>{props.setMinTeamSize(e.target.value)}}
+              />
+            </Grid>}
+            {isTeamed && <Grid item xs={12} lg={6}>
+              <TextField
+                disabled
+                autoComplete='off'
+                required
+                type="number"
+                id="maxTeam"
+                name="maxTeam"
+                label="Maximum Team Members"
+                fullWidth
+                value={teamSize.max_team_size || ""}
+              // onChange={(e)=>{props.setMaxTeamSize(e.target.value)}}
+              />
             </Grid>}
             {eventMode === "Offline" &&
               <Grid item xs={12} lg={6}>
@@ -726,17 +755,6 @@ const EventEdit = (props) => {
                 />
               </Grid>
             }
-            {/* {eventMode === "Offline" && <Grid item xs={12} sm={6}>
-              <Autocomplete
-                fullWidth
-                id="combo-box-demo"
-                options={collegesNames}
-                value={venueCollege}
-                getOptionLabel={(option) => option}
-                onChange={handleVenueCollegeChange}
-                renderInput={(params) => <TextField fullWidth required {...params} label="Venue College" />}
-              />
-            </Grid>} */}
             <Grid item xs={12}>
               <TextField
                 multiline={true}
@@ -753,22 +771,123 @@ const EventEdit = (props) => {
               />
             </Grid>
             {eventMode === "Online" && <Grid item xs={12}>
-            <TextField
-              multiline={true}
-              helperText="Enter link for the platform, you can also add it later"
-              rows="5"
-              variant='outlined'
-              placeholder="Enter details about your online platform"
-              autoComplete='off'
-              // required
-              id="platform"
-              name="platform"
-              label="Platform"
-              fullWidth
-              onChange={handlePlatformChange}
-              value={platformDetails || ""}
-            />
-          </Grid>}
+              <TextField
+                multiline={true}
+                helperText="Enter link for the platform, you can also add it later"
+                rows="5"
+                variant='outlined'
+                placeholder="Enter details about your online platform"
+                autoComplete='off'
+                // required
+                id="platform"
+                name="platform"
+                label="Platform"
+                fullWidth
+                onChange={handlePlatformChange}
+                value={platformDetails || ""}
+              />
+            </Grid>}
+            {regMode === "form" && <Grid item xs={12}>
+              <Typography>Registration Fields</Typography>
+              <Paper component="ul" className={classes.root}>
+                {event.reg_fields.map((data) => {
+                  return (
+                    <li key={data.key}>
+                      <Chip
+                        label={data.title}
+                        className={classes.chip}
+                      />
+                    </li>
+                  );
+                })}
+              </Paper>
+            </Grid>}
+
+            {regMode === "form" && <Grid item xs={12}>
+              <Typography>Rounds</Typography>
+              <Paper component="ul" className={classes.root}>
+                {rounds.map((data) => {
+                  return (
+                    <li key={data.key}>
+                      <Chip
+                        label={data.title}
+                        className={classes.chip}
+                      />
+                      <IconButton onClick={handleRoundEditButton(data)}><EditIcon></EditIcon></IconButton>
+                    </li>
+                  );
+                })}
+              </Paper>
+            </Grid>}
+            <Grid item xs={12}>
+              <TextField
+                multiline={true}
+                helperText="Enter all rules and regulation including eligibility for participation"
+                rows="5"
+                variant='outlined'
+                placeholder="Enter all rules and regulation including eligibility for participation"
+                autoComplete='off'
+                onChange={(e) => { setRules(e.target.value) }}
+                value={rules}
+                id="rules"
+                name="rules"
+                label="Rules"
+                fullWidth
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <TextField
+                multiline={true}
+                helperText="Enter your event themes like healthcare, fintech"
+                rows="5"
+                variant='outlined'
+                placeholder="Enter your event themes like healthcare, fintech"
+                autoComplete='off'
+                onChange={(e) => { setThemes(e.target.value) }}
+                value={themes}
+                id="themes"
+                name="themes"
+                label="Themes"
+                fullWidth
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <FormControl component="fieldset" className={classes.root}>
+                <FormLabel component="legend">Prizes</FormLabel>
+                <Box display="flex" style={{ marginTop: "10px" }}>
+                  <Box>
+                    <TextField onChange={handlePrizeFieldChange("title")} value={prizeTitle || ""} label="Prize Title" variant="outlined" style={{ marginRight: "5px" }}></TextField>
+                  </Box>
+                  <Box>
+                  <TextField onChange={handlePrizeFieldChange("prize")} value={prize || ""} label="Prize" variant="outlined"></TextField>
+                  </Box>
+                  <Box>
+                    <TextField onChange={handlePrizeFieldChange("desc")} value={prizeDesc || ""} label="Prize Description" variant="outlined"></TextField>
+                  </Box>
+                  <Box>
+                    <IconButton onClick={handlePrizeAddButton}>Add</IconButton>
+                  </Box>
+                </Box>
+              </FormControl>
+            </Grid>
+            <Grid>
+              <Paper component="ul" className={classes.root}>
+                {prizes.map((data, index) => {
+                  return (
+                    <li key={data.key}>
+                      <Chip
+                        label={data.title}
+                        onDelete={handlePrizeDeleteButton(index, data)}
+                        className={classes.chip}
+                      />
+                    </li>
+                  );
+                })}
+              </Paper>
+            </Grid>
+
           </Grid>
           <Button
             type="submit"
@@ -782,11 +901,13 @@ const EventEdit = (props) => {
           </Button>
         </form>
       </div>
-
-      {/* </Grid> */}
-      {/* <Box mt={2}>
-        <Copyright />
-      </Box> */}
+      <RoundEditDialog
+        open={roundsDialogOpen}
+        handleClose={handleRoundEditDialogClose}
+        rounds={rounds}
+        setRounds={setRounds}
+        roundData={selectedEditRound}
+      ></RoundEditDialog>
     </Container>
   );
 }

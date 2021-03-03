@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
         position: 'fixed',
         right: theme.spacing(4),
         bottom: theme.spacing(4),
-        left: theme.spacing(13),
+        left: theme.spacing(4),
         padding: theme.spacing(0, 3),
         backgroundColor: theme.palette.background.paper,
         borderRadius: theme.spacing(5),
@@ -72,7 +72,9 @@ export default function JustifyContent(props) {
     }
 
     const handleKeyPress = (e) => {
-        if (newmessage !== null && newmessage !== "") {
+        // console.log(newmessage);
+        if (newmessage.length > 1) {
+            // console.log(newmessage.length);
             if (e.keyCode === 13 && !e.shiftKey) {
                 e.preventDefault();
                 props.handleSend(newmessage);

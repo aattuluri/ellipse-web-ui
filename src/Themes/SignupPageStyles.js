@@ -29,6 +29,9 @@ const useStyles = makeStyles((theme) => ({
       [theme.breakpoints.down('md')]: {
         top: theme.spacing(12),
       }
+    },
+    hidden: {
+      display: 'none'
     }
   }));
 

@@ -1,13 +1,13 @@
-import React, { useEffect } from 'react';
+import React from 'react';
+
+//calender view imports
+import '../Themes/main.scss'
+import FullCalendar from '@fullcalendar/react';
+import dayGridPlugin from '@fullcalendar/daygrid';
+
+//materialui imports
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-// import { Typography } from '@material-ui/core';
-import FullCalendar from '@fullcalendar/react';
-import dayGridPlugin from '@fullcalendar/daygrid'
-import '../Themes/main.scss'
-import EventsDialog from '../Components/EventsDialog';
-// import EventsContext from '../EventsContext';
-// import AuthContext from '../AuthContext';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import Paper from '@material-ui/core/Paper';
@@ -18,8 +18,12 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import Divider from '@material-ui/core/Divider';
 import List from '@material-ui/core/List';
-import ActiveEventsContext from '../ActiveEventsContext';
 import Typography from '@material-ui/core/Typography';
+
+//other componnets
+import EventsDialog from '../Components/EventsDialog';
+import AuthContext from '../AuthContext';
+import ActiveEventsContext from '../ActiveEventsContext';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -29,8 +33,6 @@ const useStyles = makeStyles((theme) => ({
         position: 'absolute',
         right: theme.spacing(1),
         top: theme.spacing(1),
-        // color: theme.palette.grey[500],
-
     },
     rpaper: {
         padding: theme.spacing(1),
@@ -44,8 +46,6 @@ const useStyles = makeStyles((theme) => ({
             display: 'none',
         },
         top: theme.spacing(10),
-        // zIndex: 3,
-        // borderRadius: theme.spacing(50)
     },
     subRpaper: {
         backgroundColor: theme.palette.primary.light,
@@ -88,64 +88,63 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function CalenderPanel({history}) {
-    localStorage.setItem('tabIndex',1)
-    // const { children, value, url, index, ...other } = props;
-    // const user = React.useContext(AuthContext);
-    // const token = localStorage.getItem('token');
+function CalenderPanel({ history }) {
+    localStorage.setItem('tabIndex', 1)
+    const { currentUser } = React.useContext(AuthContext);
     const classes = useStyles();
-    // const [allEvents, setAllEvents] = React.useState([]);
     const [events, setEvents] = React.useState([]);
     const [open, setOpen] = React.useState(false);
     const [selectedEvent, setSelectedEvent] = React.useState([]);
-    const [registeredEvents,setRegisteredEvents] = React.useState([]);
-    // const [image, setImage] = React.useState(null);
-    const {activeEvents} = React.useContext(ActiveEventsContext);
+    const [registeredEvents, setRegisteredEvents] = React.useState([]);
+    const { activeEvents } = React.useContext(ActiveEventsContext);
 
-    useEffect(() => {
+    React.useEffect(() => {
         activeEvents.forEach(y => {
-            // console.log(y.start_time);
             setEvents(events =>
                 [...events, { id: JSON.stringify(y), title: y.name, start: y.start_time, end: y.finish_time }]
             )
         })
         setRegisteredEvents(activeEvents.filter((value) => value.registered === true))
-
     }, [activeEvents])
 
     const handleClose = () => {
         setOpen(false);
-    };
+    }
+
     const handlePostButtonClick = () => {
         history.push('/post')
     }
-    
-    const handleRegisterdEventClick = (event) => () => {
-        setSelectedEvent(event);
-        setOpen(true);
 
+    const handleRegisterdEventClick = (event) => () => {
+        if (event.registered || event.user_id === currentUser.user_id) {
+            history.push(`/event/${event._id}`)
+        } else {
+            setSelectedEvent(event);
+            setOpen(true);
+        }
     }
 
-    function handleRegistrationButton(event) {
+    const handleRegistrationButton = (event) => {
         setOpen(false);
-        // setSelectedEvent(event);
         history.push('/event/register/' + event._id);
     }
 
 
-    function handleEventClick(info) {
-        setSelectedEvent(JSON.parse(info.event.id))
-        setOpen(true);
+    const handleEventClick = (info) => {
+        if (JSON.parse(info.event.id).registered || JSON.parse(info.event.id).user_id === currentUser.user_id) {
+            history.push(`/event/${JSON.parse(info.event.id)._id}`)
+        } else {
+            setSelectedEvent(JSON.parse(info.event.id));
+            setOpen(true);
+        }
     }
+
     return (
         <div>
-            {/* {value === index && ( */}
             <div className={classes.root}>
                 <Grid container component="main" >
 
                     <Grid item xs={12} sm={12} md={3} lg={2} >
-                        {/* <Typography index={0}>Filters</Typography> */}
-                        {/* <Calendar onChange={setCalenderValue} value={calenderValue} ></Calendar> */}
 
                     </Grid>
                     <Grid item xs={12} sm={12} md={9} lg={8} >
@@ -154,55 +153,55 @@ function CalenderPanel({history}) {
                             eventBorderColor="#00bdaa"
                             events={events}
                             eventClick={handleEventClick}
-                            defaultView='dayGridMonth' plugins={[dayGridPlugin]} backgroundColor="black" 
+                            defaultView='dayGridMonth' plugins={[dayGridPlugin]} backgroundColor="black"
                             buttonIcons={false}></FullCalendar>
 
                     </Grid>
                     <Grid item xs={12} sm={12} md={false} lg={2} >
-                    <Fab color="primary" aria-label="add" className={classes.fab} onClick={handlePostButtonClick}>
-                        <AddIcon />
-                    </Fab>
-                    <Paper className={classes.rpaper}>
-                        <Paper className={classes.subRpaper}>
-                            <Button
-                                onClick={handlePostButtonClick}
-                                variant="contained"
-                                fullWidth
-                                size="large"
-                                className={classes.postButton} >
-                                Post Event
-                        </Button>
-                            <List className={classes.sideList}>
-                                <Typography variant="body2">Registered Events</Typography>
-                                {
-                                    registeredEvents.map((event, index) => {
-                                        return <React.Fragment key={index} >
-                                        <ListItem onClick={handleRegisterdEventClick(event)} key={index} button>
-                                            <ListItemAvatar>
-                                                <Avatar  variant="square"
-                                                    alt={event.name}
-                                                    src={process.env.REACT_APP_API_URL+`/api/image?id=${event.poster_url}`}
-                                                />
-                                            </ListItemAvatar>
-                                            <ListItemText  primary={event.name} />
-                                            
-                                        </ListItem>
-                                        <Divider  /></React.Fragment>
-                                    })
-                                }
-                            </List>
-                        </Paper>
-                    </Paper>
+                        <Fab color="primary" aria-label="add" className={classes.fab} onClick={handlePostButtonClick}>
+                            <AddIcon />
+                        </Fab>
+                        <Paper className={classes.rpaper}>
+                            <Paper className={classes.subRpaper}>
+                                <Button
+                                    onClick={handlePostButtonClick}
+                                    variant="contained"
+                                    fullWidth
+                                    size="large"
+                                    className={classes.postButton} >
+                                    Post Event
+                                </Button>
+                                <List className={classes.sideList}>
+                                    <Typography variant="body2">Registered Events</Typography>
+                                    {
+                                        registeredEvents.map((event, index) => {
+                                            return <React.Fragment key={index} >
+                                                <ListItem onClick={handleRegisterdEventClick(event)} key={index} button>
+                                                    <ListItemAvatar>
+                                                        <Avatar variant="square"
+                                                            alt={event.name}
+                                                            src={process.env.REACT_APP_API_URL + `/api/image?id=${event.poster_url}`}
+                                                        />
+                                                    </ListItemAvatar>
+                                                    <ListItemText primary={event.name} />
 
-                </Grid>
+                                                </ListItem>
+                                                <Divider /></React.Fragment>
+                                        })
+                                    }
+                                </List>
+                            </Paper>
+                        </Paper>
+
+                    </Grid>
                 </Grid>
                 <div>
-                    <EventsDialog
+                    {open && <EventsDialog
                         open={open}
                         event={selectedEvent}
                         handleClose={handleClose}
                         handleReg={handleRegistrationButton}
-                        ></EventsDialog>
+                    ></EventsDialog>}
                 </div>
             </div>
         </div>

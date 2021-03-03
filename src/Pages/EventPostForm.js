@@ -20,6 +20,7 @@ import Backdrop from '@material-ui/core/Backdrop';
 import EventPostDetails1 from '../Components/EventPostDetails1';
 import EventPostDetails2 from '../Components/EventPostDetails2';
 import EventPostDetails3 from '../Components/EventPostDetails3';
+import SuccessPanel from '../Components/SuccessPanel';
 import AuthContext from '../AuthContext';
 
 //function for alert
@@ -90,6 +91,9 @@ const useStyles = makeStyles((theme) => ({
     zIndex: theme.zIndex.drawer + 1,
     color: '#fff',
   },
+  hidden: {
+    display: 'none'
+  }
 }));
 
 
@@ -99,7 +103,7 @@ export default function Checkout({ history }) {
   const token = localStorage.getItem('token');
   const { currentUser } = React.useContext(AuthContext);
   const [activeStep, setActiveStep] = React.useState(0);
-  const [steps, setSteps] = React.useState(['About', 'More Details']);
+  const [steps, setSteps] = React.useState(['About','Event Details', 'More Details']);
   const [state, setState] = React.useState({
     open: false,
     vertical: 'top',
@@ -129,6 +133,7 @@ export default function Checkout({ history }) {
   const [eventThemes, setEventThemes] = React.useState([]);
   const [selectedrequirements, setSelectedRequirements] = React.useState([]);
   const [image, setImage] = React.useState(null);
+  const [imageUrl,setImageUrl] = React.useState(null);
   const [addressType, setAddressType] = React.useState(null);
   const [collegeName, setCollegeName] = React.useState(currentUser.college_name);
   const [collegeId, setCollegeId] = React.useState(currentUser.college_id)
@@ -139,6 +144,15 @@ export default function Checkout({ history }) {
   const [fields, setFields] = React.useState([]);
   const [platformDetails, setPlatformDetails] = React.useState('');
   const [imageName, setImageName] = React.useState(null);
+  const [isTeam, setIsTeam] = React.useState(false);
+  const [minTeamSize, setMinTeamSize] = React.useState(1);
+  const [maxTeamSize, setMaxTeamSize] = React.useState(1);
+  const [rounds, setRounds] = React.useState([]);
+  const [rules, setRules] = React.useState(null);
+  const [prizes, setPrizes] = React.useState([]);
+  const [themes, setThemes] = React.useState(null);
+  const [showSuccessPanel, setShowSuccessPanel] = React.useState(false);
+
 
 
 
@@ -170,6 +184,14 @@ export default function Checkout({ history }) {
             setAbout={setAbout}
             handleNext={handleNext}
             setFeeType={setFeeType}
+            poster={image}
+            imageName={imageName}
+            setImageName={setImageName}
+            setPoster={setImage}
+            imageUrl = {imageUrl}
+            setImageUrl={setImageUrl}
+            regFees={fees}
+            setFees={setFees}
             steps={steps}
             setSteps={setSteps} />);
       case 1:
@@ -193,6 +215,12 @@ export default function Checkout({ history }) {
             participantsType={participantsType}
             platformDetails={platformDetails}
             poster={image}
+            isTeam={isTeam}
+            minTeamSize={minTeamSize}
+            maxTeamSize={maxTeamSize}
+            setIsTeam={setIsTeam}
+            setMinTeamSize={setMinTeamSize}
+            setMaxTeamSize={setMaxTeamSize}
             imageName={imageName}
             setImageName={setImageName}
             setPlatformDetails={setPlatformDetails}
@@ -209,26 +237,39 @@ export default function Checkout({ history }) {
             setVenueCollege={setVenueCollege}
             setAbout={setAbout}
             setParticipantsType={setParticipantsType}
-            handleNext={registrationMode === "form" ? handleNext : handlePostwithoutregFileds} />
+            handleNext={handleNext} />
         );
       case 2:
         return (
           <EventPostDetails3
             handleBack={handleBack}
             fields={fields}
-            setFields={setRegFields} handlePost={handleEventPost}>
+            setFields={setRegFields}
+            rounds={rounds}
+            setRounds={setRounds}
+            rules={rules}
+            setRules={setRules}
+            prizes={prizes}
+            setPrizes={setPrizes}
+            themes={themes}
+            setThemes={setThemes}
+            regMode={registrationMode}
+            setRegMode={setRegistrationMode}
+            setRegLink={setRegLink}
+            regLink={regLink}
+            handlePost={handleEventPost}>
           </EventPostDetails3>);
       default:
         throw new Error('Unknown step');
     }
   }
 
-
   const handleEventPost = (allFields) => {
     var oAllowed = false;
     if (participantsType === "open") {
       oAllowed = true
     }
+    // console.log(themes)
     setLoading(true);
     try {
       var data = new FormData();
@@ -255,7 +296,13 @@ export default function Checkout({ history }) {
         reg_fields: allFields,
         reg_mode: registrationMode,
         o_allowed: oAllowed,
-        platform_details: platformDetails
+        platform_details: platformDetails,
+        isTeamed: isTeam,
+        team_size: { min_team_size: minTeamSize, max_team_size: maxTeamSize },
+        rounds: rounds,
+        rules: rules,
+        prizes: prizes,
+        themes: themes
       };
       data = JSON.stringify(payload);
       fetch(process.env.REACT_APP_API_URL + '/api/events', {
@@ -281,6 +328,7 @@ export default function Checkout({ history }) {
               if (response.status === 200) {
                 response.json().then(val => {
                   setLoading(false);
+                  setShowSuccessPanel(true)
                   setState({
                     open: true,
                     vertical: 'top',
@@ -293,13 +341,14 @@ export default function Checkout({ history }) {
               }
               else {
                 setLoading(false);
+                setShowSuccessPanel(true);
                 setState({
                   open: true,
                   vertical: 'top',
                   horizontal: 'center',
                   message: "Poster upload is not successfull try again in edit event in your events",
                   type: "error",
-                  autoHide: '5000',
+                  autoHide: '3000',
                 })
               }
             })
@@ -308,7 +357,16 @@ export default function Checkout({ history }) {
         }
         else {
           result.json().then(value => {
+            setLoading(false);
             // console.log(value);
+            setState({
+              open: true,
+              vertical: 'top',
+              horizontal: 'center',
+              message: "Something went wrong try again",
+              type: "errors",
+              autoHide: "4000"
+            })
           })
         }
       })
@@ -327,14 +385,14 @@ export default function Checkout({ history }) {
       })
     }
   }
-
+  // setLoading(false);
   function setRegFields(f) {
     setFields(f);
   }
 
-  function handlePostwithoutregFileds() {
-    handleEventPost(null);
-  }
+  // function handlePostwithoutregFileds() {
+  //   handleEventPost(null);
+  // }
 
   const handleNext = () => {
     setActiveStep(activeStep + 1);
@@ -342,6 +400,7 @@ export default function Checkout({ history }) {
 
   const handleBack = () => {
     setActiveStep(activeStep - 1);
+    // setIsTeam(false)
   };
 
   function handleCloseButton() {
@@ -369,33 +428,38 @@ export default function Checkout({ history }) {
       </Snackbar>
       {<Backdrop open={loading} className={classes.backdrop}><CircularProgress></CircularProgress></Backdrop>}
       <main className={classes.layout}>
+
         <IconButton aria-label="close" className={classes.closeButton} onClick={handleCloseButton}>
           <CloseIcon fontSize="large" />
         </IconButton>
         <Paper className={classes.paper}>
-          <Typography component="h1" variant="h4" align="center">
-            Post your Event
+          <SuccessPanel type="eventSuccess" showSuccessPanel={showSuccessPanel}></SuccessPanel>
+          <div className={showSuccessPanel && classes.hidden}>
+            <Typography component="h1" variant="h4" align="center">
+              Post your Event
           </Typography>
-          <Stepper activeStep={activeStep} className={classes.stepper}>
-            {steps.map((label) => (
-              <Step key={label}>
-                <StepLabel>{label}</StepLabel>
-              </Step>
-            ))}
-          </Stepper>
-          <React.Fragment>
-            {activeStep === steps.length ? (
-              <React.Fragment>
-                <Typography variant="h5" gutterBottom>
-                  Thank you.
-                </Typography>
-              </React.Fragment>
-            ) : (
+            <Stepper activeStep={activeStep} className={classes.stepper}>
+              {steps.map((label) => (
+                <Step key={label}>
+                  <StepLabel>{label}</StepLabel>
+                </Step>
+              ))}
+            </Stepper>
+
+            <React.Fragment>
+              {activeStep === steps.length ? (
                 <React.Fragment>
-                  {getStepContent(activeStep)}
+                  <Typography variant="h5" gutterBottom>
+                    Thank you.
+                </Typography>
                 </React.Fragment>
-              )}
-          </React.Fragment>
+              ) : (
+                  <React.Fragment>
+                    {getStepContent(activeStep)}
+                  </React.Fragment>
+                )}
+            </React.Fragment>
+          </div>
         </Paper>
         <Copyright />
       </main>

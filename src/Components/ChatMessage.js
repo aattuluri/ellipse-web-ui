@@ -7,7 +7,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import InfoIcon from '@material-ui/icons/Info';
 import { ListItemAvatar } from '@material-ui/core';
-import Box from '@material-ui/core/Box';
+// import Box from '@material-ui/core/Box';
 import Linkify from 'react-linkify';
 
 
@@ -51,9 +51,18 @@ function ChatMessage(props) {
             <ListItemText
                 primary={
                     <React.Fragment>
-                        <Typography component="h6" variant="body2">
+                        <Typography component="h5" variant="body1">
                             {message.user_name+userType}
+                            <Typography
+                                component="span"
+                                variant="body2"
+                                color="textSecondary"
+                                className={classes.date}
+                            >
+                                {"   " + date.toLocaleTimeString([], { timeStyle: 'short' })}
+                            </Typography>
                         </Typography>
+                        
 
                         {/* <Typography component="span" variant="body2" color="textSecondary">
                             {userType}
@@ -70,9 +79,8 @@ function ChatMessage(props) {
                                     </a>
                                 )}
                             >{message.message}</Linkify>
-                            {/* <Linkify properties={{ target: '_blank', style: { color: 'red', fontWeight: 'bold' } }}>{message.message}</Linkify> */}
                         </Typography>
-                        <Box>
+                        {/* <Box>
                             <Typography
                                 component="span"
                                 variant="body2"
@@ -81,7 +89,7 @@ function ChatMessage(props) {
                             >
                                 {"   " + date.toLocaleTimeString([], { timeStyle: 'short' })}
                             </Typography>
-                        </Box>
+                        </Box> */}
                     </React.Fragment>}
             />
         </ListItem>

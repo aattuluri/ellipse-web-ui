@@ -1,15 +1,21 @@
 import React from 'react';
 import { cleanup } from '@testing-library/react';
 
-//Materail imports
-import { Grid, Typography } from '@material-ui/core';
+//Material ui imports
 import { makeStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
 import Chip from '@material-ui/core/Chip';
 import Avatar from '@material-ui/core/Avatar';
 import Box from '@material-ui/core/Box';
-// import AuthContext from '../AuthContext';
-import ImageDialog from '../Components/ImageDialog';
+import GroupIcon from '@material-ui/icons/Group';
+import PersonIcon from '@material-ui/icons/Person';
+import Divider from '@material-ui/core/Divider';
+import EmojiEventsIcon from '@material-ui/icons/EmojiEvents';
+import Button from '@material-ui/core/Button';
 
+//other component imports
+import ImageDialog from '../Components/ImageDialog';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -20,40 +26,44 @@ const useStyles = makeStyles((theme) => ({
         alignContent: "center"
 
     },
-    media: {
-
-    },
-
     avatar: {
         backgroundColor: theme.palette.primary.main,
         width: theme.spacing(7),
         height: theme.spacing(7),
         marginRight: theme.spacing(1)
     },
-    buttonDiv: {
-        marginLeft: 'auto',
-    },
-    button: {
-        margin: theme.spacing(0.5),
-    },
-    large: {
-        width: theme.spacing(17),
-        height: theme.spacing(17),
-    },
-    tab: {
-        flexGrow: 1,
-        // maxWidth: 800,
-        background: theme.palette.secondary.main,
-        alignItems: 'center',
-    },
     adminDetails: {
         display: "flex",
         justifyContent: "flex-start",
         marginTop: theme.spacing(2)
     },
-    root0: {
+    boxItem: {
         display: "flex",
         justifyContent: "center",
+        minWidth: "20%",
+
+    },
+    gridMain: {
+        borderRadius: theme.spacing(2),
+        backgroundColor: theme.palette.secondary.main,
+        marginTop: theme.spacing(1),
+        border: `2px solid #00bdaa1A`,
+        elevation: 5
+    },
+    gridItem: {
+        padding: theme.spacing(1),
+        elevation: "5"
+    },
+    divider: {
+        backgroundColor: theme.palette.primary.main,
+        height: "1px",
+        margin: theme.spacing(1),
+        opacity: "0.2"
+    },
+    overFlowText: {
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        maxHeight: "100px"
     }
 }));
 
@@ -63,20 +73,25 @@ function AboutEventPanel(props) {
     const { children, value, url, index, ...other } = props;
     const event = props.event;
     const tags = event.tags;
-    // const requirements = event.requirements;
+
     const [requirements, setRequirements] = React.useState([])
     const [timeLabel, setTimeLabel] = React.useState("Registration Ends in");
     const [adminDetails, setAdminDetails] = React.useState({});
     const [imageDialogOpen, setImageDialogOpen] = React.useState(false);
-    const [notRegistered,setNotRegistered] = React.useState(false);
-    React.useEffect(()=>{
-        if(props.notRegistered){
+    const [notRegistered, setNotRegistered] = React.useState(false);
+    const [rulesHeight, setRulesHeight] = React.useState(true);
+    const [themesHeight, setThemesHeight] = React.useState(true);
+
+
+    React.useEffect(() => {
+        if (props.notRegistered) {
             setNotRegistered(true)
         }
         else {
             setNotRegistered(false)
         }
-    },[props])
+    }, [props])
+
 
     React.useEffect(() => {
         if (event.requirements !== undefined) {
@@ -91,15 +106,16 @@ function AboutEventPanel(props) {
                 },
                 method: 'GET',
             }).then(response => {
-                response.json().then(value => {
-                    setAdminDetails(value);
-                })
+                if (response.status === 200) {
+                    response.json().then(value => {
+                        setAdminDetails(value);
+                    })
+                }
             })
         }
     }, [event, token])
-    // console.log(event)
-    // console.log(requirements);
 
+    // code for timer
     const calculateTimeLeft = () => {
 
         var difference = +new Date(event.registration_end_time) - +new Date();
@@ -163,14 +179,21 @@ function AboutEventPanel(props) {
         );
     });
 
-    function handleImageDialogClose() {
+    const handleImageDialogClose = () => {
         setImageDialogOpen(false);
     }
-    function handleImageDialogOpen(event) {
-        // console.log(image);
-        // setSelectedEvent(event);
+    const handleImageDialogOpen = () => {
         setImageDialogOpen(true);
     }
+
+    const handleRulesViewMoreButton = () => {
+        setRulesHeight((height) => { return !height })
+    }
+
+    const handleThemesViewMoreButton = () => {
+        setThemesHeight((height) => { return !height })
+    }
+
     return (
         <div
             role="tabpanel"
@@ -180,73 +203,223 @@ function AboutEventPanel(props) {
                 <div className={classes.root}>
                     <Grid container component="main">
                         <Grid item xs={12} sm={12} md={4} lg={4} >
-                            <img onClick={handleImageDialogOpen} style={{ width: '200px',height: '180px' }} alt="event poster" src={process.env.REACT_APP_API_URL + `/api/image?id=${event.poster_url}`}  ></img>
+                            <img
+                                onClick={handleImageDialogOpen}
+                                style={{ width: '240px', height: '180px' }}
+                                alt="event poster"
+                                src={process.env.REACT_APP_API_URL + `/api/image?id=${event.poster_url}`}></img>
                         </Grid>
                         <Grid item xs={12} sm={12} md={8} lg={8}>
                             <Typography>{event.description} </Typography>
-                            <Typography style={{ marginTop: "20px", marginBottom: '20' }}>{timeLabel}</Typography>
-                            <Typography variant="h5">{timerComponents.length ? timerComponents : <span>Time's up!</span>}</Typography>
-                            {/* <Typography>Starts at {event.start_time}</Typography>
-                        <Typography>Ends at {event.finish_time}</Typography> */}
+                            <Typography
+                                style={{ marginTop: "20px", marginBottom: '20' }}>
+                                {timeLabel}
+                            </Typography>
+                            <Typography
+                                variant="h5">
+                                {timerComponents.length ? timerComponents : <span>Time's up!</span>}
+                            </Typography>
                             <div style={{ marginTop: '10px' }}>
-                                <Chip variant="outlined" color="inherit" label={event.event_type}></Chip>
-
-                                <Chip style={{ marginLeft: '5px' }} variant="outlined" color="inherit" label={event.fee_type}></Chip>
-                                <Chip style={{ marginLeft: '5px' }} variant="outlined" color="inherit" label={event.event_mode}></Chip>
+                                <Chip
+                                    variant="outlined"
+                                    color="inherit"
+                                    label={event.event_type}></Chip>
+                                <Chip
+                                    style={{ marginLeft: '5px' }}
+                                    variant="outlined"
+                                    color="inherit"
+                                    label={event.fee_type}></Chip>
+                                <Chip style={{ marginLeft: '5px' }}
+                                    variant="outlined"
+                                    color="inherit"
+                                    label={event.event_mode}></Chip>
+                                {event.isTeamed && <Chip
+                                    style={{ marginLeft: '5px' }}
+                                    variant="outlined"
+                                    color="inherit"
+                                    label={<Box display="flex">
+                                        <Box><GroupIcon></GroupIcon></Box>
+                                        <Box
+                                            marginTop={0.7}
+                                            marginLeft={0.5}>
+                                            {"  " + event.team_size.min_team_size + "-" + event.team_size.max_team_size}
+                                        </Box>
+                                    </Box>}></Chip>}
+                                {!event.isTeamed && <Chip
+                                    style={{ marginLeft: '5px' }}
+                                    variant="outlined"
+                                    color="inherit"
+                                    label={
+                                        <Box display="flex">
+                                            <Box><PersonIcon></PersonIcon></Box>
+                                            <Box marginTop={0.7}>Individual</Box>
+                                        </Box>}></Chip>}
                                 {tags != null && tags.map(val => {
-                                    return <Chip key={val} style={{ marginLeft: '5px' }} variant="outlined" color="inherit" label={val}></Chip>
+                                    return <Chip
+                                        key={val}
+                                        style={{ marginLeft: '5px' }}
+                                        variant="outlined"
+                                        color="inherit"
+                                        label={val}></Chip>
                                 })}
                             </div>
-
                         </Grid>
                         <Grid item xs={12}>
-
                             <Box>
-                                <Box className={classes.root0}>
-                                    <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h4">About</Typography>
-                                </Box>
-                                <Box className={classes.root0}>
-                                    <Typography color="textSecondary" variant="body2">
-                                        {
-                                            event.about
-                                        }
-                                    </Typography>
-                                </Box>
-                                <Box className={classes.root0}>
-                                    {requirements !== null && requirements.length !== 0 && <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Requirements</Typography>}
-                                </Box>
-                                <Box className={classes.root0}>
-                                    {
-                                        requirements.length !== 0 && requirements.map(val => {
-                                            return <Chip key={val} variant="outlined" color="inherit" label={val}></Chip>
-                                        })
-                                    }
-                                </Box>
-                                <Box className={classes.root0}>
-                                    {event.event_mode === "Offline" && <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Venue Details</Typography>}
-                                </Box>
-                                <Box className={classes.root0}>
-                                    {event.event_mode === "Offline" && <Typography color="textSecondary" variant="body2">{event.venue}</Typography>}
-                                </Box>
-                                <Box className={classes.root0}>
-                                    {event.event_mode === "Offline" && <Typography color="textSecondary" variant="body2">{event.venue_college}</Typography>}
-                                </Box>
-                                <Box className={classes.root0}>
-                                    {event.fee_type === "Paid" && <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Fee Details</Typography>}
-                                </Box>
-                                <Box className={classes.root0}>
-                                    {event.fee_type === "Paid" && <Typography color="textSecondary" variant="body2">{"Rs " + event.fee}</Typography>}
-                                </Box>
-                                <Box className={classes.root0}>
-                                    {event.event_mode === "Online" && <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Platform Details</Typography>}
-                                </Box>
-                                <Box className={classes.root0}>
-                                    {event.event_mode === "Online" && <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="body2">{event.platform_details}</Typography>}
-                                </Box>
-                                {!notRegistered && <Box className={classes.root0}>
+                                <Grid container component="main" className={classes.gridMain}>
+                                    <Grid item xs={12} className={classes.gridItem}>
+                                        <Box className={classes.boxItem}>
+                                            <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h4">About</Typography>
+                                        </Box>
+                                        <Box className={classes.boxItem}>
+                                            <Typography color="textSecondary" variant="body1">
+                                                {
+                                                    event.about
+                                                }
+                                            </Typography>
+                                        </Box>
+                                        <Divider flexItem className={classes.divider}></Divider>
+                                    </Grid>
+                                    {requirements !== null && requirements.length !== 0 && <Grid item xs={12} md={6} className={classes.gridItem}>
+                                        <Box className={classes.boxItem}>
+                                            {requirements !== null && requirements.length !== 0 && <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Requirements</Typography>}
+                                        </Box>
+                                        <Box className={classes.boxItem}>
+                                            {
+                                                requirements.length !== 0 && requirements.map(val => {
+                                                    return <Chip key={val} variant="outlined" color="inherit" label={val}></Chip>
+                                                })
+                                            }
+                                        </Box>
+                                    </Grid>}
+
+                                    {event.event_mode === "Offline" && <Grid item xs={12} md={6} className={classes.gridItem}>
+                                        <Box className={classes.boxItem}>
+                                            {event.event_mode === "Offline" && <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Venue Details</Typography>}
+                                        </Box>
+                                        <Box className={classes.boxItem}>
+                                            {event.event_mode === "Offline" && <Typography color="textSecondary" variant="body2">{event.venue}</Typography>}
+                                        </Box>
+                                        <Box className={classes.boxItem}>
+                                            {event.event_mode === "Offline" && <Typography color="textSecondary" variant="body2">{event.venue_college}</Typography>}
+                                        </Box>
+                                    </Grid>}
+                                    {event.fee_type === "Paid" && <Grid item xs={12} md={6} className={classes.gridItem}>
+                                        <Box className={classes.boxItem}>
+                                            {event.fee_type === "Paid" && <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Fee Details</Typography>}
+                                        </Box>
+                                        <Box className={classes.boxItem}>
+                                            {event.fee_type === "Paid" && <Typography color="textSecondary" variant="body2">{"Rs " + event.fee}</Typography>}
+                                        </Box>
+                                    </Grid>}
+                                    {event.event_mode === "Online" && event.platform_details !== null && event.platform_details !== "" && <Grid itam xs={12} md={6} className={classes.gridItem}>
+                                        <Box className={classes.boxItem}>
+                                            {event.event_mode === "Online" && <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Platform Details</Typography>}
+                                        </Box>
+                                        <Box className={classes.boxItem}>
+                                            {event.event_mode === "Online" && <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="body2">{event.platform_details}</Typography>}
+                                        </Box>
+                                    </Grid>}
+                                </Grid>
+
+
+                                {event.rounds !== undefined && event.rounds.length > 0 && <Grid container component="main" className={classes.gridMain}>
+                                    <Grid item xs={12}>
+                                        <Box display="flex" justifyContent="flex-start">
+                                            <Box className={classes.boxItem} margin={2}>
+                                                {event.rounds !== undefined && event.rounds.length > 0 && <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Rounds Details</Typography>}
+                                            </Box>
+                                            <Box>
+                                                <Divider orientation="vertical"></Divider>
+                                            </Box>
+                                            <Box flexGrow={1}></Box>
+                                            <Box className={classes.boxItem} margin={2}>
+                                                {event.rounds !== undefined && event.rounds.length > 0 && <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">
+                                                    {
+                                                        event.rounds.map((val, index) => {
+                                                            return <Typography>{val.title + " - " + val.description}</Typography>
+                                                        })
+                                                    }
+                                                </Typography>}
+                                            </Box>
+                                            <Box flexGrow={1}></Box>
+                                        </Box>
+
+                                    </Grid>
+                                </Grid>}
+
+
+                                {event.prizes !== undefined && event.prizes !== null && event.prizes.length > 0 && <Grid container component="main" className={classes.gridMain}>
+                                    <Grid item xs={12}>
+                                        <Box display="flex" justifyContent="flex-start">
+                                            <Box style={{ marginLeft: "30px" }}>
+                                                {event.prizes !== undefined && event.prizes.length > 0 && <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Prizes</Typography>}
+                                            </Box>
+
+                                        </Box>
+                                        {event.prizes !== undefined && event.prizes.length > 0 && <Box display="flex" justifyContent="center" flexWrap="wrap" style={{ marginTop: "20px", marginBottom: '20' }}>
+                                            {
+                                                event.prizes.map((val, index) => {
+                                                    return <Box padding={1} justifyContent="center" style={{ maxWidth: "500px" }}>
+                                                        <Box display="flex" justifyContent="center"><EmojiEventsIcon fontSize="large" color="primary"></EmojiEventsIcon></Box>
+                                                        <Box display="flex" justifyContent="center"><Typography>{val.title}</Typography></Box>
+                                                        <Box display="flex" justifyContent="center"><Typography variant="h5">{val.prize}</Typography></Box>
+                                                        <Box display="flex" justifyContent="center"><Typography color="textSecondary">{val.desc}</Typography></Box>
+                                                    </Box>
+                                                })
+                                            }
+                                        </Box>}
+                                    </Grid>
+                                </Grid>}
+                                <Grid container component="main" className={classes.gridMain} >
+
+
+                                    {event.themes !== undefined && event.themes !== null && event.themes !== "" &&
+                                        <Grid item xs={12} md={6} className={classes.gridItem}>
+                                            <Box style={{ marginLeft: "30px" }}>
+                                                <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Themes</Typography>
+                                            </Box>
+                                            <div className={themesHeight && classes.overFlowText} style={{ marginTop: "5px" }} whiteSpace="normal">
+                                                {event.themes.split("\n").map((val, index) => {
+                                                    if (val === "") {
+                                                        return <br></br>
+                                                    }
+                                                    return <Box style={{ marginLeft: "45px" }} whiteSpace="normal">
+                                                        <Typography color="textSecondary" variant="body2" whiteSpace="normal">
+                                                            {val}
+                                                        </Typography>
+                                                    </Box>
+                                                })}
+                                            </div>
+                                            <Button onClick={handleThemesViewMoreButton} style={{ marginLeft: "45px" }} color="primary">{themesHeight ? "View More" : "hide"}</Button>
+                                        </Grid>}
+                                    {event.rules !== undefined && event.rules !== null && event.rules !== "" &&
+                                        <Grid item xs={12} md={6} className={classes.gridItem} >
+                                            <Box style={{ marginLeft: "30px" }}>
+                                                <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Rules</Typography>
+                                            </Box>
+                                            <div className={rulesHeight && classes.overFlowText} style={{ marginTop: "5px" }} whiteSpace="normal">
+                                                {event.rules.split("\n").map((val, index) => {
+                                                    if (val === "") {
+                                                        return <br></br>
+                                                    }
+                                                    return <Box style={{ marginLeft: "45px" }} whiteSpace="normal">
+                                                        <Typography color="textSecondary" variant="body2" whiteSpace="normal">
+                                                            {val}
+                                                        </Typography>
+                                                    </Box>
+                                                })}
+
+                                            </div>
+                                            <Button onClick={handleRulesViewMoreButton} style={{ marginLeft: "45px" }} color="primary">{rulesHeight ? "View More" : "hide"}</Button>
+
+                                        </Grid>}
+                                </Grid>
+
+                                {!notRegistered && <Box className={classes.boxItem}>
                                     <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Organised By</Typography>
                                 </Box>}
-                                {!notRegistered && <Box className={classes.root0}>
+                                {!notRegistered && <Box className={classes.boxItem}>
                                     <Box className={classes.adminDetails}>
                                         <Box>
                                             <Avatar className={classes.avatar} alt={adminDetails.name} src={adminDetails.profile_pic !== null && process.env.REACT_APP_API_URL + `/api/image?id=${adminDetails.profile_pic}`} />
@@ -263,13 +436,8 @@ function AboutEventPanel(props) {
                                 </Box>}
                             </Box>
                         </Grid>
-                        <Grid item xs={12}>
-                        </Grid>
-                        <Grid>
-                        </Grid>
                     </Grid>
                     <ImageDialog
-                        // image={selectedImage}
                         event={event}
                         open={imageDialogOpen}
                         handleClose={handleImageDialogClose}>

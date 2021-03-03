@@ -1,7 +1,7 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
-import { Typography} from '@material-ui/core';
+import { IconButton, Typography } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -15,6 +15,8 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import AuthContext from '../AuthContext';
+import InputAdornment from "@material-ui/core/InputAdornment";
+import TodayIcon from '@material-ui/icons/Today';
 
 
 
@@ -47,12 +49,11 @@ const useStyles = makeStyles((theme) => ({
         position: 'sticky',
         // top: theme.spacing(10),
         marginLeft: theme.spacing(1),
-
         [theme.breakpoints.down('sm')]: {
             display: 'none',
             // top: theme.spacing(20)
         },
-    
+
     },
     root2: {
         marginTop: theme.spacing(5),
@@ -80,7 +81,7 @@ const useStyles = makeStyles((theme) => ({
 function SortLeftPanel(props) {
     const classes = useStyles();
     // const user = JSON.parse(localStorage.getItem('user'));
-    const {currentUser} = React.useContext(AuthContext);
+    const { currentUser } = React.useContext(AuthContext);
     // const token = localStorage.getItem('token');
     // const [feeChecked, setFeeChecked] = React.useState([0]);
     // const [modeChecked, setFeeChecked] = React.useState([0]);
@@ -111,7 +112,7 @@ function SortLeftPanel(props) {
 
     return (
         <div>
-            <Paper className={classes.root}>
+            <Paper elevation="0" className={classes.root}>
                 <Typography index={0}>Filters</Typography>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                     <DatePicker
@@ -126,9 +127,18 @@ function SortLeftPanel(props) {
                         // defaultValue=''
                         value={props.sortStartDate}
                         onChange={props.handleSortDateChange}
-                        // KeyboardButtonProps={{
-                        //     'aria-label': 'change date',
-                        // }}
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment>
+                                    <IconButton><TodayIcon></TodayIcon></IconButton>
+
+                                </InputAdornment>
+                            )
+                        }}
+
+                    // KeyboardButtonProps={{
+                    //     'aria-label': 'change date',
+                    // }}
                     />
                     <DatePicker
                         //   minDate={Date.now()}
@@ -142,9 +152,17 @@ function SortLeftPanel(props) {
                         // defaultValue=''
                         value={props.sortEndDate}
                         onChange={props.handleEndSortDateChange}
-                        // KeyboardButtonProps={{
-                        //     'aria-label': 'change date',
-                        // }}
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment>
+                                    <IconButton><TodayIcon></TodayIcon></IconButton>
+
+                                </InputAdornment>
+                            )
+                        }}
+                    // KeyboardButtonProps={{
+                    //     'aria-label': 'change date',
+                    // }}
                     />
                 </MuiPickersUtilsProvider>
                 {/* <FormControl fullWidth >
@@ -213,7 +231,7 @@ function SortLeftPanel(props) {
                         {["All", `${currentUser.college_name}`].map((value) => {
 
                             return (
-                                <ListItem key={value} role={undefined} dense button >
+                                <ListItem key={value} role={undefined} dense button wrap>
                                     <ListItemIcon>
                                         <FormControlLabel value={value} control={<Radio color="default" />} label={value} />
                                     </ListItemIcon>

@@ -154,13 +154,13 @@ function Eventcard(props) {
           </div>
         }
         title={
-          <Typography noWrap variant="h5" color="textPrimary" component="p">
+          <Typography variant="h5" color="textPrimary" component="p">
             {event.name}
           </Typography>
         }
         subheader={
           <React.Fragment>
-            <Typography variant="body1" color="textSecondary" component="p">
+            <Typography style={{textOverflow:"ellipsis",overflow:"hidden",height:"50px"}} variant="body1" color="textSecondary" component="p">
               {event.description}
             </Typography>
             <Chip style={{ marginRight: "4px", marginTop: "4px" }} variant="outlined" color="inherit" size="small" label={event.event_mode}></Chip>

@@ -13,9 +13,10 @@ import FormControl from '@material-ui/core/FormControl';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Chip from '@material-ui/core/Chip';
 import { Grid } from '@material-ui/core';
-import {useTheme } from '@material-ui/core/styles';
-
-
+import { useTheme } from '@material-ui/core/styles';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import Radio from '@material-ui/core/Radio';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 
 
@@ -23,26 +24,44 @@ export default function FormDialog(props) {
   const theme = useTheme();
   const [name, setName] = React.useState(null);
   const [type, setType] = React.useState(null);
+  const [required, setRequired] = React.useState(true);
   const fieldOptions = [];
   const [selectedOptions, setSelectedOptions] = React.useState(['option1', 'option2']);
-  function handleNameChange(event) {
+
+
+  const handleNameChange = (event) => {
     setName(event.target.value);
   }
-  function handleTypeChange(event) {
+  const handleTypeChange = (event) => {
     setType(event.target.value);
   }
-  function handleOptionsChange(event, values) {
+  const handleOptionsChange = (event, values) => {
     setSelectedOptions(values);
   }
-  function handleAddButton() {
-    if (type !== "radiobuttons" && type !== "checkboxes" && type !== "dropdown") {
-      props.handleAdd({ [name]: { 'title': name, 'field': type, 'options': [] } }, name);
+
+  const handleAddButton = () => {
+    if (name != null && type != null) {
+      if (type !== "radiobuttons" && type !== "checkboxes" && type !== "dropdown") {
+        props.handleAdd({ [name]: { 'title': name, 'field': type, req: required, 'options': [] } }, name);
+      }
+      else {
+        props.handleAdd({ [name]: { 'title': name, 'field': type, req: required, 'options': selectedOptions } }, name);
+      }
+      setName(null);
+      setType(null);
+      setRequired(true);
+      setSelectedOptions(['option1', 'option2']);
+      props.handleClose()
+    }
+  }
+
+  const handleradioChange = (event, value) => {
+    if (value === "required") {
+      setRequired(true);
     }
     else {
-      props.handleAdd({ [name]: { 'title': name, 'field': type, 'options': selectedOptions } }, name);
+      setRequired(false);
     }
-    props.handleClose()
-
   }
 
 
@@ -72,16 +91,16 @@ export default function FormDialog(props) {
             </Grid>
             <Grid item xs={12}>
               <FormControl fullWidth required>
-                <InputLabel htmlFor="outlined-age-native-simple">Type</InputLabel>
+                <InputLabel htmlFor="type">Type</InputLabel>
                 <Select
                   fullWidth
                   native
                   label="Type"
                   inputProps={{
                     name: 'type',
-                    id: 'outlined-age-native-simple',
+                    id: 'type',
                   }}
-                  value={props.eventMode}
+                  value={type}
                   onChange={handleTypeChange}
                 >
                   <option aria-label="None" value="" />
@@ -92,8 +111,15 @@ export default function FormDialog(props) {
                   <option value="radiobuttons">Radio Button</option>
                   <option value="checkboxes">Check Box</option>
                   <option value="link">Link</option>
+                  <option value="file">File Upload</option>
                 </Select>
               </FormControl>
+            </Grid>
+            <Grid item xs={12}>
+              <RadioGroup required name="variant" defaultValue="required" onChange={handleradioChange} style={{ display: "inline" }}>
+                <FormControlLabel value="required" control={<Radio color="default" />} label="Required" />
+                <FormControlLabel value="optional" control={<Radio color="default" />} label="Optional" />
+              </RadioGroup>
             </Grid>
             {(type === "radiobuttons" || type === "checkboxes" || type === "dropdown") &&
               <Grid item xs={12}>
