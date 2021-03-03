@@ -177,7 +177,7 @@ export default function ViewSubmissionPage(props) {
                                         <Typography>{value.title}</Typography>
                                         {
                                             ks.map((val, index) => {
-                                                if (roundInfo[0].fields[index].field === "file_upload") {
+                                                if (roundInfo[0].fields[index].field === "file") {
                                                     return <React.Fragment>
                                                         <Typography>{val}</Typography>
                                                         <IconButton download target="_blank" href={process.env.REACT_APP_API_URL + `/api/event/registration/get_file?id=${value[val]}`} size="small" color="primary"><GetAppIcon></GetAppIcon></IconButton>

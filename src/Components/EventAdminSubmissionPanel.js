@@ -350,7 +350,8 @@ function EventAdminSubmissionPanel(props) {
                                                             <Button onClick={handleRoundClickButton(value, v)} variant="outlined" className={classes.roundButton}>
                                                                 {value.title}
                                                             </Button>
-                                                            {!value.submission_access && <Button onClick={handleAccessButton(false, v.user_id, value.title)}>Give Access</Button>}
+                                                            {!value.submission_access && <Button disabled={loading} onClick={handleAccessButton(false, v.user_id, value.title)}>Give Access</Button>}
+                                                            {value.submission_access && <Button disabled={loading} onClick={handleRemoveAccessButton(false, v.user_id, value.title,v._id)}>Remove Access</Button>}
                                                             <br></br>
                                                         </React.Fragment>
                                                     })}
