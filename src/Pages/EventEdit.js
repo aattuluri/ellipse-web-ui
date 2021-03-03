@@ -235,7 +235,6 @@ const EventEdit = (props) => {
     e.preventDefault();
     setLoading(true);
     var oAllowed = false;
-    console.log(rounds);
     if (participantType === "open") {
       oAllowed = true
     }
@@ -319,7 +318,6 @@ const EventEdit = (props) => {
         }
         else {
           result.json().then(value => {
-            console.log(value);
             setLoading(false);
             setState({
               open: true,

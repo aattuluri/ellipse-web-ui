@@ -91,7 +91,7 @@ export default function StickyHeadTable(props) {
 
 
   const handleClick = (event, name) => {
-    console.log(name);
+    // console.log(name);
     const selectedIndex = selected.indexOf(name);
     let newSelected = [];
 
@@ -179,7 +179,7 @@ export default function StickyHeadTable(props) {
 
   function handleGenerateCertificateButton() {
     setLoading(true);
-    console.log(selected)
+    // console.log(selected)
     try {
       var data = new FormData();
       const d = { eventId: event._id, participants: selected }

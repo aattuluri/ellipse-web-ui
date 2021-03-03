@@ -59,7 +59,6 @@ const ForgotPassword = ({ history }) => {
         method: 'POST',
         body: data2
       }).then((result) => {
-        console.log(result);
         result.json().then((res) => {
           if (res.message === "success") {
             setLoading(false)
@@ -108,7 +107,6 @@ const ForgotPassword = ({ history }) => {
         method: 'POST',
         body: data2
       }).then((result) => {
-        console.log(result);
         result.json().then((res) => {
           if (res.message === "success") {
             setLoading2(false);
