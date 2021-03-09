@@ -107,13 +107,13 @@ const UserInfo = ({ history }) => {
     async function handleSignUp(event) {
         event.preventDefault();
         setLoading(true);
-        const { gender, collegeId, bio } = event.target.elements;
+        const { gender, bio } = event.target.elements;
 
         try {
             var data = new FormData()
             const payload = {
                 gender: gender.value,
-                college_id: collegeId.value,
+                // college_id: collegeId.value,
                 bio: bio.value,
             };
             data = JSON.stringify(payload);
