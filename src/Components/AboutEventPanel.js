@@ -13,6 +13,12 @@ import PersonIcon from '@material-ui/icons/Person';
 import Divider from '@material-ui/core/Divider';
 import EmojiEventsIcon from '@material-ui/icons/EmojiEvents';
 import Button from '@material-ui/core/Button';
+import InstagramIcon from '@material-ui/icons/Instagram';
+import TwitterIcon from '@material-ui/icons/Twitter';
+import YouTubeIcon from '@material-ui/icons/YouTube';
+import FacebookIcon from '@material-ui/icons/Facebook';
+import GitHubIcon from '@material-ui/icons/GitHub';
+import LanguageIcon from '@material-ui/icons/Language';
 
 //other component imports
 import ImageDialog from '../Components/ImageDialog';
@@ -263,6 +269,30 @@ function AboutEventPanel(props) {
                                         label={val}></Chip>
                                 })}
                             </div>
+                            {event !== undefined && event && event !== null && event.socialMediaLinks &&  <div style={{ marginTop: '10px' }}>
+                                {
+                                    event.socialMediaLinks.map(link => {
+                                        if (link.title === "Instagram") {
+                                            return <a rel="noopener noreferrer" href={link.link} target="blank"><InstagramIcon fontSize="large" color="primary"></InstagramIcon></a>
+                                        }
+                                        else if (link.title === "Youtube") {
+                                            return <a rel="noopener noreferrer" href={link.link} target="blank"><YouTubeIcon fontSize="large" color="primary"></YouTubeIcon></a>
+                                        }
+                                        else if (link.title === "Facebook") {
+                                            return <a rel="noopener noreferrer" href={link.link} target="blank"><FacebookIcon fontSize="large" color="primary"></FacebookIcon></a>
+                                        }
+                                        else if (link.title === "Twitter") {
+                                            return <a rel="noopener noreferrer" href={link.link} target="blank"><TwitterIcon fontSize="large" color="primary"></TwitterIcon></a>
+                                        }
+                                        else if (link.title === "Github") {
+                                            return <a rel="noopener noreferrer" href={link.link} target="blank"><GitHubIcon fontSize="large" color="primary"></GitHubIcon></a>
+                                        }
+                                        else {
+                                            return <a rel="noopener noreferrer" href={link.link} target="blank"><LanguageIcon fontSize="large" color="primary"></LanguageIcon></a>
+                                        }
+                                    })
+                                }
+                            </div>}
                         </Grid>
                         <Grid item xs={12}>
                             <Box>
@@ -348,7 +378,6 @@ function AboutEventPanel(props) {
                                     </Grid>
                                 </Grid>}
 
-
                                 {event.prizes !== undefined && event.prizes !== null && event.prizes.length > 0 && <Grid container component="main" className={classes.gridMain}>
                                     <Grid item xs={12}>
                                         <Box display="flex" justifyContent="flex-start">
@@ -372,8 +401,6 @@ function AboutEventPanel(props) {
                                     </Grid>
                                 </Grid>}
                                 <Grid container component="main" className={classes.gridMain} >
-
-
                                     {event.themes !== undefined && event.themes !== null && event.themes !== "" &&
                                         <Grid item xs={12} md={6} className={classes.gridItem}>
                                             <Box style={{ marginLeft: "30px" }}>
@@ -416,7 +443,7 @@ function AboutEventPanel(props) {
                                         </Grid>}
                                 </Grid>
 
-                                {!notRegistered && <Box className={classes.boxItem}>
+                                {/* {!notRegistered && <Box className={classes.boxItem}>
                                     <Typography style={{ marginTop: "20px", marginBottom: '20' }} variant="h5">Organised By</Typography>
                                 </Box>}
                                 {!notRegistered && <Box className={classes.boxItem}>
@@ -433,7 +460,7 @@ function AboutEventPanel(props) {
                                             </Box>
                                         </Box>
                                     </Box>
-                                </Box>}
+                                </Box>} */}
                             </Box>
                         </Grid>
                     </Grid>
