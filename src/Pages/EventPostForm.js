@@ -103,7 +103,7 @@ export default function Checkout({ history }) {
   const token = localStorage.getItem('token');
   const { currentUser } = React.useContext(AuthContext);
   const [activeStep, setActiveStep] = React.useState(0);
-  const [steps, setSteps] = React.useState(['About','Event Details', 'More Details']);
+  const [steps, setSteps] = React.useState(['About', 'Event Details', 'More Details']);
   const [state, setState] = React.useState({
     open: false,
     vertical: 'top',
@@ -133,7 +133,7 @@ export default function Checkout({ history }) {
   const [eventThemes, setEventThemes] = React.useState([]);
   const [selectedrequirements, setSelectedRequirements] = React.useState([]);
   const [image, setImage] = React.useState(null);
-  const [imageUrl,setImageUrl] = React.useState(null);
+  const [imageUrl, setImageUrl] = React.useState(null);
   const [addressType, setAddressType] = React.useState(null);
   const [collegeName, setCollegeName] = React.useState(currentUser.college_name);
   const [collegeId, setCollegeId] = React.useState(currentUser.college_id)
@@ -151,6 +151,7 @@ export default function Checkout({ history }) {
   const [rules, setRules] = React.useState(null);
   const [prizes, setPrizes] = React.useState([]);
   const [themes, setThemes] = React.useState(null);
+  const [socialMediaLinks, setSocialMediaLinks] = React.useState([]);
   const [showSuccessPanel, setShowSuccessPanel] = React.useState(false);
 
 
@@ -188,7 +189,7 @@ export default function Checkout({ history }) {
             imageName={imageName}
             setImageName={setImageName}
             setPoster={setImage}
-            imageUrl = {imageUrl}
+            imageUrl={imageUrl}
             setImageUrl={setImageUrl}
             regFees={fees}
             setFees={setFees}
@@ -257,6 +258,8 @@ export default function Checkout({ history }) {
             setRegMode={setRegistrationMode}
             setRegLink={setRegLink}
             regLink={regLink}
+            socialMediaLinks={socialMediaLinks}
+            setSocialMediaLinks={setSocialMediaLinks}
             handlePost={handleEventPost}>
           </EventPostDetails3>);
       default:
@@ -302,7 +305,8 @@ export default function Checkout({ history }) {
         rounds: rounds,
         rules: rules,
         prizes: prizes,
-        themes: themes
+        themes: themes,
+        socialMediaLinks: socialMediaLinks
       };
       data = JSON.stringify(payload);
       fetch(process.env.REACT_APP_API_URL + '/api/events', {
@@ -454,10 +458,10 @@ export default function Checkout({ history }) {
                 </Typography>
                 </React.Fragment>
               ) : (
-                  <React.Fragment>
-                    {getStepContent(activeStep)}
-                  </React.Fragment>
-                )}
+                <React.Fragment>
+                  {getStepContent(activeStep)}
+                </React.Fragment>
+              )}
             </React.Fragment>
           </div>
         </Paper>

@@ -67,10 +67,17 @@ export default function EventPostForm(props) {
     const [prizeDesc, setPrizeDesc] = React.useState(null);
     const [prize, setPrize] = React.useState(null);
     const [prizes, setPrizes] = React.useState([]);
+    const [socialMediaTitle, setSocialMediaTitle] = React.useState(null);
+    const [socialMediaLink, setSocialMediaLink] = React.useState(null);
+    const [socialMediaLinks, setSocialMediaLinks] = React.useState([]);
 
     React.useEffect(() => {
         setPrizes(props.prizes);
     }, [props.prizes])
+
+    React.useEffect(() => {
+        setSocialMediaLinks(props.socialMediaLinks);
+    }, [props.socialMediaLinks])
 
 
     const handleClose = () => {
@@ -193,10 +200,22 @@ export default function EventPostForm(props) {
         setPrize(null);
     }
 
+    const handleSocialMediaAddButton = () => {
+        props.setSocialMediaLinks(links => [...links, { title: socialMediaTitle, link: socialMediaLink }]);
+        setSocialMediaTitle(null);
+        setSocialMediaLink(null);
+    }
+
     const handlePrizeDeleteButton = (index, data) => () => {
         var currentPrizes = props.prizes;
         currentPrizes.splice(index);
         props.setPrizes(currentPrizes);
+    }
+
+    const handleSocialMediaDeleteButton = (index, data) => () => {
+        var currentLinks= props.socialMediaLinks;
+        currentLinks.splice(index);
+        props.setSocialMediaLinks(currentLinks);
     }
 
     const handlePrizeFieldChange = (title) => (event) => {
@@ -208,6 +227,16 @@ export default function EventPostForm(props) {
         }
         else {
             setPrize(event.target.value);
+        }
+    }
+
+    const handleSocialMediaFieldChange = (title) => (event) => {
+
+        if (title === "Social Media") {
+            setSocialMediaTitle(event.target.value);
+        }
+        else {
+            setSocialMediaLink(event.target.value);
         }
     }
 
@@ -295,7 +324,6 @@ export default function EventPostForm(props) {
                             </Box>
                         </FormControl>
                     </Grid>
-
                     <Grid>
                         <Paper component="ul" className={classes.root}>
                             {prizes.map((data, index) => {
@@ -304,6 +332,61 @@ export default function EventPostForm(props) {
                                         <Chip
                                             label={data.title}
                                             onDelete={handlePrizeDeleteButton(index, data)}
+                                            className={classes.chip}
+                                        />
+                                    </li>
+                                );
+                            })}
+                        </Paper>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <FormControl component="fieldset" className={classes.formControl}>
+                            <FormLabel component="legend">Social Media Links</FormLabel>
+                            <Box display="flex" style={{ marginTop: "10px" }}>
+                                <Box>
+                                    <FormControl fullWidth>
+                                        <InputLabel htmlFor="outlined-age-native-simple">Social Media</InputLabel>
+                                        <Select
+                                            variant="outlined"
+                                            style={{ width: "200px", marginRight: "5px" }}
+                                            // fullWidth
+                                            native
+                                            label="Registration"
+                                            inputProps={{
+                                                name: 'registrationMode',
+                                                id: 'registaration mode',
+                                            }}
+                                            value={socialMediaTitle || ""}
+                                            onChange={handleSocialMediaFieldChange("Social Media")}
+                                        >
+                                            <option aria-label="None" value="" />
+                                            <option value="Instagram">Instagram</option>
+                                            <option value="Facebook">Facebook</option>
+                                            <option value="Youtube">Youtube</option>
+                                            <option value="Twitter">Twitter</option>
+                                            <option value="Github">Github</option>
+                                            <option value="Website">Website</option>
+                                        </Select>
+                                    </FormControl>
+                                </Box>
+                                <Box>
+                                    <TextField onChange={handleSocialMediaFieldChange("link")} value={socialMediaLink || ""} label="Link" variant="outlined"></TextField>
+                                </Box>
+                                <Box>
+                                    <IconButton onClick={handleSocialMediaAddButton}>Add</IconButton>
+                                </Box>
+                            </Box>
+                        </FormControl>
+                    </Grid>
+
+                    <Grid>
+                        <Paper component="ul" className={classes.root}>
+                            {socialMediaLinks.map((data, index) => {
+                                return (
+                                    <li key={data.key}>
+                                        <Chip
+                                            label={data.title}
+                                            onDelete={handleSocialMediaDeleteButton(index, data)}
                                             className={classes.chip}
                                         />
                                     </li>

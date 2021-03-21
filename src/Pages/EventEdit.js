@@ -125,8 +125,12 @@ const EventEdit = (props) => {
   const [prizeTitle, setPrizeTitle] = React.useState(null);
   const [prize, setPrize] = React.useState(null);
   const [prizeDesc, setPrizeDesc] = React.useState(null);
+  const [socialMediaLinks, setSocialMediaLinks] = React.useState([]);
   const [roundsDialogOpen, setRoundsDialogOpen] = React.useState(false);
   const [selectedEditRound, setSelectedEditRound] = React.useState({});
+  const [socialMediaTitle, setSocialMediaTitle] = React.useState(null);
+  const [socialMediaLink, setSocialMediaLink] = React.useState(null);
+
 
 
 
@@ -188,6 +192,7 @@ const EventEdit = (props) => {
     setRules(event.rules);
     setPrizes(event.prizes);
     setThemes(event.themes);
+    setSocialMediaLinks(event.socialMediaLinks);
     if (event.o_allowed === true) {
       setParticipantsType("open")
     }
@@ -217,7 +222,7 @@ const EventEdit = (props) => {
       })
     })
 
-  }, [token, event])
+  }, [token,event])
 
 
   const handleClose = async (event, reason) => {
@@ -266,7 +271,8 @@ const EventEdit = (props) => {
         rounds: rounds,
         rules: rules,
         prizes: prizes,
-        themes: themes
+        themes: themes,
+        socialMediaLinks: socialMediaLinks
       };
       data = JSON.stringify(payload);
       fetch(process.env.REACT_APP_API_URL + '/api/updateevent', {
@@ -410,7 +416,7 @@ const EventEdit = (props) => {
   }
 
   const handlePrizeAddButton = () => {
-    setPrizes(prizes => [...prizes, { title: prizeTitle,prize: prize, desc: prizeDesc }]);
+    setPrizes(prizes => [...prizes, { title: prizeTitle, prize: prize, desc: prizeDesc }]);
     setPrizeTitle(null);
     setPrizeDesc(null);
   }
@@ -424,15 +430,43 @@ const EventEdit = (props) => {
 
   const handlePrizeFieldChange = (title) => (event) => {
     if (title === "title") {
-        setPrizeTitle(event.target.value)
+      setPrizeTitle(event.target.value)
     }
     else if (title === "desc") {
-        setPrizeDesc(event.target.value);
+      setPrizeDesc(event.target.value);
     }
     else {
-        setPrize(event.target.value);
+      setPrize(event.target.value);
     }
-}
+  }
+
+  const handleSocialMediaDeleteButton = (index, data) => () => {
+    var currentLinks = socialMediaLinks;
+    currentLinks.splice(index);
+    setSocialMediaLinks(currentLinks);
+  }
+
+  // const dummyFunction = () => {
+  //   console.log("clicke")
+  //   setSocialMediaLinks(socialMediaLinks)
+  // }
+
+  const handleSocialMediaFieldChange = (title) => (event) => {
+
+    if (title === "Social Media") {
+      setSocialMediaTitle(event.target.value);
+    }
+    else {
+      setSocialMediaLink(event.target.value);
+    }
+  }
+
+  const handleSocialMediaAddButton = () => {
+    setSocialMediaLinks(links => [...links, { title: socialMediaTitle, link: socialMediaLink }]);
+    setSocialMediaTitle(null);
+    setSocialMediaLink(null);
+  }
+
 
 
 
@@ -859,7 +893,7 @@ const EventEdit = (props) => {
                     <TextField onChange={handlePrizeFieldChange("title")} value={prizeTitle || ""} label="Prize Title" variant="outlined" style={{ marginRight: "5px" }}></TextField>
                   </Box>
                   <Box>
-                  <TextField onChange={handlePrizeFieldChange("prize")} value={prize || ""} label="Prize" variant="outlined"></TextField>
+                    <TextField onChange={handlePrizeFieldChange("prize")} value={prize || ""} label="Prize" variant="outlined"></TextField>
                   </Box>
                   <Box>
                     <TextField onChange={handlePrizeFieldChange("desc")} value={prizeDesc || ""} label="Prize Description" variant="outlined"></TextField>
@@ -878,6 +912,61 @@ const EventEdit = (props) => {
                       <Chip
                         label={data.title}
                         onDelete={handlePrizeDeleteButton(index, data)}
+                        className={classes.chip}
+                      />
+                    </li>
+                  );
+                })}
+              </Paper>
+            </Grid>
+            <Grid item xs={12}>
+              <FormControl component="fieldset" className={classes.formControl}>
+                <FormLabel component="legend">Social Media Links</FormLabel>
+                <Box display="flex" style={{ marginTop: "10px" }}>
+                  <Box>
+                    <FormControl fullWidth>
+                      <InputLabel htmlFor="socialmedia field">Social Media</InputLabel>
+                      <Select
+                        variant="outlined"
+                        style={{ width: "200px", marginRight: "5px" }}
+                        // fullWidth
+                        native
+                        label="Social Media"
+                        inputProps={{
+                          name: 'socialMediaField',
+                          id: 'socialMediaField',
+                        }}
+                        value={socialMediaTitle || ""}
+                        onChange={handleSocialMediaFieldChange("Social Media")}
+                      >
+                        <option aria-label="None" value="" />
+                        <option value="Instagram">Instagram</option>
+                        <option value="Facebook">Facebook</option>
+                        <option value="Youtube">Youtube</option>
+                        <option value="Twitter">Twitter</option>
+                        <option value="Github">Github</option>
+                        <option value="Website">Website</option>
+                      </Select>
+                    </FormControl>
+                  </Box>
+                  <Box>
+                    <TextField onChange={handleSocialMediaFieldChange("link")} value={socialMediaLink || ""} label="Link" variant="outlined"></TextField>
+                  </Box>
+                  <Box>
+                    <IconButton onClick={handleSocialMediaAddButton}>Add</IconButton>
+                  </Box>
+                </Box>
+              </FormControl>
+            </Grid>
+
+            <Grid>
+              <Paper component="ul" className={classes.root}>
+                {socialMediaLinks.map((data, index) => {
+                  return (
+                    <li key={data.key}>
+                      <Chip
+                        label={data.title}
+                        onDelete={handleSocialMediaDeleteButton(index, data)}
                         className={classes.chip}
                       />
                     </li>
